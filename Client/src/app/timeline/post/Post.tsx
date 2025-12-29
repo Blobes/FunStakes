@@ -55,7 +55,6 @@ export const PostCard = ({ post, style = {} }: PostProps) => {
 
   // Reconcile pending likes + author
   useEffect(() => {
-    if (!authUser) return;
     fetchAuthor();
 
     const pending = getPendingLike(post._id);
@@ -106,8 +105,15 @@ export const PostCard = ({ post, style = {} }: PostProps) => {
   // ✅ Early return
   if (!author)
     return (
-      <Stack>
-        <Typography>{message}</Typography>
+      <Stack
+        sx={{
+          backgroundColor: theme.palette.gray.trans[1],
+          padding: theme.boxSpacing(12, 4),
+          textAlign: "center",
+        }}>
+        <Typography variant="body3">
+          {message || "Loading author..."}
+        </Typography>
       </Stack>
     );
 

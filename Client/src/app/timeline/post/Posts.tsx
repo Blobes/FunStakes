@@ -10,7 +10,7 @@ import { Post } from "@/types";
 import { usePost } from "./postHooks";
 import { HourglassEmptyOutlined } from "@mui/icons-material";
 import { useAppContext } from "@/app/AppContext";
-import { delay, getCookie, setCookie } from "@/helpers/others";
+import { delay } from "@/helpers/others";
 
 export const Posts = () => {
   const theme = useTheme();
@@ -24,27 +24,12 @@ export const Posts = () => {
     try {
       setLoading(true);
       await delay();
-      // IF UNAUTHENTICATED → USE OFFLINE FIRST
-      // const offlinePosts = getCookie("offline_posts");
-      // if (loginStatus !== "AUTHENTICATED") {
-      //   if (offlinePosts) {
-      //     setPosts(JSON.parse(offlinePosts));
-      //     console.log("Showing cached posts:", posts);
-      //     return;
-      //   }
-      //   setMessage("Login to view posts");
-      //   return;
-      // }
+
       // IF AUTHENTICATED → FETCH FROM API
       const res = await getAllPost();
       if (res?.payload) {
         setPosts(res.payload);
         setMessage(res.message);
-        // setCookie(
-        //   "offline_posts",
-        //   JSON.stringify(res.payload.slice(0, 4)),
-        //   60 * 24
-        // );
       }
     } finally {
       setLoading(false);
@@ -67,7 +52,14 @@ export const Posts = () => {
       {loginStatus === "AUTHENTICATED" && <CreatePost />}
 
       {isLoading ? (
-        <CircularProgress size={40} />
+        <Stack
+          sx={{
+            height: "100%",
+            alignItems: "center",
+            justifyContent: "center",
+          }}>
+          <CircularProgress size={40} />
+        </Stack>
       ) : posts.length < 1 ? (
         <Stack>
           <HourglassEmptyOutlined

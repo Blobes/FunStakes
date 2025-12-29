@@ -17,10 +17,6 @@ export default function TimelinePage() {
         height: "100%",
         gap: theme.gap(0),
         backgroundColor: theme.palette.gray[0],
-        padding: {
-          sm: theme.boxSpacing(0),
-          md: theme.boxSpacing(0, 12),
-        },
         overflowY: "hidden",
         overflowX: "auto",
         flexDirection: "row",
@@ -38,6 +34,7 @@ export default function TimelinePage() {
           width: "28%",
           maxWidth: "500px",
           minWidth: "300px",
+          padding: theme.boxSpacing(8, 16),
           [theme.breakpoints.down("md")]: { display: "none" },
         }}>
         Col 3
