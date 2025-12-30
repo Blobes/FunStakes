@@ -23,6 +23,7 @@ import { red } from "@mui/material/colors";
 import { fetcher } from "@/helpers/fetcher";
 import { summarizeNum } from "@/helpers/others";
 import { AuthStepper } from "@/app/auth/login/AuthStepper";
+import { Empty } from "@/components/Empty";
 
 interface PostProps {
   post: Post;
@@ -105,31 +106,27 @@ export const PostCard = ({ post, style = {} }: PostProps) => {
   // ✅ Early return
   if (!author)
     return (
-      <Stack
-        sx={{
-          backgroundColor: theme.palette.gray.trans[1],
-          padding: theme.boxSpacing(12, 4),
-          textAlign: "center",
-        }}>
-        <Typography variant="body3">
-          {message || "Loading author..."}
-        </Typography>
-      </Stack>
+      <Empty
+        tagline={message || "Loading author..."}
+        style={{
+          container: {
+            margin: theme.boxSpacing(8, 8, 0, 8),
+          },
+        }}
+      />
     );
 
   const authorFullName = author ? `${author.firstName} ${author.lastName}` : "";
 
   return status === "DELETED" ? (
-    <Stack
-      sx={{
-        backgroundColor: theme.palette.gray.trans[1],
-        padding: theme.boxSpacing(12, 4),
-        textAlign: "center",
-      }}>
-      <Typography variant="body3">
-        This post has been deleted by the author.
-      </Typography>
-    </Stack>
+    <Empty
+      tagline={"This post has been deleted by the author."}
+      style={{
+        container: {
+          margin: theme.boxSpacing(8, 8, 0, 8),
+        },
+      }}
+    />
   ) : (
     <Card
       sx={{

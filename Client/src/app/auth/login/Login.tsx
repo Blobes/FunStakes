@@ -169,7 +169,7 @@ export const Login: React.FC<LoginProps> = ({
         <AppButton
           variant="contained"
           {...(isAuthLoading && {
-            iconLeft: <ProgressIcon props={{ size: 25 }} />,
+            iconLeft: <ProgressIcon otherProps={{ size: 25 }} />,
           })}
           submit
           style={{
@@ -181,7 +181,8 @@ export const Login: React.FC<LoginProps> = ({
             disabled:
               passwordValidity === "invalid" ||
               password === "" ||
-              loginAttempts >= MAX_ATTEMPTS,
+              loginAttempts >= MAX_ATTEMPTS ||
+              isAuthLoading,
           }}>
           {!isAuthLoading && "Login"}
         </AppButton>

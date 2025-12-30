@@ -3,14 +3,14 @@ import { useTheme } from "@mui/material/styles";
 
 interface IconProps {
   style?: any;
-  props?: any;
+  otherProps?: any;
 }
 
-export const ProgressIcon: React.FC<IconProps> = ({ style, props: props }) => {
+export const ProgressIcon: React.FC<IconProps> = ({ style, otherProps }) => {
   const theme = useTheme();
   return (
     <CircularProgress
-      {...props}
+      {...otherProps}
       sx={{ color: theme.palette.primary.light, ...style }}
     />
   );

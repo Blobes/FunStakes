@@ -82,7 +82,6 @@ export const CheckEmail: React.FC<CheckProps> = ({
         router.replace(`/auth/signup?email=${email}`);
       }
     }
-
     setAuthLoading(false);
   };
 
@@ -125,7 +124,7 @@ export const CheckEmail: React.FC<CheckProps> = ({
         <AppButton
           variant="contained"
           {...(isAuthLoading && {
-            iconLeft: <ProgressIcon props={{ size: 25 }} />,
+            iconLeft: <ProgressIcon otherProps={{ size: 25 }} />,
           })}
           submit
           style={{
@@ -134,7 +133,7 @@ export const CheckEmail: React.FC<CheckProps> = ({
             width: "100%",
           }}
           options={{
-            disabled: validity === "invalid" || email === "",
+            disabled: validity === "invalid" || email === "" || isAuthLoading,
           }}>
           {!isAuthLoading && "Continue"}
         </AppButton>
