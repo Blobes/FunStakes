@@ -42,7 +42,7 @@ const componentTheme = createTheme({
             "&:disabled": {
               backgroundColor: theme.palette.primary.main,
               color: theme.fixedColors.gray50,
-              opacity: 0.6,
+              opacity: 0.7,
             },
           }),
         outlined: ({ theme }) =>

@@ -27,6 +27,8 @@ interface AppContextType {
   setPage: React.Dispatch<React.SetStateAction<SavedPage>>;
   modalContent: ModalContent | null;
   setModalContent: React.Dispatch<React.SetStateAction<ModalContent | null>>;
+  isOnline: boolean;
+  setOnlineStatus: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const context = createContext<AppContextType | null>(null);
@@ -46,6 +48,7 @@ export const ContextProvider = ({
   const [isAuthLoading, setAuthLoading] = useState(false);
   const [lastPage, setPage] = useState<SavedPage>(defaultPage);
   const [modalContent, setModalContent] = useState<ModalContent | null>(null);
+  const [isOnline, setOnlineStatus] = useState(false);
 
   return (
     <context.Provider
@@ -66,6 +69,8 @@ export const ContextProvider = ({
         setPage,
         modalContent,
         setModalContent,
+        isOnline,
+        setOnlineStatus,
       }}>
       {children}
     </context.Provider>

@@ -29,6 +29,8 @@ export const AppWrapper = ({ children }: { children: React.ReactNode }) => {
     modalContent,
     setAuthUser,
     lastPage,
+    isOnline,
+    setOnlineStatus,
   } = useAppContext();
   const [mounted, setMounted] = useState(false);
 
@@ -123,6 +125,7 @@ export const AppWrapper = ({ children }: { children: React.ReactNode }) => {
         },
         override: true,
       });
+      setOnlineStatus(true);
       reverify();
     };
 
@@ -140,15 +143,19 @@ export const AppWrapper = ({ children }: { children: React.ReactNode }) => {
           },
         },
       });
+      setOnlineStatus(false);
     };
 
     const handleVisibility = () => {
-      if (document.visibilityState === "visible") reverify();
+      if (document.visibilityState === "visible" && isOnline) reverify();
+    };
+    const handleFocus = () => {
+      if (isOnline) reverify();
     };
 
     window.addEventListener("online", handleOnline);
     window.addEventListener("offline", handleOffline);
-    window.addEventListener("focus", reverify);
+    window.addEventListener("focus", handleFocus);
     document.addEventListener("visibilitychange", handleVisibility);
     return () => {
       window.removeEventListener("online", handleOnline);
