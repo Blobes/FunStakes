@@ -10,7 +10,7 @@ import {
   useMediaQuery,
 } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
-import { Menu } from "@mui/icons-material";
+import { Add, Menu } from "@mui/icons-material";
 import { usePathname, useRouter } from "next/navigation";
 
 import { useAppContext } from "@/app/AppContext";
@@ -144,16 +144,30 @@ export const Header: React.FC = () => {
           {isLoggedIn && isDesktop && <DesktopUserNav menuRef={menuRef} />}
 
           {isLoggedIn && (
-            <UserAvatar
-              userInfo={{ firstName, lastName, profileImage }}
-              toolTipValue="Open menu"
-              style={{ width: "34px", height: "34px" }}
-              action={(e) =>
-                isDesktop
-                  ? menuRef.current?.openMenu(e.currentTarget)
-                  : openMobileUserNav()
-              }
-            />
+            <>
+              <AppButton
+                style={{
+                  width: "40px",
+                  height: "40px",
+                  borderRadius: theme.radius.full,
+                  padding: theme.boxSpacing(4),
+                }}
+                onClick={(e) => {
+                  e.preventDefault();
+                }}>
+                <Add sx={{ width: "100%", height: "100%" }} />
+              </AppButton>
+              <UserAvatar
+                userInfo={{ firstName, lastName, profileImage }}
+                toolTipValue="Open menu"
+                style={{ width: "34px", height: "34px" }}
+                action={(e) =>
+                  isDesktop
+                    ? menuRef.current?.openMenu(e.currentTarget)
+                    : openMobileUserNav()
+                }
+              />
+            </>
           )}
 
           {!isLoggedIn && (
