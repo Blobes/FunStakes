@@ -64,7 +64,7 @@ export const AppWrapper = ({ children }: { children: React.ReactNode }) => {
   // ─────────────────────────────
   useEffect(() => {
     let intervalId: NodeJS.Timeout | null = null;
-    // AUTHENTICATED or not on app route → clean exit
+    // AUTHENTICATED or not on app route close modal
     if (loginStatus === "AUTHENTICATED" || !isOnAppRoute) {
       closeModal();
       return;
