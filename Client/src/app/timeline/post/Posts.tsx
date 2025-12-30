@@ -11,6 +11,7 @@ import { usePost } from "./postHooks";
 import { HourglassEmptyOutlined } from "@mui/icons-material";
 import { useAppContext } from "@/app/AppContext";
 import { delay } from "@/helpers/others";
+import { ProgressIcon } from "@/components/Loading";
 
 export const Posts = () => {
   const theme = useTheme();
@@ -57,12 +58,18 @@ export const Posts = () => {
             alignItems: "center",
             justifyContent: "center",
           }}>
-          <CircularProgress size={40} />
+          <ProgressIcon props={{ size: 30 }} />
         </Stack>
       ) : posts.length < 1 ? (
         <Stack>
           <HourglassEmptyOutlined
-            sx={{ transform: "scale(1.5)", stroke: theme.palette.gray[200] }}
+            sx={{
+              height: "100%",
+              alignItems: "center",
+              justifyContent: "center",
+              transform: "scale(1.5)",
+              stroke: theme.palette.gray[200],
+            }}
           />
           <Typography variant="h6">{message}</Typography>
         </Stack>

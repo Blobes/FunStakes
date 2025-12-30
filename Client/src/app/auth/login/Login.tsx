@@ -15,6 +15,7 @@ import { Edit } from "@mui/icons-material";
 import { BasicTooltip } from "@/components/Tooltips";
 import { GenericObject } from "@/types";
 import { routes } from "@/helpers/info";
+import { ProgressIcon } from "@/components/Loading";
 
 interface LoginProps {
   email: string;
@@ -167,7 +168,9 @@ export const Login: React.FC<LoginProps> = ({
         />
         <AppButton
           variant="contained"
-          {...(isAuthLoading && { iconLeft: <CircularProgress size={30} /> })}
+          {...(isAuthLoading && {
+            iconLeft: <ProgressIcon props={{ size: 25 }} />,
+          })}
           submit
           style={{
             fontSize: "16px",

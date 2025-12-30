@@ -1,7 +1,7 @@
 "use client";
 
 import { useAuth } from "@/app/auth/login/authHooks";
-import { CircularProgress, Stack, Typography } from "@mui/material";
+import { Stack, Typography } from "@mui/material";
 import { useAppContext } from "@/app/AppContext";
 import { AppButton } from "@/components/Buttons";
 import { useTheme } from "@mui/material/styles";
@@ -13,6 +13,7 @@ import { TextInput } from "@/components/InputFields";
 import { GenericObject } from "@/types";
 import { delay } from "@/helpers/others";
 import { InlineMsg } from "@/components/InlineMsg";
+import { ProgressIcon } from "@/components/Loading";
 
 interface CheckProps {
   modalRef?: React.RefObject<ModalRef>;
@@ -124,12 +125,7 @@ export const CheckEmail: React.FC<CheckProps> = ({
         <AppButton
           variant="contained"
           {...(isAuthLoading && {
-            iconLeft: (
-              <CircularProgress
-                sx={{ color: theme.palette.primary.light }}
-                size={25}
-              />
-            ),
+            iconLeft: <ProgressIcon props={{ size: 25 }} />,
           })}
           submit
           style={{

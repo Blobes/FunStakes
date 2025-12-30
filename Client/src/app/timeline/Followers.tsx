@@ -6,6 +6,7 @@ import React, { useEffect, useState } from "react";
 import { HourglassEmptyOutlined } from "@mui/icons-material";
 import { FollowerCard } from "./RightSidebarCards";
 import { delay } from "@/helpers/others";
+import { ProgressIcon } from "@/components/Loading";
 
 export const Followers = () => {
   const theme = useTheme();
@@ -41,7 +42,7 @@ export const Followers = () => {
   return (
     <>
       {isLoading ? (
-        <CircularProgress size={40} />
+        <ProgressIcon props={{ size: 30 }} />
       ) : authUser && followersId && followersId.length < 1 ? (
         <Stack>
           <HourglassEmptyOutlined

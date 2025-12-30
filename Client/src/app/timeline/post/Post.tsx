@@ -120,8 +120,15 @@ export const PostCard = ({ post, style = {} }: PostProps) => {
   const authorFullName = author ? `${author.firstName} ${author.lastName}` : "";
 
   return status === "DELETED" ? (
-    <Stack>
-      <Typography>This post has been deleted by the author.</Typography>
+    <Stack
+      sx={{
+        backgroundColor: theme.palette.gray.trans[1],
+        padding: theme.boxSpacing(12, 4),
+        textAlign: "center",
+      }}>
+      <Typography variant="body3">
+        This post has been deleted by the author.
+      </Typography>
     </Stack>
   ) : (
     <Card
