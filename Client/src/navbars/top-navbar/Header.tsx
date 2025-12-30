@@ -113,7 +113,10 @@ export const Header: React.FC = () => {
           )}
 
           {/* Logo */}
-          <Link href={defaultPage.path} onClick={handleLogoClick}>
+          <Link
+            href={defaultPage.path}
+            onClick={handleLogoClick}
+            sx={{ display: "inline-flex" }}>
             <img
               src="/assets/images/logo.png"
               alt="logo"
