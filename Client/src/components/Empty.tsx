@@ -6,7 +6,7 @@ interface EmptyProps {
   headline?: string;
   tagline?: string;
   icon?: React.ReactNode;
-  style?: any;
+  style?: { container?: any; headline?: any; tagline?: any; icon?: any };
   cta?: { label?: string; action: () => void };
 }
 
@@ -26,7 +26,7 @@ export const Empty: React.FC<EmptyProps> = ({
         textAlign: "center",
         borderRadius: theme.radius[2],
         alignItems: "center",
-        ...style.container,
+        ...style?.container,
       }}>
       {/* Icon */}
       {icon && (
@@ -39,7 +39,7 @@ export const Empty: React.FC<EmptyProps> = ({
               height: "100%",
               fill: theme.palette.gray[200],
             },
-            ...style.icon,
+            ...style?.icon,
           }}>
           {icon}
         </Stack>
@@ -51,7 +51,7 @@ export const Empty: React.FC<EmptyProps> = ({
           component={"h6"}
           sx={{
             fontWeight: "bold",
-            ...style.headline,
+            ...style?.headline,
           }}>
           {headline}
         </Typography>
@@ -61,7 +61,7 @@ export const Empty: React.FC<EmptyProps> = ({
         <Typography
           variant="body3"
           sx={{
-            ...style.tagline,
+            ...style?.tagline,
           }}>
           {tagline}
         </Typography>
