@@ -1,4 +1,4 @@
-name: Sync main back into dev
+name: Sync dev into main
 
 on:
   pull_request:
@@ -6,24 +6,25 @@ on:
     types: [closed]
 
 jobs:
-  sync-back:
-    if: github.event.pull_request.merged == true
+  sync-dev:
+    if: >
+      github.event.pull_request.merged == true &&
+      github.event.pull_request.base.ref == 'main' &&
+      github.event.pull_request.head.ref == 'dev'
     runs-on: ubuntu-latest
-
-    permissions:
-      contents: write
 
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Sync main into dev
+      - name: Sync dev to main
         run: |
-          git config user.name "GitHub Action"
-          git config user.email "action@github.com"
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
 
+          git fetch origin
           git checkout dev
-          git pull origin dev
-          git merge origin/main --ff-only
-          git push origin dev
+          git reset --hard origin/main
+          git push origin dev --force-with-lease
