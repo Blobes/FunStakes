@@ -84,6 +84,7 @@ const componentTheme = createTheme({
         root: ({ theme }) =>
           theme.unstable_sx({
             padding: theme.boxSpacing(3),
+            margin: 0,
           }),
       },
     },
