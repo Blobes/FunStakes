@@ -147,10 +147,11 @@ export const AppWrapper = ({ children }: { children: React.ReactNode }) => {
     };
 
     const handleVisibility = () => {
-      if (document.visibilityState === "visible" && isOnline) reverify();
+      if (document.visibilityState === "visible" && isOnline === true)
+        reverify();
     };
     const handleFocus = () => {
-      if (isOnline) reverify();
+      if (isOnline === true) reverify();
     };
 
     window.addEventListener("online", handleOnline);
