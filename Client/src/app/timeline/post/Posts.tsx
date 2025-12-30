@@ -1,6 +1,6 @@
 "use client";
 
-import { CircularProgress, Stack, Typography } from "@mui/material";
+import { Stack } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import { PostCard } from "./Post";
 import { ScrollableContainer } from "@/components/Containers";
@@ -8,10 +8,11 @@ import { CreatePost } from "./CreatePost";
 import { useEffect, useState } from "react";
 import { Post } from "@/types";
 import { usePost } from "./postHooks";
-import { HourglassEmptyOutlined } from "@mui/icons-material";
+import { Article } from "@mui/icons-material";
 import { useAppContext } from "@/app/AppContext";
 import { delay } from "@/helpers/others";
 import { ProgressIcon } from "@/components/Loading";
+import { Empty } from "@/components/Empty";
 
 export const Posts = () => {
   const theme = useTheme();
@@ -58,21 +59,18 @@ export const Posts = () => {
             alignItems: "center",
             justifyContent: "center",
           }}>
-          <ProgressIcon props={{ size: 30 }} />
+          <ProgressIcon otherProps={{ size: 30 }} />
         </Stack>
       ) : posts.length < 1 ? (
-        <Stack>
-          <HourglassEmptyOutlined
-            sx={{
-              height: "100%",
-              alignItems: "center",
-              justifyContent: "center",
-              transform: "scale(1.5)",
-              stroke: theme.palette.gray[200],
-            }}
-          />
-          <Typography variant="h6">{message}</Typography>
-        </Stack>
+        <Empty
+          tagline={message || "Something went wrong, check your network"}
+          icon={<Article />}
+          style={{
+            container: {
+              margin: theme.boxSpacing(8, 8, 0, 8),
+            },
+          }}
+        />
       ) : (
         <Stack
           sx={{

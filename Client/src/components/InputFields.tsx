@@ -14,7 +14,6 @@ interface TextInputProps {
   required?: boolean;
   disabled?: boolean;
   error?: boolean;
-
   onChange?: (
     event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
   ) => void;

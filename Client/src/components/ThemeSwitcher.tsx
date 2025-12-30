@@ -26,7 +26,7 @@ export const ThemeSwitcher: React.FC = () => {
         backgroundColor: theme.palette.gray.trans[1],
         alignItems: "center",
         justifyContent: "center",
-        padding: theme.boxSpacing(4),
+        padding: theme.boxSpacing(5),
         cursor: "pointer",
         borderRadius: theme.radius.full,
         width: "36px",
@@ -36,15 +36,15 @@ export const ThemeSwitcher: React.FC = () => {
         },
       }}>
       {mode === "dark" ? (
-        <BasicTooltip title={"Dark Mode"}>
+        <BasicTooltip title={"Dark Theme"}>
           <DarkMode sx={{ width: "100%", height: "100%" }} />
         </BasicTooltip>
       ) : mode === "light" ? (
-        <BasicTooltip title={"Light Mode"}>
+        <BasicTooltip title={"Light Theme"}>
           <LightMode sx={{ width: "100%", height: "100%" }} />
         </BasicTooltip>
       ) : (
-        <BasicTooltip title={"System Mode"}>
+        <BasicTooltip title={"System Theme"}>
           <DesktopMac sx={{ width: "100%", height: "100%" }} />
         </BasicTooltip>
       )}

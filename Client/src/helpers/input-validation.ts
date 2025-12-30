@@ -13,7 +13,7 @@ export function validateEmail(email: string): InputValidation {
   if (!pattern.test(trimmed)) {
     return {
       status: "invalid",
-      message: "Enter a valid email address (example: user@example.com).",
+      message: "Enter a valid email address (user@example.com).",
     };
   }
 
@@ -21,14 +21,14 @@ export function validateEmail(email: string): InputValidation {
   if (local.length > 64) {
     return {
       status: "invalid",
-      message: "The part before '@' is too long. (example: user@example.com)",
+      message: "The part before '@' is too long. (user@example.com)",
     };
   }
 
   if (domain.length > 253) {
     return {
       status: "invalid",
-      message: "The domain part is too long. (example: user@example.com)",
+      message: "The domain part is too long.",
     };
   }
 
@@ -36,7 +36,7 @@ export function validateEmail(email: string): InputValidation {
     return {
       status: "invalid",
       message:
-        "The domain cannot contain more than 1 dot (.). (example: user@example.com)",
+        "The domain cannot contain more than 1 dot (.) (user@example.com)",
     };
   }
 

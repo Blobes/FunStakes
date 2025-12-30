@@ -1,12 +1,13 @@
 import { useTheme } from "@mui/material/styles";
-import { CircularProgress, Stack, Typography } from "@mui/material";
+import { Stack } from "@mui/material";
 import { useAppContext } from "../AppContext";
 import { useUser } from "../user/userHooks";
-import React, { useEffect, useState } from "react";
-import { HourglassEmptyOutlined } from "@mui/icons-material";
+import { useEffect, useState } from "react";
+import { PersonOffSharp } from "@mui/icons-material";
 import { FollowerCard } from "./RightSidebarCards";
 import { delay } from "@/helpers/others";
 import { ProgressIcon } from "@/components/Loading";
+import { Empty } from "@/components/Empty";
 
 export const Followers = () => {
   const theme = useTheme();
@@ -42,16 +43,15 @@ export const Followers = () => {
   return (
     <>
       {isLoading ? (
-        <ProgressIcon props={{ size: 30 }} />
-      ) : authUser && followersId && followersId.length < 1 ? (
-        <Stack>
-          <HourglassEmptyOutlined
-            sx={{ transform: "scale(1.5)", stroke: theme.palette.gray[200] }}
-          />
-          <Typography variant="h6" component={"h6"}>
-            You don't have followers!
-          </Typography>
+        <Stack
+          sx={{
+            padding: theme.boxSpacing(12, 4),
+            alignItems: "center",
+          }}>
+          <ProgressIcon otherProps={{ size: 30 }} />
         </Stack>
+      ) : authUser && followersId && followersId.length < 1 ? (
+        <Empty tagline="You don't have followers!" icon={<PersonOffSharp />} />
       ) : followersId && followersId.length > 0 ? (
         <Stack
           direction="row"
@@ -69,14 +69,10 @@ export const Followers = () => {
           })}
         </Stack>
       ) : (
-        <Stack>
-          <HourglassEmptyOutlined
-            sx={{ transform: "scale(1.5)", stroke: theme.palette.gray[200] }}
-          />
-          <Typography variant="h6" component={"h6"}>
-            {message}
-          </Typography>
-        </Stack>
+        <Empty
+          tagline={message || "Something went wrong."}
+          icon={<PersonOffSharp />}
+        />
       )}
     </>
   );
