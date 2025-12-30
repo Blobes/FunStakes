@@ -25,7 +25,6 @@ export const Posts = () => {
       setLoading(true);
       await delay();
 
-      // IF AUTHENTICATED → FETCH FROM API
       const res = await getAllPost();
       if (res?.payload) {
         setPosts(res.payload);
