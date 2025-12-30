@@ -75,9 +75,17 @@ export const SnackBars = ({
               overflow: "hidden",
               gap: theme.gap(10),
               animation: isTimed ? boxAnimation : "none",
+              "& > svg": {
+                fill:
+                  msg.msgStatus === "SUCCESS" ? theme.palette.success.main : "",
+                marginTop:
+                  msg.title && msg.content && msg.cta && theme.boxSpacing(4),
+                width: "20px",
+                height: "20px",
+              },
             }}>
             {msg.msgStatus === "SUCCESS" ? (
-              <CheckCircle sx={{ fill: theme.palette.success.main }} />
+              <CheckCircle />
             ) : msg.msgStatus === "INFO" ? (
               <Info />
             ) : (
