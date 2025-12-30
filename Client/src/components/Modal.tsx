@@ -148,7 +148,7 @@ export const Modal = forwardRef<ModalRef, ModalProps>(
             ...otherStyles,
           }}>
           {
-            /* Modal Header */
+            /* Modal with Header and Close */
             showHeader && (
               <Stack
                 direction={"row"}
@@ -161,15 +161,25 @@ export const Modal = forwardRef<ModalRef, ModalProps>(
                   padding: theme.boxSpacing(2),
                   justifyContent: "flex-end",
                 }}>
-                {header}
+                {header && header}
                 {shouldClose && (
                   <IconButton
                     aria-label="Drawer closer"
                     aria-controls="close-drawer"
                     aria-haspopup="true"
                     ref={closeRef}
+                    sx={{
+                      transform: !header
+                        ? "translateX(25px) translateY(-25px)"
+                        : "unset",
+                    }}
                     onClick={handleClose}>
-                    <Close sx={{ width: "20px", height: "20px" }} />
+                    <Close
+                      sx={{
+                        width: "22px",
+                        height: "22px",
+                      }}
+                    />
                   </IconButton>
                 )}
               </Stack>
