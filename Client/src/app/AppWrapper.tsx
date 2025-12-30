@@ -82,7 +82,6 @@ export const AppWrapper = ({ children }: { children: React.ReactNode }) => {
     };
     // show once
     showModal();
-    //  console.log("Hello");
     // repeat every 60s
     intervalId = setInterval(showModal, 60 * 1000);
     // single cleanup
