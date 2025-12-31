@@ -160,13 +160,11 @@ export const Header: React.FC = () => {
                 userInfo={{ firstName, lastName, profileImage }}
                 toolTipValue="Open menu"
                 style={{ width: "34px", height: "34px" }}
-                action={(e) => {
-                  e.stopPropagation();
-                  e.preventDefault();
+                action={(e) =>
                   isDesktop
                     ? menuRef.current?.openMenu(e.currentTarget)
-                    : openMobileUserNav();
-                }}
+                    : openMobileUserNav()
+                }
               />
             </>
           )}

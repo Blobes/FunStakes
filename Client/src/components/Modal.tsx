@@ -67,7 +67,6 @@ export const Modal = forwardRef<ModalRef, ModalProps>(
     useImperativeHandle(ref, () => ({
       openModal: () => {
         setShouldRemove(false);
-
         setOpen(true), 50;
       },
       closeModal: () => {
