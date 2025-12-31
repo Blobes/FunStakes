@@ -59,7 +59,6 @@ export const Header: React.FC = () => {
   };
 
   const openMobileWebNav = () =>
-    !isDesktop &&
     openModal({
       content: (
         <WebNav
@@ -77,11 +76,10 @@ export const Header: React.FC = () => {
     });
 
   const openMobileUserNav = () =>
-    !isDesktop &&
     openModal({
       content: <MobileUserNav />,
       source: "navbar",
-      entryDir: "RIGHT",
+      // entryDir: "RIGHT",
       onClose: () => closeModal(),
       style: {
         content: { otherStyles: { height: "100%" } },

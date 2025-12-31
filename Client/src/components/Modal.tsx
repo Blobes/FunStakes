@@ -136,7 +136,7 @@ export const Modal = forwardRef<ModalRef, ModalProps>(
               maxWidth: maxWidth.md,
               padding: theme.boxSpacing(16, 16),
             },
-            gap: theme.gap(0),
+            gap: theme.gap(8),
             backgroundColor: theme.palette.gray[0],
             borderRadius: theme.radius[3],
             border: `1px solid ${theme.palette.gray.trans[2]}`,
