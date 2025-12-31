@@ -142,9 +142,6 @@ export const Header: React.FC = () => {
           {/* {isLoggedIn && isDesktop && <DesktopUserNav menuRef={menuRef} />} */}
           {isLoggedIn && (
             <>
-              {menuRef.current && isDesktop && (
-                <DesktopUserNav menuRef={menuRef} />
-              )}
               <AppButton
                 style={{
                   width: "34px",
@@ -157,6 +154,7 @@ export const Header: React.FC = () => {
                 }}>
                 <Add sx={{ width: "100%", height: "100%" }} />
               </AppButton>
+              {isDesktop && <DesktopUserNav menuRef={menuRef} />}
               <UserAvatar
                 userInfo={{ firstName, lastName, profileImage }}
                 toolTipValue="Open menu"
