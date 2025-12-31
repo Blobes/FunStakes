@@ -23,8 +23,9 @@ export const CreatePost = () => {
         margin: theme.boxSpacing(8, 8, 0, 8),
         flexDirection: "column",
         padding: theme.boxSpacing(6),
-        gap: theme.gap(2),
+        gap: theme.gap(6),
       }}>
+      {/* Create field */}
       <Stack
         sx={{
           flexDirection: "row",
@@ -45,6 +46,7 @@ export const CreatePost = () => {
           />
         </FormControl>
       </Stack>
+      {/* Actions */}
       <Stack
         sx={{
           paddingLeft: theme.boxSpacing(3),

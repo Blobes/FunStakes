@@ -26,7 +26,7 @@ export const ThemeSwitcher: React.FC = () => {
         backgroundColor: theme.palette.gray.trans[1],
         alignItems: "center",
         justifyContent: "center",
-        padding: theme.boxSpacing(5),
+        padding: theme.boxSpacing(4.5),
         cursor: "pointer",
         borderRadius: theme.radius.full,
         width: "36px",
