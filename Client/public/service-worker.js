@@ -1,5 +1,3 @@
-import { clientRoutes, defaultPage, serverRoutes } from "../src/helpers/info";
-
 const STATIC_CACHE = "funstakes-static-v1";
 const API_CACHE = "funstakes-api-v1";
 
@@ -29,7 +27,7 @@ self.addEventListener("fetch", (event) => {
   if (request.method !== "GET") return;
 
   /* NEVER CACHE AUTH */
-  if (url.pathname.startsWith(serverRoutes.authRoot)) return;
+  if (url.pathname.startsWith("/api/auth")) return;
 
   /* NEXT STATIC ASSETS */
   if (url.pathname.startsWith("/_next/static")) {
@@ -38,24 +36,21 @@ self.addEventListener("fetch", (event) => {
   }
 
   /* STATIC WEB PAGES */
-  if (
-    url.pathname.startsWith(defaultPage.path) ||
-    url.pathname.startsWith(clientRoutes.webRoot)
-  ) {
+  if (url.pathname.startsWith("/") || url.pathname.startsWith("/web")) {
     event.respondWith(cacheFirst(request, STATIC_CACHE));
     return;
   }
 
   /* TIMELINE PAGE (HTML) */
-  if (url.pathname.startsWith(clientRoutes.timeline)) {
+  if (url.pathname.startsWith("/timeline")) {
     event.respondWith(networkFirst(request, STATIC_CACHE));
     return;
   }
 
   /* API DATA */
   if (
-    url.pathname.startsWith(serverRoutes.postsRoot) ||
-    url.pathname.startsWith(serverRoutes.usersRoot)
+    url.pathname.startsWith("/api/posts") ||
+    url.pathname.startsWith("/api/users")
   ) {
     event.respondWith(networkFirst(request, API_CACHE));
     return;
