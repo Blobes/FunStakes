@@ -23,7 +23,7 @@ export const CreatePost = () => {
         margin: theme.boxSpacing(8, 8, 0, 8),
         flexDirection: "column",
         padding: theme.boxSpacing(6),
-        gap: theme.gap(8),
+        gap: theme.gap(10),
       }}>
       {/* Create field */}
       <Stack
