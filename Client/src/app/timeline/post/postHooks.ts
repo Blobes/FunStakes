@@ -1,7 +1,7 @@
 "use client";
 
 import { fetcher } from "@/helpers/fetcher";
-import { Post, SingleResponse, ListResponse } from "@/types";
+import { Post, SingleResponse, ListResponse, IUser } from "@/types";
 import { useCallback } from "react";
 import {
   setPendingLike,
@@ -29,6 +29,18 @@ export const usePost = () => {
       };
     }
   };
+
+  // Fetch Author
+  const fetchAuthor = useCallback(async (authorId: string) => {
+    try {
+      const res = await fetcher<SingleResponse<IUser>>(
+        serverRoutes.user(authorId)
+      );
+      return res.payload;
+    } catch {
+      return null;
+    }
+  }, []);
 
   const handlePostLike = useCallback(
     async (postId: string): Promise<Post | null> => {
@@ -59,5 +71,6 @@ export const usePost = () => {
     setPendingLike,
     clearPendingLike,
     getAllPost,
+    fetchAuthor,
   };
 };

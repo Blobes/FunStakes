@@ -32,8 +32,13 @@ interface PostProps {
 export const PostCard = ({ post, style = {} }: PostProps) => {
   const theme = useTheme();
   const { authUser, loginStatus, setModalContent } = useAppContext();
-  const { handlePostLike, getPendingLike, setPendingLike, clearPendingLike } =
-    usePost();
+  const {
+    handlePostLike,
+    getPendingLike,
+    setPendingLike,
+    clearPendingLike,
+    fetchAuthor,
+  } = usePost();
   const [isLiking, setLiking] = useState(false);
   const [latestPost, setLatestPost] = useState<Post>(post);
   const [author, setAuthor] = useState<IUser | null>(null);
@@ -44,19 +49,16 @@ export const PostCard = ({ post, style = {} }: PostProps) => {
   const alreadyLiked = latestPost.likes.includes(authUser?._id ?? "");
 
   // Fetch Author
-  const fetchAuthor = useCallback(async () => {
+  const handleAuthor = useCallback(async () => {
     if (!authorId) return;
-    try {
-      const res = await fetcher<SingleResponse<IUser>>(`/users/${authorId}`);
-      setAuthor(res.payload);
-    } catch {
-      setMessage("Failed to load author");
-    }
+    const res = await fetchAuthor(authorId);
+    if (res) setAuthor(res);
+    else setMessage("Failed to load author");
   }, [authorId]);
 
   // Reconcile pending likes + author
   useEffect(() => {
-    fetchAuthor();
+    handleAuthor();
 
     const pending = getPendingLike(post._id);
     if (pending !== null) {
@@ -69,7 +71,7 @@ export const PostCard = ({ post, style = {} }: PostProps) => {
           : prev;
       });
     }
-  }, [authUser, post._id, getPendingLike, fetchAuthor, userId]);
+  }, [authUser, post._id, getPendingLike, handleAuthor, userId]);
 
   // Like Handler
   const handleLike = async () => {

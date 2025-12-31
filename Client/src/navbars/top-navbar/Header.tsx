@@ -158,13 +158,15 @@ export const Header: React.FC = () => {
               {isDesktop && <DesktopUserNav menuRef={menuRef} />}
               <UserAvatar
                 userInfo={{ firstName, lastName, profileImage }}
-                toolTipValue="Open menu"
+                toolTipValue={isWeb ? "Back to timeline" : "Open menu"}
                 style={{ width: "34px", height: "34px" }}
-                action={(e) =>
-                  isDesktop
-                    ? menuRef.current?.openMenu(e.currentTarget)
-                    : openMobileUserNav()
-                }
+                action={(e) => {
+                  if (isWeb) router.push(clientRoutes.timeline);
+                  else
+                    isDesktop
+                      ? menuRef.current?.openMenu(e.currentTarget)
+                      : openMobileUserNav();
+                }}
               />
             </>
           )}
