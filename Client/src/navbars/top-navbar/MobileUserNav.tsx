@@ -99,7 +99,6 @@ export const MobileUserNav = ({}) => {
     <Stack
       sx={{
         padding: theme.boxSpacing(6),
-        display: { xs: "flex", md: "none" },
       }}>
       <UserInfo />
       <Divider />

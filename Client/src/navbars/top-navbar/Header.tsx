@@ -59,11 +59,12 @@ export const Header: React.FC = () => {
   };
 
   const openMobileWebNav = () =>
+    !isDesktop &&
     openModal({
       content: (
         <WebNav
           style={{
-            display: { xs: "flex", md: "none" },
+            // display: { xs: "flex", md: "none" },
             gap: theme.gap(4),
           }}
         />
@@ -77,6 +78,7 @@ export const Header: React.FC = () => {
     });
 
   const openMobileUserNav = () =>
+    !isDesktop &&
     openModal({
       content: <MobileUserNav />,
       source: "navbar",
