@@ -85,7 +85,6 @@ export const Header: React.FC = () => {
         content: { otherStyles: { height: "100%" } },
       },
     });
-  0;
 
   /* ---------------------------------- render ---------------------------------- */
   return (

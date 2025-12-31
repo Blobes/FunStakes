@@ -86,7 +86,7 @@ export const Modal = forwardRef<ModalRef, ModalProps>(
       ) {
         setOpen(false);
         setTimeout(() => setShouldRemove(true), 200);
-        onClose?.();
+        if (onClose) onClose();
       }
     };
 
