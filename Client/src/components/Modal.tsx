@@ -169,9 +169,9 @@ export const Modal = forwardRef<ModalRef, ModalProps>(
                     aria-haspopup="true"
                     ref={closeRef}
                     sx={{
-                      transform: !header
-                        ? "translateX(25px) translateY(-25px)"
-                        : "unset",
+                      position: !header ? "absolute" : "unset",
+                      top: "-20px",
+                      right: "20px",
                     }}
                     onClick={handleClose}>
                     <Close
