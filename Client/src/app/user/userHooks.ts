@@ -1,6 +1,7 @@
 "use client";
 
 import { fetcher } from "@/helpers/fetcher";
+import { serverRoutes } from "@/helpers/info";
 import { useSharedHooks } from "@/hooks";
 import { IUser, ListResponse, SingleResponse } from "@/types";
 
@@ -14,9 +15,12 @@ export const useUser = () => {
     message: string;
   }> => {
     try {
-      const res = await fetcher<SingleResponse<IUser>>(`/users/${userId}`, {
-        method: "GET",
-      });
+      const res = await fetcher<SingleResponse<IUser>>(
+        serverRoutes.user(userId),
+        {
+          method: "GET",
+        }
+      );
       return { payload: res.payload ?? null, message: res.message };
     } catch (error: any) {
       return {
@@ -33,8 +37,10 @@ export const useUser = () => {
   const getFollowers = async (userId: string): Promise<Followers> => {
     try {
       const res = await fetcher<ListResponse<any>>(
-        `/users/${userId}/followers`,
-        { method: "GET" }
+        serverRoutes.followers(userId),
+        {
+          method: "GET",
+        }
       );
 
       return { payload: res.payload ?? null, message: res.message };
@@ -52,7 +58,7 @@ export const useUser = () => {
   }
   const handleFollow = async (userId: string): Promise<FollowResponse> => {
     try {
-      const res = await fetcher<FollowResponse>(`/users/${userId}/follow`, {
+      const res = await fetcher<FollowResponse>(serverRoutes.follow(userId), {
         method: "PUT",
       });
       setSBMessage({

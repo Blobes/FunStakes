@@ -1,6 +1,7 @@
 "use client";
 
 import { IUser } from "../types";
+import { serverRoutes } from "./info";
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 const DEFAULT_TIMEOUT = 5000; // Default timeout in milliseconds
@@ -59,7 +60,7 @@ interface TokenCheckResponse {
 export const fetchUserWithTokenCheck =
   async (): Promise<TokenCheckResponse> => {
     try {
-      const res = await fetcher<{ user: IUser }>("/auth/verify", {
+      const res = await fetcher<{ user: IUser }>(serverRoutes.verifyAuthToken, {
         method: "GET",
       });
       return { payload: res.user };
@@ -76,7 +77,7 @@ export const fetchUserWithTokenCheck =
 
 const refreshAccessToken = async () => {
   try {
-    const res = await fetcher("/auth/refresh", {
+    const res = await fetcher(serverRoutes.refreshToken, {
       method: "POST",
     });
     return true;

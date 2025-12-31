@@ -51,6 +51,11 @@ export const AppWrapper = ({ children }: { children: React.ReactNode }) => {
   useEffect(() => {
     setMounted(true);
 
+    if (process.env.NODE_ENV === "production" && "serviceWorker" in navigator) {
+      navigator.serviceWorker.register("/service-worker.js");
+      console.log("service running");
+    }
+
     verifyAuth({
       setAuthUser,
       setLoginStatus,

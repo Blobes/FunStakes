@@ -26,7 +26,7 @@ import { ThemeSwitcher } from "../../components/ThemeSwitcher";
 import { AppButton } from "../../components/Buttons";
 import { MenuRef } from "@/components/Menus";
 
-import { defaultPage, flaggedRoutes, routes } from "@/helpers/info";
+import { defaultPage, flaggedRoutes, clientRoutes } from "@/helpers/info";
 
 export const Header: React.FC = () => {
   const { loginStatus, authUser, modalContent } = useAppContext();
@@ -170,11 +170,11 @@ export const Header: React.FC = () => {
           )}
           {!isLoggedIn && (
             <AppButton
-              href={routes.login}
+              href={clientRoutes.login}
               style={{ fontSize: "14px" }}
               onClick={(e) => {
                 e.preventDefault();
-                router.push(routes.login);
+                router.push(clientRoutes.login);
               }}>
               Login
             </AppButton>
