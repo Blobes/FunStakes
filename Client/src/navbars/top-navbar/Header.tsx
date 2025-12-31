@@ -138,17 +138,17 @@ export const Header: React.FC = () => {
               }}
             />
           )}
-
           <ThemeSwitcher />
-
-          {isLoggedIn && isDesktop && <DesktopUserNav menuRef={menuRef} />}
-
+          {/* {isLoggedIn && isDesktop && <DesktopUserNav menuRef={menuRef} />} */}
           {isLoggedIn && (
             <>
+              {menuRef.current && isDesktop && (
+                <DesktopUserNav menuRef={menuRef} />
+              )}
               <AppButton
                 style={{
-                  width: "40px",
-                  height: "40px",
+                  width: "34px",
+                  height: "34px",
                   borderRadius: theme.radius.full,
                   padding: theme.boxSpacing(4),
                 }}
@@ -169,7 +169,6 @@ export const Header: React.FC = () => {
               />
             </>
           )}
-
           {!isLoggedIn && (
             <AppButton
               href={routes.login}
