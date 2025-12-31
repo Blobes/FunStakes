@@ -79,7 +79,7 @@ export const Header: React.FC = () => {
     openModal({
       content: <MobileUserNav />,
       source: "navbar",
-      // entryDir: "RIGHT",
+      entryDir: "RIGHT",
       onClose: () => closeModal(),
       style: {
         content: { otherStyles: { height: "100%" } },
@@ -160,11 +160,13 @@ export const Header: React.FC = () => {
                 userInfo={{ firstName, lastName, profileImage }}
                 toolTipValue="Open menu"
                 style={{ width: "34px", height: "34px" }}
-                action={(e) =>
+                action={(e) => {
+                  e.stopPropagation();
+                  e.preventDefault();
                   isDesktop
                     ? menuRef.current?.openMenu(e.currentTarget)
-                    : openMobileUserNav()
-                }
+                    : openMobileUserNav();
+                }}
               />
             </>
           )}
