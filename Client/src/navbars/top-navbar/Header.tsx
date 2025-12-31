@@ -64,7 +64,6 @@ export const Header: React.FC = () => {
       content: (
         <WebNav
           style={{
-            // display: { xs: "flex", md: "none" },
             gap: theme.gap(4),
           }}
         />

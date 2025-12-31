@@ -170,8 +170,8 @@ export const Modal = forwardRef<ModalRef, ModalProps>(
                     ref={closeRef}
                     sx={{
                       position: !header ? "absolute" : "unset",
-                      top: "-24px",
-                      right: "-24px",
+                      top: { xs: "-12px", md: "-24px" },
+                      right: { xs: "-12px", md: "-24px" },
                     }}
                     onClick={handleClose}>
                     <Close
