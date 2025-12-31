@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { Typography, Link } from "@mui/material";
+import { Typography, Link, typographyClasses } from "@mui/material";
 import { useTheme, styled } from "@mui/material/styles";
 import { NavItem, GenericObject, SavedPage } from "@/types";
 import { matchPaths } from "@/helpers/others";
@@ -19,6 +19,11 @@ const NavItemWrapper = styled(Link)(({ theme }) =>
     cursor: "pointer",
     borderRadius: theme.radius[2],
     transition: theme.transitions.create("background"),
+
+    [`& .${typographyClasses.root}`]: {
+      fontSize: "15px",
+      fontWeight: "600",
+    },
     "&:hover, &:focus": {
       backgroundColor: theme.palette.gray.trans[1],
       outline: "none",
@@ -45,7 +50,7 @@ export const RenderList: React.FC<RenderListProps> = ({
   const pathname = usePathname();
 
   return (
-    <React.Fragment>
+    <>
       {list.map((item, index) => {
         if (!item.title && item.element) {
           // Render the "element" alone if there's no title (Divider, custom element, etc.)
@@ -85,6 +90,6 @@ export const RenderList: React.FC<RenderListProps> = ({
           </NavItemWrapper>
         );
       })}
-    </React.Fragment>
+    </>
   );
 };
