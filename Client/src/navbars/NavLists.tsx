@@ -1,6 +1,6 @@
 "use client";
 import { useAuth } from "@/app/auth/login/authHooks";
-import { defaultPage, routes } from "@/helpers/info";
+import { defaultPage, clientRoutes } from "@/helpers/info";
 import { NavItem } from "@/types";
 import {
   Home,
@@ -19,22 +19,22 @@ export const useNavLists = () => {
     {
       title: "About",
       element: <Home />,
-      url: routes.about,
+      url: clientRoutes.about,
     },
     {
       title: "Pricing",
       element: <Notifications />,
-      url: routes.pricing,
+      url: clientRoutes.pricing,
     },
     {
       title: "Blogs",
       element: <Notifications />,
-      url: routes.blogs,
+      url: clientRoutes.blogs,
     },
     {
       title: "Support",
       element: <Notifications />,
-      url: routes.support,
+      url: clientRoutes.support,
     },
   ];
 
@@ -50,12 +50,12 @@ export const useNavLists = () => {
     {
       title: "Profile",
       element: <AccountCircle />,
-      url: routes.profile,
+      url: clientRoutes.profile,
     },
     {
       title: "Bookmarks",
       element: <Mail />,
-      url: routes.bookmarks,
+      url: clientRoutes.bookmarks,
     },
 
     {
@@ -64,7 +64,7 @@ export const useNavLists = () => {
     {
       title: "Premium",
       element: <Mail />,
-      url: routes.pricing,
+      url: clientRoutes.pricing,
     },
     {
       title: "Logout",
@@ -78,22 +78,22 @@ export const useNavLists = () => {
     {
       title: "Timeline",
       element: <AccountCircle />,
-      url: routes.timeline,
+      url: clientRoutes.timeline,
     },
     {
       title: "Stakes",
       element: <AccountCircle />,
-      url: routes.stakes,
+      url: clientRoutes.stakes,
     },
     {
       title: "Explore",
       element: <Notifications />,
-      url: routes.explore,
+      url: clientRoutes.explore,
     },
     {
       title: "Inbox",
       element: <Mail />,
-      url: routes.inbox,
+      url: clientRoutes.inbox,
     },
     {
       element: <Divider />,
@@ -101,7 +101,7 @@ export const useNavLists = () => {
     {
       title: "Settings",
       element: <Settings />,
-      url: routes.settings,
+      url: clientRoutes.settings,
     },
   ];
 

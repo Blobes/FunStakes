@@ -10,6 +10,7 @@ import {
   enqueueLike,
   processQueue,
 } from "@/helpers/post";
+import { serverRoutes } from "@/helpers/info";
 
 export const usePost = () => {
   const getAllPost = async (): Promise<{
@@ -17,7 +18,7 @@ export const usePost = () => {
     message: string;
   }> => {
     try {
-      const res = await fetcher<ListResponse<Post>>(`/posts`, {
+      const res = await fetcher<ListResponse<Post>>(serverRoutes.postsRoot, {
         method: "GET",
       });
       return { payload: res.payload ?? null, message: res.message };
@@ -33,7 +34,7 @@ export const usePost = () => {
     async (postId: string): Promise<Post | null> => {
       try {
         const res = await fetcher<SingleResponse<Post>>(
-          `/posts/${postId}/like`,
+          serverRoutes.likePost(postId),
           {
             method: "PUT",
           }

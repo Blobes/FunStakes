@@ -1,13 +1,7 @@
 "use client";
 import React, { useRef } from "react";
-import {
-  Stack,
-  svgIconClasses,
-  typographyClasses,
-  useMediaQuery,
-} from "@mui/material";
+import { Stack, svgIconClasses, typographyClasses } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
-import { useAppContext } from "@/app/AppContext";
 import { RenderList } from "../RenderNavLists";
 import { MenuRef } from "@/components/Menus";
 import { useNavLists } from "../NavLists";

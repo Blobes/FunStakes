@@ -96,7 +96,10 @@ export const MobileUserNav = ({}) => {
   const menuRef = useRef<MenuRef>(null);
 
   return (
-    <Stack sx={{ padding: theme.boxSpacing(6) }}>
+    <Stack
+      sx={{
+        padding: theme.boxSpacing(6),
+      }}>
       <UserInfo />
       <Divider />
       <RenderList

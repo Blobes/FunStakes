@@ -1,17 +1,24 @@
 "use client";
+
 // default page
 export const defaultPage = {
   title: "home",
   path: "/",
 };
 
-export const routes = {
-  about: "/about",
-  pricing: "/pricing",
-  blogs: "/blogs",
-  support: "/support",
+export const clientRoutes = {
+  // Web
+  webRoot: "/web",
+  about: "/web/about",
+  pricing: "/web/pricing",
+  blogs: "/web/blogs",
+  support: "/web/support",
+
+  // Auth
   login: "/auth/login",
   signup: "/auth/signup",
+
+  // App
   profile: "/profile",
   bookmarks: "/bookmarks",
   timeline: "/timeline",
@@ -23,13 +30,34 @@ export const routes = {
 };
 
 export const flaggedRoutes = {
-  auth: [routes.login, routes.signup],
+  auth: [clientRoutes.login, clientRoutes.signup],
   web: [
     defaultPage.path,
-    routes.about,
-    routes.pricing,
-    routes.blogs,
-    routes.support,
+    clientRoutes.about,
+    clientRoutes.pricing,
+    clientRoutes.blogs,
+    clientRoutes.support,
   ],
-  app: [routes.timeline, routes.post],
+  app: [clientRoutes.timeline, clientRoutes.post],
+};
+
+export const serverRoutes = {
+  // Auth
+  authRoot: "/api/auth",
+  login: "/api/auth/login",
+  logout: "/api/auth/logout",
+  signup: "/api/auth/signup",
+  checkEmail: "/api/auth/check-email",
+  verifyAuthToken: "/api/auth/verify",
+  refreshToken: "/api/auth/refresh",
+
+  // Posts
+  postsRoot: "/api/posts",
+  likePost: (id: string) => `/api/posts/${id}/like`,
+
+  // Users
+  usersRoot: "/api/users",
+  user: (id: string) => `/api/users/${id}`,
+  followers: (id: string) => `/api/users/${id}/followers`,
+  follow: (id: string) => `/api/users/${id}/follow`,
 };

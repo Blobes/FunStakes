@@ -18,7 +18,12 @@ import {
   getLockRemaining,
 } from "@/helpers/auth";
 import { useRef } from "react";
-import { defaultPage, flaggedRoutes, routes } from "@/helpers/info";
+import {
+  defaultPage,
+  flaggedRoutes,
+  clientRoutes,
+  serverRoutes,
+} from "@/helpers/info";
 
 interface LoginCredentials {
   email: string;
@@ -53,7 +58,7 @@ export const useAuth = () => {
     email: string
   ): Promise<CheckEmailResponse | null> => {
     try {
-      const res = await fetcher<CheckEmailResponse>("/auth/check-email", {
+      const res = await fetcher<CheckEmailResponse>(serverRoutes.checkEmail, {
         method: "POST",
         body: JSON.stringify({ email }),
       });
@@ -110,7 +115,7 @@ export const useAuth = () => {
 
     try {
       // Login request
-      const res = await fetcher<LoginResponse>("/auth/login", {
+      const res = await fetcher<LoginResponse>(serverRoutes.login, {
         method: "POST",
         body: JSON.stringify(credentials),
       });
@@ -125,8 +130,8 @@ export const useAuth = () => {
       const isExcludedRoute = flaggedRoutes.auth.includes(currentPath);
 
       const fallbackPage = {
-        title: extractPageTitle(routes.timeline),
-        path: routes.timeline,
+        title: extractPageTitle(clientRoutes.timeline),
+        path: clientRoutes.timeline,
       };
       if (isExcludedRoute) {
         setLastPage(fallbackPage);
@@ -182,7 +187,7 @@ export const useAuth = () => {
     let pagePath;
     try {
       // Step 1: Send logout request to backend
-      await fetcher("/auth/logout", { method: "POST" });
+      await fetcher(serverRoutes.logout, { method: "POST" });
 
       // Step 2: Check if stored user exists for drawer experience
       if (snapshot) setCookie("user_snapshot", JSON.stringify(snapshot), 20);

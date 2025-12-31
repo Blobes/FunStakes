@@ -67,15 +67,11 @@ export const Modal = forwardRef<ModalRef, ModalProps>(
     useImperativeHandle(ref, () => ({
       openModal: () => {
         setShouldRemove(false);
-        setTimeout(() => {
-          setOpen(true), 50;
-        });
+        setOpen(true), 50;
       },
       closeModal: () => {
-        setTimeout(() => {
-          setOpen(false);
-          setShouldRemove(true), 200;
-        });
+        setOpen(false);
+        setShouldRemove(true);
       },
     }));
 
@@ -136,7 +132,7 @@ export const Modal = forwardRef<ModalRef, ModalProps>(
               maxWidth: maxWidth.md,
               padding: theme.boxSpacing(16, 16),
             },
-            gap: theme.gap(0),
+            gap: theme.gap(8),
             backgroundColor: theme.palette.gray[0],
             borderRadius: theme.radius[3],
             border: `1px solid ${theme.palette.gray.trans[2]}`,
@@ -169,15 +165,15 @@ export const Modal = forwardRef<ModalRef, ModalProps>(
                     aria-haspopup="true"
                     ref={closeRef}
                     sx={{
-                      transform: !header
-                        ? "translateX(25px) translateY(-25px)"
-                        : "unset",
+                      position: !header ? "absolute" : "unset",
+                      top: { xs: "-12px", md: "-24px" },
+                      right: { xs: "-12px", md: "-24px" },
                     }}
                     onClick={handleClose}>
                     <Close
                       sx={{
-                        width: "22px",
-                        height: "22px",
+                        width: "20px",
+                        height: "20px",
                       }}
                     />
                   </IconButton>

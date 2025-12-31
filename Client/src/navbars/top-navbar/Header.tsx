@@ -10,7 +10,7 @@ import {
   useMediaQuery,
 } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
-import { Menu } from "@mui/icons-material";
+import { Add, Menu } from "@mui/icons-material";
 import { usePathname, useRouter } from "next/navigation";
 
 import { useAppContext } from "@/app/AppContext";
@@ -26,7 +26,7 @@ import { ThemeSwitcher } from "../../components/ThemeSwitcher";
 import { AppButton } from "../../components/Buttons";
 import { MenuRef } from "@/components/Menus";
 
-import { defaultPage, flaggedRoutes, routes } from "@/helpers/info";
+import { defaultPage, flaggedRoutes, clientRoutes } from "@/helpers/info";
 
 export const Header: React.FC = () => {
   const { loginStatus, authUser, modalContent } = useAppContext();
@@ -63,7 +63,6 @@ export const Header: React.FC = () => {
       content: (
         <WebNav
           style={{
-            display: { xs: "flex", md: "none" },
             gap: theme.gap(4),
           }}
         />
@@ -81,7 +80,7 @@ export const Header: React.FC = () => {
       content: <MobileUserNav />,
       source: "navbar",
       entryDir: "RIGHT",
-      onClose: () => closeModal(),
+      onClose: closeModal,
       style: {
         content: { otherStyles: { height: "100%" } },
       },
@@ -138,31 +137,44 @@ export const Header: React.FC = () => {
               }}
             />
           )}
-
           <ThemeSwitcher />
 
-          {isLoggedIn && isDesktop && <DesktopUserNav menuRef={menuRef} />}
-
           {isLoggedIn && (
-            <UserAvatar
-              userInfo={{ firstName, lastName, profileImage }}
-              toolTipValue="Open menu"
-              style={{ width: "34px", height: "34px" }}
-              action={(e) =>
-                isDesktop
-                  ? menuRef.current?.openMenu(e.currentTarget)
-                  : openMobileUserNav()
-              }
-            />
-          )}
+            <>
+              {/* Create button */}
+              <AppButton
+                style={{
+                  width: "34px",
+                  height: "34px",
+                  borderRadius: theme.radius.full,
+                  padding: theme.boxSpacing(4),
+                }}
+                onClick={(e) => {
+                  e.preventDefault();
+                }}>
+                <Add sx={{ width: "100%", height: "100%" }} />
+              </AppButton>
 
+              {isDesktop && <DesktopUserNav menuRef={menuRef} />}
+              <UserAvatar
+                userInfo={{ firstName, lastName, profileImage }}
+                toolTipValue="Open menu"
+                style={{ width: "34px", height: "34px" }}
+                action={(e) =>
+                  isDesktop
+                    ? menuRef.current?.openMenu(e.currentTarget)
+                    : openMobileUserNav()
+                }
+              />
+            </>
+          )}
           {!isLoggedIn && (
             <AppButton
-              href={routes.login}
+              href={clientRoutes.login}
               style={{ fontSize: "14px" }}
               onClick={(e) => {
                 e.preventDefault();
-                router.push(routes.login);
+                router.push(clientRoutes.login);
               }}>
               Login
             </AppButton>
