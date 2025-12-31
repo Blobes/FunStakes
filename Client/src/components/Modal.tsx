@@ -68,14 +68,14 @@ export const Modal = forwardRef<ModalRef, ModalProps>(
       openModal: () => {
         setShouldRemove(false);
         setTimeout(() => {
-          setOpen(true), 50;
-        });
+          setOpen(true);
+        }, 50);
       },
       closeModal: () => {
+        setOpen(false);
         setTimeout(() => {
-          setOpen(false);
-          setShouldRemove(true), 200;
-        });
+          setShouldRemove(true);
+        }, 200);
       },
     }));
 
@@ -86,7 +86,7 @@ export const Modal = forwardRef<ModalRef, ModalProps>(
       ) {
         setOpen(false);
         setTimeout(() => setShouldRemove(true), 200);
-        if (onClose) onClose();
+        onClose?.();
       }
     };
 

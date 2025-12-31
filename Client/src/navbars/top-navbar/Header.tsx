@@ -76,19 +76,17 @@ export const Header: React.FC = () => {
     });
 
   const openMobileUserNav = () =>
-    setTimeout(
-      () =>
-        openModal({
-          content: <MobileUserNav />,
-          source: "navbar",
-          entryDir: "RIGHT",
-          onClose: closeModal,
-          style: {
-            content: { otherStyles: { height: "100%" } },
-          },
-        }),
-      10
-    );
+    openModal({
+      content: <MobileUserNav />,
+      source: "navbar",
+      entryDir: "RIGHT",
+      onClose: closeModal,
+      style: {
+        content: { otherStyles: { height: "100%" } },
+      },
+    });
+  0;
+
   /* ---------------------------------- render ---------------------------------- */
   return (
     <AppBar
