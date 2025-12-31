@@ -176,8 +176,8 @@ export const Modal = forwardRef<ModalRef, ModalProps>(
                     onClick={handleClose}>
                     <Close
                       sx={{
-                        width: "22px",
-                        height: "22px",
+                        width: "20px",
+                        height: "20px",
                       }}
                     />
                   </IconButton>
