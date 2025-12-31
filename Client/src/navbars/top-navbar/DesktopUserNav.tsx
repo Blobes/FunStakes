@@ -24,6 +24,7 @@ export const DesktopUserNav = ({
           xs: "none",
           md: "flex",
         },
+        position: "absolute",
         flexDirection: "row",
         gap: theme.gap(4),
       }}>

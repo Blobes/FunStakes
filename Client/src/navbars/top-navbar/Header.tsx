@@ -139,9 +139,10 @@ export const Header: React.FC = () => {
             />
           )}
           <ThemeSwitcher />
-          {/* {isLoggedIn && isDesktop && <DesktopUserNav menuRef={menuRef} />} */}
+
           {isLoggedIn && (
             <>
+              {/* Create button */}
               <AppButton
                 style={{
                   width: "34px",
@@ -154,6 +155,7 @@ export const Header: React.FC = () => {
                 }}>
                 <Add sx={{ width: "100%", height: "100%" }} />
               </AppButton>
+
               {isDesktop && <DesktopUserNav menuRef={menuRef} />}
               <UserAvatar
                 userInfo={{ firstName, lastName, profileImage }}

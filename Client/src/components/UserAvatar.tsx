@@ -40,7 +40,6 @@ export const UserAvatar = ({
         sx={{
           borderRadius: theme.radius.full,
           padding: theme.boxSpacing(2),
-          // marginLeft: "0px!important",
           ...(marginTop !== undefined ? { marginTop } : {}),
         }}
         aria-label="User profile">
