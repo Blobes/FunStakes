@@ -84,6 +84,7 @@ export const AppWrapper = ({ children }: { children: React.ReactNode }) => {
       return;
     }
 
+    console.log("Hello");
     const showModal = () => {
       openModal({
         content: <AuthStepper />,
@@ -104,13 +105,12 @@ export const AppWrapper = ({ children }: { children: React.ReactNode }) => {
   // 3️⃣ MODAL OPEN / CLOSE
   // ─────────────────────────────
   useEffect(() => {
-    if (!modalContent) return;
-
-    console.log("Hello");
-
-    requestAnimationFrame(() => {
+    if (modalContent) {
+      console.log("Hello");
       modalRef.current?.openModal();
-    });
+    } else {
+      modalRef.current?.closeModal();
+    }
   }, [modalContent, openModal]);
 
   //─────────────────────────────
