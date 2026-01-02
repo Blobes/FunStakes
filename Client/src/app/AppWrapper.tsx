@@ -110,7 +110,7 @@ export const AppWrapper = ({ children }: { children: React.ReactNode }) => {
     } else {
       modalRef.current?.closeModal();
     }
-  }, [modalContent, openModal]);
+  }, [modalContent, openModal, navigator]);
 
   //─────────────────────────────
   // 4️⃣ BROWSER EVENTS
