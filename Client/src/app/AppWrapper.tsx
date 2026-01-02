@@ -72,8 +72,6 @@ export const AppWrapper = ({ children }: { children: React.ReactNode }) => {
   // 2️⃣ AUTH STATE REACTIONS
   // ─────────────────────────────
   useEffect(() => {
-    if (!mounted) return;
-
     let intervalId: NodeJS.Timeout | null = null;
     // AUTHENTICATED or not on app route close modal
     if (loginStatus === "AUTHENTICATED" || !isOnAppRoute) {
@@ -107,12 +105,12 @@ export const AppWrapper = ({ children }: { children: React.ReactNode }) => {
   // 3️⃣ MODAL OPEN / CLOSE
   // ─────────────────────────────
   useEffect(() => {
-    if (modalContent) {
+    if (!modalContent) return;
+
+    requestAnimationFrame(() => {
       modalRef.current?.openModal();
-    } else {
-      modalRef.current?.closeModal();
-    }
-  }, [modalContent, openModal, navigator]);
+    });
+  }, [modalContent, openModal]);
 
   //─────────────────────────────
   // 4️⃣ BROWSER EVENTS

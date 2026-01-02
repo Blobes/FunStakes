@@ -36,7 +36,7 @@ self.addEventListener("fetch", (event) => {
   }
 
   /* STATIC WEB PAGES */
-  if (url.pathname.startsWith("/") || url.pathname.startsWith("/web")) {
+  if (url.pathname === "/" || url.pathname.startsWith("/web")) {
     event.respondWith(cacheFirst(request, STATIC_CACHE));
     return;
   }
