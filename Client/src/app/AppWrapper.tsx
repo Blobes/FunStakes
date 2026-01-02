@@ -46,7 +46,7 @@ export const AppWrapper = ({ children }: { children: React.ReactNode }) => {
   const isOnAppRoute = flaggedRoutes.app.includes(pathname);
 
   // ─────────────────────────────
-  // 1️⃣ MOUNT + INITIAL AUTH CHECK
+  // 1️⃣ MOUNT + INITIAL AUTH CHECK & SERVICE WORKER REGISTRATION
   // ─────────────────────────────
   useEffect(() => {
     setMounted(true);
@@ -91,8 +91,8 @@ export const AppWrapper = ({ children }: { children: React.ReactNode }) => {
     };
     // show once
     showModal();
-    // repeat every 60s
-    intervalId = setInterval(showModal, 60 * 1000);
+    // repeat every 10 mins
+    intervalId = setInterval(showModal, 60 * 1000 * 10);
     // single cleanup
     return () => {
       if (intervalId) clearInterval(intervalId);

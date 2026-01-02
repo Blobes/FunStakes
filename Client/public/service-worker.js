@@ -41,7 +41,7 @@ self.addEventListener("fetch", (event) => {
     return;
   }
 
-  /* TIMELINE PAGE (HTML) */
+  /* TIMELINE PAGES */
   if (url.pathname.startsWith("/timeline")) {
     event.respondWith(networkFirst(request, STATIC_CACHE));
     return;

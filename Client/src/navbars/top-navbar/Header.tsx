@@ -161,7 +161,7 @@ export const Header: React.FC = () => {
                 toolTipValue={isWeb ? "Back to timeline" : "Open menu"}
                 style={{ width: "34px", height: "34px" }}
                 action={(e) => {
-                  if (isWeb) router.push(clientRoutes.timeline);
+                  if (isWeb) router.replace(clientRoutes.timeline);
                   else
                     isDesktop
                       ? menuRef.current?.openMenu(e.currentTarget)
