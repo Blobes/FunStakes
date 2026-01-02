@@ -85,6 +85,7 @@ export const AppWrapper = ({ children }: { children: React.ReactNode }) => {
     }
 
     const showModal = () => {
+      console.log("Hello");
       openModal({
         content: <AuthStepper />,
         onClose: () => closeModal(),
