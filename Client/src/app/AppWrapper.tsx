@@ -83,6 +83,8 @@ export const AppWrapper = ({ children }: { children: React.ReactNode }) => {
       router.replace(defaultPage.path);
       return;
     }
+
+    console.log("Hello");
     const showModal = () => {
       openModal({
         content: <AuthStepper />,
