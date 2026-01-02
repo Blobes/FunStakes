@@ -37,13 +37,13 @@ export const AppWrapper = ({ children }: { children: React.ReactNode }) => {
   const flaggedAppRoutes = flaggedRoutes.app.filter((route) =>
     matchPaths(pathname, route)
   );
-  const isAllowedRoutes = [
-    ...flaggedRoutes.auth,
-    ...flaggedRoutes.web,
-    ...flaggedAppRoutes,
-  ].includes(pathname);
+  const isAllowedRoutes =
+    flaggedRoutes.auth.includes(pathname) ||
+    flaggedRoutes.web.some((r) => matchPaths(pathname, r)) ||
+    flaggedAppRoutes.length > 0;
+
   const isAllowedAuthRoutes = flaggedRoutes.auth.includes(pathname);
-  const isOnAppRoute = flaggedRoutes.app.includes(pathname);
+  const isOnAppRoute = flaggedAppRoutes.length > 0;
 
   // ─────────────────────────────
   // 1️⃣ MOUNT + INITIAL AUTH CHECK & SERVICE WORKER REGISTRATION
@@ -72,6 +72,8 @@ export const AppWrapper = ({ children }: { children: React.ReactNode }) => {
   // 2️⃣ AUTH STATE REACTIONS
   // ─────────────────────────────
   useEffect(() => {
+    if (!mounted) return;
+
     let intervalId: NodeJS.Timeout | null = null;
     // AUTHENTICATED or not on app route close modal
     if (loginStatus === "AUTHENTICATED" || !isOnAppRoute) {
