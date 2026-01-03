@@ -13,6 +13,9 @@ export const clientRoutes = {
   pricing: "/web/pricing",
   blogs: "/web/blogs",
   support: "/web/support",
+  privacy: "/web/privacy",
+  terms: "/web/terms",
+  news: "/web/news",
 
   // Auth
   login: "/auth/login",
@@ -37,6 +40,9 @@ export const flaggedRoutes = {
     clientRoutes.pricing,
     clientRoutes.blogs,
     clientRoutes.support,
+    clientRoutes.privacy,
+    clientRoutes.terms,
+    clientRoutes.news,
   ],
   app: [clientRoutes.timeline, clientRoutes.post],
 };

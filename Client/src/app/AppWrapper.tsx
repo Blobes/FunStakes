@@ -7,7 +7,7 @@ import { BlurEffect } from "../components/BlurEffect";
 import { Header } from "@/navbars/top-navbar/Header";
 import { SnackBars } from "@/components/SnackBars";
 import { useAppContext } from "./AppContext";
-import { Footer } from "@/components/Footer";
+import { Footer } from "@/navbars/Footer";
 import { Modal, ModalRef } from "@/components/Modal";
 import { useSharedHooks } from "@/hooks";
 import { AuthStepper } from "./auth/login/AuthStepper";

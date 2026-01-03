@@ -16,7 +16,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { useAppContext } from "@/app/AppContext";
 import { useSharedHooks } from "../../hooks";
 
-import { WebNav } from "./WebNav";
+import { DesktopWebNav, MobileWebNav } from "./WebNav";
 import { DesktopUserNav } from "./DesktopUserNav";
 import { MobileUserNav } from "./MobileUserNav";
 
@@ -61,7 +61,7 @@ export const Header: React.FC = () => {
   const openMobileWebNav = () =>
     openModal({
       content: (
-        <WebNav
+        <MobileWebNav
           style={{
             gap: theme.gap(4),
           }}
@@ -130,7 +130,7 @@ export const Header: React.FC = () => {
         {/* Right controls */}
         <Stack direction="row" alignItems="center" spacing={theme.gap(8)}>
           {isWeb && isDesktop && (
-            <WebNav
+            <DesktopWebNav
               style={{
                 display: { xs: "none", md: "flex", flexDirection: "row" },
                 gap: theme.gap(4),

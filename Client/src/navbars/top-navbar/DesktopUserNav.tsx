@@ -2,7 +2,7 @@
 import { Stack, svgIconClasses } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import { useAppContext } from "@/app/AppContext";
-import { RenderList } from "../RenderNavLists";
+import { RenderAdvList } from "../RenderNavLists";
 import { MenuPopup, MenuRef } from "@/components/Menus";
 import { useNavLists } from "../NavLists";
 import { useSharedHooks } from "@/hooks";
@@ -31,10 +31,10 @@ export const DesktopUserNav = ({
       <MenuPopup
         ref={menuRef}
         contentElement={
-          <RenderList
+          <RenderAdvList
             list={userNavList}
             setLastPage={setLastPage}
-            closePopup={() => {
+            onClick={() => {
               menuRef.current?.closeMenu();
               setModalContent(null);
             }}

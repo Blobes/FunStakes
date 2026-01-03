@@ -8,7 +8,7 @@ import { AppButton } from "../../components/Buttons";
 import { useAppContext } from "@/app/AppContext";
 import { Strip } from "../../components/StripBar";
 import { summarizeNum } from "@/helpers/others";
-import { RenderList } from "../RenderNavLists";
+import { RenderAdvList } from "../RenderNavLists";
 import { MenuRef } from "@/components/Menus";
 import { useNavLists } from "../NavLists";
 import { useSharedHooks } from "@/hooks";
@@ -102,10 +102,10 @@ export const MobileUserNav = ({}) => {
       }}>
       <UserInfo />
       <Divider />
-      <RenderList
+      <RenderAdvList
         list={userNavList}
         setLastPage={setLastPage}
-        closePopup={() => {
+        onClick={() => {
           menuRef.current?.closeMenu();
           closeModal();
         }}
