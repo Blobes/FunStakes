@@ -17,8 +17,7 @@ import { useAppContext } from "@/app/AppContext";
 import { useSharedHooks } from "../../hooks";
 
 import { DesktopWebNav, MobileWebNav } from "./WebNav";
-import { DesktopUserNav } from "./DesktopUserNav";
-import { MobileUserNav } from "./MobileUserNav";
+import { DesktopUserNav, MobileUserNav } from "./UserNav";
 
 import { SearchBar } from "../../components/Search";
 import { UserAvatar } from "@/components/UserAvatar";
@@ -48,6 +47,8 @@ export const Header: React.FC = () => {
       }
     };
     window.addEventListener("resize", handleResize);
+
+    // openMobileWebNav();
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 

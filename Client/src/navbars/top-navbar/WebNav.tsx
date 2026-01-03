@@ -4,6 +4,7 @@ import {
   Divider,
   Stack,
   svgIconClasses,
+  Typography,
   typographyClasses,
 } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
@@ -50,17 +51,22 @@ export const DesktopWebNav: React.FC<WebNavProps> = ({ style }) => {
 const CTA = () => {
   const theme = useTheme();
   return (
-    <Stack sx={{ gap: theme.gap(0) }}>
+    <Stack sx={{ gap: theme.gap(10) }}>
+      <Typography component="h6" variant="h6">
+        Join Funstakes Today
+      </Typography>
       <img
         src="/assets/images/logo.png"
         alt="logo"
         style={{
           width: "100%",
-          height: "250px",
+          height: "150px",
+          objectFit: "cover",
           borderRadius: `${theme.radius[2]}`,
+          margin: theme.boxSpacing(2, 0),
         }}
       />
-      <Stack sx={{ gap: theme.gap(0), width: "100%" }}>
+      <Stack direction="row" sx={{ gap: theme.gap(6), width: "100%" }}>
         <AppButton
           variant="outlined"
           style={{
