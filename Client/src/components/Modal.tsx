@@ -113,7 +113,7 @@ export const Modal = forwardRef<ModalRef, ModalProps>(
         {/* Drawer Content Container */}
         <Stack
           sx={{
-            height: "100%",
+            maxHeight: "100%",
             width: width?.xs ?? "80%",
             maxWidth: maxWidth?.xs ?? "100%",
             [theme.breakpoints.up("sm")]: {
@@ -131,6 +131,7 @@ export const Modal = forwardRef<ModalRef, ModalProps>(
             animation: isOpen
               ? `${moveIn(entryDir, "-0px", "4px")} 0.2s linear forwards`
               : `${moveOut(entryDir, "4px", "-10px")} 0.2s linear forwards`,
+            ...otherStyles,
           }}>
           {
             /* Modal with Header and Close */
@@ -169,9 +170,11 @@ export const Modal = forwardRef<ModalRef, ModalProps>(
               height: "100%",
               overflowY: "auto",
               padding: theme.boxSpacing(10),
+              [theme.breakpoints.up("md")]: {
+                padding: theme.boxSpacing(14),
+              },
               gap: theme.gap(8),
               ...(scrollBarStyle() as any),
-              ...otherStyles,
             }}>
             {content}
           </Stack>
