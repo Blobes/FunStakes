@@ -143,7 +143,9 @@ export const Modal = forwardRef<ModalRef, ModalProps>(
                   backgroundColor: theme.palette.gray[0],
                   padding: theme.boxSpacing(2),
                   justifyContent: "flex-end",
-                  borderBottom: `1px solid ${theme.palette.gray.trans[1]}`,
+                  borderBottom: header
+                    ? `1px solid ${theme.palette.gray.trans[1]}`
+                    : "none",
                 }}>
                 {header && header}
                 {shouldClose && (
