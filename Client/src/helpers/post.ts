@@ -25,38 +25,23 @@ export const clearPendingLike = (postId: string) => {
 };
 
 // --- Offline queue ---
-export const enqueueLike = (postId: string, liked: boolean) => {
+export const enqueueLike = (postId: string) => {
   const queue = JSON.parse(localStorage.getItem(likeQueueKey) || "[]");
-  queue.push({
-    postId,
-    action: liked ? "LIKE" : "UNLIKE",
-    timestamp: Date.now(),
-  });
+  queue.push({ postId, timestamp: Date.now() });
   localStorage.setItem(likeQueueKey, JSON.stringify(queue));
 };
 
 export const processQueue = async () => {
-  const queue = JSON.parse(localStorage.getItem("likeQueue") || "[]");
+  const queue = JSON.parse(localStorage.getItem(likeQueueKey) || "[]");
   if (!queue.length) return;
 
-  const latestIntent = new Map<string, "LIKE" | "UNLIKE">();
-
-  for (const item of queue) {
-    latestIntent.set(item.postId, item.action);
-  }
-
   const remaining: any[] = [];
-
-  for (const [postId, action] of Array.from(latestIntent.entries())) {
+  for (const { postId } of queue) {
     try {
-      await fetcher(`/posts/${postId}/like`, {
-        method: "PUT",
-        body: JSON.stringify({ action }),
-      });
+      await fetcher(`/posts/${postId}/like`, { method: "PUT" });
     } catch {
-      remaining.push({ postId, action, timestamp: Date.now() });
+      remaining.push({ postId, timestamp: Date.now() });
     }
   }
-
-  localStorage.setItem("likeQueue", JSON.stringify(remaining));
+  localStorage.setItem(likeQueueKey, JSON.stringify(remaining));
 };

@@ -48,20 +48,17 @@ export const usePost = () => {
   }
 
   const handlePostLike = useCallback(
-    async (postId: string, liked: boolean): Promise<LikeResponse | null> => {
+    async (postId: string): Promise<LikeResponse | null> => {
       try {
         const res = await fetcher<SingleResponse<LikeResponse>>(
           serverRoutes.likePost(postId),
           {
             method: "PUT",
-            body: JSON.stringify({
-              action: liked ? "LIKE" : "UNLIKE",
-            }),
           }
         );
         return res.payload;
       } catch {
-        enqueueLike(postId, liked);
+        enqueueLike(postId);
         return null;
       }
     },

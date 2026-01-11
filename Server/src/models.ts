@@ -91,6 +91,7 @@ const postSchema = new mongoose.Schema(
   { timestamps: true }
 );
 postSchema.index({ authorId: 1, createdAt: -1 });
+postSchema.set("strict", "throw");
 export const PostModel = mongoose.model("Posts", postSchema);
 
 // Post Like Schema
