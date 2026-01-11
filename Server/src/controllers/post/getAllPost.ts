@@ -26,6 +26,8 @@ export const getAllPost = async (req: AuthRequest, res: Response) => {
       })
     );
 
+    console.log("Post with likes", postsWithLikes);
+
     res.status(200).json({
       message:
         posts.length > 0 ? "Posts fetched successfully" : "No posts found",
