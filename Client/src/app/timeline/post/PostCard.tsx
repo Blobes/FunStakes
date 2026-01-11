@@ -71,7 +71,6 @@ export const PostCard = ({ post, style = {} }: PostProps) => {
     if (pending !== null) {
       setLatestPost((prev) => {
         if (prev.likedByMe === pending) return prev;
-
         return {
           ...prev,
           likedByMe: pending,
@@ -107,7 +106,7 @@ export const PostCard = ({ post, style = {} }: PostProps) => {
           likedByMe: payload.likedByMe,
           likeCount: payload.likeCount,
         }));
-        clearPendingLike(post._id);
+        // clearPendingLike(post._id);
       }
     } catch (err) {
       clearPendingLike(post._id);
