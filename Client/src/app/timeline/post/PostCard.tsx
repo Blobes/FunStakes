@@ -39,105 +39,74 @@ export const PostCard = ({ post, style = {} }: PostProps) => {
     clearPendingLike,
     fetchAuthor,
   } = usePost();
-  const [isLiking, setLiking] = useState(false);
-  const [latestPost, setLatestPost] = useState<Post>(post);
+
   const [author, setAuthor] = useState<IUser | null>(null);
   const [message, setMessage] = useState<string | null>(null);
+  const [likedByMe, setLikedByMe] = useState(post.likedByMe);
+  const [likeCount, setLikeCount] = useState(post.likeCount);
+  const [isLiking, setIsLiking] = useState(false);
 
-  const {
-    authorId,
-    content,
-    postImage,
-    createdAt,
-    likedByMe,
-    likeCount,
-    status,
-  } = latestPost;
-  const userId = authUser?._id ?? "";
+  const { authorId, content, postImage, createdAt, status } = post;
 
-  // Fetch Author
   const handleAuthor = useCallback(async () => {
     if (!authorId) return;
     const res = await fetchAuthor(authorId);
     if (res) setAuthor(res);
     else setMessage("Failed to load author");
-  }, [authorId]);
+  }, [authorId, fetchAuthor]);
 
-  // Reconcile pending likes + author
+  // Hydrate pending like from localStorage once
   useEffect(() => {
     handleAuthor();
-
     const pending = getPendingLike(post._id);
-    if (pending !== null) {
-      setLatestPost((prev) => {
-        if (prev.likedByMe === pending) return prev;
-        return {
-          ...prev,
-          likedByMe: pending,
-          likeCount: pending
-            ? prev.likeCount + 1
-            : Math.max(0, prev.likeCount - 1),
-        };
-      });
+    if (pending !== null && pending !== likedByMe) {
+      setLikedByMe(pending);
+      setLikeCount((prev) => prev + (pending ? 1 : -1));
     }
   }, [post._id, handleAuthor]);
 
-  // Like Handler
   const handleLike = async () => {
     if (!authUser || loginStatus !== "AUTHENTICATED") {
       setModalContent({ content: <AuthStepper /> });
       return;
     }
-    // Optimistically update
-    setLatestPost((prev) => ({
-      ...prev,
-      likedByMe: !prev.likedByMe,
-      likeCount: prev.likedByMe ? prev.likeCount - 1 : prev.likeCount + 1,
-    }));
-    setPendingLike(post._id, !likedByMe);
-    setLiking(true);
+    if (isLiking) return;
 
-    // Sync like on server
+    const nextLiked = !likedByMe;
+    setLikedByMe(nextLiked);
+    setLikeCount((prev) => prev + (nextLiked ? 1 : -1));
+    setPendingLike(post._id, nextLiked);
+    setIsLiking(true);
+
     try {
       const payload = await handlePostLike(post._id);
       if (payload) {
-        setLatestPost((prev) => ({
-          ...prev,
-          likedByMe: payload.likedByMe,
-          likeCount: payload.likeCount,
-        }));
+        setLikedByMe(payload.likedByMe);
+        setLikeCount(payload.likeCount);
         clearPendingLike(post._id);
       }
-    } catch (err) {
+    } catch {
       clearPendingLike(post._id);
+      // Optional: rollback or leave pending
     } finally {
-      setTimeout(() => setLiking(false), 200);
+      setIsLiking(false);
     }
   };
 
-  // ✅ Early return
   if (!author)
     return (
       <Empty
         tagline={message || "Loading author..."}
-        style={{
-          container: {
-            margin: theme.boxSpacing(8, 8, 0, 8),
-          },
-        }}
+        style={{ container: { margin: theme.boxSpacing(8, 8, 0, 8) } }}
       />
     );
 
-  const authorFullName = author ? `${author.firstName} ${author.lastName}` : "";
+  const authorFullName = `${author.firstName} ${author.lastName}`;
 
   return status === "DELETED" ? (
     <Empty
       tagline={"This post has been deleted by the author."}
-      style={{
-        container: {
-          margin: theme.boxSpacing(8, 8, 0, 8),
-        },
-      }}
+      style={{ container: { margin: theme.boxSpacing(8, 8, 0, 8) } }}
     />
   ) : (
     <Card
@@ -151,7 +120,6 @@ export const PostCard = ({ post, style = {} }: PostProps) => {
         gap: theme.gap(4),
         ...style,
       }}>
-      {/* Post Header */}
       <CardHeader
         sx={{ padding: theme.boxSpacing(0, 8, 0, 4) }}
         avatar={
@@ -182,30 +150,24 @@ export const PostCard = ({ post, style = {} }: PostProps) => {
         }
       />
 
-      {/* Content */}
       <CardContent sx={{ padding: theme.boxSpacing(0, 8) }}>
         <Typography variant="body2">{content}</Typography>
       </CardContent>
 
-      {/* Media */}
-      {postImage && postImage !== "" && (
+      {postImage && (
         <CardMedia component="img" image={postImage} alt="Post image" />
       )}
 
-      {/* Actions */}
       <CardActions sx={{ padding: theme.boxSpacing(0, 4) }} disableSpacing>
         <Stack direction="row" gap={theme.gap(2)} width="100%">
           <IconButton
-            sx={{
-              padding: theme.boxSpacing(4),
-              borderRadius: theme.radius[3],
-            }}
+            sx={{ padding: theme.boxSpacing(4), borderRadius: theme.radius[3] }}
             onClick={handleLike}>
             <Heart
               style={{
                 width: 22,
                 marginRight: theme.boxSpacing(2),
-                ...(isLiking && { animation: `${heartBeat} 0.3s linear` }),
+                ...(isLiking && { animation: `heartBeat 0.3s linear` }),
                 fill: likedByMe ? red[500] : "none",
                 stroke: likedByMe
                   ? red[500]

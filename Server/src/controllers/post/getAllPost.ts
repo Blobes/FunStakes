@@ -6,7 +6,10 @@ export const getAllPost = async (
   res: Response
 ): Promise<void> => {
   try {
-    const posts = await PostModel.find().sort({ createdAt: -1 }).lean();
+    const posts = await PostModel.find()
+      .sort({ createdAt: -1 })
+      .select("_id content likeCount createdAt")
+      .lean();
 
     res.status(200).json({
       message:
