@@ -71,7 +71,7 @@ const CTA = () => {
           variant="outlined"
           style={{
             fontSize: "13px",
-            padding: theme.boxSpacing(1, 4),
+            padding: theme.boxSpacing(2, 4),
             borderColor: theme.palette.gray[100],
             width: "100%",
           }}>
@@ -81,7 +81,7 @@ const CTA = () => {
           variant="contained"
           style={{
             fontSize: "13px",
-            padding: theme.boxSpacing(1, 4),
+            padding: theme.boxSpacing(2, 4),
             borderColor: theme.palette.gray[100],
             width: "100%",
           }}>

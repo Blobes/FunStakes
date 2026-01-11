@@ -14,6 +14,7 @@ import { GenericObject } from "@/types";
 import { delay } from "@/helpers/others";
 import { InlineMsg } from "@/components/InlineMsg";
 import { ProgressIcon } from "@/components/Loading";
+import { Mail } from "lucide-react";
 
 interface CheckProps {
   modalRef?: React.RefObject<ModalRef>;
@@ -120,6 +121,13 @@ export const CheckEmail: React.FC<CheckProps> = ({
           onChange={onEmailChange}
           helperText={msg}
           error={email !== "" && validity === "invalid"}
+          affix={
+            <Mail
+              size={19}
+              style={{ stroke: theme.palette.gray[200] as string }}
+            />
+          }
+          affixPosition="end"
         />
         <AppButton
           variant="contained"

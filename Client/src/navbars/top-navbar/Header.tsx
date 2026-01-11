@@ -48,7 +48,6 @@ export const Header: React.FC = () => {
     };
     window.addEventListener("resize", handleResize);
 
-    //    openMobileWebNav();
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 

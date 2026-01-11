@@ -16,6 +16,7 @@ import { BasicTooltip } from "@/components/Tooltips";
 import { GenericObject } from "@/types";
 import { clientRoutes } from "@/helpers/info";
 import { ProgressIcon } from "@/components/Loading";
+import { Pencil } from "lucide-react";
 
 interface LoginProps {
   email: string;
@@ -125,7 +126,9 @@ export const Login: React.FC<LoginProps> = ({
         </Typography>
       </Stack>
 
-      {inlineMsg && <InlineMsg msg={inlineMsg} type="ERROR" />}
+      {!isAuthLoading && inlineMsg && (
+        <InlineMsg msg={inlineMsg} type="ERROR" />
+      )}
 
       <Stack
         sx={{ gap: theme.gap(8) }}
@@ -139,9 +142,9 @@ export const Login: React.FC<LoginProps> = ({
               textAlign: "left",
               padding: theme.boxSpacing(4, 6),
               borderRadius: theme.radius[2],
-              color: theme.palette.gray[200],
-              border: `1px solid ${theme.palette.gray.trans[1]}`,
-              backgroundColor: theme.palette.gray.trans[1],
+              color: theme.palette.primary.light,
+              border: `1px solid ${theme.fixedColors.mainTrans}`,
+              backgroundColor: theme.fixedColors.mainTrans,
               width: "100%",
             }}>
             {email}
@@ -157,7 +160,7 @@ export const Login: React.FC<LoginProps> = ({
               setStep?.("email");
             }}>
             <BasicTooltip title={"Change email"}>
-              <Edit sx={{ width: "20px" }} />
+              <Pencil style={{ width: "20px" }} />
             </BasicTooltip>
           </AppButton>
         </Stack>

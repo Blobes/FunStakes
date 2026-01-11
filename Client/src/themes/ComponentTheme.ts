@@ -42,7 +42,7 @@ const componentTheme = createTheme({
             "&:disabled": {
               backgroundColor: theme.palette.primary.main,
               color: theme.fixedColors.gray50,
-              opacity: 0.7,
+              opacity: 0.8,
             },
           }),
         outlined: ({ theme }) =>
@@ -247,7 +247,7 @@ const componentTheme = createTheme({
             borderRadius: theme.radius[2],
             maxWidth: "600px",
             minWidth: "150px",
-            padding: theme.boxSpacing(2),
+            padding: theme.boxSpacing(2, 4, 2, 0),
             [`& .Mui-error .${outlinedInputClasses.notchedOutline}`]: {
               borderColor: "var(--TextField-error)",
             },

@@ -3,51 +3,63 @@
 import { useColorScheme, useTheme } from "@mui/material/styles";
 import { Stack } from "@mui/material";
 import React from "react";
-import { DarkMode, DesktopMac, LightMode } from "@mui/icons-material";
 import { BasicTooltip } from "./Tooltips";
+import { MoonStar, Sun } from "lucide-react";
 
 export const ThemeSwitcher: React.FC = () => {
-  const { mode, setMode } = useColorScheme();
+  const { mode, systemMode, setMode } = useColorScheme();
   const theme = useTheme();
-  const availableModes = ["system", "light", "dark"] as const;
+  const effectiveMode = mode === "system" ? systemMode ?? "dark" : mode;
 
-  const updateMode = () => {
-    const currentIndex = availableModes.indexOf(mode || "system");
-    const nextIndex = (currentIndex + 1) % availableModes.length;
-    setMode(availableModes[nextIndex]);
+  const toggleMode = () => {
+    setMode(effectiveMode === "dark" ? "light" : "dark");
   };
 
   return (
     <Stack
-      role="radiogroup"
-      aria-label="Display mode"
-      onClick={updateMode}
+      role="switch"
+      aria-checked={effectiveMode === "dark"}
+      onClick={toggleMode}
       sx={{
+        width: 44,
+        padding: theme.boxSpacing(1),
+        borderRadius: theme.radius.full,
         backgroundColor: theme.palette.gray.trans[1],
+        border: `1px solid ${theme.palette.gray.trans[1]}`,
+        cursor: "pointer",
+        display: "flex",
         alignItems: "center",
         justifyContent: "center",
-        padding: theme.boxSpacing(4.5),
-        cursor: "pointer",
-        borderRadius: theme.radius.full,
-        width: "36px",
-        height: "36px",
         "&:hover": {
           backgroundColor: theme.palette.gray.trans[2],
         },
       }}>
-      {mode === "dark" ? (
-        <BasicTooltip title={"Dark Theme"}>
-          <DarkMode sx={{ width: "100%", height: "100%" }} />
+      {/* THUMB */}
+      <Stack
+        sx={{
+          width: 22,
+          height: 22,
+          borderRadius: theme.radius.full,
+          backgroundColor: theme.palette.gray[0],
+          padding: theme.boxSpacing(2),
+          alignItems: "center",
+          justifyContent: "center",
+          transition: "transform 200ms cubic-bezier(0.4, 0, 0.2, 1)",
+          transform:
+            effectiveMode === "dark" ? "translateX(8px)" : "translateX(-8px)",
+        }}>
+        <BasicTooltip
+          title={effectiveMode === "dark" ? "Dark Theme" : "Light Theme"}>
+          {effectiveMode === "dark" ? (
+            <MoonStar
+              fontSize="small"
+              style={{ width: "100%", height: "100%" }}
+            />
+          ) : (
+            <Sun fontSize="small" style={{ width: "100%", height: "100%" }} />
+          )}
         </BasicTooltip>
-      ) : mode === "light" ? (
-        <BasicTooltip title={"Light Theme"}>
-          <LightMode sx={{ width: "100%", height: "100%" }} />
-        </BasicTooltip>
-      ) : (
-        <BasicTooltip title={"System Theme"}>
-          <DesktopMac sx={{ width: "100%", height: "100%" }} />
-        </BasicTooltip>
-      )}
+      </Stack>
     </Stack>
   );
 };
