@@ -1,20 +1,35 @@
-import { PostModel } from "@/models";
-import { Request, Response } from "express";
+import { PostModel, PostLikeModel } from "@/models";
+import { Response } from "express";
+import { AuthRequest } from "@/middlewares/verifyToken";
 
-export const getAllPost = async (
-  req: Request,
-  res: Response
-): Promise<void> => {
+export const getAllPost = async (req: AuthRequest, res: Response) => {
+  const userId = req.user?.id; // Logged-in user
+
   try {
     const posts = await PostModel.find()
       .sort({ createdAt: -1 })
-      .select("_id content likeCount createdAt")
+      .select("_id authorId content likeCount createdAt postImage status")
       .lean();
+
+    // Map likedByMe for current user
+    const postsWithLikes = await Promise.all(
+      posts.map(async (post) => {
+        let likedByMe = false;
+
+        if (userId) {
+          likedByMe = !!(await PostLikeModel.exists({
+            postId: post._id,
+            userId,
+          }));
+        }
+        return { ...post, likedByMe };
+      })
+    );
 
     res.status(200).json({
       message:
         posts.length > 0 ? "Posts fetched successfully" : "No posts found",
-      payload: posts,
+      payload: postsWithLikes,
       status: "SUCCESS",
     });
   } catch (error: any) {

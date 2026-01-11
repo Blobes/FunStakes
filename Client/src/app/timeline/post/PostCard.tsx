@@ -63,7 +63,7 @@ export const PostCard = ({ post, style = {} }: PostProps) => {
       setLikedByMe(pending);
       setLikeCount((prev) => prev + (pending ? 1 : -1));
     }
-  }, [post._id, handleAuthor]);
+  }, [post._id, getPendingLike, handleAuthor]);
 
   const handleLike = async () => {
     if (!authUser || loginStatus !== "AUTHENTICATED") {
@@ -71,12 +71,18 @@ export const PostCard = ({ post, style = {} }: PostProps) => {
       return;
     }
     if (isLiking) return;
-
-    const nextLiked = !likedByMe;
-    setLikedByMe(nextLiked);
-    setLikeCount((prev) => prev + (nextLiked ? 1 : -1));
-    setPendingLike(post._id, nextLiked);
     setIsLiking(true);
+
+    // const nextLiked = !likedByMe;
+    // setLikedByMe(nextLiked);
+    // setLikeCount((prev) => prev + (nextLiked ? 1 : -1));
+    // setPendingLike(post._id, nextLiked);
+    setLikedByMe((prev) => {
+      const nextLiked = !prev;
+      setLikeCount((prevCount) => prevCount + (nextLiked ? 1 : -1));
+      setPendingLike(post._id, nextLiked);
+      return nextLiked;
+    });
 
     try {
       const payload = await handlePostLike(post._id);
