@@ -80,7 +80,7 @@ export const PostCard = ({ post, style = {} }: PostProps) => {
         };
       });
     }
-  }, [authUser, post._id, getPendingLike, handleAuthor, userId]);
+  }, [post._id, handleAuthor]);
 
   // Like Handler
   const handleLike = async () => {
@@ -106,7 +106,7 @@ export const PostCard = ({ post, style = {} }: PostProps) => {
           likedByMe: payload.likedByMe,
           likeCount: payload.likeCount,
         }));
-        // clearPendingLike(post._id);
+        clearPendingLike(post._id);
       }
     } catch (err) {
       clearPendingLike(post._id);
