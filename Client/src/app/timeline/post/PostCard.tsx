@@ -29,72 +29,89 @@ interface PostProps {
   post: Post;
   style?: GenericObject<string>;
 }
+
 export const PostCard = ({ post, style = {} }: PostProps) => {
   const theme = useTheme();
   const { authUser, loginStatus, setModalContent } = useAppContext();
   const {
     handlePostLike,
+    fetchAuthor,
     getPendingLike,
     setPendingLike,
     clearPendingLike,
-    fetchAuthor,
   } = usePost();
 
+  const [postData, setPostData] = useState<Post>(post); // Full post state
   const [author, setAuthor] = useState<IUser | null>(null);
   const [message, setMessage] = useState<string | null>(null);
-  const [likedByMe, setLikedByMe] = useState(post.likedByMe);
-  const [likeCount, setLikeCount] = useState(post.likeCount);
   const [isLiking, setIsLiking] = useState(false);
 
-  const { authorId, content, postImage, createdAt, status } = post;
+  const { _id, authorId, content, postImage, createdAt, status } = post;
 
+  // Fetch author once
   const handleAuthor = useCallback(async () => {
     if (!authorId) return;
-    const res = await fetchAuthor(authorId);
-    if (res) setAuthor(res);
-    else setMessage("Failed to load author");
+    try {
+      const res = await fetchAuthor(authorId);
+      if (res) setAuthor(res);
+      else setMessage("Failed to load author");
+    } catch {
+      setMessage("Failed to load author");
+    }
   }, [authorId, fetchAuthor]);
 
   // Hydrate pending like from localStorage once
   useEffect(() => {
     handleAuthor();
-    const pending = getPendingLike(post._id);
-    if (pending !== null && pending !== likedByMe) {
-      setLikedByMe(pending);
-      setLikeCount((prev) => prev + (pending ? 1 : -1));
-    }
-  }, [post._id, getPendingLike, handleAuthor]);
 
+    const pending = getPendingLike(_id);
+    if (pending !== null && pending !== postData.likedByMe) {
+      setPostData((prev) => ({
+        ...prev,
+        likedByMe: pending,
+        likeCount: prev.likeCount + (pending ? 1 : -1),
+      }));
+    }
+  }, [_id, handleAuthor]);
+
+  // Handle like/unlike
   const handleLike = async () => {
     if (!authUser || loginStatus !== "AUTHENTICATED") {
       setModalContent({ content: <AuthStepper /> });
       return;
     }
     if (isLiking) return;
+
+    const nextLiked = !postData.likedByMe;
+
+    // Optimistic update
+    setPostData((prev) => ({
+      ...prev,
+      likedByMe: nextLiked,
+      likeCount: prev.likeCount + (nextLiked ? 1 : -1),
+    }));
+    setPendingLike(_id, nextLiked);
     setIsLiking(true);
 
-    // const nextLiked = !likedByMe;
-    // setLikedByMe(nextLiked);
-    // setLikeCount((prev) => prev + (nextLiked ? 1 : -1));
-    // setPendingLike(post._id, nextLiked);
-    setLikedByMe((prev) => {
-      const nextLiked = !prev;
-      setLikeCount((prevCount) => prevCount + (nextLiked ? 1 : -1));
-      setPendingLike(post._id, nextLiked);
-      return nextLiked;
-    });
-
     try {
-      const payload = await handlePostLike(post._id);
+      const payload = await handlePostLike(_id);
       if (payload) {
-        setLikedByMe(payload.likedByMe);
-        setLikeCount(payload.likeCount);
-        console.log("Testing");
-        clearPendingLike(post._id);
+        // Sync with server
+        setPostData((prev) => ({
+          ...prev,
+          likedByMe: payload.likedByMe,
+          likeCount: payload.likeCount,
+        }));
+        clearPendingLike(_id);
       }
     } catch {
-      clearPendingLike(post._id);
-      // Optional: rollback or leave pending
+      // Optional rollback if request failed
+      setPostData((prev) => ({
+        ...prev,
+        likedByMe: !nextLiked,
+        likeCount: prev.likeCount + (nextLiked ? -1 : 1),
+      }));
+      clearPendingLike(_id);
     } finally {
       setIsLiking(false);
     }
@@ -110,12 +127,15 @@ export const PostCard = ({ post, style = {} }: PostProps) => {
 
   const authorFullName = `${author.firstName} ${author.lastName}`;
 
-  return status === "DELETED" ? (
-    <Empty
-      tagline={"This post has been deleted by the author."}
-      style={{ container: { margin: theme.boxSpacing(8, 8, 0, 8) } }}
-    />
-  ) : (
+  if (status === "DELETED")
+    return (
+      <Empty
+        tagline="This post has been deleted by the author."
+        style={{ container: { margin: theme.boxSpacing(8, 8, 0, 8) } }}
+      />
+    );
+
+  return (
     <Card
       sx={{
         backgroundColor: "unset",
@@ -127,6 +147,7 @@ export const PostCard = ({ post, style = {} }: PostProps) => {
         gap: theme.gap(4),
         ...style,
       }}>
+      {/* Post Header */}
       <CardHeader
         sx={{ padding: theme.boxSpacing(0, 8, 0, 4) }}
         avatar={
@@ -152,11 +173,12 @@ export const PostCard = ({ post, style = {} }: PostProps) => {
         }
         subheader={
           <Typography variant="body3" sx={{ color: theme.palette.gray[200] }}>
-            {createdAt.toString()}
+            {new Date(createdAt).toLocaleString()}
           </Typography>
         }
       />
 
+      {/* Content */}
       <CardContent sx={{ padding: theme.boxSpacing(0, 8) }}>
         <Typography variant="body2">{content}</Typography>
       </CardContent>
@@ -165,6 +187,7 @@ export const PostCard = ({ post, style = {} }: PostProps) => {
         <CardMedia component="img" image={postImage} alt="Post image" />
       )}
 
+      {/* Actions */}
       <CardActions sx={{ padding: theme.boxSpacing(0, 4) }} disableSpacing>
         <Stack direction="row" gap={theme.gap(2)} width="100%">
           <IconButton
@@ -174,15 +197,14 @@ export const PostCard = ({ post, style = {} }: PostProps) => {
               style={{
                 width: 22,
                 marginRight: theme.boxSpacing(2),
-                ...(isLiking && { animation: `heartBeat 0.3s linear` }),
-                fill: likedByMe ? red[500] : "none",
-                stroke: likedByMe
-                  ? red[500]
+                fill: postData.likedByMe ? red[500] : "none",
+                stroke: postData.likedByMe
+                  ? (red[500] as string)
                   : (theme.palette.gray[200] as string),
               }}
             />
             <Typography variant="body2">
-              <b>{summarizeNum(likeCount)}</b>
+              <b>{summarizeNum(postData.likeCount)}</b>
             </Typography>
           </IconButton>
 
