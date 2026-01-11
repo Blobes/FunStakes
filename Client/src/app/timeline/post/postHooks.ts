@@ -42,10 +42,15 @@ export const usePost = () => {
     }
   }, []);
 
+  interface LikeResponse {
+    likedByMe: boolean;
+    likeCount: number;
+  }
+
   const handlePostLike = useCallback(
-    async (postId: string): Promise<Post | null> => {
+    async (postId: string): Promise<LikeResponse | null> => {
       try {
-        const res = await fetcher<SingleResponse<Post>>(
+        const res = await fetcher<SingleResponse<LikeResponse>>(
           serverRoutes.likePost(postId),
           {
             method: "PUT",

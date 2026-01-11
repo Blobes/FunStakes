@@ -55,14 +55,8 @@ export const Modal = forwardRef<ModalRef, ModalProps>(
     const closeRef = useRef<HTMLButtonElement>(null);
     const { scrollBarStyle } = useStyles();
     const theme = useTheme();
-    const {
-      overlay,
-      content: {
-        width = { xs: "80%", sm: "80%", md: "40%" },
-        maxWidth = { xs: "100%", sm: "350px", md: "400px" },
-        otherStyles,
-      } = {},
-    } = style || {};
+    const { overlay, content: { width, maxWidth, otherStyles } = {} } =
+      style || {};
 
     useImperativeHandle(ref, () => ({
       openModal: () => {
@@ -120,27 +114,23 @@ export const Modal = forwardRef<ModalRef, ModalProps>(
         <Stack
           sx={{
             maxHeight: "100%",
-            width: width.xs,
-            maxWidth: maxWidth.xs,
-            padding: theme.boxSpacing(10, 10),
+            width: width?.xs ?? "80%",
+            maxWidth: maxWidth?.xs ?? "100%",
             [theme.breakpoints.up("sm")]: {
-              width: width.sm,
-              maxWidth: maxWidth.sm,
+              width: width?.sm ?? "80%",
+              maxWidth: maxWidth?.sm ?? "350px",
             },
             [theme.breakpoints.up("md")]: {
-              width: width.md,
-              maxWidth: maxWidth.md,
-              padding: theme.boxSpacing(16, 16),
+              width: width?.md ?? "40%",
+              maxWidth: maxWidth?.md ?? "400px",
             },
-            gap: theme.gap(8),
+            gap: theme.gap(0),
             backgroundColor: theme.palette.gray[0],
             borderRadius: theme.radius[3],
-            border: `1px solid ${theme.palette.gray.trans[2]}`,
-            overflow: "auto",
+            overflow: "hidden",
             animation: isOpen
               ? `${moveIn(entryDir, "-0px", "4px")} 0.2s linear forwards`
               : `${moveOut(entryDir, "4px", "-10px")} 0.2s linear forwards`,
-            ...(scrollBarStyle() as any),
             ...otherStyles,
           }}>
           {
@@ -150,12 +140,12 @@ export const Modal = forwardRef<ModalRef, ModalProps>(
                 direction={"row"}
                 sx={{
                   position: "sticky",
-                  top: 0,
-                  right: 0,
-                  width: "100%",
                   backgroundColor: theme.palette.gray[0],
                   padding: theme.boxSpacing(2),
                   justifyContent: "flex-end",
+                  borderBottom: header
+                    ? `1px solid ${theme.palette.gray.trans[1]}`
+                    : "none",
                 }}>
                 {header && header}
                 {shouldClose && (
@@ -164,11 +154,6 @@ export const Modal = forwardRef<ModalRef, ModalProps>(
                     aria-controls="close-drawer"
                     aria-haspopup="true"
                     ref={closeRef}
-                    sx={{
-                      position: !header ? "absolute" : "unset",
-                      top: { xs: "-12px", md: "-24px" },
-                      right: { xs: "-12px", md: "-24px" },
-                    }}
                     onClick={handleClose}>
                     <Close
                       sx={{
@@ -181,7 +166,20 @@ export const Modal = forwardRef<ModalRef, ModalProps>(
               </Stack>
             )
           }
-          {content}
+          {/* Modal Body */}
+          <Stack
+            sx={{
+              height: "100%",
+              overflowY: "auto",
+              padding: theme.boxSpacing(10),
+              [theme.breakpoints.up("md")]: {
+                padding: theme.boxSpacing(14),
+              },
+              gap: theme.gap(8),
+              ...(scrollBarStyle() as any),
+            }}>
+            {content}
+          </Stack>
         </Stack>
       </Stack>
     );

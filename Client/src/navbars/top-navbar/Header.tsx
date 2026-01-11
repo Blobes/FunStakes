@@ -16,9 +16,8 @@ import { usePathname, useRouter } from "next/navigation";
 import { useAppContext } from "@/app/AppContext";
 import { useSharedHooks } from "../../hooks";
 
-import { WebNav } from "./WebNav";
-import { DesktopUserNav } from "./DesktopUserNav";
-import { MobileUserNav } from "./MobileUserNav";
+import { DesktopWebNav, MobileWebNav } from "./WebNav";
+import { DesktopUserNav, MobileUserNav } from "./UserNav";
 
 import { SearchBar } from "../../components/Search";
 import { UserAvatar } from "@/components/UserAvatar";
@@ -48,6 +47,7 @@ export const Header: React.FC = () => {
       }
     };
     window.addEventListener("resize", handleResize);
+
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
@@ -61,7 +61,7 @@ export const Header: React.FC = () => {
   const openMobileWebNav = () =>
     openModal({
       content: (
-        <WebNav
+        <MobileWebNav
           style={{
             gap: theme.gap(4),
           }}
@@ -130,7 +130,7 @@ export const Header: React.FC = () => {
         {/* Right controls */}
         <Stack direction="row" alignItems="center" spacing={theme.gap(8)}>
           {isWeb && isDesktop && (
-            <WebNav
+            <DesktopWebNav
               style={{
                 display: { xs: "none", md: "flex", flexDirection: "row" },
                 gap: theme.gap(4),
@@ -161,7 +161,7 @@ export const Header: React.FC = () => {
                 toolTipValue={isWeb ? "Back to timeline" : "Open menu"}
                 style={{ width: "34px", height: "34px" }}
                 action={(e) => {
-                  if (isWeb) router.push(clientRoutes.timeline);
+                  if (isWeb) router.replace(clientRoutes.timeline);
                   else
                     isDesktop
                       ? menuRef.current?.openMenu(e.currentTarget)

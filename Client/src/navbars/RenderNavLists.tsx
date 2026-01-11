@@ -8,7 +8,7 @@ import { matchPaths } from "@/helpers/others";
 import { usePathname, useRouter } from "next/navigation";
 
 // Styled wrapper for individual nav items
-const NavItemWrapper = styled(Link)(({ theme }) =>
+const ItemWrapper = styled(Link)(({ theme }) =>
   theme.unstable_sx({
     display: "flex",
     alignItems: "center",
@@ -35,14 +35,14 @@ const NavItemWrapper = styled(Link)(({ theme }) =>
 export interface RenderListProps {
   list: NavItem[];
   setLastPage: (page: SavedPage) => void;
-  closePopup?: () => void;
+  onClick?: () => void;
   style?: GenericObject<string>;
 }
-// Renders a nav list (either default or logged-in) with accessibility support
-export const RenderList: React.FC<RenderListProps> = ({
+// Renders an advance nav list
+export const RenderAdvList: React.FC<RenderListProps> = ({
   list,
   setLastPage,
-  closePopup,
+  onClick,
   style = {},
 }) => {
   const router = useRouter();
@@ -59,7 +59,7 @@ export const RenderList: React.FC<RenderListProps> = ({
 
         const isCurrentPage = matchPaths(pathname, item.url);
         return (
-          <NavItemWrapper
+          <ItemWrapper
             key={index}
             href={item.url ?? "#"}
             onClick={(e: React.MouseEvent<HTMLAnchorElement>) => {
@@ -72,7 +72,7 @@ export const RenderList: React.FC<RenderListProps> = ({
                   title: item.title.toLowerCase(),
                   path: item.url ?? "#",
                 });
-              if (closePopup) closePopup();
+              if (onClick) onClick();
             }}
             aria-current={isCurrentPage ? "page" : undefined}
             role="link"
@@ -87,7 +87,55 @@ export const RenderList: React.FC<RenderListProps> = ({
             {item.title && (
               <Typography variant="button">{item.title}</Typography>
             )}
-          </NavItemWrapper>
+          </ItemWrapper>
+        );
+      })}
+    </>
+  );
+};
+
+// Renders a simple nav list
+export const RenderSimpleList: React.FC<RenderListProps> = ({
+  list,
+  setLastPage,
+  onClick,
+  style = {},
+}) => {
+  const router = useRouter();
+
+  return (
+    <>
+      {list.map((item, index) => {
+        if (!item.title && item.element) {
+          // Render the "element" alone if there's no title (Divider, custom element, etc.)
+          return <React.Fragment key={index}>{item.element}</React.Fragment>;
+        }
+        return (
+          <ItemWrapper
+            key={index}
+            href={item.url ?? "#"}
+            onClick={(e: React.MouseEvent<HTMLAnchorElement>) => {
+              e.preventDefault();
+              router.push(item.url ?? "#");
+
+              if (item.action) item.action();
+              if (item.title)
+                setLastPage({
+                  title: item.title.toLowerCase(),
+                  path: item.url ?? "#",
+                });
+              if (onClick) onClick();
+            }}
+            role="link"
+            tabIndex={0}
+            sx={{
+              ...style,
+            }}>
+            {item.element}
+            {item.title && (
+              <Typography variant="button">{item.title}</Typography>
+            )}
+          </ItemWrapper>
         );
       })}
     </>

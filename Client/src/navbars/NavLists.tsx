@@ -17,24 +17,38 @@ export const useNavLists = () => {
   // Web navigation list visible to all users on the web
   const webNavList: NavItem[] = [
     {
-      title: "About",
-      element: <Home />,
-      url: clientRoutes.about,
+      title: "Support",
+      element: <Notifications />,
+      url: clientRoutes.support,
     },
     {
       title: "Pricing",
       element: <Notifications />,
       url: clientRoutes.pricing,
     },
+  ];
+
+  // Footer navigation list visible to all users
+  const footerNavList: NavItem[] = [
+    {
+      title: "About",
+      url: clientRoutes.about,
+    },
     {
       title: "Blogs",
-      element: <Notifications />,
       url: clientRoutes.blogs,
     },
     {
-      title: "Support",
-      element: <Notifications />,
-      url: clientRoutes.support,
+      title: "Privacy",
+      url: clientRoutes.privacy,
+    },
+    {
+      title: "Terms",
+      url: clientRoutes.terms,
+    },
+    {
+      title: "News",
+      url: clientRoutes.news,
     },
   ];
 
@@ -105,5 +119,5 @@ export const useNavLists = () => {
     },
   ];
 
-  return { webNavList, userNavList, sidebarNavList };
+  return { webNavList, userNavList, footerNavList, sidebarNavList };
 };

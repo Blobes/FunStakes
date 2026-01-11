@@ -7,7 +7,7 @@ import { BlurEffect } from "../components/BlurEffect";
 import { Header } from "@/navbars/top-navbar/Header";
 import { SnackBars } from "@/components/SnackBars";
 import { useAppContext } from "./AppContext";
-import { Footer } from "@/components/Footer";
+import { Footer } from "@/navbars/Footer";
 import { Modal, ModalRef } from "@/components/Modal";
 import { useSharedHooks } from "@/hooks";
 import { AuthStepper } from "./auth/login/AuthStepper";
@@ -37,16 +37,16 @@ export const AppWrapper = ({ children }: { children: React.ReactNode }) => {
   const flaggedAppRoutes = flaggedRoutes.app.filter((route) =>
     matchPaths(pathname, route)
   );
-  const isAllowedRoutes = [
-    ...flaggedRoutes.auth,
-    ...flaggedRoutes.web,
-    ...flaggedAppRoutes,
-  ].includes(pathname);
+  const isAllowedRoutes =
+    flaggedRoutes.auth.includes(pathname) ||
+    flaggedRoutes.web.some((r) => matchPaths(pathname, r)) ||
+    flaggedAppRoutes.length > 0;
+
   const isAllowedAuthRoutes = flaggedRoutes.auth.includes(pathname);
-  const isOnAppRoute = flaggedRoutes.app.includes(pathname);
+  const isOnAppRoute = flaggedAppRoutes.length > 0;
 
   // ─────────────────────────────
-  // 1️⃣ MOUNT + INITIAL AUTH CHECK
+  // 1️⃣ MOUNT + INITIAL AUTH CHECK & SERVICE WORKER REGISTRATION
   // ─────────────────────────────
   useEffect(() => {
     setMounted(true);
@@ -83,6 +83,7 @@ export const AppWrapper = ({ children }: { children: React.ReactNode }) => {
       router.replace(defaultPage.path);
       return;
     }
+
     const showModal = () => {
       openModal({
         content: <AuthStepper />,
@@ -91,8 +92,8 @@ export const AppWrapper = ({ children }: { children: React.ReactNode }) => {
     };
     // show once
     showModal();
-    // repeat every 60s
-    intervalId = setInterval(showModal, 60 * 1000);
+    // repeat every 10 mins
+    intervalId = setInterval(showModal, 60 * 1000 * 10);
     // single cleanup
     return () => {
       if (intervalId) clearInterval(intervalId);
@@ -103,11 +104,13 @@ export const AppWrapper = ({ children }: { children: React.ReactNode }) => {
   // 3️⃣ MODAL OPEN / CLOSE
   // ─────────────────────────────
   useEffect(() => {
-    if (modalContent) {
-      modalRef.current?.openModal();
-    } else {
+    if (!modalContent) {
       modalRef.current?.closeModal();
+      return;
     }
+    requestAnimationFrame(() => {
+      modalRef.current?.openModal();
+    });
   }, [modalContent, openModal]);
 
   //─────────────────────────────

@@ -13,17 +13,17 @@ import {
 import { useTheme } from "@mui/material/styles";
 import { useAppContext } from "@/app/AppContext";
 import { UserAvatar } from "@/components/UserAvatar";
-import { Favorite, Share, MoreHoriz, Bookmark } from "@mui/icons-material";
-import { GenericObject, IUser, SingleResponse } from "@/types";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { Share, MoreHoriz, Bookmark } from "@mui/icons-material";
+import { GenericObject, IUser } from "@/types";
+import { useCallback, useEffect, useState } from "react";
 import { heartBeat } from "@/helpers/animations";
 import { usePost } from "./postHooks";
 import { Post } from "@/types";
 import { red } from "@mui/material/colors";
-import { fetcher } from "@/helpers/fetcher";
 import { summarizeNum } from "@/helpers/others";
 import { AuthStepper } from "@/app/auth/login/AuthStepper";
 import { Empty } from "@/components/Empty";
+import { Heart } from "lucide-react";
 
 interface PostProps {
   post: Post;
@@ -44,9 +44,16 @@ export const PostCard = ({ post, style = {} }: PostProps) => {
   const [author, setAuthor] = useState<IUser | null>(null);
   const [message, setMessage] = useState<string | null>(null);
 
-  const { authorId, content, postImage, createdAt, likes, status } = latestPost;
+  const {
+    authorId,
+    content,
+    postImage,
+    createdAt,
+    likedByMe,
+    likeCount,
+    status,
+  } = latestPost;
   const userId = authUser?._id ?? "";
-  const alreadyLiked = latestPost.likes.includes(authUser?._id ?? "");
 
   // Fetch Author
   const handleAuthor = useCallback(async () => {
@@ -63,12 +70,15 @@ export const PostCard = ({ post, style = {} }: PostProps) => {
     const pending = getPendingLike(post._id);
     if (pending !== null) {
       setLatestPost((prev) => {
-        const liked = prev.likes.includes(userId);
-        return pending && !liked
-          ? { ...prev, likes: [...prev.likes, userId] }
-          : !pending && liked
-          ? { ...prev, likes: prev.likes.filter((id) => id !== userId) }
-          : prev;
+        if (prev.likedByMe === pending) return prev;
+
+        return {
+          ...prev,
+          likedByMe: pending,
+          likeCount: pending
+            ? prev.likeCount + 1
+            : Math.max(0, prev.likeCount - 1),
+        };
       });
     }
   }, [authUser, post._id, getPendingLike, handleAuthor, userId]);
@@ -79,26 +89,27 @@ export const PostCard = ({ post, style = {} }: PostProps) => {
       setModalContent({ content: <AuthStepper /> });
       return;
     }
-
-    const userId = authUser._id;
     // Optimistically update
     setLatestPost((prev) => ({
       ...prev,
-      likes: !alreadyLiked
-        ? [...prev.likes, userId]
-        : prev.likes.filter((id) => id !== userId),
+      likedByMe: !prev.likedByMe,
+      likeCount: prev.likedByMe ? prev.likeCount - 1 : prev.likeCount + 1,
     }));
-    setPendingLike(post._id, !alreadyLiked);
+    setPendingLike(post._id, !likedByMe);
     setLiking(true);
 
     // Sync like on server
     try {
-      const res = await handlePostLike(post._id);
-      if (res) {
-        setLatestPost(res);
+      const payload = await handlePostLike(post._id);
+      if (payload) {
+        setLatestPost((prev) => ({
+          ...prev,
+          likedByMe: payload.likedByMe,
+          likeCount: payload.likeCount,
+        }));
+        clearPendingLike(post._id);
       }
     } catch (err) {
-      console.error("Failed to sync like:", err);
       clearPendingLike(post._id);
     } finally {
       setTimeout(() => setLiking(false), 200);
@@ -191,16 +202,19 @@ export const PostCard = ({ post, style = {} }: PostProps) => {
               borderRadius: theme.radius[3],
             }}
             onClick={handleLike}>
-            <Favorite
-              sx={{
+            <Heart
+              style={{
                 width: 22,
-                mr: theme.boxSpacing(2),
+                marginRight: theme.boxSpacing(2),
                 ...(isLiking && { animation: `${heartBeat} 0.3s linear` }),
-                fill: alreadyLiked ? red[500] : theme.palette.gray[200],
+                fill: likedByMe ? red[500] : "none",
+                stroke: likedByMe
+                  ? red[500]
+                  : (theme.palette.gray[200] as string),
               }}
             />
             <Typography variant="body2">
-              <b>{summarizeNum(likes.length)}</b>
+              <b>{summarizeNum(likeCount)}</b>
             </Typography>
           </IconButton>
 

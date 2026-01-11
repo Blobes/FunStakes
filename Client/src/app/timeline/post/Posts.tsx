@@ -2,7 +2,7 @@
 
 import { Stack } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
-import { PostCard } from "./Post";
+import { PostCard } from "./PostCard";
 import { ScrollableContainer } from "@/components/Containers";
 import { CreatePost } from "./CreatePost";
 import { useEffect, useState } from "react";

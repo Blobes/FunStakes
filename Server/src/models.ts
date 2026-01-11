@@ -68,21 +68,66 @@ const userSchema = new mongoose.Schema(
   },
   { timestamps: true }
 );
-
+userSchema.index({ email: 1 }, { unique: true });
+userSchema.index({ username: 1 }, { unique: true, sparse: true });
 export const UserModel = mongoose.model("Users", userSchema);
 
 //Post Schema
 const postSchema = new mongoose.Schema(
   {
     authorId: {
-      type: String,
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Users",
       required: true,
     },
     content: String,
     postImage: String,
-    likes: [],
+    likeCount: {
+      type: Number,
+      default: 0,
+    },
     status: String,
   },
   { timestamps: true }
 );
+postSchema.index({ authorId: 1, createdAt: -1 });
+postSchema.set("strict", "throw");
 export const PostModel = mongoose.model("Posts", postSchema);
+
+// Post Like Schema
+const postLikeSchema = new mongoose.Schema(
+  {
+    userId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Users",
+      required: true,
+    },
+    postId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Posts",
+      required: true,
+    },
+  },
+  { timestamps: true }
+);
+postLikeSchema.index({ userId: 1, postId: 1 }, { unique: true });
+export const PostLikeModel = mongoose.model("Post_Likes", postLikeSchema);
+
+// Post Bookmark Schema
+const bookmarkSchema = new mongoose.Schema(
+  {
+    userId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Users",
+      required: true,
+    },
+    postId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Posts",
+      required: true,
+    },
+  },
+  { timestamps: true }
+);
+bookmarkSchema.index({ userId: 1, postId: 1 }, { unique: true });
+export const BookmarkModel = mongoose.model("Bookmarks", bookmarkSchema);

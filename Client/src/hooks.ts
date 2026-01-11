@@ -86,7 +86,7 @@ export const useSharedHooks = () => {
   };
 
   const openModal = (update: ModalContent) => {
-    setModalContent((prev) => (prev?.source === update.source ? prev : update));
+    setModalContent((prev) => (prev === update ? prev : update));
   };
 
   const closeModal = () => {

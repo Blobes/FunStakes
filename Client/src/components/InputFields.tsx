@@ -1,9 +1,9 @@
 import { useTheme } from "@mui/material/styles";
 import { IconButton, InputAdornment, TextField } from "@mui/material";
 import { useState } from "react";
-import { AccountCircle, Visibility, VisibilityOff } from "@mui/icons-material";
+import { Eye, EyeOff, User } from "lucide-react";
 
-interface TextInputProps {
+interface InputProps {
   variant?: "outlined" | "filled";
   id?: string;
   type?: "text" | "number" | "email" | "search" | "password";
@@ -14,6 +14,8 @@ interface TextInputProps {
   required?: boolean;
   disabled?: boolean;
   error?: boolean;
+  affix?: React.ReactNode | string;
+  affixPosition?: "start" | "end";
   onChange?: (
     event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
   ) => void;
@@ -35,58 +37,12 @@ export const TextInput = ({
   required = false,
   disabled = false,
   error = false,
-  onChange,
-  onFocus,
-  onBlur,
-}: TextInputProps) => {
-  return (
-    <TextField
-      variant={variant}
-      id={id}
-      type={type}
-      defaultValue={defaultValue}
-      placeholder={placeholder}
-      label={label}
-      helperText={helperText}
-      required={required}
-      disabled={disabled}
-      error={error}
-      size="small"
-      fullWidth
-      onChange={(e) => {
-        onChange && onChange(e);
-      }}
-      onFocus={(e) => {
-        onFocus && onFocus(e);
-      }}
-      onBlur={(e) => {
-        onBlur && onBlur(e);
-      }}
-    />
-  );
-};
-
-interface AffixedInputProps extends TextInputProps {
-  affix?: React.ReactNode | string;
-  affixPosition?: "start" | "end";
-}
-export const AffixedInput = ({
-  variant = "outlined",
-  id = "",
-  type = "text",
-  defaultValue,
-  placeholder = "Type here...",
-  label = "Input Label",
-  helperText = "",
-  required = false,
-  disabled = false,
-  error = false,
-  affix = <AccountCircle />,
+  affix,
   affixPosition = "start",
   onChange,
   onFocus,
   onBlur,
-}: AffixedInputProps) => {
+}: InputProps) => {
   return (
     <TextField
       variant={variant}
@@ -101,13 +57,15 @@ export const AffixedInput = ({
       error={error}
       size="small"
       fullWidth
-      slotProps={{
-        input: {
-          [affixPosition === "start" ? "startAdornment" : "endAdornment"]: (
-            <InputAdornment position={affixPosition}>{affix}</InputAdornment>
-          ),
+      {...(affix && {
+        slotProps: {
+          input: {
+            [affixPosition === "start" ? "startAdornment" : "endAdornment"]: (
+              <InputAdornment position={affixPosition}>{affix}</InputAdornment>
+            ),
+          },
         },
-      }}
+      })}
       onChange={(e) => {
         onChange && onChange(e);
       }}
@@ -136,7 +94,7 @@ export const PasswordInput = ({
   onBlur,
   onChange,
   onFocus,
-}: AffixedInputProps) => {
+}: InputProps) => {
   const [showPassword, setShowPassword] = useState(false);
   const toggleShowPassword = () => setShowPassword((show) => !show);
   const handleMouseDown = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -170,12 +128,17 @@ export const PasswordInput = ({
                 }
                 onClick={toggleShowPassword}
                 onMouseDown={handleMouseDown}
-                onMouseUp={handleMouseUp}
-                edge="end">
+                onMouseUp={handleMouseUp}>
                 {showPassword ? (
-                  <Visibility sx={{ fill: theme.palette.gray[200] }} />
+                  <Eye
+                    size={22}
+                    style={{ stroke: theme.palette.gray[200] as string }}
+                  />
                 ) : (
-                  <VisibilityOff sx={{ fill: theme.palette.gray[200] }} />
+                  <EyeOff
+                    size={22}
+                    style={{ stroke: theme.palette.gray[200] as string }}
+                  />
                 )}
               </IconButton>
             </InputAdornment>

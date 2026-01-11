@@ -86,7 +86,7 @@ let designSystem = createTheme({
     h2: { fontWeight: 600 },
     h4: { fontWeight: 600 },
     h5: { fontWeight: 600, fontSize: "26px" },
-    h6: { fontSize: "24px" },
+    h6: { fontWeight: 600, fontSize: "24px" },
     subtitle1: {
       fontSize: "20px",
       fontWeight: 600,

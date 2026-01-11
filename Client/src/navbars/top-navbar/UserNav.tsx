@@ -8,10 +8,58 @@ import { AppButton } from "../../components/Buttons";
 import { useAppContext } from "@/app/AppContext";
 import { Strip } from "../../components/StripBar";
 import { summarizeNum } from "@/helpers/others";
-import { RenderList } from "../RenderNavLists";
-import { MenuRef } from "@/components/Menus";
+import { RenderAdvList } from "../RenderNavLists";
+import { MenuRef, MenuPopup } from "@/components/Menus";
 import { useNavLists } from "../NavLists";
 import { useSharedHooks } from "@/hooks";
+
+export const DesktopUserNav = ({
+  menuRef,
+}: {
+  menuRef: React.RefObject<MenuRef>;
+}) => {
+  const theme = useTheme();
+  const { userNavList } = useNavLists();
+  const { setLastPage } = useSharedHooks();
+  const { setModalContent } = useAppContext();
+
+  return (
+    <Stack
+      sx={{
+        display: {
+          xs: "none",
+          md: "flex",
+        },
+        position: "absolute",
+        flexDirection: "row",
+        gap: theme.gap(4),
+      }}>
+      <MenuPopup
+        ref={menuRef}
+        contentElement={
+          <RenderAdvList
+            list={userNavList}
+            setLastPage={setLastPage}
+            onClick={() => {
+              menuRef.current?.closeMenu();
+              setModalContent(null);
+            }}
+            style={{
+              padding: theme.boxSpacing(4, 8),
+              borderRadius: "unset",
+              gap: theme.gap(8),
+              [`& .${svgIconClasses.root}`]: {
+                fill: theme.palette.gray[200],
+                width: "20px",
+                height: "20px",
+              },
+            }}
+          />
+        }
+      />
+    </Stack>
+  );
+};
 
 // Mobile-specific wrapper for the same RenderList
 // User info
@@ -102,10 +150,10 @@ export const MobileUserNav = ({}) => {
       }}>
       <UserInfo />
       <Divider />
-      <RenderList
+      <RenderAdvList
         list={userNavList}
         setLastPage={setLastPage}
-        closePopup={() => {
+        onClick={() => {
           menuRef.current?.closeMenu();
           closeModal();
         }}
