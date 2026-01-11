@@ -48,7 +48,6 @@ export interface Post {
   authorId: string;
   content: string;
   postImage: string | null;
-  // likes?: string[];
   likeCount: number;
   likedByMe: boolean;
   createdAt: number;

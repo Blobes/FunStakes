@@ -83,6 +83,7 @@ export const PostCard = ({ post, style = {} }: PostProps) => {
       if (payload) {
         setLikedByMe(payload.likedByMe);
         setLikeCount(payload.likeCount);
+        console.log("Testing");
         clearPendingLike(post._id);
       }
     } catch {

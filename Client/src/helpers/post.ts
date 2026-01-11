@@ -1,6 +1,7 @@
 "use client";
 
 import { fetcher } from "./fetcher";
+import { serverRoutes } from "./info";
 
 // POST LIKE HANDLING HELPERS
 const pendingLikesKey = "pendingLikes";
@@ -38,7 +39,7 @@ export const processQueue = async () => {
   const remaining: any[] = [];
   for (const { postId } of queue) {
     try {
-      await fetcher(`/posts/${postId}/like`, { method: "PUT" });
+      await fetcher(serverRoutes.likePost(postId), { method: "PUT" });
     } catch {
       remaining.push({ postId, timestamp: Date.now() });
     }
