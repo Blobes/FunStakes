@@ -74,7 +74,7 @@ export const PostCard = ({ post, style = {} }: PostProps) => {
         return !prev.likedByMe
           ? {
               ...prev,
-              likedByMe: prev.likedByMe,
+              likedByMe: !prev.likedByMe,
               likeCount: prev.likeCount + 1,
             }
           : {
@@ -102,7 +102,7 @@ export const PostCard = ({ post, style = {} }: PostProps) => {
       return !prev.likedByMe
         ? {
             ...prev,
-            likedByMe: prev.likedByMe,
+            likedByMe: !prev.likedByMe,
             likeCount: prev.likeCount + 1,
           }
         : {
