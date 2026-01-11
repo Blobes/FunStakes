@@ -46,7 +46,7 @@ export const PostCard = ({ post, style = {} }: PostProps) => {
   const [message, setMessage] = useState<string | null>(null);
   const [isLiking, setIsLiking] = useState(false);
 
-  const { _id, authorId, content, postImage, createdAt, status } = post;
+  const { _id, authorId, content, postImage, createdAt, status } = postData;
 
   // Fetch author once
   const handleAuthor = useCallback(async () => {
