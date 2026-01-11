@@ -119,8 +119,9 @@ export const likePost = async (
 
       await PostModel.updateOne(
         { _id: postId },
-        { $inc: { likeCount: -1 } }
-      ).session(session);
+        { $inc: { likeCount: -1 } },
+        { session }
+      );
 
       liked = false;
     } else {
@@ -137,8 +138,9 @@ export const likePost = async (
 
       await PostModel.updateOne(
         { _id: postId },
-        { $inc: { likeCount: 1 } }
-      ).session(session);
+        { $inc: { likeCount: 1 } },
+        { session }
+      );
 
       liked = true;
     }

@@ -54,7 +54,6 @@ export const PostCard = ({ post, style = {} }: PostProps) => {
     status,
   } = latestPost;
   const userId = authUser?._id ?? "";
-  //const alreadyLiked = likedByMe;
 
   // Fetch Author
   const handleAuthor = useCallback(async () => {
@@ -71,23 +70,16 @@ export const PostCard = ({ post, style = {} }: PostProps) => {
     const pending = getPendingLike(post._id);
     if (pending !== null) {
       setLatestPost((prev) => {
-        return !prev.likedByMe
-          ? {
-              ...prev,
-              likedByMe: !prev.likedByMe,
-              likeCount: prev.likeCount + 1,
-            }
-          : {
-              ...prev,
-              likedByMe: !prev.likedByMe,
-              ikeCount: prev.likeCount - 1,
-            };
+        if (prev.likedByMe === pending) return prev;
+
+        return {
+          ...prev,
+          likedByMe: pending,
+          likeCount: pending
+            ? prev.likeCount + 1
+            : Math.max(0, prev.likeCount - 1),
+        };
       });
-      // setLatestPost((prev) => ({
-      //   ...prev,
-      //   likedByMe: !prev.likedByMe,
-      //   likeCount: prev.likedByMe ? prev.likeCount - 1 : prev.likeCount + 1,
-      // }));
     }
   }, [authUser, post._id, getPendingLike, handleAuthor, userId]);
 
@@ -98,24 +90,11 @@ export const PostCard = ({ post, style = {} }: PostProps) => {
       return;
     }
     // Optimistically update
-    setLatestPost((prev) => {
-      return !prev.likedByMe
-        ? {
-            ...prev,
-            likedByMe: !prev.likedByMe,
-            likeCount: prev.likeCount + 1,
-          }
-        : {
-            ...prev,
-            likedByMe: !prev.likedByMe,
-            ikeCount: prev.likeCount - 1,
-          };
-    });
-    // setLatestPost((prev) => ({
-    //   ...prev,
-    //   likedByMe: !prev.likedByMe,
-    //   likeCount: prev.likedByMe ? prev.likeCount - 1 : prev.likeCount + 1,
-    // }));
+    setLatestPost((prev) => ({
+      ...prev,
+      likedByMe: !prev.likedByMe,
+      likeCount: prev.likedByMe ? prev.likeCount - 1 : prev.likeCount + 1,
+    }));
     setPendingLike(post._id, !likedByMe);
     setLiking(true);
 
@@ -128,14 +107,9 @@ export const PostCard = ({ post, style = {} }: PostProps) => {
           likedByMe: payload.likedByMe,
           likeCount: payload.likeCount,
         }));
+        clearPendingLike(post._id);
       }
     } catch (err) {
-      // rollback
-      setLatestPost((prev) => ({
-        ...prev,
-        likedByMe,
-        likeCount: likedByMe ? prev.likeCount + 1 : prev.likeCount - 1,
-      }));
       clearPendingLike(post._id);
     } finally {
       setTimeout(() => setLiking(false), 200);
