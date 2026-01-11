@@ -68,101 +68,172 @@ import { AuthRequest } from "@/middlewares/verifyToken";
 //   }
 // };
 
+// export const likePost = async (
+//   req: AuthRequest,
+//   res: Response
+// ): Promise<any> => {
+//   const postId = req.params.id;
+//   const userId = req.user?.id;
+
+//   if (!userId) {
+//     return res.status(401).json({
+//       status: "ERROR",
+//       message: "Unauthorized",
+//       payload: null,
+//     });
+//   }
+
+//   if (!mongoose.Types.ObjectId.isValid(postId)) {
+//     return res.status(400).json({
+//       status: "ERROR",
+//       message: "Invalid post ID",
+//       payload: null,
+//     });
+//   }
+
+//   const session = await mongoose.startSession();
+
+//   try {
+//     session.startTransaction();
+
+//     const post = await PostModel.findById(postId).session(session);
+//     if (!post) {
+//       await session.abortTransaction();
+//       return res.status(404).json({
+//         status: "ERROR",
+//         message: "Post not found",
+//         payload: null,
+//       });
+//     }
+
+//     const existingLike = await PostLikeModel.findOne({
+//       postId,
+//       userId,
+//     }).session(session);
+
+//     let liked: boolean;
+
+//     if (existingLike) {
+//       // UNLIKE
+//       await PostLikeModel.deleteOne({ _id: existingLike._id }).session(session);
+
+//       await PostModel.updateOne(
+//         { _id: postId },
+//         { $inc: { likeCount: -1 } },
+//         { session }
+//       );
+
+//       liked = false;
+//     } else {
+//       // LIKE
+//       await PostLikeModel.create(
+//         [
+//           {
+//             postId,
+//             userId,
+//           },
+//         ],
+//         { session }
+//       );
+
+//       await PostModel.updateOne(
+//         { _id: postId },
+//         { $inc: { likeCount: 1 } },
+//         { session }
+//       );
+
+//       liked = true;
+//     }
+
+//     await session.commitTransaction();
+
+//     const updatedPost = await PostModel.findById(postId).select("likeCount");
+
+//     return res.status(200).json({
+//       status: "SUCCESS",
+//       message: liked ? "Post liked" : "Post unliked",
+//       payload: {
+//         likedByMe: liked,
+//         likeCount: updatedPost?.likeCount ?? 0,
+//       },
+//     });
+//   } catch (error: any) {
+//     await session.abortTransaction();
+
+//     return res.status(500).json({
+//       status: "ERROR",
+//       message: error.message || "Server error",
+//       payload: null,
+//     });
+//   } finally {
+//     session.endSession();
+//   }
+// };
+
 export const likePost = async (
   req: AuthRequest,
   res: Response
-): Promise<any> => {
+): Promise<void> => {
+  const { action } = req.body; // "LIKE" | "UNLIKE"
   const postId = req.params.id;
   const userId = req.user?.id;
 
-  if (!userId) {
-    return res.status(401).json({
+  if (!userId || !["LIKE", "UNLIKE"].includes(action)) {
+    res.status(400).json({
       status: "ERROR",
-      message: "Unauthorized",
+      message: "Invalid request",
       payload: null,
     });
-  }
-
-  if (!mongoose.Types.ObjectId.isValid(postId)) {
-    return res.status(400).json({
-      status: "ERROR",
-      message: "Invalid post ID",
-      payload: null,
-    });
+    return;
   }
 
   const session = await mongoose.startSession();
-
   try {
     session.startTransaction();
 
     const post = await PostModel.findById(postId).session(session);
-    if (!post) {
-      await session.abortTransaction();
-      return res.status(404).json({
-        status: "ERROR",
-        message: "Post not found",
-        payload: null,
-      });
-    }
+    if (!post) throw new Error("Post not found");
 
-    const existingLike = await PostLikeModel.findOne({
-      postId,
+    const existing = await PostLikeModel.findOne({
       userId,
+      postId,
     }).session(session);
 
-    let liked: boolean;
-
-    if (existingLike) {
-      // UNLIKE
-      await PostLikeModel.deleteOne({ _id: existingLike._id }).session(session);
-
-      await PostModel.updateOne(
-        { _id: postId },
-        { $inc: { likeCount: -1 } },
-        { session }
-      );
-
-      liked = false;
-    } else {
-      // LIKE
-      await PostLikeModel.create(
-        [
-          {
-            postId,
-            userId,
-          },
-        ],
-        { session }
-      );
-
+    if (action === "LIKE" && !existing) {
+      await PostLikeModel.create([{ userId, postId }], { session });
       await PostModel.updateOne(
         { _id: postId },
         { $inc: { likeCount: 1 } },
         { session }
       );
+    }
 
-      liked = true;
+    if (action === "UNLIKE" && existing) {
+      await PostLikeModel.deleteOne({ _id: existing._id }).session(session);
+      await PostModel.updateOne(
+        { _id: postId },
+        { $inc: { likeCount: -1 } },
+        { session }
+      );
     }
 
     await session.commitTransaction();
 
-    const updatedPost = await PostModel.findById(postId).select("likeCount");
+    const updated = await PostModel.findById(postId).select("likeCount");
 
-    return res.status(200).json({
+    res.status(200).json({
       status: "SUCCESS",
-      message: liked ? "Post liked" : "Post unliked",
+      // message: liked ? "Post liked" : "Post unliked",
       payload: {
-        likedByMe: liked,
-        likeCount: updatedPost?.likeCount ?? 0,
+        likedByMe: action === "LIKE",
+        likeCount: updated?.likeCount ?? 0,
       },
     });
-  } catch (error: any) {
+  } catch (err: any) {
     await session.abortTransaction();
-
-    return res.status(500).json({
+    res.status(500).json({
       status: "ERROR",
-      message: error.message || "Server error",
+      message: err.message,
       payload: null,
     });
   } finally {

@@ -100,7 +100,7 @@ export const PostCard = ({ post, style = {} }: PostProps) => {
 
     // Sync like on server
     try {
-      const payload = await handlePostLike(post._id);
+      const payload = await handlePostLike(post._id, likedByMe);
       if (payload) {
         setLatestPost((prev) => ({
           ...prev,
