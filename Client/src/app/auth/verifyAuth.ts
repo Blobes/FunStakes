@@ -52,7 +52,7 @@ export const verifyAuth = async ({
     // 🚫 Fully logged out
     setAuthUser(null);
     setLoginStatus("UNAUTHENTICATED");
-    setLastPage({ title: defaultPage.title, path: defaultPage.path });
+    setLastPage({ title: extractPageTitle(pagePath), path: pagePath });
     return;
   } catch (err: any) {
     setAuthUser(null);
