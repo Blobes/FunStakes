@@ -24,7 +24,7 @@ export const getAllPost = async (req: AuthRequest, res: Response) => {
             userId,
           }));
         }
-        return { ...post, likedByMe, test: "Testing" };
+        return { ...post, likedByMe };
       })
     );
 
