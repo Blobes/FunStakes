@@ -24,7 +24,6 @@ export const AppWrapper = ({ children }: { children: React.ReactNode }) => {
   const { setSBMessage, setLastPage, openModal, closeModal } = useSharedHooks();
   const {
     snackBarMsgs,
-    authUser,
     loginStatus,
     setLoginStatus,
     modalContent,
@@ -62,14 +61,12 @@ export const AppWrapper = ({ children }: { children: React.ReactNode }) => {
   // ─────────────────────────────
   useEffect(() => {
     setMounted(true);
-
     if (process.env.NODE_ENV === "production" && "serviceWorker" in navigator) {
       navigator.serviceWorker
         .register("/service-worker.js")
         .then(() => console.log("SW registered"))
         .catch((err) => console.error("SW registration failed:", err));
     }
-
     verify();
   }, []);
 
@@ -81,7 +78,7 @@ export const AppWrapper = ({ children }: { children: React.ReactNode }) => {
     // AUTHENTICATED or not on app route close modal
     if (
       loginStatus === "AUTHENTICATED" ||
-      (!navigator.onLine && loginStatus === "UNKNOWN") ||
+      loginStatus === "UNKNOWN" ||
       !isOnAppRoute
     ) {
       closeModal();
