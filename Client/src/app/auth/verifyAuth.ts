@@ -41,7 +41,7 @@ export const verifyAuth = async ({
     // Token invalid but snapshot exists → LOCKED
     if (authUser) {
       // setAuthUser(userSnapshot);
-      // setLoginStatus("UNAUTHENTICATED");
+      setLoginStatus("UNKNOWN");
       console.log(authUser);
       //  setLastPage({ title: extractPageTitle(pagePath), path: pagePath });
       if (!res.message?.toLowerCase().includes("no token")) {
