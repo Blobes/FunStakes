@@ -50,6 +50,7 @@ export interface Post {
   postImage: string | null;
   likeCount: number;
   likedByMe: boolean;
+  test: string;
   createdAt: number;
   status: "ACTIVE" | "DELETED";
 }

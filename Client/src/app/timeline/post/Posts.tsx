@@ -31,7 +31,7 @@ export const Posts = () => {
       if (res?.payload) {
         setPosts(res.payload);
         setMessage(res.message);
-        //  console.log(res.payload);
+        console.log(res.payload);
       }
     } finally {
       setLoading(false);

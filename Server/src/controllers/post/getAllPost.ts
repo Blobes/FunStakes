@@ -1,6 +1,7 @@
 import { PostModel, PostLikeModel } from "@/models";
 import { Response } from "express";
 import { AuthRequest } from "@/middlewares/verifyToken";
+import mongoose from "mongoose";
 
 export const getAllPost = async (req: AuthRequest, res: Response) => {
   const userId = req.user?.id; // Logged-in user
@@ -18,15 +19,13 @@ export const getAllPost = async (req: AuthRequest, res: Response) => {
 
         if (userId) {
           likedByMe = !!(await PostLikeModel.exists({
-            postId: post._id,
+            postId: new mongoose.Types.ObjectId(post._id),
             userId,
           }));
         }
-        return { ...post, likedByMe };
+        return { ...post, likedByMe, test: "Testing" };
       })
     );
-
-    console.log("Post with likes", postsWithLikes);
 
     res.status(200).json({
       message:
