@@ -1,6 +1,4 @@
-import { GenericObject, Post } from "@/types";
-import { Typography, useTheme } from "@mui/material";
-import { useEffect } from "react";
+import { Typography } from "@mui/material";
 
 export default function PostPage() {
   return <Typography>Single Post View</Typography>;
