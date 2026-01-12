@@ -65,6 +65,7 @@ export const AppWrapper = ({ children }: { children: React.ReactNode }) => {
       setLastPage,
       pathname,
       isAllowedAuthRoutes,
+      loginStatus,
     });
   }, []);
 
@@ -74,7 +75,11 @@ export const AppWrapper = ({ children }: { children: React.ReactNode }) => {
   useEffect(() => {
     let intervalId: NodeJS.Timeout | null = null;
     // AUTHENTICATED or not on app route close modal
-    if (loginStatus === "AUTHENTICATED" || !isOnAppRoute) {
+    if (
+      loginStatus === "AUTHENTICATED" ||
+      loginStatus === "UNKNOWN" ||
+      !isOnAppRoute
+    ) {
       closeModal();
       return;
     }
@@ -125,6 +130,7 @@ export const AppWrapper = ({ children }: { children: React.ReactNode }) => {
         setLastPage,
         pathname,
         isAllowedAuthRoutes,
+        loginStatus,
       });
 
     const handleOnline = () => {

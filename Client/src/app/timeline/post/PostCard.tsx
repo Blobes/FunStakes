@@ -20,7 +20,7 @@ import { heartBeat } from "@/helpers/animations";
 import { usePost } from "./postHooks";
 import { Post } from "@/types";
 import { red } from "@mui/material/colors";
-import { summarizeNum } from "@/helpers/others";
+import { delay, summarizeNum } from "@/helpers/others";
 import { AuthStepper } from "@/app/auth/login/AuthStepper";
 import { Empty } from "@/components/Empty";
 import { Heart } from "lucide-react";
@@ -89,23 +89,28 @@ export const PostCard = ({ post, style = {} }: PostProps) => {
       setModalContent({ content: <AuthStepper /> });
       return;
     }
-    if (isLiking) return;
+    // if (isLiking) return;
 
-    const nextLiked = !likedByMe;
-
-    // Optimistic update
-    setPostData((prev) => ({
-      ...prev,
-      likedByMe: nextLiked,
-      likeCount: prev.likeCount + (nextLiked ? 1 : -1),
-    }));
-    setPendingLike(_id, nextLiked);
+    //const nextLiked = !likedByMe;
+    delay();
     setIsLiking(true);
 
+    // Optimistic update
+    setPostData((prev) => {
+      const nextLiked = !prev.likedByMe;
+      const nextCount = prev.likeCount + (nextLiked ? 1 : -1);
+      // persist pending like
+      setPendingLike(_id, nextLiked);
+      return { ...prev, likedByMe: nextLiked, likeCount: nextCount };
+    });
+    // setPendingLike(_id, nextLiked);
+
     try {
-      const payload = await handlePostLike(_id);
+      // const payload = await handlePostLike(_id);
+      const latestLiked = getPendingLike(_id); // retrieve current optimistic state
+      const payload = await handlePostLike(_id); // pass state to backend
       if (payload) {
-        // Sync with server
+        // sync with server
         setPostData((prev) => ({
           ...prev,
           likedByMe: payload.likedByMe,
@@ -200,6 +205,7 @@ export const PostCard = ({ post, style = {} }: PostProps) => {
               style={{
                 width: 22,
                 marginRight: theme.boxSpacing(2),
+                ...(isLiking && { animation: `${heartBeat} 0.3s linear ` }),
                 fill: likedByMe ? red[500] : "none",
                 stroke: postData.likedByMe
                   ? (red[500] as string)

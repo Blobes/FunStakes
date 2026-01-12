@@ -12,6 +12,7 @@ interface VerifyParams {
   setLastPage: (page: SavedPage) => void;
   pathname: string;
   isAllowedAuthRoutes: boolean;
+  loginStatus: string;
 }
 
 export const verifyAuth = async ({
@@ -37,7 +38,7 @@ export const verifyAuth = async ({
     }
 
     // Token invalid but snapshot exists → LOCKED
-    if (!navigator.onLine && userSnapshot) {
+    if (userSnapshot) {
       setAuthUser(userSnapshot);
       // setLoginStatus("UNAUTHENTICATED");
       setLastPage({ title: extractPageTitle(pagePath), path: pagePath });
