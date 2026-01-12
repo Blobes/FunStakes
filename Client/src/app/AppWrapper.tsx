@@ -104,7 +104,14 @@ export const AppWrapper = ({ children }: { children: React.ReactNode }) => {
     return () => {
       if (intervalId) clearInterval(intervalId);
     };
-  }, [isOnAppRoute, isAllowedRoutes, router, defaultPage.path, pathname]);
+  }, [
+    loginStatus,
+    isOnAppRoute,
+    isAllowedRoutes,
+    router,
+    defaultPage.path,
+    pathname,
+  ]);
 
   // ─────────────────────────────
   // 3️⃣ MODAL OPEN / CLOSE
