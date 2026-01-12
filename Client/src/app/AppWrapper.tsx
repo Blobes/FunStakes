@@ -24,6 +24,7 @@ export const AppWrapper = ({ children }: { children: React.ReactNode }) => {
   const { setSBMessage, setLastPage, openModal, closeModal } = useSharedHooks();
   const {
     snackBarMsgs,
+    authUser,
     loginStatus,
     setLoginStatus,
     modalContent,
@@ -65,7 +66,7 @@ export const AppWrapper = ({ children }: { children: React.ReactNode }) => {
       setLastPage,
       pathname,
       isAllowedAuthRoutes,
-      loginStatus,
+      user: authUser?.firstName ?? "",
     });
   }, []);
 
@@ -130,7 +131,7 @@ export const AppWrapper = ({ children }: { children: React.ReactNode }) => {
         setLastPage,
         pathname,
         isAllowedAuthRoutes,
-        loginStatus,
+        user: authUser?.firstName ?? "",
       });
 
     const handleOnline = () => {
