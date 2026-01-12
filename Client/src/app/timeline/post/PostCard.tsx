@@ -89,9 +89,9 @@ export const PostCard = ({ post, style = {} }: PostProps) => {
       setModalContent({ content: <AuthStepper /> });
       return;
     }
-    if (isLiking) return;
+    // if (isLiking) return;
 
-    const nextLiked = !likedByMe;
+    //const nextLiked = !likedByMe;
     setIsLiking(true);
 
     // Optimistic update

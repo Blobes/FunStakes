@@ -28,7 +28,7 @@ import { MenuRef } from "@/components/Menus";
 import { defaultPage, flaggedRoutes, clientRoutes } from "@/helpers/info";
 
 export const Header: React.FC = () => {
-  const { loginStatus, authUser, modalContent } = useAppContext();
+  const { loginStatus, authUser, modalContent, isOnline } = useAppContext();
   const { setLastPage, openModal, closeModal } = useSharedHooks();
   const theme = useTheme();
   const router = useRouter();
@@ -170,7 +170,7 @@ export const Header: React.FC = () => {
               />
             </>
           )}
-          {!isLoggedIn && (
+          {isOnline && !isLoggedIn && (
             <AppButton
               href={clientRoutes.login}
               style={{ fontSize: "14px" }}
