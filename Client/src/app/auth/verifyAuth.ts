@@ -56,6 +56,7 @@ export const verifyAuth = async ({
     setAuthUser(null);
     setLoginStatus("UNAUTHENTICATED");
     setLastPage({ title: defaultPage.title, path: defaultPage.path });
+    console.log(loginStatus);
     return;
   } catch (err: any) {
     setAuthUser(null);
