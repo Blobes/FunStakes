@@ -1,5 +1,5 @@
-const STATIC_CACHE = "funstakes-static-v11";
-const API_CACHE = "funstakes-api-v11";
+const STATIC_CACHE = "funstakes-static-v12";
+const API_CACHE = "funstakes-api-v12";
 
 /* ---------- INSTALL ---------- */
 self.addEventListener("install", (event) => {
@@ -33,7 +33,7 @@ self.addEventListener("activate", (event) => {
 self.addEventListener("fetch", (event) => {
   const { request } = event;
 
-  /* ✅ ALWAYS HANDLE NAVIGATION */
+  /* ✅ NAVIGATION */
   if (request.mode === "navigate") {
     event.respondWith(fetch(request).catch(() => caches.match("/timeline")));
     return;
@@ -43,65 +43,54 @@ self.addEventListener("fetch", (event) => {
 
   const url = new URL(request.url);
 
-  /* 🚫 NEVER TOUCH THESE */
-  if (
-    url.hostname.includes("vercel.live") ||
-    url.pathname.startsWith("/_next-live")
-  ) {
+  /* 🚫 IGNORE VERCEL LIVE */
+  if (url.hostname.includes("vercel.live")) return;
+
+  /* 🚫 NEVER CACHE AUTH */
+  if (url.pathname.startsWith("/api/auth")) return;
+
+  /* ✅ NEXT.JS STATIC CHUNKS */
+  if (url.pathname.startsWith("/_next/static")) {
+    event.respondWith(cacheFirstStrict(request, STATIC_CACHE));
     return;
   }
 
-  /* NEVER CACHE AUTH */
-  if (url.pathname.startsWith("/api/auth")) return;
-
-  /* MANIFEST + ICONS */
+  /* ✅ MANIFEST + ICONS */
   if (
     url.pathname === "/manifest.json" ||
     url.pathname.endsWith(".png") ||
     url.pathname.endsWith(".ico")
   ) {
-    event.respondWith(cacheFirstSafe(request, STATIC_CACHE));
+    event.respondWith(cacheFirstStrict(request, STATIC_CACHE));
     return;
   }
 
-  /* NEXT STATIC ASSETS */
-  if (url.pathname.startsWith("/_next/static")) {
-    event.respondWith(cacheFirstSafe(request, STATIC_CACHE));
-    return;
-  }
-
-  /* TIMELINE */
+  /* ✅ TIMELINE */
   if (url.pathname.startsWith("/timeline")) {
     event.respondWith(networkFirst(request, STATIC_CACHE));
     return;
   }
 
-  /* API DATA */
+  /* ✅ API DATA */
   if (
     url.pathname.startsWith("/api/posts") ||
     url.pathname.startsWith("/api/users")
   ) {
     event.respondWith(networkFirst(request, API_CACHE));
-    return;
   }
 });
 
 /* ---------- STRATEGIES ---------- */
 
-async function cacheFirstSafe(request, cacheName) {
+async function cacheFirstStrict(request, cacheName) {
   const cache = await caches.open(cacheName);
-
   const cached = await cache.match(request);
+
   if (cached) return cached;
 
-  try {
-    const fresh = await fetch(request);
-    cache.put(request, fresh.clone());
-    return fresh;
-  } catch {
-    // 🔥 DO NOT THROW — return a noop response
-    return new Response("", { status: 204 });
-  }
+  const fresh = await fetch(request); // ❗ let this throw if offline
+  cache.put(request, fresh.clone());
+  return fresh;
 }
 
 async function networkFirst(request, cacheName) {
@@ -113,9 +102,6 @@ async function networkFirst(request, cacheName) {
   } catch {
     const cached = await cache.match(request);
     if (cached) return cached;
-
-    return new Response(JSON.stringify({ offline: true }), {
-      headers: { "Content-Type": "application/json" },
-    });
+    throw new Error("Offline and no cache");
   }
 }
