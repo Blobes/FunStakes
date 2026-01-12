@@ -42,7 +42,7 @@ export const verifyAuth = async ({
     if (userSnapshot) {
       setAuthUser(userSnapshot);
       // setLoginStatus("UNAUTHENTICATED");
-      console.log();
+      console.log(user);
       setLastPage({ title: extractPageTitle(pagePath), path: pagePath });
       if (!res.message?.toLowerCase().includes("no token")) {
         setSBMessage({
