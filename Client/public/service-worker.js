@@ -1,5 +1,5 @@
-const STATIC_CACHE = "funstakes-static-v6";
-const API_CACHE = "funstakes-api-v6";
+const STATIC_CACHE = "funstakes-static-v7";
+const API_CACHE = "funstakes-api-v7";
 
 self.addEventListener("install", (event) => {
   self.skipWaiting();

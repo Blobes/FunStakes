@@ -86,7 +86,7 @@ const postSchema = new mongoose.Schema(
       type: Number,
       default: 0,
     },
-    status: String,
+    status: { type: String, default: "ACTIVE" },
   },
   { timestamps: true }
 );
