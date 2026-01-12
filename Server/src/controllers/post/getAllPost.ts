@@ -5,7 +5,7 @@ import mongoose from "mongoose";
 
 export const getAllPost = async (req: AuthRequest, res: Response) => {
   const userId = req.user?.id; // Logged-in user
-  throw new Error("🔥 IF YOU SEE THIS, THIS ROUTE IS ACTIVE");
+  // throw new Error("🔥 IF YOU SEE THIS, THIS ROUTE IS ACTIVE");
 
   try {
     const posts = await PostModel.find()
