@@ -32,7 +32,7 @@ interface PostProps {
 
 export const PostCard = ({ post, style = {} }: PostProps) => {
   const theme = useTheme();
-  const { authUser, loginStatus, setModalContent } = useAppContext();
+  const { authUser, loginStatus, setModalContent, isOnline } = useAppContext();
   const {
     handlePostLike,
     fetchAuthor,
@@ -85,7 +85,7 @@ export const PostCard = ({ post, style = {} }: PostProps) => {
 
   // Handle like/unlike
   const handleLike = async () => {
-    if (!authUser || loginStatus === "UNAUTHENTICATED") {
+    if ((isOnline && !authUser) || loginStatus === "UNAUTHENTICATED") {
       setModalContent({ content: <AuthStepper /> });
       return;
     }

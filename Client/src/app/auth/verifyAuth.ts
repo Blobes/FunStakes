@@ -42,7 +42,7 @@ export const verifyAuth = async ({
     if (loginStatus === "UNKNOWN") {
       // setAuthUser(userSnapshot);
       console.log(true);
-      //  setLastPage({ title: extractPageTitle(pagePath), path: pagePath });
+      setLastPage({ title: extractPageTitle(pagePath), path: pagePath });
       if (!res.message?.toLowerCase().includes("no token")) {
         setSBMessage({
           msg: { content: res.message, msgStatus: "ERROR", hasClose: true },
