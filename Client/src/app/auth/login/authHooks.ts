@@ -3,7 +3,7 @@
 import { useAppContext } from "@/app/AppContext";
 import { useSharedHooks } from "@/hooks";
 import { fetcher } from "@/helpers/fetcher";
-import { IUser, SavedPage, SingleResponse, UserSnapshot } from "@/types";
+import { IUser, SavedPage, SingleResponse } from "@/types";
 import { usePathname, useRouter } from "next/navigation";
 import {
   deleteCookie,

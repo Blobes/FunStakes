@@ -2,7 +2,7 @@
 
 import { extractPageTitle } from "@/helpers/others";
 import { fetchUserWithTokenCheck } from "@/helpers/fetcher";
-import { IUser, SavedPage } from "@/types";
+import { SavedPage } from "@/types";
 import { defaultPage, clientRoutes } from "@/helpers/info";
 
 interface VerifyParams {
