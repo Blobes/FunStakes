@@ -37,7 +37,7 @@ export const verifyAuth = async ({
     }
 
     // Token invalid but snapshot exists → LOCKED
-    if (!navigator.onLine && userSnapshot) {
+    if (userSnapshot) {
       setAuthUser(userSnapshot);
       // setLoginStatus("UNAUTHENTICATED");
       setLastPage({ title: extractPageTitle(pagePath), path: pagePath });

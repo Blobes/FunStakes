@@ -94,18 +94,22 @@ export const PostCard = ({ post, style = {} }: PostProps) => {
     const nextLiked = !likedByMe;
 
     // Optimistic update
-    setPostData((prev) => ({
-      ...prev,
-      likedByMe: nextLiked,
-      likeCount: prev.likeCount + (nextLiked ? 1 : -1),
-    }));
-    setPendingLike(_id, nextLiked);
+    setPostData((prev) => {
+      const nextLiked = !prev.likedByMe;
+      const nextCount = prev.likeCount + (nextLiked ? 1 : -1);
+      // persist pending like
+      setPendingLike(_id, nextLiked);
+      return { ...prev, likedByMe: nextLiked, likeCount: nextCount };
+    });
+    // setPendingLike(_id, nextLiked);
     setIsLiking(true);
 
     try {
-      const payload = await handlePostLike(_id);
+      // const payload = await handlePostLike(_id);
+      const latestLiked = getPendingLike(_id); // retrieve current optimistic state
+      const payload = await handlePostLike(_id); // pass state to backend
       if (payload) {
-        // Sync with server
+        // sync with server
         setPostData((prev) => ({
           ...prev,
           likedByMe: payload.likedByMe,
@@ -200,6 +204,7 @@ export const PostCard = ({ post, style = {} }: PostProps) => {
               style={{
                 width: 22,
                 marginRight: theme.boxSpacing(2),
+                ...(isLiking && { animation: `${heartBeat} 0.3s linear ` }),
                 fill: likedByMe ? red[500] : "none",
                 stroke: postData.likedByMe
                   ? (red[500] as string)
