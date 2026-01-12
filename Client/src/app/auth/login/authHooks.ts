@@ -140,8 +140,18 @@ export const useAuth = () => {
         setLastPage(savedPage);
       }
 
+      //Set user snapshot
+      const snapshot: UserSnapshot | null = payload
+        ? {
+            _id: payload._id,
+            firstName: payload.firstName,
+            lastName: payload.lastName,
+          }
+        : null;
+      if (snapshot) setCookie("user_snapshot", JSON.stringify(snapshot), 20);
+
       //Clear cookies
-      deleteCookie("user_snapshot");
+      // deleteCookie("user_snapshot");
       deleteCookie("loginAttempts");
 
       return { payload, message, status };
@@ -190,22 +200,24 @@ export const useAuth = () => {
       await fetcher(serverRoutes.logout, { method: "POST" });
 
       // Step 2: Check if stored user exists for drawer experience
-      if (snapshot) setCookie("user_snapshot", JSON.stringify(snapshot), 20);
-      const userSnapshot = getCookie("user_snapshot");
+      // if (snapshot) setCookie("user_snapshot", JSON.stringify(snapshot), 20);
+      // const userSnapshot = getCookie("user_snapshot");
 
-      if (userSnapshot) {
-        const parsed = JSON.parse(userSnapshot);
-        setAuthUser(parsed);
+      // if (userSnapshot) {
+      //   const parsed = JSON.parse(userSnapshot);
+      //   setAuthUser(parsed);
 
-        pagePath = pathname;
-        setLastPage({ title: extractPageTitle(pagePath), path: pagePath });
-        setLoginStatus("UNAUTHENTICATED");
-      } else {
-        setAuthUser(null);
-        setLastPage({ title: defaultPage.title, path: defaultPage.path });
-        setLoginStatus("UNAUTHENTICATED");
-        router.replace(defaultPage.path);
-      }
+      //   pagePath = pathname;
+      //   setLastPage({ title: extractPageTitle(pagePath), path: pagePath });
+      //   setLoginStatus("UNAUTHENTICATED");
+      // } else {
+
+      setAuthUser(null);
+      deleteCookie("user_snapshot");
+      setLastPage({ title: defaultPage.title, path: defaultPage.path });
+      setLoginStatus("UNAUTHENTICATED");
+      router.replace(defaultPage.path);
+      //}
     } catch (error: any) {
       setSBMessage({
         msg: { content: error.message, msgStatus: "ERROR" },

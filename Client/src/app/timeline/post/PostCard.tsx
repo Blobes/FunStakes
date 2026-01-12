@@ -41,7 +41,7 @@ export const PostCard = ({ post, style = {} }: PostProps) => {
     clearPendingLike,
   } = usePost();
 
-  const [postData, setPostData] = useState<Post>(post); // Full post state
+  const [postData, setPostData] = useState<Post>(post);
   const [author, setAuthor] = useState<IUser | null>(null);
   const [message, setMessage] = useState<string | null>(null);
   const [isLiking, setIsLiking] = useState(false);
@@ -55,7 +55,7 @@ export const PostCard = ({ post, style = {} }: PostProps) => {
     status,
     likeCount,
     likedByMe,
-  } = post;
+  } = postData;
 
   // Fetch author once
   const handleAuthor = useCallback(async () => {
@@ -74,7 +74,7 @@ export const PostCard = ({ post, style = {} }: PostProps) => {
     handleAuthor();
 
     const pending = getPendingLike(_id);
-    if (pending !== null && pending !== postData.likedByMe) {
+    if (pending !== null && pending !== likedByMe) {
       setPostData((prev) => ({
         ...prev,
         likedByMe: pending,
@@ -91,7 +91,7 @@ export const PostCard = ({ post, style = {} }: PostProps) => {
     }
     if (isLiking) return;
 
-    const nextLiked = !postData.likedByMe;
+    const nextLiked = !likedByMe;
 
     // Optimistic update
     setPostData((prev) => ({
@@ -114,12 +114,6 @@ export const PostCard = ({ post, style = {} }: PostProps) => {
         clearPendingLike(_id);
       }
     } catch {
-      // Optional rollback if request failed
-      setPostData((prev) => ({
-        ...prev,
-        likedByMe: !nextLiked,
-        likeCount: prev.likeCount + (nextLiked ? -1 : 1),
-      }));
       clearPendingLike(_id);
     } finally {
       setIsLiking(false);
@@ -206,14 +200,14 @@ export const PostCard = ({ post, style = {} }: PostProps) => {
               style={{
                 width: 22,
                 marginRight: theme.boxSpacing(2),
-                fill: postData.likedByMe ? red[500] : "none",
+                fill: likedByMe ? red[500] : "none",
                 stroke: postData.likedByMe
                   ? (red[500] as string)
                   : (theme.palette.gray[200] as string),
               }}
             />
             <Typography variant="body2">
-              <b>{summarizeNum(postData.likeCount)}</b>
+              <b>{summarizeNum(likeCount)}</b>
             </Typography>
           </IconButton>
 
