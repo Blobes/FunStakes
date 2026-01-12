@@ -46,6 +46,17 @@ export const AppWrapper = ({ children }: { children: React.ReactNode }) => {
   const isAllowedAuthRoutes = flaggedRoutes.auth.includes(pathname);
   const isOnAppRoute = flaggedAppRoutes.length > 0;
 
+  const verify = async () =>
+    await verifyAuth({
+      setAuthUser,
+      setLoginStatus,
+      setSBMessage,
+      setLastPage,
+      pathname,
+      isAllowedAuthRoutes,
+      authUser,
+    });
+
   // ─────────────────────────────
   // 1️⃣ MOUNT + INITIAL AUTH CHECK & SERVICE WORKER REGISTRATION
   // ─────────────────────────────
@@ -59,15 +70,7 @@ export const AppWrapper = ({ children }: { children: React.ReactNode }) => {
         .catch((err) => console.error("SW registration failed:", err));
     }
 
-    verifyAuth({
-      setAuthUser,
-      setLoginStatus,
-      setSBMessage,
-      setLastPage,
-      pathname,
-      isAllowedAuthRoutes,
-      authUser,
-    });
+    verify();
   }, []);
 
   // ─────────────────────────────
@@ -123,17 +126,6 @@ export const AppWrapper = ({ children }: { children: React.ReactNode }) => {
   // 4️⃣ BROWSER EVENTS
   // ─────────────────────────────
   useEffect(() => {
-    const reverify = async () =>
-      await verifyAuth({
-        setAuthUser,
-        setLoginStatus,
-        setSBMessage,
-        setLastPage,
-        pathname,
-        isAllowedAuthRoutes,
-        authUser,
-      });
-
     const handleOnline = () => {
       setSBMessage({
         msg: {
@@ -143,7 +135,7 @@ export const AppWrapper = ({ children }: { children: React.ReactNode }) => {
         override: true,
       });
       setOnlineStatus(true);
-      reverify();
+      verify();
     };
 
     const handleOffline = () => {
@@ -164,11 +156,10 @@ export const AppWrapper = ({ children }: { children: React.ReactNode }) => {
     };
 
     const handleVisibility = () => {
-      if (document.visibilityState === "visible" && isOnline === true)
-        reverify();
+      if (document.visibilityState === "visible" && isOnline === true) verify();
     };
     const handleFocus = () => {
-      if (isOnline === true) reverify();
+      if (isOnline === true) verify();
     };
 
     window.addEventListener("online", handleOnline);
@@ -178,7 +169,7 @@ export const AppWrapper = ({ children }: { children: React.ReactNode }) => {
     return () => {
       window.removeEventListener("online", handleOnline);
       window.removeEventListener("offline", handleOffline);
-      window.removeEventListener("focus", reverify);
+      window.removeEventListener("focus", verify);
       document.removeEventListener("visibilitychange", handleVisibility);
     };
   }, [pathname, lastPage]);
