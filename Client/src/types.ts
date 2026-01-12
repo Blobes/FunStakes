@@ -48,9 +48,9 @@ export interface Post {
   authorId: string;
   content: string;
   postImage: string | null;
-  // likes?: string[];
   likeCount: number;
   likedByMe: boolean;
+  test: string;
   createdAt: number;
   status: "ACTIVE" | "DELETED";
 }

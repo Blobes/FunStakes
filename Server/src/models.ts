@@ -86,12 +86,11 @@ const postSchema = new mongoose.Schema(
       type: Number,
       default: 0,
     },
-    status: String,
+    status: { type: String, default: "ACTIVE" },
   },
   { timestamps: true }
 );
 postSchema.index({ authorId: 1, createdAt: -1 });
-postSchema.set("strict", "throw");
 export const PostModel = mongoose.model("Posts", postSchema);
 
 // Post Like Schema

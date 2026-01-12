@@ -1,17 +1,37 @@
-import { PostModel } from "@/models";
-import { Request, Response } from "express";
+import { PostModel, PostLikeModel } from "@/models";
+import { Response } from "express";
+import { AuthRequest } from "@/middlewares/verifyToken";
+import mongoose from "mongoose";
 
-export const getAllPost = async (
-  req: Request,
-  res: Response
-): Promise<void> => {
+export const getAllPost = async (req: AuthRequest, res: Response) => {
+  const userId = req.user?.id; // Logged-in user
+  throw new Error("🔥 IF YOU SEE THIS, THIS ROUTE IS ACTIVE");
+
   try {
-    const posts = await PostModel.find().sort({ createdAt: -1 }).lean();
+    const posts = await PostModel.find()
+      .sort({ createdAt: -1 })
+      .select("_id authorId content likeCount createdAt postImage status")
+      .lean();
+
+    // Map likedByMe for current user
+    const postsWithLikes = await Promise.all(
+      posts.map(async (post) => {
+        let likedByMe = false;
+
+        if (userId) {
+          likedByMe = !!(await PostLikeModel.exists({
+            postId: new mongoose.Types.ObjectId(post._id),
+            userId,
+          }));
+        }
+        return { ...post, likedByMe, test: "Testing" };
+      })
+    );
 
     res.status(200).json({
       message:
         posts.length > 0 ? "Posts fetched successfully" : "No posts found",
-      payload: posts,
+      payload: postsWithLikes,
       status: "SUCCESS",
     });
   } catch (error: any) {

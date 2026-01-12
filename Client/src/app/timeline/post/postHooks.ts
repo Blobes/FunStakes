@@ -14,13 +14,14 @@ import { serverRoutes } from "@/helpers/info";
 
 export const usePost = () => {
   const getAllPost = async (): Promise<{
-    payload: Post[] | null;
+    payload: (Post & { likedByMe: boolean })[] | null;
     message: string;
   }> => {
     try {
-      const res = await fetcher<ListResponse<Post>>(serverRoutes.postsRoot, {
-        method: "GET",
-      });
+      const res = await fetcher<
+        ListResponse<Post & { likedByMe: boolean; test: string }>
+      >(serverRoutes.postsRoot, { method: "GET" });
+      // console.log(res);
       return { payload: res.payload ?? null, message: res.message };
     } catch (error: any) {
       return {
