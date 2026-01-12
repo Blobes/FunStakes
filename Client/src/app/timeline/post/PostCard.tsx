@@ -41,7 +41,7 @@ export const PostCard = ({ post, style = {} }: PostProps) => {
     clearPendingLike,
   } = usePost();
 
-  const [postData, setPostData] = useState<Post>(post); // Full post state
+  const [postData, setPostData] = useState<Post>(post);
   const [author, setAuthor] = useState<IUser | null>(null);
   const [message, setMessage] = useState<string | null>(null);
   const [isLiking, setIsLiking] = useState(false);
@@ -80,6 +80,7 @@ export const PostCard = ({ post, style = {} }: PostProps) => {
         likedByMe: pending,
         likeCount: prev.likeCount + (pending ? 1 : -1),
       }));
+      console.log("Yeah");
     }
   }, [_id, handleAuthor]);
 
@@ -114,12 +115,6 @@ export const PostCard = ({ post, style = {} }: PostProps) => {
         clearPendingLike(_id);
       }
     } catch {
-      // Optional rollback if request failed
-      setPostData((prev) => ({
-        ...prev,
-        likedByMe: !nextLiked,
-        likeCount: prev.likeCount + (nextLiked ? -1 : 1),
-      }));
       clearPendingLike(_id);
     } finally {
       setIsLiking(false);
