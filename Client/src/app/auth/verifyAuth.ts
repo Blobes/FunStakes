@@ -12,7 +12,7 @@ interface VerifyParams {
   setLastPage: (page: SavedPage) => void;
   pathname: string;
   isAllowedAuthRoutes: boolean;
-  authUser: IUser | null;
+  loginStatus: string;
 }
 
 export const verifyAuth = async ({
@@ -22,7 +22,7 @@ export const verifyAuth = async ({
   setLastPage,
   pathname,
   isAllowedAuthRoutes,
-  authUser,
+  loginStatus,
 }: VerifyParams) => {
   try {
     const res = await fetchUserWithTokenCheck();
@@ -39,10 +39,9 @@ export const verifyAuth = async ({
     }
 
     // Token invalid but snapshot exists → LOCKED
-    if (authUser) {
+    if (loginStatus === "UNKNOWN") {
       // setAuthUser(userSnapshot);
-      setLoginStatus("UNKNOWN");
-      console.log(authUser);
+      console.log(true);
       //  setLastPage({ title: extractPageTitle(pagePath), path: pagePath });
       if (!res.message?.toLowerCase().includes("no token")) {
         setSBMessage({
