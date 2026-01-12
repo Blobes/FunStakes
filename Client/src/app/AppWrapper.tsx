@@ -54,7 +54,7 @@ export const AppWrapper = ({ children }: { children: React.ReactNode }) => {
       setLastPage,
       pathname,
       isAllowedAuthRoutes,
-      loginStatus,
+      isOnline,
     });
 
   // ─────────────────────────────
