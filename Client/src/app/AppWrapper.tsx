@@ -182,7 +182,7 @@ export const AppWrapper = ({ children }: { children: React.ReactNode }) => {
     };
   }, [pathname, lastPage]);
 
-  if (!mounted || loginStatus === "UNKNOWN") {
+  if (!mounted) {
     return null; // or splash loader
   }
   return (
