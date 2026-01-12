@@ -85,7 +85,7 @@ export const PostCard = ({ post, style = {} }: PostProps) => {
 
   // Handle like/unlike
   const handleLike = async () => {
-    if (!authUser || loginStatus !== "AUTHENTICATED") {
+    if (!authUser || loginStatus === "UNAUTHENTICATED") {
       setModalContent({ content: <AuthStepper /> });
       return;
     }
