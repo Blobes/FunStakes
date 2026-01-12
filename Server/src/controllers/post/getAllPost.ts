@@ -17,7 +17,6 @@ export const getAllPost = async (req: AuthRequest, res: Response) => {
     const postsWithLikes = await Promise.all(
       posts.map(async (post) => {
         let likedByMe = false;
-
         if (userId) {
           likedByMe = !!(await PostLikeModel.exists({
             postId: new mongoose.Types.ObjectId(post._id),

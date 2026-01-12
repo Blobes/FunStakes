@@ -46,7 +46,16 @@ export const PostCard = ({ post, style = {} }: PostProps) => {
   const [message, setMessage] = useState<string | null>(null);
   const [isLiking, setIsLiking] = useState(false);
 
-  const { _id, authorId, content, postImage, createdAt, status } = post;
+  const {
+    _id,
+    authorId,
+    content,
+    postImage,
+    createdAt,
+    status,
+    likeCount,
+    likedByMe,
+  } = postData;
 
   // Fetch author once
   const handleAuthor = useCallback(async () => {
@@ -65,7 +74,7 @@ export const PostCard = ({ post, style = {} }: PostProps) => {
     handleAuthor();
 
     const pending = getPendingLike(_id);
-    if (pending !== null && pending !== postData.likedByMe) {
+    if (pending !== null && pending !== likedByMe) {
       setPostData((prev) => ({
         ...prev,
         likedByMe: pending,
@@ -82,7 +91,7 @@ export const PostCard = ({ post, style = {} }: PostProps) => {
     }
     if (isLiking) return;
 
-    const nextLiked = !postData.likedByMe;
+    const nextLiked = !likedByMe;
 
     // Optimistic update
     setPostData((prev) => ({
@@ -197,14 +206,14 @@ export const PostCard = ({ post, style = {} }: PostProps) => {
               style={{
                 width: 22,
                 marginRight: theme.boxSpacing(2),
-                fill: postData.likedByMe ? red[500] : "none",
+                fill: likedByMe ? red[500] : "none",
                 stroke: postData.likedByMe
                   ? (red[500] as string)
                   : (theme.palette.gray[200] as string),
               }}
             />
             <Typography variant="body2">
-              <b>{summarizeNum(postData.likeCount)}</b>
+              <b>{summarizeNum(likeCount)}</b>
             </Typography>
           </IconButton>
 

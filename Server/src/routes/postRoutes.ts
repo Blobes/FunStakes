@@ -5,9 +5,10 @@ import { likePost } from "@/controllers/post/likePost";
 import editPost from "@/controllers/post/editPost";
 import { getAllPost } from "@/controllers/post/getAllPost";
 import verifyToken from "@/middlewares/verifyToken";
+import { optionalVerifyToken } from "@/middlewares/optionalTokenCheck";
 
 const router = express.Router();
-router.get("/", getAllPost);
+router.get("/", optionalVerifyToken, getAllPost);
 router.post("/create", verifyToken, createPost);
 router.get("/:id", getPost);
 router.put("/:id/like", verifyToken, likePost);
