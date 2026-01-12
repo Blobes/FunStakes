@@ -178,7 +178,7 @@ export const Header: React.FC = () => {
                 e.preventDefault();
                 router.push(clientRoutes.login);
               }}>
-              {"Login" + isOnline}
+              Login
             </AppButton>
           )}
         </Stack>

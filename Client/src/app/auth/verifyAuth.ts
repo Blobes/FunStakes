@@ -2,7 +2,7 @@
 
 import { extractPageTitle, getCookie } from "@/helpers/others";
 import { fetchUserWithTokenCheck } from "@/helpers/fetcher";
-import { SavedPage } from "@/types";
+import { IUser, SavedPage } from "@/types";
 import { defaultPage, clientRoutes } from "@/helpers/info";
 
 interface VerifyParams {
@@ -12,7 +12,7 @@ interface VerifyParams {
   setLastPage: (page: SavedPage) => void;
   pathname: string;
   isAllowedAuthRoutes: boolean;
-  user: string;
+  authUser: IUser | null;
 }
 
 export const verifyAuth = async ({
@@ -22,7 +22,7 @@ export const verifyAuth = async ({
   setLastPage,
   pathname,
   isAllowedAuthRoutes,
-  user,
+  authUser,
 }: VerifyParams) => {
   try {
     const res = await fetchUserWithTokenCheck();
@@ -39,14 +39,15 @@ export const verifyAuth = async ({
     }
 
     // Token invalid but snapshot exists → LOCKED
-    if (userSnapshot) {
-      setAuthUser(userSnapshot);
+    if (authUser) {
+      // setAuthUser(userSnapshot);
       // setLoginStatus("UNAUTHENTICATED");
-      console.log(user);
-      setLastPage({ title: extractPageTitle(pagePath), path: pagePath });
+      // console.log(user);
+      //  setLastPage({ title: extractPageTitle(pagePath), path: pagePath });
       if (!res.message?.toLowerCase().includes("no token")) {
         setSBMessage({
           msg: { content: res.message, msgStatus: "ERROR", hasClose: true },
+          override: true,
         });
       }
       return;

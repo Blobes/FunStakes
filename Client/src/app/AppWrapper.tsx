@@ -66,7 +66,7 @@ export const AppWrapper = ({ children }: { children: React.ReactNode }) => {
       setLastPage,
       pathname,
       isAllowedAuthRoutes,
-      user: authUser?.firstName ?? "",
+      authUser,
     });
   }, []);
 
@@ -131,7 +131,7 @@ export const AppWrapper = ({ children }: { children: React.ReactNode }) => {
         setLastPage,
         pathname,
         isAllowedAuthRoutes,
-        user: authUser?.firstName ?? "",
+        authUser,
       });
 
     const handleOnline = () => {
