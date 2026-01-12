@@ -81,7 +81,7 @@ export const AppWrapper = ({ children }: { children: React.ReactNode }) => {
     // AUTHENTICATED or not on app route close modal
     if (
       loginStatus === "AUTHENTICATED" ||
-      (!isOnline && loginStatus === "UNKNOWN") ||
+      (!navigator.onLine && loginStatus === "UNKNOWN") ||
       !isOnAppRoute
     ) {
       closeModal();

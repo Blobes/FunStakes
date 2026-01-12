@@ -39,7 +39,7 @@ export const verifyAuth = async ({
     }
 
     // Token invalid but snapshot exists → LOCKED
-    if (!isOnline) {
+    if (!navigator.onLine) {
       // setAuthUser(userSnapshot);
       console.log(true);
       setLoginStatus("UNKNOWN");
@@ -57,7 +57,6 @@ export const verifyAuth = async ({
     setAuthUser(null);
     setLoginStatus("UNAUTHENTICATED");
     setLastPage({ title: defaultPage.title, path: defaultPage.path });
-    console.log(false);
     return;
   } catch (err: any) {
     setAuthUser(null);
