@@ -141,12 +141,11 @@ export const useAuth = () => {
       }
 
       //Set user snapshot
-      const snapshot: UserSnapshot | null = authUser
+      const snapshot: UserSnapshot | null = payload
         ? {
-            _id: authUser._id,
-            firstName: authUser.firstName,
-            lastName: authUser.lastName,
-            username: authUser.username,
+            _id: payload._id,
+            firstName: payload.firstName,
+            lastName: payload.lastName,
           }
         : null;
       if (snapshot) setCookie("user_snapshot", JSON.stringify(snapshot), 20);
