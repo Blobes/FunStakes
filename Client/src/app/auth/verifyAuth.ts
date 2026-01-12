@@ -28,18 +28,18 @@ export const verifyAuth = async ({
     const res = await fetchUserWithTokenCheck();
     const pagePath = !isAllowedAuthRoutes ? pathname : clientRoutes.timeline;
 
+    setLastPage({ title: extractPageTitle(pagePath), path: pagePath });
+
     // Fully authenticated
     if (isOnline && res.payload) {
       setAuthUser(res.payload);
       setLoginStatus("AUTHENTICATED");
-      setLastPage({ title: extractPageTitle(pagePath), path: pagePath });
       return;
     }
 
     // Set login status to unkown when offline
     if (!isOnline) {
       setLoginStatus("UNKNOWN");
-      setLastPage({ title: extractPageTitle(pagePath), path: pagePath });
       if (!res.message?.toLowerCase().includes("no token")) {
         setSBMessage({
           msg: { content: res.message, msgStatus: "ERROR", hasClose: true },
@@ -52,7 +52,6 @@ export const verifyAuth = async ({
     // 🚫 Fully logged out
     setAuthUser(null);
     setLoginStatus("UNAUTHENTICATED");
-    setLastPage({ title: extractPageTitle(pagePath), path: pagePath });
     return;
   } catch (err: any) {
     setAuthUser(null);

@@ -26,7 +26,6 @@ export const Posts = () => {
     try {
       setLoading(true);
       await delay();
-
       const res = await getAllPost();
       if (res?.payload) {
         setPosts(res.payload);

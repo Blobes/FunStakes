@@ -39,10 +39,6 @@ export interface IUser {
   updatedAt?: string;
 }
 
-export interface UserSnapshot extends IUser {
-  lastRoute?: string;
-}
-
 export interface Post {
   _id: string;
   authorId: string;

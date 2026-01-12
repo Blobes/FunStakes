@@ -140,16 +140,6 @@ export const useAuth = () => {
         setLastPage(savedPage);
       }
 
-      // //Set user snapshot
-      // const snapshot: UserSnapshot | null = payload
-      //   ? {
-      //       _id: payload._id,
-      //       firstName: payload.firstName,
-      //       lastName: payload.lastName,
-      //     }
-      //   : null;
-      // if (snapshot) setCookie("user_snapshot", JSON.stringify(snapshot), 20);
-
       //Clear cookies
       deleteCookie("loginAttempts");
 
@@ -186,7 +176,7 @@ export const useAuth = () => {
 
   const handleLogout = async () => {
     try {
-      // Step 1: Send logout request to backend
+      //  Send logout request to backend
       await fetcher(serverRoutes.logout, { method: "POST" });
 
       setAuthUser(null);

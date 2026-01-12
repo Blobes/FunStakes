@@ -89,9 +89,7 @@ export const PostCard = ({ post, style = {} }: PostProps) => {
       setModalContent({ content: <AuthStepper /> });
       return;
     }
-    // if (isLiking) return;
 
-    //const nextLiked = !likedByMe;
     delay();
     setIsLiking(true);
 
@@ -103,11 +101,8 @@ export const PostCard = ({ post, style = {} }: PostProps) => {
       setPendingLike(_id, nextLiked);
       return { ...prev, likedByMe: nextLiked, likeCount: nextCount };
     });
-    // setPendingLike(_id, nextLiked);
 
     try {
-      // const payload = await handlePostLike(_id);
-      const latestLiked = getPendingLike(_id); // retrieve current optimistic state
       const payload = await handlePostLike(_id); // pass state to backend
       if (payload) {
         // sync with server
