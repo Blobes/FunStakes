@@ -20,7 +20,7 @@ import { heartBeat } from "@/helpers/animations";
 import { usePost } from "./postHooks";
 import { Post } from "@/types";
 import { red } from "@mui/material/colors";
-import { summarizeNum } from "@/helpers/others";
+import { delay, summarizeNum } from "@/helpers/others";
 import { AuthStepper } from "@/app/auth/login/AuthStepper";
 import { Empty } from "@/components/Empty";
 import { Heart } from "lucide-react";
@@ -92,6 +92,7 @@ export const PostCard = ({ post, style = {} }: PostProps) => {
     // if (isLiking) return;
 
     //const nextLiked = !likedByMe;
+    delay();
     setIsLiking(true);
 
     // Optimistic update
