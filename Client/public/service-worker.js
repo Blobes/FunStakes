@@ -1,10 +1,21 @@
-const STATIC_CACHE = "funstakes-static-v9";
-const API_CACHE = "funstakes-api-v9";
+const STATIC_CACHE = "funstakes-static-v10";
+const API_CACHE = "funstakes-api-v10";
 
+// ---------- INSTALL ----------
 self.addEventListener("install", (event) => {
+  event.waitUntil(
+    caches.open(STATIC_CACHE).then((cache) =>
+      cache.addAll([
+        "/", // app shell
+        "/timeline", // main timeline
+        "/manifest.json", // PWA manifest
+      ])
+    )
+  );
   self.skipWaiting();
 });
 
+// ---------- ACTIVATE ----------
 self.addEventListener("activate", (event) => {
   event.waitUntil(
     caches
@@ -20,14 +31,30 @@ self.addEventListener("activate", (event) => {
   self.clients.claim();
 });
 
+// ---------- FETCH ----------
 self.addEventListener("fetch", (event) => {
   const { request } = event;
-  const url = new URL(request.url);
+
+  /* 🔥 ALWAYS HANDLE NAVIGATION FIRST */
+  if (request.mode === "navigate") {
+    event.respondWith(
+      fetch(request).catch(() => caches.match("/timeline") || caches.match("/"))
+    );
+    return;
+  }
 
   if (request.method !== "GET") return;
 
+  const url = new URL(request.url);
+
   /* NEVER CACHE AUTH */
   if (url.pathname.startsWith("/api/auth")) return;
+
+  /* MANIFEST */
+  if (url.pathname === "/manifest.json") {
+    event.respondWith(cacheFirst(request, STATIC_CACHE));
+    return;
+  }
 
   /* NEXT STATIC ASSETS */
   if (url.pathname.startsWith("/_next/static")) {
