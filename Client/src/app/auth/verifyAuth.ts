@@ -22,7 +22,6 @@ export const verifyAuth = async ({
   setLastPage,
   pathname,
   isAllowedAuthRoutes,
-  loginStatus,
 }: VerifyParams) => {
   try {
     const res = await fetchUserWithTokenCheck();
@@ -41,8 +40,7 @@ export const verifyAuth = async ({
     // Token invalid but snapshot exists → LOCKED
     if (userSnapshot) {
       setAuthUser(userSnapshot);
-      // setLoginStatus("UNAUTHENTICATED");
-      console.log(loginStatus);
+      setLoginStatus("UNAUTHENTICATED");
       setLastPage({ title: extractPageTitle(pagePath), path: pagePath });
       if (!res.message?.toLowerCase().includes("no token")) {
         setSBMessage({

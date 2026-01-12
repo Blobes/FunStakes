@@ -92,6 +92,7 @@ export const PostCard = ({ post, style = {} }: PostProps) => {
     if (isLiking) return;
 
     const nextLiked = !likedByMe;
+    setIsLiking(true);
 
     // Optimistic update
     setPostData((prev) => {
@@ -102,7 +103,6 @@ export const PostCard = ({ post, style = {} }: PostProps) => {
       return { ...prev, likedByMe: nextLiked, likeCount: nextCount };
     });
     // setPendingLike(_id, nextLiked);
-    setIsLiking(true);
 
     try {
       // const payload = await handlePostLike(_id);
