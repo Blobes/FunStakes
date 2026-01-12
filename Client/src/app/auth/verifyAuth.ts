@@ -26,22 +26,20 @@ export const verifyAuth = async ({
 }: VerifyParams) => {
   try {
     const res = await fetchUserWithTokenCheck();
-    const snapshotCookie = getCookie("user_snapshot");
-    const userSnapshot = snapshotCookie ? JSON.parse(snapshotCookie) : null;
+    // const snapshotCookie = getCookie("user_snapshot");
+    // const userSnapshot = snapshotCookie ? JSON.parse(snapshotCookie) : null;
     const pagePath = !isAllowedAuthRoutes ? pathname : clientRoutes.timeline;
 
     // Fully authenticated
-    if (navigator.onLine && res.payload) {
+    if (isOnline && res.payload) {
       setAuthUser(res.payload);
       setLoginStatus("AUTHENTICATED");
       setLastPage({ title: extractPageTitle(pagePath), path: pagePath });
       return;
     }
 
-    // Token invalid but snapshot exists → LOCKED
-    if (!navigator.onLine) {
-      // setAuthUser(userSnapshot);
-      console.log(true);
+    // Set login status to unkown when offline
+    if (!isOnline) {
       setLoginStatus("UNKNOWN");
       setLastPage({ title: extractPageTitle(pagePath), path: pagePath });
       if (!res.message?.toLowerCase().includes("no token")) {

@@ -140,18 +140,17 @@ export const useAuth = () => {
         setLastPage(savedPage);
       }
 
-      //Set user snapshot
-      const snapshot: UserSnapshot | null = payload
-        ? {
-            _id: payload._id,
-            firstName: payload.firstName,
-            lastName: payload.lastName,
-          }
-        : null;
-      if (snapshot) setCookie("user_snapshot", JSON.stringify(snapshot), 20);
+      // //Set user snapshot
+      // const snapshot: UserSnapshot | null = payload
+      //   ? {
+      //       _id: payload._id,
+      //       firstName: payload.firstName,
+      //       lastName: payload.lastName,
+      //     }
+      //   : null;
+      // if (snapshot) setCookie("user_snapshot", JSON.stringify(snapshot), 20);
 
       //Clear cookies
-      // deleteCookie("user_snapshot");
       deleteCookie("loginAttempts");
 
       return { payload, message, status };
@@ -186,31 +185,9 @@ export const useAuth = () => {
   };
 
   const handleLogout = async () => {
-    const snapshot: UserSnapshot | null = authUser
-      ? {
-          _id: authUser._id,
-          firstName: authUser.firstName,
-          lastName: authUser.lastName,
-          username: authUser.lastName,
-        }
-      : null;
-    let pagePath;
     try {
       // Step 1: Send logout request to backend
       await fetcher(serverRoutes.logout, { method: "POST" });
-
-      // Step 2: Check if stored user exists for drawer experience
-      // if (snapshot) setCookie("user_snapshot", JSON.stringify(snapshot), 20);
-      // const userSnapshot = getCookie("user_snapshot");
-
-      // if (userSnapshot) {
-      //   const parsed = JSON.parse(userSnapshot);
-      //   setAuthUser(parsed);
-
-      //   pagePath = pathname;
-      //   setLastPage({ title: extractPageTitle(pagePath), path: pagePath });
-      //   setLoginStatus("UNAUTHENTICATED");
-      // } else {
 
       setAuthUser(null);
       deleteCookie("user_snapshot");
