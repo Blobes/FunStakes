@@ -80,7 +80,6 @@ export const PostCard = ({ post, style = {} }: PostProps) => {
         likedByMe: pending,
         likeCount: prev.likeCount + (pending ? 1 : -1),
       }));
-      console.log("Yeah");
     }
   }, [_id, handleAuthor]);
 
