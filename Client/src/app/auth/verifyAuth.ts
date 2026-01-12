@@ -26,8 +26,6 @@ export const verifyAuth = async ({
 }: VerifyParams) => {
   try {
     const res = await fetchUserWithTokenCheck();
-    // const snapshotCookie = getCookie("user_snapshot");
-    // const userSnapshot = snapshotCookie ? JSON.parse(snapshotCookie) : null;
     const pagePath = !isAllowedAuthRoutes ? pathname : clientRoutes.timeline;
 
     // Fully authenticated
