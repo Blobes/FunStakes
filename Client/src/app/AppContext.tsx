@@ -48,7 +48,7 @@ export const ContextProvider = ({
   const [isAuthLoading, setAuthLoading] = useState(false);
   const [lastPage, setPage] = useState<SavedPage>(defaultPage);
   const [modalContent, setModalContent] = useState<ModalContent | null>(null);
-  const [isOnline, setOnlineStatus] = useState(false);
+  const [isOnline, setOnlineStatus] = useState(navigator.onLine);
 
   return (
     <context.Provider
