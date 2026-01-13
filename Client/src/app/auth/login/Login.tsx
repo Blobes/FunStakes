@@ -140,12 +140,13 @@ export const Login: React.FC<LoginProps> = ({
             variant="body2"
             sx={{
               textAlign: "left",
-              padding: theme.boxSpacing(4, 6),
-              borderRadius: theme.radius[2],
+              padding: theme.boxSpacing(6, 8),
+              borderRadius: theme.radius[3],
               color: theme.palette.primary.light,
               border: `1px solid ${theme.fixedColors.mainTrans}`,
               backgroundColor: theme.fixedColors.mainTrans,
               width: "100%",
+              fontWeight: "500",
             }}>
             {email}
           </Typography>
@@ -154,13 +155,15 @@ export const Login: React.FC<LoginProps> = ({
             style={{
               padding: theme.boxSpacing(3, 4),
               color: theme.palette.gray[200],
-              borderColor: theme.palette.gray[100],
+              borderColor: theme.palette.gray.trans[1],
+              borderRadius: theme.radius[3],
+              width: "50px",
             }}
             onClick={() => {
               setStep?.("email");
             }}>
             <BasicTooltip title={"Change email"}>
-              <Pencil style={{ width: "20px" }} />
+              <Pencil style={{ width: "18px" }} />
             </BasicTooltip>
           </AppButton>
         </Stack>

@@ -246,10 +246,10 @@ const componentTheme = createTheme({
         root: ({ theme }) =>
           theme.unstable_sx({
             borderColor: "var(--TextField-default)",
-            borderRadius: theme.radius[2],
+            borderRadius: theme.radius[3],
             maxWidth: "600px",
             minWidth: "150px",
-            padding: theme.boxSpacing(2, 4, 2, 0),
+            padding: theme.boxSpacing(2, 6, 2, 0),
             [`& .Mui-error .${outlinedInputClasses.notchedOutline}`]: {
               borderColor: "var(--TextField-error)",
             },
