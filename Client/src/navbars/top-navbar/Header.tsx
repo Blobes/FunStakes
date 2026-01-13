@@ -102,6 +102,7 @@ export const Header: React.FC = () => {
           gap: theme.gap(6),
           padding: theme.boxSpacing(6, 10),
           borderBottom: `1px solid ${theme.palette.gray.trans[1]}`,
+          // background: "none",
         }}>
         <Stack direction="row" alignItems="center" spacing={theme.gap(8)}>
           {/* Mobile hamburger (logged out only) */}

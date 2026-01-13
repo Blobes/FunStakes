@@ -14,10 +14,12 @@ import { AuthStepper } from "./auth/login/AuthStepper";
 import { verifyAuth } from "./auth/verifyAuth";
 import { defaultPage, flaggedRoutes } from "@/helpers/info";
 import { matchPaths } from "@/helpers/others";
+import { useTheme } from "@mui/material/styles";
 
 export const AppWrapper = ({ children }: { children: React.ReactNode }) => {
   const pathname = usePathname();
   const router = useRouter();
+  const theme = useTheme();
 
   // Always initialize hooks here — top of the component
   const modalRef = useRef<ModalRef>(null);
@@ -183,7 +185,14 @@ export const AppWrapper = ({ children }: { children: React.ReactNode }) => {
     return null; // or splash loader
   }
   return (
-    <Stack sx={{ position: "fixed", height: "100vh", width: "100%", gap: 0 }}>
+    <Stack
+      sx={{
+        position: "fixed",
+        height: "100vh",
+        width: "100%",
+        gap: 0,
+        backgroundColor: theme.palette.gray[0],
+      }}>
       <BlurEffect />
       {!isAllowedAuthRoutes && <Header />}
       {snackBarMsgs.messgages && <SnackBars snackBarMsg={snackBarMsgs} />}

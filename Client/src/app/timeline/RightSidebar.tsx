@@ -4,25 +4,31 @@ import { Stack, Typography } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import { ProfileCard } from "./RightSidebarCards";
 import { Followers } from "./Followers";
-import { ScrollableContainer } from "@/components/Containers";
 import { useAppContext } from "../AppContext";
 import { AppButton } from "@/components/Buttons";
 import { useRouter } from "next/navigation";
+import { useStyles } from "@/helpers/styles";
 
 export const RightSidebar = () => {
   const theme = useTheme();
   const { loginStatus } = useAppContext();
   const router = useRouter();
+  const { autoScroll } = useStyles();
 
   return (
-    <ScrollableContainer
+    <Stack
       sx={{
         width: "28%",
         minWidth: "300px",
         maxWidth: "500px",
-        [theme.breakpoints.down("md")]: { display: "none" },
         gap: theme.gap(8),
+        flex: "none",
         padding: theme.boxSpacing(8, 16),
+        ...autoScroll().base,
+        [theme.breakpoints.down("md")]: {
+          display: "none",
+          ...autoScroll().mobile,
+        },
       }}>
       {loginStatus === "AUTHENTICATED" ? (
         <>
@@ -42,6 +48,6 @@ export const RightSidebar = () => {
           </AppButton>
         </Stack>
       )}
-    </ScrollableContainer>
+    </Stack>
   );
 };

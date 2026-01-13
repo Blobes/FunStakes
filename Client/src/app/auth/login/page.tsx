@@ -19,7 +19,7 @@ export default function LoginPage() {
         style={{
           container: {
             width: "400px",
-            padding: theme.boxSpacing(16, 10),
+            padding: theme.boxSpacing(18, 16),
           },
         }}
       />

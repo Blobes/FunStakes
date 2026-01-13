@@ -50,7 +50,7 @@ export const AuthStepper: React.FC<StepperProps> = ({ style = {} }) => {
   return (
     <Stack
       sx={{
-        backgroundColor: theme.palette.gray[0],
+        backgroundColor: theme.palette.gray[50],
         borderRadius: "12px",
         justifyContent: "center",
         alignItems: "center",

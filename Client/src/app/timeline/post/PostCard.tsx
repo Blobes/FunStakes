@@ -148,6 +148,8 @@ export const PostCard = ({ post, style = {} }: PostProps) => {
         display: "flex",
         flexDirection: "column",
         gap: theme.gap(4),
+        flexGrow: "0",
+        flexShrink: "0",
         ...style,
       }}>
       {/* Post Header */}

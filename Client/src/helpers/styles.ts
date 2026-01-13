@@ -25,5 +25,21 @@ export const useStyles = () => {
       },
     };
   };
-  return { scrollBarStyle };
+
+  const autoScroll = () => ({
+    base: {
+      overflowY: "auto",
+      height: "100%",
+      "&::-webkit-scrollbar": {
+        width: "0px",
+      },
+    },
+    mobile: {
+      height: "fit-content",
+      width: "100%",
+      overflowY: "unset",
+    },
+  });
+
+  return { scrollBarStyle, autoScroll };
 };

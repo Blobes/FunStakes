@@ -31,7 +31,7 @@ export const Empty: React.FC<EmptyProps> = ({
     <Stack
       sx={{
         backgroundColor: theme.palette.gray.trans[1],
-        padding: theme.boxSpacing(12, 4),
+        padding: theme.boxSpacing(12, 8),
         textAlign: "center",
         borderRadius: theme.radius[2],
         alignItems: "center",

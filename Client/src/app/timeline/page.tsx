@@ -5,18 +5,16 @@ import { useTheme } from "@mui/material/styles";
 import { RightSidebar } from "./RightSidebar";
 import { Posts } from "./post/Posts";
 import { useStyles } from "@/helpers/styles";
-import { ScrollableContainer } from "@/components/Containers";
 
 export default function TimelinePage() {
   const theme = useTheme();
-  const { scrollBarStyle } = useStyles();
+  const { scrollBarStyle, autoScroll } = useStyles();
 
   return (
     <Stack
       sx={{
         height: "100%",
         gap: theme.gap(0),
-        backgroundColor: theme.palette.gray[0],
         overflowY: "hidden",
         overflowX: "auto",
         flexDirection: "row",
@@ -29,16 +27,20 @@ export default function TimelinePage() {
         },
         ...scrollBarStyle(),
       }}>
-      <ScrollableContainer
+      <Stack
         sx={{
-          width: "28%",
-          maxWidth: "500px",
-          minWidth: "300px",
+          width: "18%",
+          maxWidth: "400px",
+          minWidth: "250px",
           padding: theme.boxSpacing(8, 16),
-          [theme.breakpoints.down("md")]: { display: "none" },
+          ...autoScroll().base,
+          [theme.breakpoints.down("md")]: {
+            display: "none",
+            ...autoScroll().mobile,
+          },
         }}>
-        Col 3
-      </ScrollableContainer>
+        Left hand navigation
+      </Stack>
       <Posts />
       <RightSidebar />
     </Stack>

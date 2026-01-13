@@ -46,8 +46,8 @@ let designSystem = createTheme({
           dark: "#4355DC",
         },
         gray: {
-          0: grey[900],
-          50: grey[800],
+          0: "#020516",
+          50: "#050C2D",
           100: grey[700],
           200: grey[500],
           300: "#ffffff",
@@ -75,7 +75,7 @@ let designSystem = createTheme({
   // Fixed colors
   fixedColors: {
     gray50: grey[50],
-    gray800: "#333437",
+    gray800: "#06122B",
     mainTrans: "rgba(63, 121, 228, 0.14)",
   },
 
