@@ -16,7 +16,7 @@ export default function TimelinePage() {
       sx={{
         height: "100%",
         gap: theme.gap(0),
-        backgroundColor: theme.palette.gray[0],
+        //  backgroundColor: theme.palette.gray[0],
         overflowY: "hidden",
         overflowX: "auto",
         flexDirection: "row",

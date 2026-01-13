@@ -12,7 +12,7 @@ const Blur = styled("div")(({ theme }) =>
     height: "350px",
     zIndex: -1,
     filter: "blur(72px)",
-    opacity: 0.12,
+    opacity: 0.05,
   })
 );
 
@@ -31,12 +31,6 @@ export const BlurEffect = () => {
           backgroundColor: blue.A700,
           top: "20px",
           right: "-30px",
-        }}></Blur>
-      <Blur
-        sx={{
-          backgroundColor: purple.A700,
-          bottom: "10px",
-          left: "-30px",
         }}></Blur>
       <Blur
         sx={{

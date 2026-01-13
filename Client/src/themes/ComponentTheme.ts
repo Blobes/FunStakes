@@ -62,13 +62,15 @@ const componentTheme = createTheme({
       styleOverrides: {
         tooltip: ({ theme }) =>
           theme.unstable_sx({
-            padding: theme.boxSpacing(3, 6),
+            padding: theme.boxSpacing(3, 5),
             backgroundColor: theme.fixedColors.gray800,
             color: theme.fixedColors.gray50,
-            fontSize: "13px",
-            borderRadius: theme.radius[1],
+            fontSize: "12px",
+            borderRadius: theme.radius[2],
+            boxShadow: theme.shadows[1],
             maxWidth: 420,
             margin: theme.boxSpacing(0, 6),
+            border: `1px solid ${theme.palette.gray.trans[1]}`,
           }),
         arrow: ({ theme }) =>
           theme.unstable_sx({
@@ -191,7 +193,7 @@ const componentTheme = createTheme({
       styleOverrides: {
         root: ({ theme }) =>
           theme.unstable_sx({
-            backgroundColor: "unset",
+            background: "unset",
             borderRadius: theme.radius[0],
             boxShadow: "none",
           }),
