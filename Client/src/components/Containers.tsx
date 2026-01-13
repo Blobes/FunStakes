@@ -1,5 +1,5 @@
 import { styled } from "@mui/material/styles";
-import { Box, Stack } from "@mui/material";
+import { Stack } from "@mui/material";
 
 export const ScrollableContainer = styled(Stack)(({ theme }) =>
   theme.unstable_sx({

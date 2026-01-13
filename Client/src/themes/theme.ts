@@ -46,8 +46,8 @@ let designSystem = createTheme({
           dark: "#4355DC",
         },
         gray: {
-          0: "#020816",
-          50: grey[800],
+          0: "#020516",
+          50: "#050C2D",
           100: grey[700],
           200: grey[500],
           300: "#ffffff",

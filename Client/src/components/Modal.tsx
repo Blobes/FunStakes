@@ -125,7 +125,7 @@ export const Modal = forwardRef<ModalRef, ModalProps>(
               maxWidth: maxWidth?.md ?? "400px",
             },
             gap: theme.gap(0),
-            backgroundColor: theme.palette.gray[0],
+            backgroundColor: theme.palette.gray[50],
             borderRadius: theme.radius[3],
             overflow: "hidden",
             animation: isOpen
@@ -140,7 +140,7 @@ export const Modal = forwardRef<ModalRef, ModalProps>(
                 direction={"row"}
                 sx={{
                   position: "sticky",
-                  backgroundColor: theme.palette.gray[0],
+                  backgroundColor: theme.palette.gray[50],
                   padding: theme.boxSpacing(2),
                   justifyContent: "flex-end",
                   borderBottom: header

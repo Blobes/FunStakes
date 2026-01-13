@@ -3,7 +3,6 @@
 import { Stack } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import { PostCard } from "./PostCard";
-import { ScrollableContainer } from "@/components/Containers";
 import { CreatePost } from "./CreatePost";
 import { useEffect, useState } from "react";
 import { Post } from "@/types";
@@ -14,6 +13,7 @@ import { ProgressIcon } from "@/components/Loading";
 import { Empty } from "@/components/Empty";
 import { useRouter } from "next/navigation";
 import { RadioTower } from "lucide-react";
+import { useStyles } from "@/helpers/styles";
 
 export const Posts = () => {
   const theme = useTheme();
@@ -23,6 +23,7 @@ export const Posts = () => {
   const { loginStatus } = useAppContext();
   const [isLoading, setLoading] = useState(false);
   const router = useRouter();
+  const { autoScroll } = useStyles();
 
   const renderPosts = async () => {
     try {
@@ -43,16 +44,25 @@ export const Posts = () => {
   }, [loginStatus]);
 
   return (
-    <ScrollableContainer
+    <Stack
       sx={{
         borderLeft: `1px solid ${theme.palette.gray.trans[1]}`,
         borderRight: `1px solid ${theme.palette.gray.trans[1]}`,
-        width: "44%",
-        maxWidth: "650px",
+        width: "100%",
+        height: "100%",
         minWidth: "400px",
+        gap: "unset",
+        padding: theme.boxSpacing(0),
+        ...(posts.length > 1 && autoScroll().base),
+
+        [theme.breakpoints.down("md")]: {
+          border: "none",
+          maxWidth: "unset",
+          minWidth: "unset",
+          ...autoScroll().mobile,
+        },
       }}>
       {loginStatus === "AUTHENTICATED" && <CreatePost />}
-
       {isLoading ? (
         <Stack
           sx={{
@@ -76,30 +86,25 @@ export const Posts = () => {
               height: "100%",
               backgroundColor: "none",
             },
-            tagline: { fontSize: "18px" },
+            tagline: { fontSize: { sx: "15px", sm: "18px" } },
             icon: {
               width: "60px",
               height: "60px",
+              [theme.breakpoints.down("md")]: {
+                width: "40px",
+                height: "40px",
+              },
               svg: {
                 fill: "none",
-                stroke: theme.palette.gray[200],
+                stroke: theme.palette.gray[300],
                 strokeWidth: "1.5px",
               },
             },
           }}
         />
       ) : (
-        <Stack
-          sx={{
-            gap: "unset",
-            height: "fit-content",
-            padding: theme.boxSpacing(0),
-          }}>
-          {posts.map((post) => (
-            <PostCard key={post._id} post={post} />
-          ))}
-        </Stack>
+        posts.map((post) => <PostCard key={post._id} post={post} />)
       )}
-    </ScrollableContainer>
+    </Stack>
   );
 };
