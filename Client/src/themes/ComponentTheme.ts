@@ -28,7 +28,7 @@ const componentTheme = createTheme({
         root: ({ theme }) =>
           theme.unstable_sx({
             padding: theme.boxSpacing(4, 9),
-            borderRadius: theme.radius[2],
+            borderRadius: theme.radius.full,
             alignSelf: "flex-start",
             height: "40px",
           }),

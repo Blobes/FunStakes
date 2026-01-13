@@ -57,8 +57,9 @@ export const SnackBars = ({
             variant="elevation"
             sx={{
               position: "absolute",
-              top: `${20 + i * 80}px`, // offset for multiple snackbars
+              top: `${10 + i * 80}px`, // offset for multiple snackbars
               right: "10px",
+              maxWidth: { xs: "290px", sm: "500px" },
               zIndex: 1000,
               padding: theme.boxSpacing(8),
               display: "flex",

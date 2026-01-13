@@ -45,7 +45,7 @@ export const AppWrapper = ({ children }: { children: React.ReactNode }) => {
   const isAllowedAuthRoutes = flaggedRoutes.auth.includes(pathname);
   const isOnAppRoute = flaggedAppRoutes.length > 0;
 
-  const verify = async () =>
+  const verifyUserAuth = async () =>
     await verifyAuth({
       setAuthUser,
       setLoginStatus,
@@ -67,7 +67,7 @@ export const AppWrapper = ({ children }: { children: React.ReactNode }) => {
         .then(() => console.log("SW registered"))
         .catch((err) => console.error("SW registration failed:", err));
     }
-    verify();
+    verifyUserAuth();
   }, []);
 
   // ─────────────────────────────
@@ -139,7 +139,7 @@ export const AppWrapper = ({ children }: { children: React.ReactNode }) => {
         override: true,
       });
       setOnlineStatus(true);
-      verify();
+      verifyUserAuth();
     };
 
     const handleOffline = () => {
@@ -152,7 +152,7 @@ export const AppWrapper = ({ children }: { children: React.ReactNode }) => {
           hasClose: true,
           cta: {
             label: "Refresh",
-            action: () => window.location.reload(),
+            action: () => router.refresh(),
           },
         },
       });
@@ -160,10 +160,11 @@ export const AppWrapper = ({ children }: { children: React.ReactNode }) => {
     };
 
     const handleVisibility = () => {
-      if (document.visibilityState === "visible" && isOnline === true) verify();
+      if (document.visibilityState === "visible" && isOnline === true)
+        verifyUserAuth();
     };
     const handleFocus = () => {
-      if (isOnline === true) verify();
+      if (isOnline === true) verifyUserAuth();
     };
 
     window.addEventListener("online", handleOnline);
@@ -173,7 +174,7 @@ export const AppWrapper = ({ children }: { children: React.ReactNode }) => {
     return () => {
       window.removeEventListener("online", handleOnline);
       window.removeEventListener("offline", handleOffline);
-      window.removeEventListener("focus", verify);
+      window.removeEventListener("focus", verifyUserAuth);
       document.removeEventListener("visibilitychange", handleVisibility);
     };
   }, [pathname, lastPage, loginStatus]);
