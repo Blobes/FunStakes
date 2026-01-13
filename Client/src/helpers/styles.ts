@@ -35,7 +35,7 @@ export const useStyles = () => {
       },
     },
     mobile: {
-      height: "fit-content",
+      // height: "fit-content",
       width: "100%",
       overflowY: "unset",
     },
