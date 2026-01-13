@@ -1,6 +1,6 @@
 "use client";
 
-import { extractPageTitle, getCookie } from "@/helpers/others";
+import { extractPageTitle } from "@/helpers/others";
 import { fetchUserWithTokenCheck } from "@/helpers/fetcher";
 import { SavedPage } from "@/types";
 import { defaultPage, clientRoutes } from "@/helpers/info";
@@ -12,7 +12,7 @@ interface VerifyParams {
   setLastPage: (page: SavedPage) => void;
   pathname: string;
   isAllowedAuthRoutes: boolean;
-  loginStatus: string;
+  isOnline: boolean;
 }
 
 export const verifyAuth = async ({
@@ -22,29 +22,28 @@ export const verifyAuth = async ({
   setLastPage,
   pathname,
   isAllowedAuthRoutes,
+  isOnline,
 }: VerifyParams) => {
   try {
     const res = await fetchUserWithTokenCheck();
-    const snapshotCookie = getCookie("user_snapshot");
-    const userSnapshot = snapshotCookie ? JSON.parse(snapshotCookie) : null;
     const pagePath = !isAllowedAuthRoutes ? pathname : clientRoutes.timeline;
 
+    setLastPage({ title: extractPageTitle(pagePath), path: pagePath });
+
     // Fully authenticated
-    if (navigator.onLine && res.payload) {
+    if (isOnline && res.payload) {
       setAuthUser(res.payload);
       setLoginStatus("AUTHENTICATED");
-      setLastPage({ title: extractPageTitle(pagePath), path: pagePath });
       return;
     }
 
-    // Token invalid but snapshot exists → LOCKED
-    if (userSnapshot) {
-      setAuthUser(userSnapshot);
-      // setLoginStatus("UNAUTHENTICATED");
-      setLastPage({ title: extractPageTitle(pagePath), path: pagePath });
+    // Set login status to unkown when offline
+    if (!isOnline) {
+      setLoginStatus("UNKNOWN");
       if (!res.message?.toLowerCase().includes("no token")) {
         setSBMessage({
           msg: { content: res.message, msgStatus: "ERROR", hasClose: true },
+          override: true,
         });
       }
       return;
@@ -53,7 +52,6 @@ export const verifyAuth = async ({
     // 🚫 Fully logged out
     setAuthUser(null);
     setLoginStatus("UNAUTHENTICATED");
-    setLastPage({ title: defaultPage.title, path: defaultPage.path });
     return;
   } catch (err: any) {
     setAuthUser(null);

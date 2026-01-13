@@ -1,13 +1,21 @@
-import { Stack, Typography } from "@mui/material";
+import { IconButton, Stack, Typography } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import { AppButton } from "./Buttons";
+import React from "react";
+import { RefreshCcw } from "lucide-react";
+import { BasicTooltip } from "./Tooltips";
 
 interface EmptyProps {
   headline?: string;
   tagline?: string;
   icon?: React.ReactNode;
   style?: { container?: any; headline?: any; tagline?: any; icon?: any };
-  cta?: { label?: string; action: () => void };
+  cta?: {
+    type?: "BUTTON" | "ICON";
+    label?: string | React.ReactNode;
+    toolTip?: string;
+    action: () => void;
+  };
 }
 
 export const Empty: React.FC<EmptyProps> = ({
@@ -18,6 +26,7 @@ export const Empty: React.FC<EmptyProps> = ({
   cta,
 }) => {
   const theme = useTheme();
+  const ctaType = cta?.type || "BUTTON";
   return (
     <Stack
       sx={{
@@ -26,6 +35,7 @@ export const Empty: React.FC<EmptyProps> = ({
         textAlign: "center",
         borderRadius: theme.radius[2],
         alignItems: "center",
+        justifyContent: "center",
         ...style?.container,
       }}>
       {/* Icon */}
@@ -38,6 +48,7 @@ export const Empty: React.FC<EmptyProps> = ({
               width: "100%",
               height: "100%",
               fill: theme.palette.gray[200],
+              ...style?.icon?.svg,
             },
             ...style?.icon,
           }}>
@@ -67,18 +78,25 @@ export const Empty: React.FC<EmptyProps> = ({
         </Typography>
       )}
       {/* CTA */}
-      {cta && (
-        <AppButton
-          variant="contained"
-          style={{
-            fontSize: "14px",
-            padding: theme.boxSpacing(2, 6),
-            marginTop: theme.boxSpacing(6),
-          }}
-          onClick={cta.action}>
-          {cta.label || "Start"}
-        </AppButton>
-      )}
+      {cta &&
+        (ctaType === "BUTTON" ? (
+          <AppButton
+            variant="contained"
+            style={{
+              fontSize: "14px",
+              padding: theme.boxSpacing(2, 6),
+              marginTop: theme.boxSpacing(6),
+            }}
+            onClick={cta.action}>
+            {cta.label || "Start"}
+          </AppButton>
+        ) : (
+          <BasicTooltip title={cta.toolTip || ""}>
+            <IconButton onClick={cta.action}>
+              {cta.label || <RefreshCcw />}
+            </IconButton>
+          </BasicTooltip>
+        ))}
     </Stack>
   );
 };

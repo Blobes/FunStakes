@@ -8,11 +8,12 @@ import { CreatePost } from "./CreatePost";
 import { useEffect, useState } from "react";
 import { Post } from "@/types";
 import { usePost } from "./postHooks";
-import { Article } from "@mui/icons-material";
 import { useAppContext } from "@/app/AppContext";
 import { delay } from "@/helpers/others";
 import { ProgressIcon } from "@/components/Loading";
 import { Empty } from "@/components/Empty";
+import { useRouter } from "next/navigation";
+import { RadioTower } from "lucide-react";
 
 export const Posts = () => {
   const theme = useTheme();
@@ -21,12 +22,12 @@ export const Posts = () => {
   const [message, setMessage] = useState<string | null>(null);
   const { loginStatus } = useAppContext();
   const [isLoading, setLoading] = useState(false);
+  const router = useRouter();
 
   const renderPosts = async () => {
     try {
       setLoading(true);
       await delay();
-
       const res = await getAllPost();
       if (res?.payload) {
         setPosts(res.payload);
@@ -64,10 +65,26 @@ export const Posts = () => {
       ) : posts.length < 1 ? (
         <Empty
           tagline={message || "Something went wrong, check your network"}
-          icon={<Article />}
+          icon={<RadioTower />}
+          cta={{
+            type: "ICON",
+            toolTip: "Refresh",
+            action: () => router.refresh(),
+          }}
           style={{
             container: {
-              margin: theme.boxSpacing(8, 8, 0, 8),
+              height: "100%",
+              backgroundColor: "none",
+            },
+            tagline: { fontSize: "18px" },
+            icon: {
+              width: "60px",
+              height: "60px",
+              svg: {
+                fill: "none",
+                stroke: theme.palette.gray[200],
+                strokeWidth: "1.5px",
+              },
             },
           }}
         />

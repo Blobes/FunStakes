@@ -14,7 +14,7 @@ import { serverRoutes } from "@/helpers/info";
 
 export const usePost = () => {
   const getAllPost = async (): Promise<{
-    payload: (Post & { likedByMe: boolean })[] | null;
+    payload: Post[] | null;
     message: string;
   }> => {
     try {

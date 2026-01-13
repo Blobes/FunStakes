@@ -32,7 +32,7 @@ interface PostProps {
 
 export const PostCard = ({ post, style = {} }: PostProps) => {
   const theme = useTheme();
-  const { authUser, loginStatus, setModalContent } = useAppContext();
+  const { authUser, loginStatus, setModalContent, isOnline } = useAppContext();
   const {
     handlePostLike,
     fetchAuthor,
@@ -85,13 +85,11 @@ export const PostCard = ({ post, style = {} }: PostProps) => {
 
   // Handle like/unlike
   const handleLike = async () => {
-    if (!authUser || loginStatus !== "AUTHENTICATED") {
+    if ((isOnline && !authUser) || loginStatus === "UNAUTHENTICATED") {
       setModalContent({ content: <AuthStepper /> });
       return;
     }
-    // if (isLiking) return;
 
-    //const nextLiked = !likedByMe;
     delay();
     setIsLiking(true);
 
@@ -103,11 +101,8 @@ export const PostCard = ({ post, style = {} }: PostProps) => {
       setPendingLike(_id, nextLiked);
       return { ...prev, likedByMe: nextLiked, likeCount: nextCount };
     });
-    // setPendingLike(_id, nextLiked);
 
     try {
-      // const payload = await handlePostLike(_id);
-      const latestLiked = getPendingLike(_id); // retrieve current optimistic state
       const payload = await handlePostLike(_id); // pass state to backend
       if (payload) {
         // sync with server

@@ -114,7 +114,7 @@ export const Modal = forwardRef<ModalRef, ModalProps>(
         <Stack
           sx={{
             maxHeight: "100%",
-            width: width?.xs ?? "80%",
+            width: width?.xs ?? "90%",
             maxWidth: maxWidth?.xs ?? "100%",
             [theme.breakpoints.up("sm")]: {
               width: width?.sm ?? "80%",

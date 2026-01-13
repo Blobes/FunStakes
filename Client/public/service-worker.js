@@ -1,10 +1,12 @@
-const STATIC_CACHE = "funstakes-static-v9";
-const API_CACHE = "funstakes-api-v9";
+const STATIC_CACHE = "funstakes-static-v1";
+const API_CACHE = "funstakes-api-v1";
 
+// Install
 self.addEventListener("install", (event) => {
   self.skipWaiting();
 });
 
+// Activate
 self.addEventListener("activate", (event) => {
   event.waitUntil(
     caches
@@ -31,6 +33,16 @@ self.addEventListener("fetch", (event) => {
 
   /* NEXT STATIC ASSETS */
   if (url.pathname.startsWith("/_next/static")) {
+    event.respondWith(cacheFirst(request, STATIC_CACHE));
+    return;
+  }
+
+  /* MANIFEST + ICONS */
+  if (
+    url.pathname === "/manifest.json" ||
+    url.pathname.endsWith(".png") ||
+    url.pathname.endsWith(".ico")
+  ) {
     event.respondWith(cacheFirst(request, STATIC_CACHE));
     return;
   }

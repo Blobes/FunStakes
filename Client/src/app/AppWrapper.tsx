@@ -45,28 +45,29 @@ export const AppWrapper = ({ children }: { children: React.ReactNode }) => {
   const isAllowedAuthRoutes = flaggedRoutes.auth.includes(pathname);
   const isOnAppRoute = flaggedAppRoutes.length > 0;
 
-  // ─────────────────────────────
-  // 1️⃣ MOUNT + INITIAL AUTH CHECK & SERVICE WORKER REGISTRATION
-  // ─────────────────────────────
-  useEffect(() => {
-    setMounted(true);
-
-    if (process.env.NODE_ENV === "production" && "serviceWorker" in navigator) {
-      navigator.serviceWorker
-        .register("/service-worker.js")
-        .then(() => console.log("SW registered"))
-        .catch((err) => console.error("SW registration failed:", err));
-    }
-
-    verifyAuth({
+  const verifyUserAuth = async () =>
+    await verifyAuth({
       setAuthUser,
       setLoginStatus,
       setSBMessage,
       setLastPage,
       pathname,
       isAllowedAuthRoutes,
-      loginStatus,
+      isOnline,
     });
+
+  // ─────────────────────────────
+  // 1️⃣ MOUNT + INITIAL AUTH CHECK & SERVICE WORKER REGISTRATION
+  // ─────────────────────────────
+  useEffect(() => {
+    setMounted(true);
+    if (process.env.NODE_ENV === "production" && "serviceWorker" in navigator) {
+      navigator.serviceWorker
+        .register("/service-worker.js")
+        .then(() => console.log("SW registered"))
+        .catch((err) => console.error("SW registration failed:", err));
+    }
+    verifyUserAuth();
   }, []);
 
   // ─────────────────────────────
@@ -103,7 +104,14 @@ export const AppWrapper = ({ children }: { children: React.ReactNode }) => {
     return () => {
       if (intervalId) clearInterval(intervalId);
     };
-  }, [loginStatus, isOnAppRoute, isAllowedRoutes, router, defaultPage.path]);
+  }, [
+    loginStatus,
+    isOnAppRoute,
+    isAllowedRoutes,
+    router,
+    defaultPage.path,
+    pathname,
+  ]);
 
   // ─────────────────────────────
   // 3️⃣ MODAL OPEN / CLOSE
@@ -122,17 +130,6 @@ export const AppWrapper = ({ children }: { children: React.ReactNode }) => {
   // 4️⃣ BROWSER EVENTS
   // ─────────────────────────────
   useEffect(() => {
-    const reverify = async () =>
-      await verifyAuth({
-        setAuthUser,
-        setLoginStatus,
-        setSBMessage,
-        setLastPage,
-        pathname,
-        isAllowedAuthRoutes,
-        loginStatus,
-      });
-
     const handleOnline = () => {
       setSBMessage({
         msg: {
@@ -142,7 +139,7 @@ export const AppWrapper = ({ children }: { children: React.ReactNode }) => {
         override: true,
       });
       setOnlineStatus(true);
-      reverify();
+      verifyUserAuth();
     };
 
     const handleOffline = () => {
@@ -155,7 +152,7 @@ export const AppWrapper = ({ children }: { children: React.ReactNode }) => {
           hasClose: true,
           cta: {
             label: "Refresh",
-            action: () => window.location.reload(),
+            action: () => router.refresh(),
           },
         },
       });
@@ -164,10 +161,10 @@ export const AppWrapper = ({ children }: { children: React.ReactNode }) => {
 
     const handleVisibility = () => {
       if (document.visibilityState === "visible" && isOnline === true)
-        reverify();
+        verifyUserAuth();
     };
     const handleFocus = () => {
-      if (isOnline === true) reverify();
+      if (isOnline === true) verifyUserAuth();
     };
 
     window.addEventListener("online", handleOnline);
@@ -177,12 +174,12 @@ export const AppWrapper = ({ children }: { children: React.ReactNode }) => {
     return () => {
       window.removeEventListener("online", handleOnline);
       window.removeEventListener("offline", handleOffline);
-      window.removeEventListener("focus", reverify);
+      window.removeEventListener("focus", verifyUserAuth);
       document.removeEventListener("visibilitychange", handleVisibility);
     };
-  }, [pathname, lastPage]);
+  }, [pathname, lastPage, loginStatus]);
 
-  if (!mounted || loginStatus === "UNKNOWN") {
+  if (!mounted) {
     return null; // or splash loader
   }
   return (
