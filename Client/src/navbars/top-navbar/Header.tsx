@@ -27,7 +27,8 @@ import { MenuRef } from "@/components/Menus";
 
 import { defaultPage, flaggedRoutes, clientRoutes } from "@/helpers/info";
 import { getCookie } from "@/helpers/others";
-import { img, Icon } from "@/assets/exported";
+import { img } from "@/assets/exported";
+import IOfflineAvatar from "@/assets/svgs/offline-avatar.svg";
 import Image from "next/image";
 
 export const Header: React.FC = () => {
@@ -164,8 +165,8 @@ export const Header: React.FC = () => {
               />
             </>
           )}
-          {!isOnline && (
-            <Icon.OfflineAvatar style={{ width: "34px", height: "34px" }} />
+          {!isOnline && tempUser && (
+            <IOfflineAvatar style={{ width: "34px", height: "34px" }} />
           )}
           {((!isOnline && !tempUser) || loginStatus === "UNAUTHENTICATED") && (
             <AppButton
