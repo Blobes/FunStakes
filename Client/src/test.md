@@ -87,3 +87,17 @@ if (cached) return cached;
 
 }
 }
+
+{/_ Create button _/}
+<AppButton
+style={{
+                  width: "34px",
+                  height: "34px",
+                  borderRadius: theme.radius.full,
+                  padding: theme.boxSpacing(4),
+                }}
+onClick={(e) => {
+e.preventDefault();
+}}>
+<Add sx={{ width: "100%", height: "100%" }} />
+</AppButton>

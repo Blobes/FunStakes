@@ -10,7 +10,7 @@ import {
   useMediaQuery,
 } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
-import { Add, Menu } from "@mui/icons-material";
+import { Menu } from "@mui/icons-material";
 import { usePathname, useRouter } from "next/navigation";
 
 import { useAppContext } from "@/app/AppContext";
@@ -26,6 +26,9 @@ import { AppButton } from "../../components/Buttons";
 import { MenuRef } from "@/components/Menus";
 
 import { defaultPage, flaggedRoutes, clientRoutes } from "@/helpers/info";
+import { getCookie } from "@/helpers/others";
+import { img, Icon } from "@/assets/exported";
+import Image from "next/image";
 
 export const Header: React.FC = () => {
   const { loginStatus, authUser, modalContent, isOnline } = useAppContext();
@@ -38,6 +41,7 @@ export const Header: React.FC = () => {
   const { firstName, lastName, profileImage } = authUser || {};
   const pathname = usePathname();
   const isWeb = flaggedRoutes.web.includes(pathname);
+  const tempUser = getCookie("savedUser");
 
   /* ---------------------------------- effects --------------------------------- */
   useEffect(() => {
@@ -100,9 +104,8 @@ export const Header: React.FC = () => {
           justifyContent: "space-between",
           alignItems: "center",
           gap: theme.gap(6),
-          padding: theme.boxSpacing(6, 10),
+          padding: theme.boxSpacing(6, 6),
           borderBottom: `1px solid ${theme.palette.gray.trans[1]}`,
-          // background: "none",
         }}>
         <Stack direction="row" alignItems="center" spacing={theme.gap(8)}>
           {/* Mobile hamburger (logged out only) */}
@@ -117,10 +120,14 @@ export const Header: React.FC = () => {
             href={defaultPage.path}
             onClick={handleLogoClick}
             sx={{ display: "inline-flex" }}>
-            <img
-              src="/assets/images/logo.png"
+            <Image
+              src={img.logo}
               alt="logo"
-              style={{ width: 40, borderRadius: `${theme.radius[2]}` }}
+              style={{
+                width: 40,
+                height: 40,
+                borderRadius: `${theme.radius.full}`,
+              }}
             />
           </Link>
         </Stack>
@@ -142,20 +149,6 @@ export const Header: React.FC = () => {
 
           {isLoggedIn && (
             <>
-              {/* Create button */}
-              <AppButton
-                style={{
-                  width: "34px",
-                  height: "34px",
-                  borderRadius: theme.radius.full,
-                  padding: theme.boxSpacing(4),
-                }}
-                onClick={(e) => {
-                  e.preventDefault();
-                }}>
-                <Add sx={{ width: "100%", height: "100%" }} />
-              </AppButton>
-
               {isDesktop && <DesktopUserNav menuRef={menuRef} />}
               <UserAvatar
                 userInfo={{ firstName, lastName, profileImage }}
@@ -171,7 +164,10 @@ export const Header: React.FC = () => {
               />
             </>
           )}
-          {isOnline && !isLoggedIn && (
+          {!isOnline && (
+            <Icon.OfflineAvatar style={{ width: "34px", height: "34px" }} />
+          )}
+          {((!isOnline && !tempUser) || loginStatus === "UNAUTHENTICATED") && (
             <AppButton
               href={clientRoutes.login}
               style={{ fontSize: "14px" }}

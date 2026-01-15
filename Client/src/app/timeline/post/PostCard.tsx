@@ -20,10 +20,11 @@ import { heartBeat } from "@/helpers/animations";
 import { usePost } from "./postHooks";
 import { Post } from "@/types";
 import { red } from "@mui/material/colors";
-import { delay, summarizeNum } from "@/helpers/others";
+import { delay, getCookie, summarizeNum } from "@/helpers/others";
 import { AuthStepper } from "@/app/auth/login/AuthStepper";
 import { Empty } from "@/components/Empty";
 import { Heart } from "lucide-react";
+import { useSharedHooks } from "@/hooks";
 
 interface PostProps {
   post: Post;
@@ -32,7 +33,7 @@ interface PostProps {
 
 export const PostCard = ({ post, style = {} }: PostProps) => {
   const theme = useTheme();
-  const { authUser, loginStatus, setModalContent, isOnline } = useAppContext();
+  const { loginStatus, setModalContent, isOnline } = useAppContext();
   const {
     handlePostLike,
     fetchAuthor,
@@ -40,11 +41,12 @@ export const PostCard = ({ post, style = {} }: PostProps) => {
     setPendingLike,
     clearPendingLike,
   } = usePost();
-
   const [postData, setPostData] = useState<Post>(post);
   const [author, setAuthor] = useState<IUser | null>(null);
   const [message, setMessage] = useState<string | null>(null);
   const [isLiking, setIsLiking] = useState(false);
+  const tempUser = getCookie("savedUser");
+  const { setSBMessage } = useSharedHooks();
 
   const {
     _id,
@@ -85,12 +87,22 @@ export const PostCard = ({ post, style = {} }: PostProps) => {
 
   // Handle like/unlike
   const handleLike = async () => {
-    if ((isOnline && !authUser) || loginStatus === "UNAUTHENTICATED") {
+    if (isOnline && loginStatus === "UNAUTHENTICATED") {
       setModalContent({ content: <AuthStepper /> });
       return;
     }
+    if (!isOnline && !tempUser) {
+      setSBMessage({
+        msg: {
+          content: "Something went wrong.",
+          msgStatus: "ERROR",
+        },
+        override: true,
+      });
+      return;
+    }
 
-    delay();
+    await delay();
     setIsLiking(true);
 
     // Optimistic update

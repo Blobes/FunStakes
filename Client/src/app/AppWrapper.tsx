@@ -13,7 +13,7 @@ import { useSharedHooks } from "@/hooks";
 import { AuthStepper } from "./auth/login/AuthStepper";
 import { verifyAuth } from "./auth/verifyAuth";
 import { defaultPage, flaggedRoutes } from "@/helpers/info";
-import { matchPaths } from "@/helpers/others";
+import { deleteCookie, matchPaths, setCookie } from "@/helpers/others";
 import { useTheme } from "@mui/material/styles";
 
 export const AppWrapper = ({ children }: { children: React.ReactNode }) => {
@@ -29,6 +29,7 @@ export const AppWrapper = ({ children }: { children: React.ReactNode }) => {
     loginStatus,
     setLoginStatus,
     modalContent,
+    authUser,
     setAuthUser,
     lastPage,
     isOnline,
@@ -142,6 +143,7 @@ export const AppWrapper = ({ children }: { children: React.ReactNode }) => {
       });
       setOnlineStatus(true);
       verifyUserAuth();
+      deleteCookie("savedUser");
     };
 
     const handleOffline = () => {
@@ -159,6 +161,7 @@ export const AppWrapper = ({ children }: { children: React.ReactNode }) => {
         },
       });
       setOnlineStatus(false);
+      if (authUser) setCookie("savedUser", authUser._id, 20);
     };
 
     const handleVisibility = () => {
