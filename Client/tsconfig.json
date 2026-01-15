@@ -32,12 +32,10 @@
   },
   "include": [
     "next-env.d.ts",
-    "svg.d.ts",
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts",
     ".next/dev/types/**/*.ts"
-    // "src/navbars/NavLists.tsx"
   ],
   "exclude": ["node_modules"]
 }
