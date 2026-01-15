@@ -109,6 +109,7 @@ export const AppWrapper = ({ children }: { children: React.ReactNode }) => {
     };
   }, [
     loginStatus,
+    isOnline,
     isOnAppRoute,
     isAllowedRoutes,
     router,
