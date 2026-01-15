@@ -47,7 +47,7 @@ let designSystem = createTheme({
         },
         gray: {
           0: "#010516", // "#020516",
-          50: "#050C2D",
+          50: "#07103B",
           100: grey[700],
           200: grey[500],
           300: "#ffffff",
