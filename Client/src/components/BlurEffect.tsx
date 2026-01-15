@@ -2,7 +2,7 @@
 
 import { Box } from "@mui/material";
 import { useTheme, styled } from "@mui/material/styles";
-import { blue, purple } from "@mui/material/colors";
+import { blue } from "@mui/material/colors";
 
 const Blur = styled("div")(({ theme }) =>
   theme.unstable_sx({
@@ -12,7 +12,7 @@ const Blur = styled("div")(({ theme }) =>
     height: "350px",
     zIndex: -1,
     filter: "blur(72px)",
-    opacity: 0.05,
+    opacity: 0.04,
   })
 );
 

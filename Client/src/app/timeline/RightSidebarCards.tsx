@@ -12,6 +12,7 @@ import { Post } from "@/types";
 import { AnchorLink, AppButton } from "@/components/Buttons";
 import { summarizeNum } from "@/helpers/others";
 import { Strip } from "@/components/StripBar";
+import { img } from "@/assets/exported";
 
 export const ProfileCard = () => {
   const theme = useTheme();
@@ -33,7 +34,7 @@ export const ProfileCard = () => {
         flexGrow: 0,
       }}>
       <Image
-        src={coverImage || "/assets/images/cover.jpg"}
+        src={coverImage || img.defaultCover}
         width={400}
         height={130}
         alt="Image cover"

@@ -1,6 +1,6 @@
 "use client";
 
-import { green, grey, red } from "@mui/material/colors";
+import { grey, red } from "@mui/material/colors";
 import { createTheme, responsiveFontSizes } from "@mui/material/styles";
 import componentTheme from "./ComponentTheme";
 
@@ -42,11 +42,11 @@ let designSystem = createTheme({
     dark: {
       palette: {
         primary: {
-          main: "#6F81EE",
+          main: "#5D71EC",
           dark: "#4355DC",
         },
         gray: {
-          0: "#020516",
+          0: "#010516", // "#020516",
           50: "#050C2D",
           100: grey[700],
           200: grey[500],

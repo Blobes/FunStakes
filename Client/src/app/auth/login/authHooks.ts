@@ -52,7 +52,6 @@ export const useAuth = () => {
   const loginAttempts = parseInt(getCookie("loginAttempts") || "0", 10);
   const lockTimestamp = getCookie("loginLockTime");
   const countdownRef = useRef<NodeJS.Timeout | null>(null);
-  const pathname = usePathname();
 
   const checkEmail = async (
     email: string
