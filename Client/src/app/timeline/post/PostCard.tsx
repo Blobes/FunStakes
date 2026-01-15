@@ -96,6 +96,7 @@ export const PostCard = ({ post, style = {} }: PostProps) => {
         msg: {
           content: "Something went wrong.",
           msgStatus: "ERROR",
+          behavior: "FIXED",
         },
         override: true,
       });
