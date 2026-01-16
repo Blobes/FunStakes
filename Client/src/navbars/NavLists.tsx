@@ -1,16 +1,22 @@
 "use client";
 import { useAuth } from "@/app/auth/login/authHooks";
-import { defaultPage, clientRoutes } from "@/helpers/info";
+import { clientRoutes } from "@/helpers/info";
 import { NavItem } from "@/types";
 import {
-  Home,
-  Notifications,
-  Settings,
-  Logout,
-  AccountCircle,
+  AudioLines,
+  BadgeQuestionMark,
+  Bell,
+  Bookmark,
+  Gem,
+  House,
+  LogOut,
   Mail,
-} from "@mui/icons-material";
-import { Divider } from "@mui/material";
+  Pentagon,
+  Search,
+  Settings,
+  User,
+  WalletMinimal,
+} from "lucide-react";
 export const useNavLists = () => {
   const { handleLogout } = useAuth();
 
@@ -18,12 +24,12 @@ export const useNavLists = () => {
   const webNavList: NavItem[] = [
     {
       title: "Support",
-      element: <Notifications />,
+      element: <BadgeQuestionMark />,
       url: clientRoutes.support,
     },
     {
       title: "Pricing",
-      element: <Notifications />,
+      element: <Gem />,
       url: clientRoutes.pricing,
     },
   ];
@@ -55,34 +61,34 @@ export const useNavLists = () => {
   // User profile navigation list visible to only logged-in users
   const userNavList: NavItem[] = [
     {
-      title: "Update Status",
-      element: <Notifications />,
-    },
-    {
-      element: <Divider />,
-    },
-    {
       title: "Profile",
-      element: <AccountCircle />,
+      element: <User />,
       url: clientRoutes.profile,
     },
     {
-      title: "Bookmarks",
-      element: <Mail />,
-      url: clientRoutes.bookmarks,
-    },
-
-    {
-      element: <Divider />,
-    },
-    {
       title: "Premium",
-      element: <Mail />,
+      element: <Gem />,
       url: clientRoutes.pricing,
     },
     {
+      title: "Wallet",
+      element: <WalletMinimal />,
+      url: clientRoutes.pricing,
+    },
+    {
+      title: "Bookmarks",
+      element: <Bookmark />,
+      url: clientRoutes.bookmarks,
+    },
+    {
+      title: "Settings",
+      element: <Settings />,
+      url: clientRoutes.pricing,
+    },
+
+    {
       title: "Logout",
-      element: <Logout />,
+      element: <LogOut />,
       action: async () => await handleLogout(),
     },
   ];
@@ -91,31 +97,33 @@ export const useNavLists = () => {
   const sidebarNavList: NavItem[] = [
     {
       title: "Timeline",
-      element: <AccountCircle />,
+      element: <House />,
       url: clientRoutes.timeline,
     },
     {
+      title: "Explore",
+      element: <Search />,
+      url: clientRoutes.explore,
+    },
+    {
       title: "Stakes",
-      element: <AccountCircle />,
+      element: <Pentagon />,
       url: clientRoutes.stakes,
     },
     {
-      title: "Explore",
-      element: <Notifications />,
-      url: clientRoutes.explore,
+      title: "Voice Out",
+      element: <AudioLines />,
+      url: clientRoutes.settings,
+    },
+    {
+      title: "Notifications",
+      element: <Bell />,
+      url: clientRoutes.inbox,
     },
     {
       title: "Inbox",
       element: <Mail />,
       url: clientRoutes.inbox,
-    },
-    {
-      element: <Divider />,
-    },
-    {
-      title: "Settings",
-      element: <Settings />,
-      url: clientRoutes.settings,
     },
   ];
 

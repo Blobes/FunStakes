@@ -14,15 +14,15 @@ import { Menu } from "@mui/icons-material";
 import { usePathname, useRouter } from "next/navigation";
 
 import { useAppContext } from "@/app/AppContext";
-import { useSharedHooks } from "../../hooks";
+import { useSharedHooks } from "@/hooks";
 
 import { DesktopWebNav, MobileWebNav } from "./WebNav";
 import { DesktopUserNav, MobileUserNav } from "./UserNav";
 
-import { SearchBar } from "../../components/Search";
+import { SearchBar } from "@/components/Search";
 import { UserAvatar } from "@/components/UserAvatar";
-import { ThemeSwitcher } from "../../components/ThemeSwitcher";
-import { AppButton } from "../../components/Buttons";
+import { ThemeMode } from "@/components/ThemeSwitcher";
+import { AppButton } from "@/components/Buttons";
 import { MenuRef } from "@/components/Menus";
 
 import { defaultPage, flaggedRoutes, clientRoutes } from "@/helpers/info";
@@ -32,14 +32,13 @@ import IOfflineAvatar from "@/assets/svgs/offline-avatar.svg";
 import Image from "next/image";
 
 export const Header: React.FC = () => {
-  const { loginStatus, authUser, modalContent, isOnline } = useAppContext();
+  const { loginStatus, modalContent, isOnline } = useAppContext();
   const { setLastPage, openModal, closeModal } = useSharedHooks();
   const theme = useTheme();
   const router = useRouter();
   const isDesktop = useMediaQuery(theme.breakpoints.up("md"));
   const isLoggedIn = loginStatus === "AUTHENTICATED";
   const menuRef = useRef<MenuRef>(null);
-  const { firstName, lastName, profileImage } = authUser || {};
   const pathname = usePathname();
   const isWeb = flaggedRoutes.web.includes(pathname);
   const tempUser = getCookie("savedUser");
@@ -82,12 +81,22 @@ export const Header: React.FC = () => {
 
   const openMobileUserNav = () =>
     openModal({
+      header: <UserAvatar style={{ width: "35px", height: "35px" }} />,
       content: <MobileUserNav />,
       source: "navbar",
       entryDir: "RIGHT",
       onClose: closeModal,
       style: {
-        content: { otherStyles: { height: "100%" } },
+        content: {
+          otherStyles: {
+            height: "100%",
+            backgroundColor: theme.palette.gray[0],
+          },
+        },
+        header: {
+          justifyContent: "space-between",
+          padding: theme.boxSpacing(5, 8),
+        },
       },
     });
 
@@ -146,13 +155,12 @@ export const Header: React.FC = () => {
               }}
             />
           )}
-          <ThemeSwitcher />
+          {/* <ThemeMode /> */}
 
           {isLoggedIn && (
             <>
               {isDesktop && <DesktopUserNav menuRef={menuRef} />}
               <UserAvatar
-                userInfo={{ firstName, lastName, profileImage }}
                 toolTipValue={isWeb ? "Back to timeline" : "Open menu"}
                 style={{ width: "34px", height: "34px" }}
                 action={(e) => {

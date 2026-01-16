@@ -1,17 +1,24 @@
 "use client";
 
 import { useRef } from "react";
-import { Typography, Divider, Stack, svgIconClasses } from "@mui/material";
+import {
+  Typography,
+  Divider,
+  Stack,
+  svgIconClasses,
+  IconButton,
+  typographyClasses,
+} from "@mui/material";
 import { useTheme } from "@mui/material/styles";
-import { UserAvatar } from "../../components/UserAvatar";
-import { AppButton } from "../../components/Buttons";
 import { useAppContext } from "@/app/AppContext";
 import { Strip } from "../../components/StripBar";
 import { summarizeNum } from "@/helpers/others";
-import { RenderAdvList } from "../RenderNavLists";
+import { RenderAdvList, RenderSimpleList } from "../RenderNavLists";
 import { MenuRef, MenuPopup } from "@/components/Menus";
 import { useNavLists } from "../NavLists";
 import { useSharedHooks } from "@/hooks";
+import { CircleCheckBig, WalletMinimal } from "lucide-react";
+import { ThemeMode } from "@/components/ThemeSwitcher";
 
 export const DesktopUserNav = ({
   menuRef,
@@ -40,7 +47,7 @@ export const DesktopUserNav = ({
           <RenderAdvList
             list={userNavList}
             setLastPage={setLastPage}
-            onClick={() => {
+            onClose={() => {
               menuRef.current?.closeMenu();
               setModalContent(null);
             }}
@@ -78,32 +85,22 @@ const UserInfo = () => {
           flexDirection: "row",
           alignItems: "center",
         }}>
-        <UserAvatar
-          style={{ width: "40px", height: "40px" }}
-          userInfo={{ firstName, lastName, profileImage }}
-        />
         <Stack sx={{ gap: theme.gap(0), width: "100%" }}>
-          <Typography variant="body1">
+          <Typography variant="body1" sx={{ fontWeight: "600" }}>
             {firstName} {lastName}
           </Typography>
           <Typography variant="body2" sx={{ color: theme.palette.gray[200] }}>
             {username}
           </Typography>
         </Stack>
-        <AppButton
-          variant="outlined"
-          style={{
-            fontSize: "13px",
-            padding: theme.boxSpacing(1, 4),
-            borderColor: theme.palette.gray[100],
-          }}>
-          Profile
-        </AppButton>
+        <IconButton sx={{ fontSize: "20px", fontWeight: "500" }}>
+          <WalletMinimal style={{ width: "20px", height: "20px" }} />
+          12K
+        </IconButton>
       </Stack>
       <Divider />
       <Strip
         style={{
-          paddingX: theme.boxSpacing(4),
           justifyContent: "space-between",
         }}
         items={[
@@ -144,28 +141,43 @@ export const MobileUserNav = ({}) => {
   const menuRef = useRef<MenuRef>(null);
 
   return (
-    <Stack
-      sx={{
-        padding: theme.boxSpacing(6),
-      }}>
+    <Stack>
       <UserInfo />
       <Divider />
-      <RenderAdvList
-        list={userNavList}
-        setLastPage={setLastPage}
-        onClick={() => {
-          menuRef.current?.closeMenu();
-          closeModal();
-        }}
-        style={{
-          gap: theme.gap(10),
-          [`& .${svgIconClasses.root}`]: {
-            fill: theme.palette.gray[200],
-            width: "22px",
-            height: "22px",
-          },
-        }}
-      />
+      <Stack direction="row" gap={theme.gap(10)} alignItems="center">
+        <CircleCheckBig style={{ width: "18px", height: "18px" }} />
+        <Typography variant="body2" sx={{ fontWeight: "600" }}>
+          Active now
+        </Typography>
+      </Stack>
+      <Divider />
+      <Stack gap={theme.gap(10)}>
+        <RenderSimpleList
+          list={userNavList}
+          setLastPage={setLastPage}
+          onClose={() => {
+            menuRef.current?.closeMenu();
+            closeModal();
+          }}
+          style={{
+            gap: theme.gap(10),
+            padding: "0",
+            background: "none",
+            "&:hover": {
+              background: "none",
+            },
+            [`& .${typographyClasses.root}`]: {
+              fontSize: "18px",
+            },
+            "& svg": {
+              width: "22px",
+              height: "22px",
+            },
+          }}
+        />
+        <Divider />
+        <ThemeMode />
+      </Stack>
     </Stack>
   );
 };

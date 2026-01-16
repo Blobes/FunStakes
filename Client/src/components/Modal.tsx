@@ -33,6 +33,7 @@ export interface ModalProps {
       maxWidth?: { xs?: string; sm?: string; md?: string };
       otherStyles?: GenericObject<string>;
     };
+    header?: any;
   };
 }
 
@@ -140,12 +141,14 @@ export const Modal = forwardRef<ModalRef, ModalProps>(
                 direction={"row"}
                 sx={{
                   position: "sticky",
-                  backgroundColor: theme.palette.gray[50],
                   padding: theme.boxSpacing(2),
                   justifyContent: "flex-end",
+                  alignItems: "center",
+                  gap: theme.gap(2),
                   borderBottom: header
                     ? `1px solid ${theme.palette.gray.trans[1]}`
                     : "none",
+                  ...style?.header,
                 }}>
                 {header && header}
                 {shouldClose && (

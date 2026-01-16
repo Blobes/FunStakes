@@ -13,6 +13,8 @@ import { MenuRef } from "@/components/Menus";
 import { useNavLists } from "../NavLists";
 import { useSharedHooks } from "@/hooks";
 import { AppButton } from "@/components/Buttons";
+import { img } from "@/assets/exported";
+import Image from "next/image";
 
 interface WebNavProps {
   style?: any;
@@ -28,7 +30,7 @@ export const DesktopWebNav: React.FC<WebNavProps> = ({ style }) => {
       <RenderAdvList
         list={webNavList}
         setLastPage={setLastPage}
-        onClick={() => {
+        onClose={() => {
           menuRef.current?.closeMenu();
           closeModal();
         }}
@@ -55,8 +57,8 @@ const CTA = () => {
       <Typography component="h6" variant="h6">
         Join Funstakes Today
       </Typography>
-      <img
-        src="/assets/images/logo.png"
+      <Image
+        src={img.logo}
         alt="logo"
         style={{
           width: "100%",
@@ -105,7 +107,7 @@ export const MobileWebNav: React.FC<WebNavProps> = ({ style }) => {
       <RenderAdvList
         list={webNavList}
         setLastPage={setLastPage}
-        onClick={() => {
+        onClose={() => {
           menuRef.current?.closeMenu();
           closeModal();
         }}
@@ -125,7 +127,7 @@ export const MobileWebNav: React.FC<WebNavProps> = ({ style }) => {
       <RenderSimpleList
         list={footerNavList} // Footer list
         setLastPage={setLastPage}
-        onClick={() => {
+        onClose={() => {
           menuRef.current?.closeMenu();
           closeModal();
         }}

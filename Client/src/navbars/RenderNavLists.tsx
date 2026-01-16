@@ -35,14 +35,14 @@ const ItemWrapper = styled(Link)(({ theme }) =>
 export interface RenderListProps {
   list: NavItem[];
   setLastPage: (page: SavedPage) => void;
-  onClick?: () => void;
+  onClose?: () => void;
   style?: GenericObject<string>;
 }
 // Renders an advance nav list
 export const RenderAdvList: React.FC<RenderListProps> = ({
   list,
   setLastPage,
-  onClick,
+  onClose: onClick,
   style = {},
 }) => {
   const router = useRouter();
@@ -98,7 +98,7 @@ export const RenderAdvList: React.FC<RenderListProps> = ({
 export const RenderSimpleList: React.FC<RenderListProps> = ({
   list,
   setLastPage,
-  onClick,
+  onClose: onClick,
   style = {},
 }) => {
   const router = useRouter();

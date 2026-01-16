@@ -87,7 +87,7 @@ export const PostCard = ({ post, style = {} }: PostProps) => {
 
   // Handle like/unlike
   const handleLike = async () => {
-    if (isOnline && loginStatus === "UNAUTHENTICATED") {
+    if (loginStatus === "UNAUTHENTICATED") {
       setModalContent({ content: <AuthStepper /> });
       return;
     }
@@ -103,8 +103,8 @@ export const PostCard = ({ post, style = {} }: PostProps) => {
       return;
     }
 
-    await delay();
     setIsLiking(true);
+    await delay();
 
     // Optimistic update
     setPostData((prev) => {

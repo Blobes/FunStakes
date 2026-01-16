@@ -87,17 +87,27 @@ if (cached) return cached;
 
 }
 }
-
-{/_ Create button _/}
-<AppButton
+{/_ <AppButton
+variant="outlined"
 style={{
-                  width: "34px",
-                  height: "34px",
-                  borderRadius: theme.radius.full,
-                  padding: theme.boxSpacing(4),
-                }}
-onClick={(e) => {
-e.preventDefault();
-}}>
-<Add sx={{ width: "100%", height: "100%" }} />
-</AppButton>
+            fontSize: "13px",
+            padding: theme.boxSpacing(1, 4),
+            borderColor: theme.palette.gray[100],
+          }}>
+Profile
+</AppButton> _/}
+
+const handleKeyDown = (e: KeyboardEvent) => {
+// Example: Trigger when 'n' is pressed (and user isn't typing in an input)
+if (e.key === "n" && (e.target as HTMLElement).tagName !== "INPUT") {
+openMobileUserNav(e);
+}
+
+      // OR Example: Cmd + K
+      if ((e.metaKey || e.ctrlKey) && e.key === "k") {
+        e.preventDefault();
+        openMobileUserNav(e);
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);

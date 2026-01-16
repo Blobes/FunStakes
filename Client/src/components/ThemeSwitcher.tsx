@@ -1,12 +1,12 @@
 "use client";
 
 import { useColorScheme, useTheme } from "@mui/material/styles";
-import { Stack } from "@mui/material";
+import { Stack, Typography } from "@mui/material";
 import React from "react";
 import { BasicTooltip } from "./Tooltips";
 import { MoonStar, Sun } from "lucide-react";
 
-export const ThemeSwitcher: React.FC = () => {
+export const ThemeMode: React.FC = () => {
   const { mode, systemMode, setMode } = useColorScheme();
   const theme = useTheme();
   const effectiveMode = mode === "system" ? systemMode ?? "dark" : mode;
@@ -16,49 +16,63 @@ export const ThemeSwitcher: React.FC = () => {
   };
 
   return (
-    <Stack
-      role="switch"
-      aria-checked={effectiveMode === "dark"}
-      onClick={toggleMode}
-      sx={{
-        width: 44,
-        padding: theme.boxSpacing(1),
-        borderRadius: theme.radius.full,
-        backgroundColor: theme.palette.gray.trans[1],
-        border: `1px solid ${theme.palette.gray.trans[1]}`,
-        cursor: "pointer",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        "&:hover": {
-          backgroundColor: theme.palette.gray.trans[2],
-        },
-      }}>
-      {/* THUMB */}
+    <Stack direction="row" alignItems="center">
       <Stack
         sx={{
-          width: 22,
-          height: 22,
+          width: "100%",
+          flexDirection: "row",
+          gap: theme.gap(10),
+          alignItems: "center",
+          "& svg": { width: "22px", height: "22px" },
+        }}>
+        {effectiveMode === "dark" ? <MoonStar /> : <Sun />}
+        <Typography variant="body2" sx={{ fontWeight: "600" }}>
+          {effectiveMode === "dark" ? "Dark theme" : "Light theme"}
+        </Typography>
+      </Stack>
+
+      {/* Switcher */}
+      <Stack
+        role="switch"
+        aria-checked={effectiveMode === "dark"}
+        onClick={toggleMode}
+        sx={{
+          width: 44,
+          padding: theme.boxSpacing(1),
           borderRadius: theme.radius.full,
-          backgroundColor: theme.palette.gray[0],
-          padding: theme.boxSpacing(2),
+          backgroundColor: theme.palette.gray.trans[1],
+          border: `1px solid ${theme.palette.gray.trans[1]}`,
+          cursor: "pointer",
+          flex: "none",
           alignItems: "center",
           justifyContent: "center",
-          transition: "transform 200ms cubic-bezier(0.4, 0, 0.2, 1)",
-          transform:
-            effectiveMode === "dark" ? "translateX(8px)" : "translateX(-8px)",
+          "&:hover": {
+            backgroundColor: theme.palette.gray.trans[2],
+          },
         }}>
-        <BasicTooltip
-          title={effectiveMode === "dark" ? "Dark Theme" : "Light Theme"}>
-          {effectiveMode === "dark" ? (
-            <MoonStar
-              fontSize="small"
-              style={{ width: "100%", height: "100%" }}
-            />
-          ) : (
-            <Sun fontSize="small" style={{ width: "100%", height: "100%" }} />
-          )}
-        </BasicTooltip>
+        {/* THUMB */}
+        <Stack
+          sx={{
+            width: 22,
+            height: 22,
+            borderRadius: theme.radius.full,
+            backgroundColor: theme.palette.gray[0],
+            padding: theme.boxSpacing(2),
+            alignItems: "center",
+            justifyContent: "center",
+            transition: "transform 200ms cubic-bezier(0.4, 0, 0.2, 1)",
+            transform:
+              effectiveMode === "dark" ? "translateX(8px)" : "translateX(-8px)",
+            "& svg": {
+              width: "100%",
+              height: "100%",
+            },
+          }}>
+          <BasicTooltip
+            title={effectiveMode === "dark" ? "Dark Theme" : "Light Theme"}>
+            {effectiveMode === "dark" ? <MoonStar /> : <Sun />}
+          </BasicTooltip>
+        </Stack>
       </Stack>
     </Stack>
   );

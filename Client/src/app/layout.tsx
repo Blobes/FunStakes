@@ -17,7 +17,7 @@ export const metadata: Metadata = {
     icon: "/favicon.ico",
     other: {
       rel: "apple-touch-icon",
-      url: "/assets/images/logo.png",
+      url: "logo.png",
     },
   },
 };

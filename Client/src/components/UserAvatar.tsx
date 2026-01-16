@@ -6,9 +6,10 @@ import { getInitialsWithColors } from "@/helpers/others";
 import { BasicTooltip } from "@/components/Tooltips";
 import { GenericObject } from "@/types";
 import { useTheme } from "@mui/material/styles";
+import { useAppContext } from "@/app/AppContext";
 
 interface UserAvatarProps {
-  userInfo: { firstName?: string; lastName?: string; profileImage?: string };
+  userInfo?: { firstName?: string; lastName?: string; profileImage?: string };
   action?: (e: React.MouseEvent<HTMLElement>) => void;
   url?: string;
   style?: GenericObject<string>;
@@ -23,11 +24,13 @@ export const UserAvatar = ({
   toolTipValue = "",
 }: UserAvatarProps) => {
   const theme = useTheme();
-  const { firstName, lastName, profileImage } = userInfo;
+  const { authUser } = useAppContext();
+  const info = userInfo ?? authUser;
 
-  if (!firstName && !lastName && !profileImage) {
+  if (!info) {
     return null;
   }
+  const { firstName, lastName, profileImage } = info;
 
   const initials = getInitialsWithColors(`${firstName} ${lastName}`);
   const { marginTop, ...others } = style;

@@ -111,10 +111,10 @@ let designSystem = createTheme({
     full: "1000px",
   },
   // Padding & Margin Spacing
-  boxSpacing: (val1, val2, val3, val4) => {
-    return `${val1 * 2}px ${val2 || val2 === 0 ? val2 * 2 + "px" : ""} ${
-      val3 || val3 === 0 ? val3 * 2 + "px" : ""
-    } ${val4 || val4 === 0 ? val4 * 2 + "px" : ""}`;
+  boxSpacing: (top, right, bottom, left) => {
+    return `${top * 2}px ${right || right === 0 ? right * 2 + "px" : ""} ${
+      bottom || bottom === 0 ? bottom * 2 + "px" : ""
+    } ${left || left === 0 ? left * 2 + "px" : ""}`;
   },
 
   // Spacing Between Elements
