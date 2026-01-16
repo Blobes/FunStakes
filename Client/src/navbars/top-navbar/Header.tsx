@@ -52,21 +52,6 @@ export const Header: React.FC = () => {
     };
     window.addEventListener("resize", handleResize);
 
-    const handleKeyDown = (e: KeyboardEvent) => {
-      // Example: Trigger when 'n' is pressed (and user isn't typing in an input)
-      if (e.key === "n" && (e.target as HTMLElement).tagName !== "INPUT") {
-        openMobileUserNav(e);
-      }
-
-      // OR Example: Cmd + K
-      if ((e.metaKey || e.ctrlKey) && e.key === "k") {
-        e.preventDefault();
-        openMobileUserNav(e);
-      }
-    };
-
-    window.addEventListener("keydown", handleKeyDown);
-
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
@@ -94,7 +79,7 @@ export const Header: React.FC = () => {
       },
     });
 
-  const openMobileUserNav = (e: KeyboardEvent) =>
+  const openMobileUserNav = () =>
     openModal({
       header: <UserAvatar style={{ width: "35px", height: "35px" }} />,
       content: <MobileUserNav />,
@@ -181,7 +166,9 @@ export const Header: React.FC = () => {
                 action={(e) => {
                   if (isWeb) router.replace(clientRoutes.timeline);
                   else
-                    isDesktop ? menuRef.current?.openMenu(e.currentTarget) : ""; // openMobileUserNav();
+                    isDesktop
+                      ? menuRef.current?.openMenu(e.currentTarget)
+                      : openMobileUserNav();
                 }}
               />
             </>

@@ -96,3 +96,18 @@ style={{
           }}>
 Profile
 </AppButton> _/}
+
+const handleKeyDown = (e: KeyboardEvent) => {
+// Example: Trigger when 'n' is pressed (and user isn't typing in an input)
+if (e.key === "n" && (e.target as HTMLElement).tagName !== "INPUT") {
+openMobileUserNav(e);
+}
+
+      // OR Example: Cmd + K
+      if ((e.metaKey || e.ctrlKey) && e.key === "k") {
+        e.preventDefault();
+        openMobileUserNav(e);
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
