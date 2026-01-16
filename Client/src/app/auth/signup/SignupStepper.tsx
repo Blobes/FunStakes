@@ -8,6 +8,8 @@ import { Login } from "../login/Login";
 import { GenericObject, Step } from "@/types";
 import { Stepper } from "@/components/Stepper";
 import { Stack } from "@mui/material";
+import Image from "next/image";
+import { img } from "@/assets/exported";
 
 interface StepperProps {
   modalRef?: React.RefObject<ModalRef>;
@@ -68,9 +70,9 @@ export const SignUpStepper: React.FC<StepperProps> = ({
         },
         ...style.container,
       }}>
-      <img
+      <Image
         alt="logo"
-        src="/assets/images/logo.png"
+        src={img.logo}
         style={{ borderRadius: "500px", width: "70px", height: "70px" }}
       />
       <Stepper steps={steps} currStep={currStep} setCurrStep={setCurrStep} />
