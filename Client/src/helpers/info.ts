@@ -1,12 +1,6 @@
 "use client";
 
-import { GenericObject, SavedPage } from "@/types";
-
-// default page
-// export const defaultPage = {
-//   title: "home",
-//   path: "/",
-// };
+import { SavedPage } from "@/types";
 
 export const clientRoutes: Record<string, SavedPage> = {
   // Web

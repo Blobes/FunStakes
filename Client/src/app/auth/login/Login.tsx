@@ -1,12 +1,12 @@
 "use client";
 
 import { useAuth } from "@/app/auth/login/authHooks";
-import { CircularProgress, Stack, Typography } from "@mui/material";
+import { Stack, Typography } from "@mui/material";
 import { useAppContext } from "@/app/AppContext";
 import { AppButton } from "@/components/Buttons";
 import { useTheme } from "@mui/material/styles";
 import { useRouter } from "next/navigation";
-import { delay, getFromLocalStorage } from "@/helpers/others";
+import { delay } from "@/helpers/others";
 import { useEffect, useState } from "react";
 import { useSharedHooks } from "@/hooks";
 import { PasswordInput } from "@/components/InputFields";

@@ -12,7 +12,6 @@ export const useSharedHooks = () => {
   const { snackBarMsgs, setSnackBarMsgs, setPage, setModalContent } =
     useAppContext();
   const theme = useTheme();
-  const pathname = usePathname();
 
   interface SBMessage {
     msg?: MsgType;

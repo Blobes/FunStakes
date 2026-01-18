@@ -23,7 +23,7 @@ export const genAccessTokens = (user: any, res: Response) => {
     secure: true,
     sameSite: "none",
     path: "/",
-    maxAge: 30 * 60 * 1000, // 60 minutes
+    maxAge: 30 * 60 * 1000, // 30 minutes
   });
   return accessToken;
 };

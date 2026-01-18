@@ -18,19 +18,6 @@ export const refreshAuthToken = async (
     const user = { _id: payload.id };
     genAccessTokens(user, res);
 
-    // const newAccessToken = jwt.sign(
-    //   { id: payload.id },
-    //   process.env.JWT_SECRET as string,
-    //   { expiresIn: "15m" }
-    // );
-
-    // res.cookie("access_token", newAccessToken, {
-    //   httpOnly: true,
-    //   secure: process.env.NODE_ENV === "production",
-    //   sameSite: "strict",
-    //   maxAge: 15 * 60 * 1000, // 15 minutes
-    // });
-
     res.status(200).json({ message: "Token refreshed" });
   } catch (err) {
     res.clearCookie("access_token");

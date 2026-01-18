@@ -1,6 +1,6 @@
 "use client";
 
-import { IUser } from "../types";
+import { IUser } from "@/types";
 import { serverRoutes } from "./info";
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
@@ -78,7 +78,7 @@ export const fetchUserWithTokenCheck = async (
 
     // 2. Catch 401 (Missing/Expired) OR 403 (Invalid)
     if (err.status === 401 || err.status === 403) {
-      console.log(`Attempt ${attempt + 1}: Triggering Refresh...`);
+      // console.log(`Attempt ${attempt + 1}: Triggering Refresh...`);
       const refreshed = await refreshAccessToken();
       if (refreshed) {
         return fetchUserWithTokenCheck(attempt + 1);
@@ -93,10 +93,9 @@ const refreshAccessToken = async () => {
     const res = await fetcher(serverRoutes.refreshToken, {
       method: "POST",
     });
-    console.log(res);
     return true;
   } catch (err) {
-    console.error("Failed to refresh token", err);
+    console.error("Refresh Token Error:", err);
     return false;
   }
 };
