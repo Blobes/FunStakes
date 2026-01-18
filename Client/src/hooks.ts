@@ -100,7 +100,8 @@ export const useSharedHooks = () => {
 
   const isDesktop = useMediaQuery(theme.breakpoints.up("md"));
 
-  const isWeb = (path: string) => flaggedRoutes.web.includes(path);
+  const isOnWeb = (path: string) => flaggedRoutes.web.includes(path);
+  const isOnAuth = (path: string) => flaggedRoutes.auth.includes(path);
 
   return {
     setSBMessage,
@@ -110,6 +111,7 @@ export const useSharedHooks = () => {
     openModal,
     closeModal,
     isDesktop,
-    isWeb,
+    isOnWeb,
+    isOnAuth,
   };
 };

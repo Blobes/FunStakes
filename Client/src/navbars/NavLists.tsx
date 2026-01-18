@@ -1,5 +1,5 @@
 "use client";
-import { useAuth } from "@/app/auth/login/authHooks";
+import { useLogin } from "@/app/auth/login/loginHooks";
 import { clientRoutes } from "@/helpers/info";
 import { NavItem } from "@/types";
 import {
@@ -19,7 +19,7 @@ import {
   WalletMinimal,
 } from "lucide-react";
 export const useNavLists = () => {
-  const { handleLogout } = useAuth();
+  const { handleLogout } = useLogin();
 
   // Web navigation list visible to all users on the web
   const webNavList: NavItem[] = [

@@ -59,6 +59,7 @@ export const fetcher = async <T>(
 interface TokenCheckResponse {
   payload: IUser | null;
   message?: string;
+  status?: "SUCCESS" | "ERROR";
 }
 
 export const fetchUserWithTokenCheck = async (
@@ -66,14 +67,18 @@ export const fetchUserWithTokenCheck = async (
 ): Promise<TokenCheckResponse> => {
   try {
     const res = await fetcher<{ user: IUser }>(serverRoutes.verifyAuthToken);
-    return { payload: res.user };
+    return { payload: res.user, status: "SUCCESS" };
   } catch (err: any) {
     // 1. Stop the loop if we've tried 2 times
     if (attempt >= 2) {
       console.error(
         "Stopping infinite refresh loop. Check server-side cookie/JWT logic."
       );
-      return { payload: null, message: "Authentication Loop Detected" };
+      return {
+        payload: null,
+        message: "Can't refresh session. Refresh the page.",
+        status: "ERROR",
+      };
     }
 
     // 2. Catch 401 (Missing/Expired) OR 403 (Invalid)
@@ -84,7 +89,11 @@ export const fetchUserWithTokenCheck = async (
         return fetchUserWithTokenCheck(attempt + 1);
       }
     }
-    return { payload: null, message: "Session expired." };
+    return {
+      payload: null,
+      message: "Session expired!",
+      status: "ERROR",
+    };
   }
 };
 
@@ -95,7 +104,7 @@ const refreshAccessToken = async () => {
     });
     return true;
   } catch (err) {
-    console.error("Refresh Token Error:", err);
+    console.error(err);
     return false;
   }
 };

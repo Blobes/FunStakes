@@ -3,9 +3,26 @@
 import { useTheme } from "@mui/material/styles";
 import { AuthStepper } from "./AuthStepper";
 import { Stack } from "@mui/material";
+import { useEffect } from "react";
+import { useAppContext } from "@/app/AppContext";
+import { useRouter } from "next/navigation";
+import { getFromLocalStorage } from "@/helpers/others";
+import { SavedPage } from "@/types";
 
 export default function LoginPage() {
   const theme = useTheme();
+  const { loginStatus, lastPage } = useAppContext();
+  const router = useRouter();
+
+  const savedPage = getFromLocalStorage<SavedPage>();
+  const savedPath = savedPage?.path;
+
+  useEffect(() => {
+    if (savedPath && loginStatus === "AUTHENTICATED") {
+      router.replace(savedPage.path);
+    }
+  }, [savedPath]);
+
   return (
     <Stack
       sx={{

@@ -24,7 +24,7 @@ interface SignupInfo {
   lastName: string;
 }
 
-export const useAuth = (drawerRef?: React.RefObject<ModalRef>) => {
+export const useSignup = (drawerRef?: React.RefObject<ModalRef>) => {
   const {
     setAuthUser,
     setLoginStatus,

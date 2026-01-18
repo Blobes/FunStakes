@@ -61,9 +61,9 @@ export const SnackBars = ({
               right: "10px",
               maxWidth: { xs: "290px", sm: "500px" },
               zIndex: 1000,
-              padding: theme.boxSpacing(8),
+              padding: theme.boxSpacing(6),
               display: "flex",
-              alignItems: "flex-start",
+              alignItems: "center",
               flexDirection: "row",
               backgroundColor:
                 msg.msgStatus === "SUCCESS"
@@ -81,8 +81,8 @@ export const SnackBars = ({
                   msg.msgStatus === "SUCCESS" ? theme.palette.success.main : "",
                 marginTop:
                   msg.title && msg.content && msg.cta && theme.boxSpacing(4),
-                width: "20px",
-                height: "20px",
+                width: "18px",
+                height: "18px",
               },
             }}>
             {msg.msgStatus === "SUCCESS" ? (

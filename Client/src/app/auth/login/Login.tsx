@@ -1,6 +1,6 @@
 "use client";
 
-import { useAuth } from "@/app/auth/login/authHooks";
+import { useLogin } from "@/app/auth/login/loginHooks";
 import { Stack, Typography } from "@mui/material";
 import { useAppContext } from "@/app/AppContext";
 import { AppButton } from "@/components/Buttons";
@@ -40,10 +40,10 @@ export const Login: React.FC<LoginProps> = ({
     MAX_ATTEMPTS,
     lockTimestamp,
     startLockCountdown,
-  } = useAuth();
+  } = useLogin();
   const { inlineMsg, setInlineMsg, isAuthLoading, setAuthLoading, lastPage } =
     useAppContext();
-  const { setSBMessage, isWeb } = useSharedHooks();
+  const { isOnWeb } = useSharedHooks();
   const [msg, setMsg] = useState("");
   const [passwordValidity, setPasswordValidity] = useState<
     "valid" | "invalid"
@@ -83,18 +83,11 @@ export const Login: React.FC<LoginProps> = ({
       password: password,
     });
     if (res) {
-      const { payload, message: timedMsg, fixedMsg, status } = res;
-
+      const { payload, message: status } = res;
       if (payload && status === "SUCCESS") {
-        !isAuthLoading &&
-          setSBMessage({
-            msg: { content: timedMsg, msgStatus: status },
-          });
         setStep?.("email");
-        const isLastWeb = isWeb(lastPage.path);
+        const isLastWeb = isOnWeb(lastPage.path);
         router.push(isLastWeb ? clientRoutes.home.path : lastPage.path);
-      } else {
-        setInlineMsg(fixedMsg ?? null);
       }
     }
     setAuthLoading(false);

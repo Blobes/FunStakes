@@ -11,37 +11,35 @@ import { Footer } from "@/navbars/Footer";
 import { Modal, ModalRef } from "@/components/Modal";
 import { useSharedHooks } from "@/hooks";
 import { AuthStepper } from "./auth/login/AuthStepper";
-import { verifyAuth } from "./auth/verifyAuth";
 import { clientRoutes, flaggedRoutes } from "@/helpers/info";
 import { deleteCookie, matchPaths, setCookie } from "@/helpers/others";
 import { useTheme } from "@mui/material/styles";
 import { LeftNav } from "@/navbars/LeftNav";
 import { RightSidebar } from "./right-sidebar/RightSidebar";
 import { useStyles } from "@/helpers/styles";
+import { useAuth } from "./auth/authHooks";
 
 export const AppWrapper = ({ children }: { children: React.ReactNode }) => {
   const pathname = usePathname();
   const router = useRouter();
   const theme = useTheme();
   const { scrollBarStyle } = useStyles();
+  const { verifyAuth } = useAuth();
 
   // Always initialize hooks here — top of the component
   const modalRef = useRef<ModalRef>(null);
-  const { setSBMessage, setLastPage, openModal, closeModal, isWeb } =
+  const { setSBMessage, openModal, closeModal, isOnWeb, isOnAuth } =
     useSharedHooks();
   const {
     snackBarMsgs,
     loginStatus,
-    setLoginStatus,
     modalContent,
     authUser,
-    setAuthUser,
     lastPage,
     isOnline,
     setOnlineStatus,
   } = useAppContext();
   const [mounted, setMounted] = useState(false);
-  const isOnWebRoute = isWeb(pathname);
 
   const flaggedAppRoutes = flaggedRoutes.app.filter((route) =>
     matchPaths(pathname, route)
@@ -51,20 +49,9 @@ export const AppWrapper = ({ children }: { children: React.ReactNode }) => {
     flaggedRoutes.web.some((r) => matchPaths(pathname, r)) ||
     flaggedAppRoutes.length > 0;
 
-  const isOnAuthRoute = flaggedRoutes.auth.includes(pathname);
+  const isOnWebRoute = isOnWeb(pathname);
+  const isOnAuthRoute = isOnAuth(pathname);
   const isOnAppRoute = flaggedAppRoutes.length > 0;
-
-  const verifyUserAuth = async () =>
-    await verifyAuth({
-      setAuthUser,
-      setLoginStatus,
-      setSBMessage,
-      setLastPage,
-      lastPage,
-      pathname,
-      isOnAuthRoute,
-      isOnline,
-    });
 
   // ─────────────────────────────
   // 1️⃣ MOUNT + INITIAL AUTH CHECK & SERVICE WORKER REGISTRATION
@@ -77,7 +64,7 @@ export const AppWrapper = ({ children }: { children: React.ReactNode }) => {
         .then(() => console.log("SW registered"))
         .catch((err) => console.error("SW registration failed:", err));
     }
-    verifyUserAuth();
+    verifyAuth();
   }, []);
 
   // ─────────────────────────────
@@ -150,7 +137,7 @@ export const AppWrapper = ({ children }: { children: React.ReactNode }) => {
         override: true,
       });
       setOnlineStatus(true);
-      verifyUserAuth();
+      !isOnAuthRoute && verifyAuth();
       deleteCookie("savedUser");
     };
 
@@ -174,10 +161,10 @@ export const AppWrapper = ({ children }: { children: React.ReactNode }) => {
 
     const handleVisibility = () => {
       if (document.visibilityState === "visible" && isOnline === true)
-        verifyUserAuth();
+        !isOnAuthRoute && verifyAuth();
     };
     const handleFocus = () => {
-      if (isOnline === true) verifyUserAuth();
+      if (isOnline === true) !isOnAuthRoute && verifyAuth();
     };
 
     window.addEventListener("online", handleOnline);
@@ -187,7 +174,7 @@ export const AppWrapper = ({ children }: { children: React.ReactNode }) => {
     return () => {
       window.removeEventListener("online", handleOnline);
       window.removeEventListener("offline", handleOffline);
-      window.removeEventListener("focus", verifyUserAuth);
+      window.removeEventListener("focus", handleFocus);
       document.removeEventListener("visibilitychange", handleVisibility);
     };
   }, [pathname, lastPage, loginStatus]);

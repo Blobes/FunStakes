@@ -50,12 +50,10 @@ export const verifyAuth = async ({
     // Set login status to unkown when offline
     if (!isOnline) {
       setLoginStatus("UNKNOWN");
-      if (!res.message?.toLowerCase().includes("no token")) {
-        setSBMessage({
-          msg: { content: res.message, msgStatus: "ERROR", hasClose: true },
-          override: true,
-        });
-      }
+      setSBMessage({
+        msg: { content: res.message, msgStatus: "ERROR", hasClose: true },
+        override: true,
+      });
       return;
     }
 
@@ -64,6 +62,14 @@ export const verifyAuth = async ({
     if (!existingUser) setLastPage(clientRoutes.about);
     setAuthUser(null);
     setLoginStatus("UNAUTHENTICATED");
+    setSBMessage({
+      msg: {
+        content: res.message,
+        msgStatus: "ERROR",
+        hasClose: true,
+      },
+      override: true,
+    });
     return;
   } catch (err: any) {
     setAuthUser(null);

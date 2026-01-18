@@ -2,6 +2,7 @@
 
 import React, { useEffect, useRef, MouseEvent } from "react";
 import { AppBar, Toolbar, Stack, IconButton, Link } from "@mui/material";
+import { ProgressIcon } from "@/components/Loading";
 import { useTheme } from "@mui/material/styles";
 import { usePathname, useRouter } from "next/navigation";
 
@@ -24,8 +25,9 @@ import Image from "next/image";
 import { Bell, Menu } from "lucide-react";
 
 export const Header: React.FC = () => {
-  const { loginStatus, modalContent, isOnline } = useAppContext();
-  const { setLastPage, openModal, closeModal, isDesktop, isWeb } =
+  const { loginStatus, modalContent, isOnline, isAuthLoading } =
+    useAppContext();
+  const { setLastPage, openModal, closeModal, isDesktop, isOnWeb } =
     useSharedHooks();
   const theme = useTheme();
   const router = useRouter();
@@ -33,7 +35,7 @@ export const Header: React.FC = () => {
   const menuRef = useRef<MenuRef>(null);
   const tempUser = getCookie("savedUser");
   const pathname = usePathname();
-  const isOnWebRoute = isWeb(pathname);
+  const isOnWebRoute = isOnWeb(pathname);
 
   /* ---------------------------------- effects --------------------------------- */
   useEffect(() => {
@@ -180,7 +182,9 @@ export const Header: React.FC = () => {
           {!isOnline && tempUser && (
             <IOfflineAvatar style={{ width: "34px", height: "34px" }} />
           )}
-          {((!isOnline && !tempUser) || loginStatus === "UNAUTHENTICATED") && (
+          {isAuthLoading && <ProgressIcon otherProps={{ size: 16 }} />}
+          {((!isAuthLoading && !isOnline && !tempUser) ||
+            (!isAuthLoading && loginStatus === "UNAUTHENTICATED")) && (
             <AppButton
               href={clientRoutes.login.path}
               style={{ fontSize: "14px" }}

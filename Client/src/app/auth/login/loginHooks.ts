@@ -4,7 +4,7 @@ import { useAppContext } from "@/app/AppContext";
 import { useSharedHooks } from "@/hooks";
 import { fetcher } from "@/helpers/fetcher";
 import { IUser, SavedPage, SingleResponse } from "@/types";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import {
   deleteCookie,
   getCookie,
@@ -31,16 +31,10 @@ interface CheckEmailResponse {
   message: string;
 }
 
-export const useAuth = () => {
-  const {
-    setAuthUser,
-    lastPage,
-    setLoginStatus,
-    setSnackBarMsgs,
-    setInlineMsg,
-  } = useAppContext();
-  const { setSBMessage, setLastPage, isWeb } = useSharedHooks();
-  const router = useRouter();
+export const useLogin = () => {
+  const { setAuthUser, lastPage, setLoginStatus, setInlineMsg, isAuthLoading } =
+    useAppContext();
+  const { setSBMessage, setLastPage, isOnWeb } = useSharedHooks();
   const MAX_ATTEMPTS = 3;
   const LOCKOUT_MIN = 2;
   const loginAttempts = parseInt(getCookie("loginAttempts") || "0", 10);
@@ -115,15 +109,14 @@ export const useAuth = () => {
       });
 
       const { payload, message, status } = res;
-      if (!payload || status !== "SUCCESS") return null;
+
+      if (!payload || status !== "SUCCESS") return null; // Return early
 
       setAuthUser(payload);
       setLoginStatus("AUTHENTICATED");
 
-      //const currentPath = window.location.pathname;
       const isExcludedRoute = flaggedRoutes.auth.includes(pathname);
-
-      const isLastWeb = isWeb(lastPage.path);
+      const isLastWeb = isOnWeb(lastPage.path);
       const savedPage = getFromLocalStorage<SavedPage>();
 
       setLastPage(
@@ -137,6 +130,12 @@ export const useAuth = () => {
 
       //Clear cookies
       deleteCookie("loginAttempts");
+
+      // Success feedback
+      !isAuthLoading &&
+        setSBMessage({
+          msg: { content: message, msgStatus: status, hasClose: true },
+        });
 
       return { payload, message, status };
     } catch (error: any) {
@@ -160,6 +159,9 @@ export const useAuth = () => {
         return null;
       }
 
+      // Error feedback
+      setInlineMsg(fixedMessage ?? null);
+
       return {
         payload: null,
         message: error.message,
@@ -169,30 +171,9 @@ export const useAuth = () => {
     }
   };
 
-  const handleLogout = async () => {
-    try {
-      //  Send logout request to backend
-      await fetcher(serverRoutes.logout, { method: "POST" });
-
-      setAuthUser(null);
-      deleteCookie("user_snapshot");
-      setLoginStatus("UNAUTHENTICATED");
-      setLastPage(clientRoutes.about);
-      router.replace(clientRoutes.about.path);
-    } catch (error: any) {
-      setSBMessage({
-        msg: { content: error.message, msgStatus: "ERROR" },
-      });
-      console.error("Logout failed:", error);
-    }
-    //Reset feedback state
-    setSnackBarMsgs((prev) => ({ ...prev, messgages: [], inlineMsg: null }));
-  };
-
   return {
     checkEmail,
     handleLogin,
-    handleLogout,
     loginAttempts,
     MAX_ATTEMPTS,
     lockTimestamp,

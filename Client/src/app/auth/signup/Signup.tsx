@@ -1,6 +1,6 @@
 "use client";
 
-import { useAuth } from "@/app/auth/login/authHooks";
+import { useLogin } from "@/app/auth/login/loginHooks";
 import { CircularProgress, Stack, Typography } from "@mui/material";
 import { useAppContext } from "@/app/AppContext";
 import { AppButton } from "@/components/Buttons";
@@ -31,7 +31,7 @@ export const Signup: React.FC<InfoProps> = ({
   setEmailProp,
   style = {},
 }) => {
-  const { checkEmail } = useAuth();
+  const { checkEmail } = useLogin();
   const { isAuthLoading, setAuthLoading } = useAppContext();
   const [validity, setValidity] = useState<"valid" | "invalid">();
   const [msg, setMsg] = useState("");
