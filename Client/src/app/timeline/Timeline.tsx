@@ -2,8 +2,8 @@
 
 import { Stack } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
-import { RightSidebar } from "./RightSidebar";
-import { Posts } from "./post/Posts";
+import { RightSidebar } from "../right-sidebar/RightSidebar";
+import { Posts } from "../post/Posts";
 import { useStyles } from "@/helpers/styles";
 
 export default function TimelinePage() {
@@ -27,7 +27,7 @@ export default function TimelinePage() {
         },
         ...scrollBarStyle(),
       }}>
-      <Stack
+      {/* <Stack
         sx={{
           width: "18%",
           maxWidth: "400px",
@@ -40,7 +40,7 @@ export default function TimelinePage() {
           },
         }}>
         Left hand navigation
-      </Stack>
+      </Stack> */}
       <Posts />
       <RightSidebar />
     </Stack>

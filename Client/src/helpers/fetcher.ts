@@ -34,7 +34,11 @@ export const fetcher = async <T>(
 
     if (!response.ok) {
       const errorData = await response.json();
-      throw new Error(errorData.message || "Something went wrong");
+      const error = new Error(
+        errorData.message || "Something went wrong"
+      ) as any;
+      error.status = response.status;
+      throw error;
     }
     return await response.json();
   } catch (error: any) {
@@ -57,29 +61,39 @@ interface TokenCheckResponse {
   message?: string;
 }
 
-export const fetchUserWithTokenCheck =
-  async (): Promise<TokenCheckResponse> => {
-    try {
-      const res = await fetcher<{ user: IUser }>(serverRoutes.verifyAuthToken, {
-        method: "GET",
-      });
-      return { payload: res.user };
-    } catch (err: any) {
-      if (err.message?.toLowerCase().includes("invalid token")) {
-        const refreshed = await refreshAccessToken();
-        if (refreshed) {
-          return fetchUserWithTokenCheck(); // Retry after refreshing token
-        }
-      }
-      return { payload: null, message: err.message };
+export const fetchUserWithTokenCheck = async (
+  attempt = 0
+): Promise<TokenCheckResponse> => {
+  try {
+    const res = await fetcher<{ user: IUser }>(serverRoutes.verifyAuthToken);
+    return { payload: res.user };
+  } catch (err: any) {
+    // 1. Stop the loop if we've tried 2 times
+    if (attempt >= 2) {
+      console.error(
+        "Stopping infinite refresh loop. Check server-side cookie/JWT logic."
+      );
+      return { payload: null, message: "Authentication Loop Detected" };
     }
-  };
+
+    // 2. Catch 401 (Missing/Expired) OR 403 (Invalid)
+    if (err.status === 401 || err.status === 403) {
+      console.log(`Attempt ${attempt + 1}: Triggering Refresh...`);
+      const refreshed = await refreshAccessToken();
+      if (refreshed) {
+        return fetchUserWithTokenCheck(attempt + 1);
+      }
+    }
+    return { payload: null, message: "Session expired." };
+  }
+};
 
 const refreshAccessToken = async () => {
   try {
     const res = await fetcher(serverRoutes.refreshToken, {
       method: "POST",
     });
+    console.log(res);
     return true;
   } catch (err) {
     console.error("Failed to refresh token", err);

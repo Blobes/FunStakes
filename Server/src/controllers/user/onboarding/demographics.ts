@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 import { UserModel } from "@/models";
 import bcrypt from "bcrypt";
 import { Response } from "express";
-import { AuthRequest } from "@/middlewares/verifyToken";
+import { AuthRequest } from "@/middlewares/verifyAuthToken";
 
 // Set up user demographics
 interface DemographicsRequest extends AuthRequest {

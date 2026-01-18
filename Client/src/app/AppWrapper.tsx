@@ -12,18 +12,23 @@ import { Modal, ModalRef } from "@/components/Modal";
 import { useSharedHooks } from "@/hooks";
 import { AuthStepper } from "./auth/login/AuthStepper";
 import { verifyAuth } from "./auth/verifyAuth";
-import { defaultPage, flaggedRoutes } from "@/helpers/info";
+import { clientRoutes, flaggedRoutes } from "@/helpers/info";
 import { deleteCookie, matchPaths, setCookie } from "@/helpers/others";
 import { useTheme } from "@mui/material/styles";
+import { LeftNav } from "@/navbars/LeftNav";
+import { RightSidebar } from "./right-sidebar/RightSidebar";
+import { useStyles } from "@/helpers/styles";
 
 export const AppWrapper = ({ children }: { children: React.ReactNode }) => {
   const pathname = usePathname();
   const router = useRouter();
   const theme = useTheme();
+  const { scrollBarStyle } = useStyles();
 
   // Always initialize hooks here — top of the component
   const modalRef = useRef<ModalRef>(null);
-  const { setSBMessage, setLastPage, openModal, closeModal } = useSharedHooks();
+  const { setSBMessage, setLastPage, openModal, closeModal, isWeb } =
+    useSharedHooks();
   const {
     snackBarMsgs,
     loginStatus,
@@ -36,6 +41,7 @@ export const AppWrapper = ({ children }: { children: React.ReactNode }) => {
     setOnlineStatus,
   } = useAppContext();
   const [mounted, setMounted] = useState(false);
+  const isOnWebRoute = isWeb(pathname);
 
   const flaggedAppRoutes = flaggedRoutes.app.filter((route) =>
     matchPaths(pathname, route)
@@ -45,7 +51,7 @@ export const AppWrapper = ({ children }: { children: React.ReactNode }) => {
     flaggedRoutes.web.some((r) => matchPaths(pathname, r)) ||
     flaggedAppRoutes.length > 0;
 
-  const isAllowedAuthRoutes = flaggedRoutes.auth.includes(pathname);
+  const isOnAuthRoute = flaggedRoutes.auth.includes(pathname);
   const isOnAppRoute = flaggedAppRoutes.length > 0;
 
   const verifyUserAuth = async () =>
@@ -54,8 +60,9 @@ export const AppWrapper = ({ children }: { children: React.ReactNode }) => {
       setLoginStatus,
       setSBMessage,
       setLastPage,
+      lastPage,
       pathname,
-      isAllowedAuthRoutes,
+      isOnAuthRoute,
       isOnline,
     });
 
@@ -89,7 +96,7 @@ export const AppWrapper = ({ children }: { children: React.ReactNode }) => {
     }
     // Not allowed → redirect + exit
     if (!isAllowedRoutes) {
-      router.replace(defaultPage.path);
+      router.replace(clientRoutes.about.path);
       return;
     }
 
@@ -113,7 +120,7 @@ export const AppWrapper = ({ children }: { children: React.ReactNode }) => {
     isOnAppRoute,
     isAllowedRoutes,
     router,
-    defaultPage.path,
+    clientRoutes.path,
     pathname,
   ]);
 
@@ -198,9 +205,34 @@ export const AppWrapper = ({ children }: { children: React.ReactNode }) => {
         backgroundColor: theme.palette.gray[0],
       }}>
       <BlurEffect />
-      {!isAllowedAuthRoutes && <Header />}
+      {!isOnAuthRoute && <Header />}
+
+      {isOnWebRoute || isOnAuthRoute ? (
+        children
+      ) : (
+        <Stack
+          sx={{
+            height: "100%",
+            gap: theme.gap(0),
+            overflowY: "hidden",
+            overflowX: "auto",
+            flexDirection: "row",
+            justifyContent: "center",
+            [theme.breakpoints.down("md")]: {
+              overflowY: "auto",
+              justifyContent: "flex-start",
+              alignItems: "center",
+              flexDirection: "column",
+            },
+            ...scrollBarStyle(),
+          }}>
+          <LeftNav />
+          {children}
+          <RightSidebar />
+        </Stack>
+      )}
+
       {snackBarMsgs.messgages && <SnackBars snackBarMsg={snackBarMsgs} />}
-      {children}
       {modalContent && (
         <Modal
           ref={modalRef}

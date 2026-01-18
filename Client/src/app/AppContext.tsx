@@ -8,7 +8,7 @@ import {
   ModalContent,
   SavedPage,
 } from "@/types";
-import { defaultPage } from "@/helpers/info";
+import { clientRoutes } from "@/helpers/info";
 
 interface AppContextType {
   loginStatus: LoginStatus;
@@ -46,7 +46,7 @@ export const ContextProvider = ({
   const [inlineMsg, setInlineMsg] = useState<string | null>(null);
   const [isGlobalLoading, setGlobalLoading] = useState(false);
   const [isAuthLoading, setAuthLoading] = useState(false);
-  const [lastPage, setPage] = useState<SavedPage>(defaultPage);
+  const [lastPage, setPage] = useState<SavedPage>(clientRoutes.about);
   const [modalContent, setModalContent] = useState<ModalContent | null>(null);
   const [isOnline, setOnlineStatus] = useState(navigator.onLine);
 

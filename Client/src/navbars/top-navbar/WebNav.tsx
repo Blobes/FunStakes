@@ -1,12 +1,6 @@
 "use client";
 import React, { useRef } from "react";
-import {
-  Divider,
-  Stack,
-  svgIconClasses,
-  Typography,
-  typographyClasses,
-} from "@mui/material";
+import { Divider, Stack, Typography, typographyClasses } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import { RenderAdvList, RenderSimpleList } from "../RenderNavLists";
 import { MenuRef } from "@/components/Menus";
@@ -36,10 +30,9 @@ export const DesktopWebNav: React.FC<WebNavProps> = ({ style }) => {
         }}
         style={{
           padding: theme.boxSpacing(1, 5, 1, 4),
-          [`& .${svgIconClasses.root}`]: {
-            fill: theme.palette.gray[200],
-            width: "20px",
-            height: "20px",
+          "& svg": {
+            width: "18px",
+            height: "18px",
           },
           [`& .${typographyClasses.root}`]: {
             padding: theme.boxSpacing(1, 0, 0, 0),
@@ -113,7 +106,7 @@ export const MobileWebNav: React.FC<WebNavProps> = ({ style }) => {
         }}
         style={{
           padding: theme.boxSpacing(1, 5, 1, 4),
-          [`& .${svgIconClasses.root}`]: {
+          "& svg": {
             fill: theme.palette.gray[200],
             width: "20px",
             height: "20px",

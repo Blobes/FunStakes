@@ -1,5 +1,5 @@
-const STATIC_CACHE = "funstakes-static-v1";
-const API_CACHE = "funstakes-api-v1";
+const STATIC_CACHE = "funstakes-static-v2";
+const API_CACHE = "funstakes-api-v2";
 
 // Install
 self.addEventListener("install", (event) => {
@@ -48,13 +48,13 @@ self.addEventListener("fetch", (event) => {
   }
 
   /* STATIC WEB PAGES */
-  if (url.pathname === "/" || url.pathname.startsWith("/web")) {
+  if (url.pathname.startsWith("/web")) {
     event.respondWith(cacheFirst(request, STATIC_CACHE));
     return;
   }
 
   /* TIMELINE PAGES */
-  if (url.pathname.startsWith("/timeline")) {
+  if (url.pathname === "/" || url.pathname.startsWith("/post")) {
     event.respondWith(networkFirst(request, STATIC_CACHE));
     return;
   }

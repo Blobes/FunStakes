@@ -7,7 +7,6 @@ import { IUser, SavedPage, SingleResponse } from "@/types";
 import { usePathname, useRouter } from "next/navigation";
 import {
   deleteCookie,
-  extractPageTitle,
   getCookie,
   getFromLocalStorage,
   setCookie,
@@ -18,12 +17,7 @@ import {
   getLockRemaining,
 } from "@/helpers/auth";
 import { useRef } from "react";
-import {
-  defaultPage,
-  flaggedRoutes,
-  clientRoutes,
-  serverRoutes,
-} from "@/helpers/info";
+import { clientRoutes, flaggedRoutes, serverRoutes } from "@/helpers/info";
 
 interface LoginCredentials {
   email: string;
@@ -39,19 +33,20 @@ interface CheckEmailResponse {
 
 export const useAuth = () => {
   const {
-    authUser,
     setAuthUser,
+    lastPage,
     setLoginStatus,
     setSnackBarMsgs,
     setInlineMsg,
   } = useAppContext();
-  const { setSBMessage, setLastPage } = useSharedHooks();
+  const { setSBMessage, setLastPage, isWeb } = useSharedHooks();
   const router = useRouter();
   const MAX_ATTEMPTS = 3;
   const LOCKOUT_MIN = 2;
   const loginAttempts = parseInt(getCookie("loginAttempts") || "0", 10);
   const lockTimestamp = getCookie("loginLockTime");
   const countdownRef = useRef<NodeJS.Timeout | null>(null);
+  const pathname = usePathname();
 
   const checkEmail = async (
     email: string
@@ -125,19 +120,20 @@ export const useAuth = () => {
       setAuthUser(payload);
       setLoginStatus("AUTHENTICATED");
 
-      const currentPath = window.location.pathname;
-      const isExcludedRoute = flaggedRoutes.auth.includes(currentPath);
+      //const currentPath = window.location.pathname;
+      const isExcludedRoute = flaggedRoutes.auth.includes(pathname);
 
-      const fallbackPage = {
-        title: extractPageTitle(clientRoutes.timeline),
-        path: clientRoutes.timeline,
-      };
-      if (isExcludedRoute) {
-        setLastPage(fallbackPage);
-      } else {
-        const savedPage = getFromLocalStorage<SavedPage>() ?? fallbackPage;
-        setLastPage(savedPage);
-      }
+      const isLastWeb = isWeb(lastPage.path);
+      const savedPage = getFromLocalStorage<SavedPage>();
+
+      setLastPage(
+        isLastWeb
+          ? clientRoutes.home
+          : isExcludedRoute && savedPage
+          ? savedPage
+          : clientRoutes.about
+      );
+      setCookie("existingUser", payload._id, 60 * 24 * 7);
 
       //Clear cookies
       deleteCookie("loginAttempts");
@@ -180,10 +176,9 @@ export const useAuth = () => {
 
       setAuthUser(null);
       deleteCookie("user_snapshot");
-      setLastPage({ title: defaultPage.title, path: defaultPage.path });
       setLoginStatus("UNAUTHENTICATED");
-      router.replace(defaultPage.path);
-      //}
+      setLastPage(clientRoutes.about);
+      router.replace(clientRoutes.about.path);
     } catch (error: any) {
       setSBMessage({
         msg: { content: error.message, msgStatus: "ERROR" },

@@ -46,7 +46,6 @@ export const Posts = () => {
   return (
     <Stack
       sx={{
-        borderLeft: `1px solid ${theme.palette.gray.trans[1]}`,
         borderRight: `1px solid ${theme.palette.gray.trans[1]}`,
         width: "100%",
         height: "100%",

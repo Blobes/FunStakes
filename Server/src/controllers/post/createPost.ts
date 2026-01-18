@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 import { PostModel, UserModel } from "@/models";
 import { Response } from "express";
-import { AuthRequest } from "@/middlewares/verifyToken";
+import { AuthRequest } from "@/middlewares/verifyAuthToken";
 
 interface CreateRequest extends AuthRequest {
   body: {

@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 import { PostModel } from "@/models";
 import { Response } from "express";
-import { AuthRequest } from "@/middlewares/verifyToken"; // type with user?: JwtUserPayload
+import { AuthRequest } from "@/middlewares/verifyAuthToken"; // type with user?: JwtUserPayload
 
 interface EditRequest extends AuthRequest {
   body: {

@@ -11,7 +11,6 @@ import { useEffect, useState } from "react";
 import { useSharedHooks } from "@/hooks";
 import { PasswordInput } from "@/components/InputFields";
 import { InlineMsg } from "@/components/InlineMsg";
-import { Edit } from "@mui/icons-material";
 import { BasicTooltip } from "@/components/Tooltips";
 import { GenericObject } from "@/types";
 import { clientRoutes } from "@/helpers/info";
@@ -42,9 +41,9 @@ export const Login: React.FC<LoginProps> = ({
     lockTimestamp,
     startLockCountdown,
   } = useAuth();
-  const { inlineMsg, setInlineMsg, isAuthLoading, setAuthLoading } =
+  const { inlineMsg, setInlineMsg, isAuthLoading, setAuthLoading, lastPage } =
     useAppContext();
-  const { setSBMessage } = useSharedHooks();
+  const { setSBMessage, isWeb } = useSharedHooks();
   const [msg, setMsg] = useState("");
   const [passwordValidity, setPasswordValidity] = useState<
     "valid" | "invalid"
@@ -92,11 +91,8 @@ export const Login: React.FC<LoginProps> = ({
             msg: { content: timedMsg, msgStatus: status },
           });
         setStep?.("email");
-        router.push(
-          getFromLocalStorage()
-            ? getFromLocalStorage().path
-            : clientRoutes.timeline
-        );
+        const isLastWeb = isWeb(lastPage.path);
+        router.push(isLastWeb ? clientRoutes.home.path : lastPage.path);
       } else {
         setInlineMsg(fixedMsg ?? null);
       }

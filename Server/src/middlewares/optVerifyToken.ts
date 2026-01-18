@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
-import { AuthRequest, JwtUserPayload } from "./verifyToken";
+import { AuthRequest, JwtUserPayload } from "./verifyAuthToken";
 
 export const optVerifyToken = (
   req: AuthRequest,

@@ -1,50 +1,55 @@
 "use client";
 
-// default page
-export const defaultPage = {
-  title: "home",
-  path: "/",
-};
+import { GenericObject, SavedPage } from "@/types";
 
-export const clientRoutes = {
+// default page
+// export const defaultPage = {
+//   title: "home",
+//   path: "/",
+// };
+
+export const clientRoutes: Record<string, SavedPage> = {
   // Web
-  webRoot: "/web",
-  about: "/web/about",
-  pricing: "/web/pricing",
-  blogs: "/web/blogs",
-  support: "/web/support",
-  privacy: "/web/privacy",
-  terms: "/web/terms",
-  news: "/web/news",
+  about: { title: "About", path: "/web" },
+  pricing: { title: "Pricing", path: "/web/pricing" },
+  blogs: { title: "Blogs", path: "/web/blogs" },
+  support: { title: "Support", path: "/web/support" },
+  privacy: { title: "Privacy", path: "/web/privacy" },
+  terms: { title: "Terms", path: "/web/terms" },
+  news: { title: "News", path: "/web/news" },
 
   // Auth
-  login: "/auth/login",
-  signup: "/auth/signup",
+  login: { title: "Login", path: "/auth/login" },
+  signup: { title: "Signup", path: "/auth/signup" },
 
   // App
-  profile: "/profile",
-  bookmarks: "/bookmarks",
-  timeline: "/timeline",
-  stakes: "/stakes",
-  explore: "/explore",
-  inbox: "/inbox",
-  settings: "/settings",
-  post: "/timeline/post",
-};
+  home: { title: "Home", path: "/" },
+  profile: { title: "Profile", path: "/profile" },
+  bookmarks: { title: "Bookmarks", path: "/bookmarks" },
+  // timeline: { title: "Timeline", path: "/timeline" },
+  stakes: { title: "Stakes", path: "/stakes" },
+  explore: { title: "Explore", path: "/explore" },
+  inbox: { title: "Inbox", path: "/inbox" },
+  settings: { title: "Settings", path: "/settings" },
+  post: { title: "Post", path: "/post" },
+  notifications: { title: "Notifications", path: "/notifications" },
+  wallet: { title: "Wallet", path: "/wallet" },
+  vibes: { title: "Vibes", path: "/vibes" },
+  voices: { title: "Voices", path: "/voices" },
+} as const;
 
 export const flaggedRoutes = {
-  auth: [clientRoutes.login, clientRoutes.signup],
+  auth: [clientRoutes.login.path, clientRoutes.signup.path],
   web: [
-    defaultPage.path,
-    clientRoutes.about,
-    clientRoutes.pricing,
-    clientRoutes.blogs,
-    clientRoutes.support,
-    clientRoutes.privacy,
-    clientRoutes.terms,
-    clientRoutes.news,
+    clientRoutes.about.path,
+    clientRoutes.pricing.path,
+    clientRoutes.blogs.path,
+    clientRoutes.support.path,
+    clientRoutes.privacy.path,
+    clientRoutes.terms.path,
+    clientRoutes.news.path,
   ],
-  app: [clientRoutes.timeline, clientRoutes.post],
+  app: [clientRoutes.home.path, clientRoutes.post.path],
 };
 
 export const serverRoutes = {

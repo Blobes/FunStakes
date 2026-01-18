@@ -189,6 +189,7 @@ const componentTheme = createTheme({
       },
     },
 
+    // App Bar
     MuiAppBar: {
       styleOverrides: {
         root: ({ theme }) =>
@@ -196,6 +197,19 @@ const componentTheme = createTheme({
             background: "unset",
             borderRadius: theme.radius[0],
             boxShadow: "none",
+          }),
+      },
+    },
+
+    // Tool Bar
+    MuiToolbar: {
+      styleOverrides: {
+        root: ({ theme }) =>
+          theme.unstable_sx({
+            [theme.breakpoints.down("lg")]: {
+              minHeight: "40px",
+              padding: theme.boxSpacing(6),
+            },
           }),
       },
     },

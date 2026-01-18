@@ -2,11 +2,17 @@
 
 import { useAppContext } from "@/app/AppContext";
 import { ModalContent, MsgType, SavedPage } from "@/types";
+import { useMediaQuery } from "@mui/material";
 import { useEffect } from "react";
+import { useTheme } from "@mui/material/styles";
+import { usePathname } from "next/navigation";
+import { flaggedRoutes } from "./helpers/info";
 
 export const useSharedHooks = () => {
   const { snackBarMsgs, setSnackBarMsgs, setPage, setModalContent } =
     useAppContext();
+  const theme = useTheme();
+  const pathname = usePathname();
 
   interface SBMessage {
     msg?: MsgType;
@@ -92,6 +98,11 @@ export const useSharedHooks = () => {
   const closeModal = () => {
     setModalContent(null);
   };
+
+  const isDesktop = useMediaQuery(theme.breakpoints.up("md"));
+
+  const isWeb = (path: string) => flaggedRoutes.web.includes(path);
+
   return {
     setSBMessage,
     setSBTimer,
@@ -99,5 +110,7 @@ export const useSharedHooks = () => {
     setLastPage,
     openModal,
     closeModal,
+    isDesktop,
+    isWeb,
   };
 };

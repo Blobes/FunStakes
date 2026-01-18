@@ -1,16 +1,8 @@
 "use client";
 
 import React, { useEffect, useRef, MouseEvent } from "react";
-import {
-  AppBar,
-  Toolbar,
-  Stack,
-  IconButton,
-  Link,
-  useMediaQuery,
-} from "@mui/material";
+import { AppBar, Toolbar, Stack, IconButton, Link } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
-import { Menu } from "@mui/icons-material";
 import { usePathname, useRouter } from "next/navigation";
 
 import { useAppContext } from "@/app/AppContext";
@@ -21,27 +13,27 @@ import { DesktopUserNav, MobileUserNav } from "./UserNav";
 
 import { SearchBar } from "@/components/Search";
 import { UserAvatar } from "@/components/UserAvatar";
-import { ThemeMode } from "@/components/ThemeSwitcher";
 import { AppButton } from "@/components/Buttons";
 import { MenuRef } from "@/components/Menus";
 
-import { defaultPage, flaggedRoutes, clientRoutes } from "@/helpers/info";
+import { clientRoutes } from "@/helpers/info";
 import { getCookie } from "@/helpers/others";
 import { img } from "@/assets/exported";
 import IOfflineAvatar from "@/assets/svgs/offline-avatar.svg";
 import Image from "next/image";
+import { Bell, Menu } from "lucide-react";
 
 export const Header: React.FC = () => {
   const { loginStatus, modalContent, isOnline } = useAppContext();
-  const { setLastPage, openModal, closeModal } = useSharedHooks();
+  const { setLastPage, openModal, closeModal, isDesktop, isWeb } =
+    useSharedHooks();
   const theme = useTheme();
   const router = useRouter();
-  const isDesktop = useMediaQuery(theme.breakpoints.up("md"));
   const isLoggedIn = loginStatus === "AUTHENTICATED";
   const menuRef = useRef<MenuRef>(null);
-  const pathname = usePathname();
-  const isWeb = flaggedRoutes.web.includes(pathname);
   const tempUser = getCookie("savedUser");
+  const pathname = usePathname();
+  const isOnWebRoute = isWeb(pathname);
 
   /* ---------------------------------- effects --------------------------------- */
   useEffect(() => {
@@ -58,8 +50,14 @@ export const Header: React.FC = () => {
   /* -------------------------------- handlers --------------------------------- */
   const handleLogoClick = (e: MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault();
-    router.push(defaultPage.path);
-    setLastPage(defaultPage);
+    setLastPage(clientRoutes.about);
+    router.push(clientRoutes.about.path);
+  };
+
+  const handleNotification = (e: MouseEvent<HTMLAnchorElement>) => {
+    e.preventDefault();
+    setLastPage(clientRoutes.notifications);
+    router.push(clientRoutes.notifications.path);
   };
 
   const openMobileWebNav = () =>
@@ -114,40 +112,46 @@ export const Header: React.FC = () => {
           justifyContent: "space-between",
           alignItems: "center",
           gap: theme.gap(6),
-          padding: theme.boxSpacing(6, 6),
+          //  padding: theme.boxSpacing(4, 4),
           borderBottom: `1px solid ${theme.palette.gray.trans[1]}`,
         }}>
-        <Stack direction="row" alignItems="center" spacing={theme.gap(8)}>
-          {/* Mobile hamburger (logged out only) */}
-          {isWeb && !isDesktop && (
-            <IconButton onClick={openMobileWebNav} aria-label="Open menu">
-              <Menu />
-            </IconButton>
-          )}
+        {/* Mobile hamburger (logged out only) */}
+        {isOnWebRoute && !isDesktop && (
+          <IconButton onClick={openMobileWebNav} aria-label="Open menu">
+            <Menu />
+          </IconButton>
+        )}
 
-          {/* Logo */}
-          <Link
-            href={defaultPage.path}
-            onClick={handleLogoClick}
-            sx={{ display: "inline-flex" }}>
-            <Image
-              src={img.logo}
-              alt="logo"
-              style={{
-                width: 40,
-                height: 40,
-                borderRadius: `${theme.radius.full}`,
-              }}
-            />
-          </Link>
-        </Stack>
+        {!isOnWebRoute && isLoggedIn && !isDesktop && (
+          <IconButton
+            onClick={handleNotification}
+            href={clientRoutes.notifications.path}>
+            <Bell />
+          </IconButton>
+        )}
+
+        {/* Logo */}
+        <Link
+          href={clientRoutes.about.path}
+          onClick={handleLogoClick}
+          sx={{ display: "inline-flex" }}>
+          <Image
+            src={img.logo}
+            alt="logo"
+            style={{
+              width: 34,
+              height: 34,
+              borderRadius: `${theme.radius.full}`,
+            }}
+          />
+        </Link>
 
         {/* Search */}
         {isLoggedIn && <SearchBar />}
 
         {/* Right controls */}
         <Stack direction="row" alignItems="center" spacing={theme.gap(8)}>
-          {isWeb && isDesktop && (
+          {isOnWebRoute && isDesktop && (
             <DesktopWebNav
               style={{
                 display: { xs: "none", md: "flex", flexDirection: "row" },
@@ -161,10 +165,10 @@ export const Header: React.FC = () => {
             <>
               {isDesktop && <DesktopUserNav menuRef={menuRef} />}
               <UserAvatar
-                toolTipValue={isWeb ? "Back to timeline" : "Open menu"}
+                toolTipValue={isOnWebRoute ? "Back to timeline" : "Open menu"}
                 style={{ width: "34px", height: "34px" }}
                 action={(e) => {
-                  if (isWeb) router.replace(clientRoutes.timeline);
+                  if (isOnWebRoute) router.replace(clientRoutes.about.path);
                   else
                     isDesktop
                       ? menuRef.current?.openMenu(e.currentTarget)
@@ -178,11 +182,11 @@ export const Header: React.FC = () => {
           )}
           {((!isOnline && !tempUser) || loginStatus === "UNAUTHENTICATED") && (
             <AppButton
-              href={clientRoutes.login}
+              href={clientRoutes.login.path}
               style={{ fontSize: "14px" }}
               onClick={(e) => {
                 e.preventDefault();
-                router.push(clientRoutes.login);
+                router.push(clientRoutes.login.path);
               }}>
               Login
             </AppButton>

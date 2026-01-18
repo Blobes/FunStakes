@@ -9,8 +9,9 @@ export const genAccessTokens = (user: any, res: Response) => {
   if (!process.env.JWT_SECRET || !process.env.REFRESH_TOKEN_SECRET) {
     throw new Error("JWT_SECRET is not defined in environment variables");
   }
+  const userId = user._id?.toString() || user.id?.toString();
   const accessToken = jwt.sign(
-    { id: user._id },
+    { id: userId },
     process.env.JWT_SECRET as string,
     {
       expiresIn: "30m",
@@ -22,7 +23,7 @@ export const genAccessTokens = (user: any, res: Response) => {
     secure: true,
     sameSite: "none",
     path: "/",
-    maxAge: 60 * 60 * 1000, // 60 minutes
+    maxAge: 30 * 60 * 1000, // 60 minutes
   });
   return accessToken;
 };
@@ -33,8 +34,9 @@ export const genRefreshTokens = (user: any, res: Response) => {
       "REFRESH_TOKEN_SECRET is not defined in environment variables"
     );
   }
+  const userId = user._id?.toString() || user.id?.toString();
   const refreshToken = jwt.sign(
-    { id: user._id },
+    { id: userId },
     process.env.REFRESH_TOKEN_SECRET as string,
     { expiresIn: "7d" }
   );

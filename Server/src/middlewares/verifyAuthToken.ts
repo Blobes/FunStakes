@@ -15,7 +15,11 @@ export interface AuthRequest extends Request {
   user?: JwtUserPayload;
 }
 
-const verifyToken = (req: AuthRequest, res: Response, next: NextFunction) => {
+const verifyAuthToken = (
+  req: AuthRequest,
+  res: Response,
+  next: NextFunction
+) => {
   const token = req.cookies.access_token;
 
   if (!token) {
@@ -34,8 +38,8 @@ const verifyToken = (req: AuthRequest, res: Response, next: NextFunction) => {
     ) => {
       if (err || typeof payload !== "object" || !("id" in payload)) {
         return res
-          .status(403)
-          .json({ message: "Invalid token", status: "FORBIDDEN" });
+          .status(401)
+          .json({ message: "Invalid token", status: "UNAUTHORIZED" });
       }
 
       req.user = payload as JwtUserPayload; //attach user data to the request
@@ -44,4 +48,4 @@ const verifyToken = (req: AuthRequest, res: Response, next: NextFunction) => {
   );
 };
 
-export default verifyToken;
+export default verifyAuthToken;

@@ -1,17 +1,22 @@
 "use client";
 
-import { extractPageTitle } from "@/helpers/others";
+import {
+  extractPageTitle,
+  getCookie,
+  getFromLocalStorage,
+} from "@/helpers/others";
 import { fetchUserWithTokenCheck } from "@/helpers/fetcher";
 import { SavedPage } from "@/types";
-import { defaultPage, clientRoutes } from "@/helpers/info";
+import { clientRoutes } from "@/helpers/info";
 
 interface VerifyParams {
   setAuthUser: Function;
   setLoginStatus: Function;
   setSBMessage: Function;
   setLastPage: (page: SavedPage) => void;
+  lastPage: SavedPage;
   pathname: string;
-  isAllowedAuthRoutes: boolean;
+  isOnAuthRoute: boolean;
   isOnline: boolean;
 }
 
@@ -20,16 +25,21 @@ export const verifyAuth = async ({
   setLoginStatus,
   setSBMessage,
   setLastPage,
+  lastPage,
   pathname,
-  isAllowedAuthRoutes,
+  isOnAuthRoute,
   isOnline,
 }: VerifyParams) => {
   try {
+    const savedPage = getFromLocalStorage<SavedPage>();
+    const pagePath = !isOnAuthRoute ? pathname : lastPage.path;
+    setLastPage(
+      isOnAuthRoute && savedPage
+        ? savedPage
+        : { title: extractPageTitle(pagePath), path: pagePath }
+    );
+
     const res = await fetchUserWithTokenCheck();
-    const pagePath = !isAllowedAuthRoutes ? pathname : clientRoutes.timeline;
-
-    setLastPage({ title: extractPageTitle(pagePath), path: pagePath });
-
     // Fully authenticated
     if (isOnline && res.payload) {
       setAuthUser(res.payload);
@@ -49,14 +59,16 @@ export const verifyAuth = async ({
       return;
     }
 
-    // 🚫 Fully logged out
+    // Fully logged out
+    const existingUser = getCookie("existingUser");
+    if (!existingUser) setLastPage(clientRoutes.about);
     setAuthUser(null);
     setLoginStatus("UNAUTHENTICATED");
     return;
   } catch (err: any) {
     setAuthUser(null);
     setLoginStatus("UNAUTHENTICATED");
-    setLastPage({ title: defaultPage.title, path: defaultPage.path });
+    setLastPage(clientRoutes.about);
     setSBMessage({
       msg: { content: "Unable to verify session", msgStatus: "ERROR" },
     });

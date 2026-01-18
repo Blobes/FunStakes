@@ -1,6 +1,6 @@
 import { PostModel, PostLikeModel } from "@/models";
 import { Response } from "express";
-import { AuthRequest } from "@/middlewares/verifyToken";
+import { AuthRequest } from "@/middlewares/verifyAuthToken";
 import mongoose from "mongoose";
 
 export const getAllPost = async (req: AuthRequest, res: Response) => {
