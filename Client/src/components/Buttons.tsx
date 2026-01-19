@@ -47,6 +47,7 @@ export const AppButton = ({
     color: theme.palette.gray[300],
     padding: theme.boxSpacing(0, 5),
     minWidth: "unset",
+    alignSelf: "unset",
   };
 
   const mergedStyle =

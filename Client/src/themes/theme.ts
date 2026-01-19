@@ -30,6 +30,9 @@ let designSystem = createTheme({
           main: "#4863FF",
           dark: "#10142C",
         },
+        error: {
+          main: red[400],
+        },
         tonalOffset: 0.6,
         contrastThreshold: 4.5,
       },
@@ -42,7 +45,7 @@ let designSystem = createTheme({
         },
         gray: {
           0: "#010516",
-          50: "#07103B",
+          50: "#171D3A",
           100: grey[700],
           200: grey[500],
           300: "#ffffff",
@@ -56,6 +59,9 @@ let designSystem = createTheme({
           light: "#10142C",
           main: "#506AFF",
           dark: "#BBC4E8",
+        },
+        error: {
+          main: red[300],
         },
         tonalOffset: 0.6,
         contrastThreshold: 4.5,

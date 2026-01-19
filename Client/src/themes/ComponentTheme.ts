@@ -229,7 +229,7 @@ const componentTheme = createTheme({
         root: ({ theme }) =>
           theme.unstable_sx({
             "--TextField-default": theme.palette.gray[50],
-            "--TextField-success": theme.palette.success.main,
+            "--TextField-success": theme.palette.info.main,
             "--TextField-error": theme.palette.error.main,
 
             "& .MuiInputBase-input": {

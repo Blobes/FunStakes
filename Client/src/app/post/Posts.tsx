@@ -75,7 +75,7 @@ export const Posts = () => {
         <Empty
           tagline={message || "Something went wrong, check your network"}
           icon={<RadioTower />}
-          cta={{
+          primaryCta={{
             type: "ICON",
             toolTip: "Refresh",
             action: () => router.refresh(),

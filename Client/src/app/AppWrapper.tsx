@@ -149,18 +149,18 @@ export const AppWrapper = ({ children }: { children: React.ReactNode }) => {
       !isOnAuthRoute && verifyAuth();
     };
 
-    const handleFocus = () => {
-      !isOnAuthRoute && verifyAuth();
-    };
+    // const handleFocus = () => {
+    //   !isOnAuthRoute && verifyAuth();
+    // };
 
     window.addEventListener("online", handleOnline);
     window.addEventListener("offline", handleOffline);
-    window.addEventListener("focus", handleFocus);
+    // window.addEventListener("focus", handleFocus);
 
     return () => {
       window.removeEventListener("online", handleOnline);
       window.removeEventListener("offline", handleOffline);
-      window.removeEventListener("focus", handleFocus);
+      // window.removeEventListener("focus", handleFocus);
     };
   }, [pathname, lastPage, loginStatus, isOnline()]);
 
