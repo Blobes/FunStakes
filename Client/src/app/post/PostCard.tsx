@@ -20,7 +20,7 @@ import { heartBeat } from "@/helpers/animations";
 import { usePost } from "./postHooks";
 import { Post } from "@/types";
 import { red } from "@mui/material/colors";
-import { delay, getCookie, summarizeNum } from "@/helpers/others";
+import { delay, getCookie, isOnline, summarizeNum } from "@/helpers/others";
 import { AuthStepper } from "@/app/auth/login/AuthStepper";
 import { Empty } from "@/components/Empty";
 import { Heart } from "lucide-react";
@@ -33,7 +33,7 @@ interface PostProps {
 
 export const PostCard = ({ post, style = {} }: PostProps) => {
   const theme = useTheme();
-  const { loginStatus, setModalContent, isOnline } = useAppContext();
+  const { loginStatus, setModalContent } = useAppContext();
   const {
     handlePostLike,
     fetchAuthor,
@@ -91,7 +91,7 @@ export const PostCard = ({ post, style = {} }: PostProps) => {
       setModalContent({ content: <AuthStepper /> });
       return;
     }
-    if (!isOnline && !tempUser) {
+    if (!isOnline() && !tempUser) {
       setSBMessage({
         msg: {
           content: "Something went wrong.",
