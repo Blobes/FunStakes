@@ -34,7 +34,7 @@ interface CheckEmailResponse {
 export const useLogin = () => {
   const { setAuthUser, lastPage, setLoginStatus, setInlineMsg, isAuthLoading } =
     useAppContext();
-  const { setSBMessage, setLastPage, isOnWeb } = useSharedHooks();
+  const { setSBMessage, setLastPage, isOnWeb, isOnAuth } = useSharedHooks();
   const MAX_ATTEMPTS = 3;
   const LOCKOUT_MIN = 2;
   const loginAttempts = parseInt(getCookie("loginAttempts") || "0", 10);
@@ -115,16 +115,17 @@ export const useLogin = () => {
       setAuthUser(payload);
       setLoginStatus("AUTHENTICATED");
 
-      const isExcludedRoute = flaggedRoutes.auth.includes(pathname);
-      const isLastWeb = isOnWeb(lastPage.path);
+      // const isExcludedRoute = flaggedRoutes.auth.includes(pathname);
       const savedPage = getFromLocalStorage<SavedPage>();
+      const savedPath = savedPage ? savedPage.path : "";
+      const isLastWeb = isOnWeb(savedPath);
 
       setLastPage(
         isLastWeb
           ? clientRoutes.home
-          : isExcludedRoute && savedPage
+          : !isLastWeb && savedPage
           ? savedPage
-          : clientRoutes.about
+          : clientRoutes.home
       );
 
       //Clear cookies

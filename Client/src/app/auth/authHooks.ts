@@ -59,7 +59,7 @@ export const useAuth = () => {
       }
 
       // Fully logged out
-      if (isOnline()) {
+      if (isOnline() && !authToken) {
         setAuthUser(null);
         setLoginStatus("UNAUTHENTICATED");
         setSBMessage({
@@ -67,7 +67,6 @@ export const useAuth = () => {
             content: res.message,
             msgStatus: "ERROR",
             hasClose: true,
-            behavior: "FIXED",
           },
         });
         !existingVisitor && setLastPage(clientRoutes.about);

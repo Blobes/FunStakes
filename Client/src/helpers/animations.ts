@@ -18,11 +18,16 @@ export const fadeOut = keyframes`
     opacity: 0;
   }
 `;
+
+interface Move {
+  dir?: "LEFT" | "RIGHT" | "CENTER";
+  from?: string;
+  to?: string;
+}
 export const moveIn = (
-  dir: "LEFT" | "RIGHT" | "CENTER",
-  from: string = "-14px",
-  to: string = "10px"
+  params: Move = { dir: "RIGHT", from: "-14px", to: "10px" }
 ) => {
+  const { dir, from, to } = params;
   switch (dir) {
     case "LEFT":
       return keyframes`
@@ -57,10 +62,9 @@ export const moveIn = (
 };
 
 export const moveOut = (
-  dir: "LEFT" | "RIGHT" | "CENTER",
-  from: string = "10px",
-  to: string = "-14px"
+  params: Move = { dir: "RIGHT", from: "10px", to: "-14px" }
 ) => {
+  const { dir, from, to } = params;
   switch (dir) {
     case "LEFT":
       return keyframes`

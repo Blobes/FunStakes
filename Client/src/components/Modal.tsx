@@ -130,8 +130,16 @@ export const Modal = forwardRef<ModalRef, ModalProps>(
             borderRadius: theme.radius[3],
             overflow: "hidden",
             animation: isOpen
-              ? `${moveIn(entryDir, "-0px", "4px")} 0.2s linear forwards`
-              : `${moveOut(entryDir, "4px", "-10px")} 0.2s linear forwards`,
+              ? `${moveIn({
+                  dir: entryDir,
+                  from: "-0px",
+                  to: "4px",
+                })} 0.2s linear forwards`
+              : `${moveOut({
+                  dir: entryDir,
+                  from: "4px",
+                  to: "-10px",
+                })} 0.2s linear forwards`,
             ...otherStyles,
           }}>
           {

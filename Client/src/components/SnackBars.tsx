@@ -43,12 +43,13 @@ export const SnackBars = ({
 
         const boxAnimation =
           progressDur > 0
-            ? `${fadeIn} 0.3s linear forwards, ${moveIn(
-                entryDir
-              )} 0.3s linear forwards`
-            : `${fadeOut} 0.3s linear forwards, ${moveOut(
-                entryDir
-              )} 0.3s linear forwards`;
+            ? `${fadeIn} 0.3s linear forwards, ${moveIn({
+                dir: entryDir,
+                to: "10px",
+              })} 0.3s linear forwards`
+            : `${fadeOut} 0.3s linear forwards, ${moveOut({
+                dir: entryDir,
+              })} 0.3s linear forwards`;
 
         const progressWidthAnim = `${shrinkWidth} ${progressDur}s linear forwards`;
 
@@ -133,7 +134,7 @@ export const SnackBars = ({
               </IconButton>
             )}
 
-            {isTimed && (
+            {/* {isTimed && (
               <Box
                 sx={{
                   position: "absolute",
@@ -149,7 +150,7 @@ export const SnackBars = ({
                       : theme.palette.error.main,
                 }}
               />
-            )}
+            )} */}
           </Paper>
         );
       })}
