@@ -111,3 +111,34 @@ openMobileUserNav(e);
     };
 
     window.addEventListener("keydown", handleKeyDown);
+
+const handleVisibility = () => {
+if (document.visibilityState === "visible" && isOnline === true)
+!isOnAuthRoute && verifyAuth();
+};
+// document.addEventListener("visibilitychange", handleVisibility);
+// document.removeEventListener("visibilitychange", handleVisibility);
+
+Lightmode
+success: {
+light: "#CBD3F1",
+main: "#425BEF",
+dark: "#161C3D",
+},
+error: {
+light: "#CBD3F1",
+main: red[400],
+dark: "#1D0505",
+},
+
+Darkmode
+success: {
+light: "#10142C",
+main: "#506AFF",
+dark: "#BBC4E8", //7E92FF
+},
+error: {
+light: "#10142C",
+main: red[300],
+dark: red[100],
+},

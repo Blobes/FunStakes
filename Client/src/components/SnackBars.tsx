@@ -3,7 +3,7 @@
 import { Box, IconButton, Paper, Stack, Typography } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import { useSharedHooks } from "../hooks";
-import { CheckCircle, Close, Info, Warning } from "@mui/icons-material";
+import { Close } from "@mui/icons-material";
 import {
   fadeIn,
   fadeOut,
@@ -13,6 +13,7 @@ import {
 } from "../helpers/animations";
 import { SnackBarMsg } from "@/types";
 import { AppButton } from "./Buttons";
+import { Info, CircleCheck, CircleAlert } from "lucide-react";
 
 interface SnackBarProps {
   entryDir?: "LEFT" | "RIGHT";
@@ -56,10 +57,11 @@ export const SnackBars = ({
             key={i}
             variant="elevation"
             sx={{
-              position: "absolute",
-              top: `${10 + i * 80}px`, // offset for multiple snackbars
+              position: "fixed",
+              bottom: i === 0 ? "10px" : `${(10 + i) * 12}px`, // offset for multiple snackbars
               right: "10px",
-              maxWidth: { xs: "290px", sm: "500px" },
+              width: "94%",
+              maxWidth: { sm: "400px" },
               zIndex: 1000,
               padding: theme.boxSpacing(6),
               display: "flex",
@@ -67,53 +69,60 @@ export const SnackBars = ({
               flexDirection: "row",
               backgroundColor:
                 msg.msgStatus === "SUCCESS"
-                  ? theme.palette.success.light
-                  : msg.msgStatus === "INFO"
-                  ? theme.palette.info.light
-                  : theme.palette.error.light,
+                  ? theme.palette.info.main
+                  : theme.palette.info.light,
               border: `1px solid ${theme.palette.gray.trans[2]}`,
               borderRadius: theme.radius[3],
               overflow: "hidden",
               gap: theme.gap(10),
               animation: isTimed ? boxAnimation : "none",
               "& > svg": {
-                fill:
-                  msg.msgStatus === "SUCCESS" ? theme.palette.success.main : "",
+                stroke: `${theme.palette.gray[300]}`,
                 marginTop:
                   msg.title && msg.content && msg.cta && theme.boxSpacing(4),
-                width: "18px",
-                height: "18px",
+                width: "24px",
+                height: "24px",
               },
             }}>
             {msg.msgStatus === "SUCCESS" ? (
-              <CheckCircle />
+              <CircleCheck />
             ) : msg.msgStatus === "INFO" ? (
               <Info />
             ) : (
-              <Warning />
+              <CircleAlert />
             )}
 
-            <Stack sx={{ gap: theme.gap(2), alignItems: "flex-start" }}>
+            <Stack
+              sx={{
+                gap: theme.gap(1),
+                alignItems: "flex-start",
+                width: "100%",
+              }}>
               {msg.title && (
                 <Typography
                   variant="body1"
-                  sx={{ maxWidth: "360px", fontWeight: 500 }}>
+                  sx={{ maxWidth: "360px", fontWeight: 600 }}>
                   {msg.title}
                 </Typography>
               )}
-              {msg.content && (
-                <Typography variant="body2" sx={{ maxWidth: "360px" }}>
-                  {msg.content}
-                </Typography>
-              )}
-              {msg.cta && (
-                <AppButton
-                  style={{ fontSize: "14px", marginTop: theme.boxSpacing(8) }}
-                  variant="outlined"
-                  onClick={msg.cta.action}>
-                  {msg.cta.label}
-                </AppButton>
-              )}
+              <Stack
+                sx={{
+                  flexDirection: "row",
+                  flexWrap: "wrap",
+                  alignItems: "center",
+                  gap: theme.gap(1),
+                }}>
+                {msg.content && (
+                  <Typography variant="body2" sx={{ maxWidth: "360px" }}>
+                    {msg.content}
+                  </Typography>
+                )}
+                {msg.cta && (
+                  <AppButton variant="text" onClick={msg.cta.action}>
+                    {msg.cta.label}
+                  </AppButton>
+                )}
+              </Stack>
             </Stack>
 
             {msg.hasClose && msg.id && (

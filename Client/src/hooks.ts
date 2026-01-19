@@ -5,7 +5,6 @@ import { ModalContent, MsgType, SavedPage } from "@/types";
 import { useMediaQuery } from "@mui/material";
 import { useEffect } from "react";
 import { useTheme } from "@mui/material/styles";
-import { usePathname } from "next/navigation";
 import { flaggedRoutes } from "./helpers/info";
 
 export const useSharedHooks = () => {
@@ -19,7 +18,7 @@ export const useSharedHooks = () => {
     override?: boolean;
   }
 
-  const setSBMessage = ({ msg, delay = 0, override = false }: SBMessage) => {
+  const setSBMessage = ({ msg, delay = 0, override = true }: SBMessage) => {
     if (msg !== undefined) {
       setTimeout(() => {
         const newMsg = {
@@ -72,7 +71,6 @@ export const useSharedHooks = () => {
   const removeMessage = (id: number) => {
     setSnackBarMsgs((prev) => {
       const updatedMsgs = prev.messgages?.filter((m) => m.id !== id) || [];
-
       return {
         ...prev,
         messgages: updatedMsgs,

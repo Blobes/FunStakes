@@ -126,7 +126,6 @@ export const useLogin = () => {
           ? savedPage
           : clientRoutes.about
       );
-      setCookie("existingUser", payload._id, 60 * 24 * 7);
 
       //Clear cookies
       deleteCookie("loginAttempts");

@@ -111,3 +111,5 @@ export const matchPaths = (pathname: string, pagePath: string | undefined) => {
     pathname === pagePath?.toLowerCase() || pathname.startsWith(`${pagePath}/`)
   );
 };
+
+export const isOnline = () => navigator.onLine;

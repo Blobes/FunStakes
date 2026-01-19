@@ -8,18 +8,19 @@ import { useAppContext } from "@/app/AppContext";
 import { useRouter } from "next/navigation";
 import { getFromLocalStorage } from "@/helpers/others";
 import { SavedPage } from "@/types";
+import { clientRoutes } from "@/helpers/info";
 
 export default function LoginPage() {
   const theme = useTheme();
-  const { loginStatus, lastPage } = useAppContext();
+  const { loginStatus } = useAppContext();
   const router = useRouter();
 
   const savedPage = getFromLocalStorage<SavedPage>();
   const savedPath = savedPage?.path;
 
   useEffect(() => {
-    if (savedPath && loginStatus === "AUTHENTICATED") {
-      router.replace(savedPage.path);
+    if (loginStatus === "AUTHENTICATED") {
+      router.replace(savedPath ? savedPath : clientRoutes.about.path);
     }
   }, [savedPath]);
 

@@ -46,11 +46,11 @@ export const fetcher = async <T>(
 
     if (error.name === "AbortError") {
       console.log(error);
-      throw new Error("No internet connection. Please check your network");
+      throw new Error("No internet connection.");
     }
 
     if (error.message === "Failed to fetch" || error instanceof TypeError) {
-      throw new Error("Unable to reach the server. Please try again later.");
+      throw new Error("Network connection failed");
     }
     throw error;
   }
@@ -81,17 +81,19 @@ export const fetchUserWithTokenCheck = async (
       };
     }
 
+    let msg = err.message;
     // 2. Catch 401 (Missing/Expired) OR 403 (Invalid)
-    if (err.status === 401 || err.status === 403) {
+    if (err.status === 401) {
       // console.log(`Attempt ${attempt + 1}: Triggering Refresh...`);
       const refreshed = await refreshAccessToken();
+      msg = "Session expired!";
       if (refreshed) {
         return fetchUserWithTokenCheck(attempt + 1);
       }
     }
     return {
       payload: null,
-      message: "Session expired!",
+      message: msg,
       status: "ERROR",
     };
   }

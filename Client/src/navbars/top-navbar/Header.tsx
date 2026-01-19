@@ -1,39 +1,32 @@
 "use client";
 
 import React, { useEffect, useRef, MouseEvent } from "react";
-import { AppBar, Toolbar, Stack, IconButton, Link } from "@mui/material";
-import { ProgressIcon } from "@/components/Loading";
+import { AppBar, Toolbar, Stack, IconButton } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import { usePathname, useRouter } from "next/navigation";
-
 import { useAppContext } from "@/app/AppContext";
 import { useSharedHooks } from "@/hooks";
-
 import { DesktopWebNav, MobileWebNav } from "./WebNav";
 import { DesktopUserNav, MobileUserNav } from "./UserNav";
-
 import { SearchBar } from "@/components/Search";
 import { UserAvatar } from "@/components/UserAvatar";
-import { AppButton } from "@/components/Buttons";
+import { AnchorLink, AppButton } from "@/components/Buttons";
 import { MenuRef } from "@/components/Menus";
-
 import { clientRoutes } from "@/helpers/info";
-import { getCookie } from "@/helpers/others";
+import { isOnline } from "@/helpers/others";
 import { img } from "@/assets/exported";
 import IOfflineAvatar from "@/assets/svgs/offline-avatar.svg";
 import Image from "next/image";
 import { Bell, Menu } from "lucide-react";
 
 export const Header: React.FC = () => {
-  const { loginStatus, modalContent, isOnline, isAuthLoading } =
-    useAppContext();
+  const { loginStatus, modalContent } = useAppContext();
   const { setLastPage, openModal, closeModal, isDesktop, isOnWeb } =
     useSharedHooks();
   const theme = useTheme();
   const router = useRouter();
   const isLoggedIn = loginStatus === "AUTHENTICATED";
   const menuRef = useRef<MenuRef>(null);
-  const tempUser = getCookie("savedUser");
   const pathname = usePathname();
   const isOnWebRoute = isOnWeb(pathname);
 
@@ -133,20 +126,22 @@ export const Header: React.FC = () => {
         )}
 
         {/* Logo */}
-        <Link
-          href={clientRoutes.about.path}
+        <AnchorLink
+          url={clientRoutes.about.path}
           onClick={handleLogoClick}
-          sx={{ display: "inline-flex" }}>
-          <Image
-            src={img.logo}
-            alt="logo"
-            style={{
-              width: 34,
-              height: 34,
-              borderRadius: `${theme.radius.full}`,
-            }}
-          />
-        </Link>
+          style={{ display: "inline-flex" }}
+          icon={
+            <Image
+              src={img.logo}
+              alt="logo"
+              style={{
+                width: 34,
+                height: 34,
+                borderRadius: `${theme.radius.full}`,
+              }}
+            />
+          }
+        />
 
         {/* Search */}
         {isLoggedIn && <SearchBar />}
@@ -163,7 +158,7 @@ export const Header: React.FC = () => {
           )}
           {/* <ThemeMode /> */}
 
-          {isLoggedIn && (
+          {isOnline() && isLoggedIn && (
             <>
               {isDesktop && <DesktopUserNav menuRef={menuRef} />}
               <UserAvatar
@@ -179,12 +174,11 @@ export const Header: React.FC = () => {
               />
             </>
           )}
-          {!isOnline && tempUser && (
+          {(!isOnline() || loginStatus === "UNKNOWN") && (
             <IOfflineAvatar style={{ width: "34px", height: "34px" }} />
           )}
-          {isAuthLoading && <ProgressIcon otherProps={{ size: 16 }} />}
-          {((!isAuthLoading && !isOnline && !tempUser) ||
-            (!isAuthLoading && loginStatus === "UNAUTHENTICATED")) && (
+
+          {loginStatus === "UNAUTHENTICATED" && (
             <AppButton
               href={clientRoutes.login.path}
               style={{ fontSize: "14px" }}

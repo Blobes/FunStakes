@@ -25,15 +25,10 @@ let designSystem = createTheme({
             overlay: "rgba(0, 0, 0, 0.50)",
           },
         },
-        success: {
-          light: "#CBD3F1",
-          main: "#425BEF",
-          dark: "#161C3D",
-        },
-        error: {
-          light: red[50],
-          main: red[400],
-          dark: "#1D0505",
+        info: {
+          light: "#BBC4E8",
+          main: "#4863FF",
+          dark: "#10142C",
         },
         tonalOffset: 0.6,
         contrastThreshold: 4.5,
@@ -46,7 +41,7 @@ let designSystem = createTheme({
           dark: "#4355DC",
         },
         gray: {
-          0: "#010516", // "#020516",
+          0: "#010516",
           50: "#07103B",
           100: grey[700],
           200: grey[500],
@@ -57,15 +52,10 @@ let designSystem = createTheme({
             overlay: "rgba(0, 0, 0, 0.50)",
           },
         },
-        success: {
+        info: {
           light: "#10142C",
           main: "#506AFF",
           dark: "#BBC4E8",
-        },
-        error: {
-          light: "#1D0505",
-          main: red[300],
-          dark: red[100],
         },
         tonalOffset: 0.6,
         contrastThreshold: 4.5,

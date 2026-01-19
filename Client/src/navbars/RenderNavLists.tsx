@@ -1,14 +1,15 @@
 "use client";
 
 import React from "react";
-import { Typography, Link, typographyClasses } from "@mui/material";
+import { Typography, typographyClasses } from "@mui/material";
 import { useTheme, styled } from "@mui/material/styles";
 import { NavItem, GenericObject, SavedPage } from "@/types";
 import { matchPaths } from "@/helpers/others";
 import { usePathname, useRouter } from "next/navigation";
+import { AnchorLink } from "@/components/Buttons";
 
 // Styled wrapper for individual nav items
-const ItemWrapper = styled(Link)(({ theme }) =>
+const ItemWrapper = styled(AnchorLink)(({ theme }) =>
   theme.unstable_sx({
     display: "flex",
     alignItems: "center",
@@ -61,7 +62,7 @@ export const RenderAdvList: React.FC<RenderListProps> = ({
         return (
           <ItemWrapper
             key={index}
-            href={item.url ?? "#"}
+            url={item.url ?? "#"}
             onClick={(e: React.MouseEvent<HTMLAnchorElement>) => {
               e.preventDefault();
               router.push(item.url ?? "#");
@@ -113,7 +114,7 @@ export const RenderSimpleList: React.FC<RenderListProps> = ({
         return (
           <ItemWrapper
             key={index}
-            href={item.url ?? "#"}
+            url={item.url ?? "#"}
             onClick={(e: React.MouseEvent<HTMLAnchorElement>) => {
               e.preventDefault();
               router.push(item.url ?? "#");

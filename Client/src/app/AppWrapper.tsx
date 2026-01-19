@@ -12,7 +12,7 @@ import { Modal, ModalRef } from "@/components/Modal";
 import { useSharedHooks } from "@/hooks";
 import { AuthStepper } from "./auth/login/AuthStepper";
 import { clientRoutes, flaggedRoutes } from "@/helpers/info";
-import { deleteCookie, matchPaths, setCookie } from "@/helpers/others";
+import { isOnline, matchPaths } from "@/helpers/others";
 import { useTheme } from "@mui/material/styles";
 import { LeftNav } from "@/navbars/LeftNav";
 import { RightSidebar } from "./right-sidebar/RightSidebar";
@@ -28,17 +28,15 @@ export const AppWrapper = ({ children }: { children: React.ReactNode }) => {
 
   // Always initialize hooks here — top of the component
   const modalRef = useRef<ModalRef>(null);
-  const { setSBMessage, openModal, closeModal, isOnWeb, isOnAuth } =
-    useSharedHooks();
   const {
-    snackBarMsgs,
-    loginStatus,
-    modalContent,
-    authUser,
-    lastPage,
-    isOnline,
-    setOnlineStatus,
-  } = useAppContext();
+    setSBMessage,
+    openModal,
+    closeModal,
+    isOnWeb,
+    isOnAuth,
+    removeMessage,
+  } = useSharedHooks();
+  const { snackBarMsgs, loginStatus, modalContent, lastPage } = useAppContext();
   const [mounted, setMounted] = useState(false);
 
   const flaggedAppRoutes = flaggedRoutes.app.filter((route) =>
@@ -68,7 +66,7 @@ export const AppWrapper = ({ children }: { children: React.ReactNode }) => {
   }, []);
 
   // ─────────────────────────────
-  // 2️⃣ AUTH STATE REACTIONS
+  // 2️⃣ AUTH MODAL STATE REACTIONS
   // ─────────────────────────────
   useEffect(() => {
     let intervalId: NodeJS.Timeout | null = null;
@@ -103,7 +101,7 @@ export const AppWrapper = ({ children }: { children: React.ReactNode }) => {
     };
   }, [
     loginStatus,
-    isOnline,
+    isOnline(),
     isOnAppRoute,
     isAllowedRoutes,
     router,
@@ -129,21 +127,14 @@ export const AppWrapper = ({ children }: { children: React.ReactNode }) => {
   // ─────────────────────────────
   useEffect(() => {
     const handleOnline = () => {
-      setSBMessage({
-        msg: {
-          content: "You are now online",
-          msgStatus: "SUCCESS",
-        },
-        override: true,
-      });
-      setOnlineStatus(true);
+      removeMessage(1);
       !isOnAuthRoute && verifyAuth();
-      deleteCookie("savedUser");
     };
 
     const handleOffline = () => {
       setSBMessage({
         msg: {
+          id: 1,
           title: "No internet connection",
           content: "Check your network and refresh the page",
           msgStatus: "ERROR",
@@ -155,33 +146,28 @@ export const AppWrapper = ({ children }: { children: React.ReactNode }) => {
           },
         },
       });
-      setOnlineStatus(false);
-      if (authUser) setCookie("savedUser", authUser._id, 20);
+      !isOnAuthRoute && verifyAuth();
     };
 
-    const handleVisibility = () => {
-      if (document.visibilityState === "visible" && isOnline === true)
-        !isOnAuthRoute && verifyAuth();
-    };
     const handleFocus = () => {
-      if (isOnline === true) !isOnAuthRoute && verifyAuth();
+      !isOnAuthRoute && verifyAuth();
     };
 
     window.addEventListener("online", handleOnline);
     window.addEventListener("offline", handleOffline);
     window.addEventListener("focus", handleFocus);
-    document.addEventListener("visibilitychange", handleVisibility);
+
     return () => {
       window.removeEventListener("online", handleOnline);
       window.removeEventListener("offline", handleOffline);
       window.removeEventListener("focus", handleFocus);
-      document.removeEventListener("visibilitychange", handleVisibility);
     };
-  }, [pathname, lastPage, loginStatus]);
+  }, [pathname, lastPage, loginStatus, isOnline()]);
 
   if (!mounted) {
     return null; // or splash loader
   }
+
   return (
     <Stack
       sx={{

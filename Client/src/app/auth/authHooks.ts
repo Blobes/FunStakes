@@ -9,79 +9,78 @@ import {
   getCookie,
   getFromLocalStorage,
   deleteCookie,
+  isOnline,
+  setCookie,
 } from "@/helpers/others";
 import { SavedPage } from "@/types";
 import { usePathname, useRouter } from "next/navigation";
 
 export const useAuth = () => {
-  const {
-    setAuthUser,
-    lastPage,
-    setLoginStatus,
-    setSnackBarMsgs,
-    isOnline,
-    setAuthLoading,
-  } = useAppContext();
+  const { setAuthUser, lastPage, setLoginStatus, setSnackBarMsgs } =
+    useAppContext();
   const { setSBMessage, setLastPage, isOnAuth } = useSharedHooks();
   const router = useRouter();
   const pathname = usePathname();
 
   // Verify authentication
   const verifyAuth = async () => {
+    const authToken = getCookie("access_token");
     const isOnAuthRoute = isOnAuth(pathname);
     const savedPage = getFromLocalStorage<SavedPage>();
     const pagePath = !isOnAuthRoute ? pathname : lastPage.path;
+    const existingVisitor = getCookie("existingVisitor");
     setLastPage(
       isOnAuthRoute && savedPage
         ? savedPage
         : { title: extractPageTitle(pagePath), path: pagePath }
     );
+
+    if (!existingVisitor) {
+      setCookie(
+        "existingVisitor",
+        (Math.random() * 1e6).toFixed(0).toString(),
+        60 * 24 * 7
+      );
+    }
+
     try {
-      !isOnAuthRoute && setAuthLoading(true);
       const res = await fetchUserWithTokenCheck();
       // Fully authenticated
-      if (isOnline && res.payload) {
+      if (isOnline() && res.payload) {
         setAuthUser(res.payload);
         setLoginStatus("AUTHENTICATED");
         return;
       }
 
       // Set login status to unkown when offline
-      if (!isOnline) {
+      if (!isOnline()) {
         setLoginStatus("UNKNOWN");
-        setSBMessage({
-          msg: { content: res.message, msgStatus: "ERROR", hasClose: true },
-          override: true,
-        });
         return;
       }
 
       // Fully logged out
-      const existingUser = getCookie("existingUser");
-      if (!existingUser) setLastPage(clientRoutes.about);
-      setAuthUser(null);
-      setLoginStatus("UNAUTHENTICATED");
-      !isOnAuthRoute &&
+      if (isOnline()) {
+        setAuthUser(null);
+        setLoginStatus("UNAUTHENTICATED");
         setSBMessage({
           msg: {
             content: res.message,
             msgStatus: "ERROR",
             hasClose: true,
+            behavior: "FIXED",
           },
-          override: true,
         });
-      return;
+        !existingVisitor && setLastPage(clientRoutes.about);
+        return;
+      }
     } catch (err: any) {
       setAuthUser(null);
       setLoginStatus("UNAUTHENTICATED");
       setLastPage(clientRoutes.about);
-      !isOnAuthRoute &&
-        setSBMessage({
-          msg: { content: "Unable to verify session", msgStatus: "ERROR" },
-        });
+      setSBMessage({
+        msg: { content: "Unable to verify session", msgStatus: "ERROR" },
+      });
       return;
-    } finally {
-      setAuthLoading(false);
     }
   };
 

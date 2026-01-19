@@ -40,9 +40,22 @@ export const AppButton = ({
     gap: theme.gap(2),
     alignItems: "center",
   };
+  const textVarDefaultStyle: GenericObject<string> = {
+    fontSize: "14px",
+    fontWeight: "800",
+    height: "unset",
+    color: theme.palette.gray[300],
+    padding: theme.boxSpacing(0, 5),
+    minWidth: "unset",
+  };
 
   const mergedStyle =
-    overrideStyle === "full" ? style : { ...defaultStyle, ...style };
+    overrideStyle === "full"
+      ? style
+      : {
+          ...(variant === "text" ? textVarDefaultStyle : defaultStyle),
+          ...style,
+        };
   // If it's a link, wrap button inside AnchorLink
   if (href) {
     return (
@@ -75,7 +88,7 @@ export const AppButton = ({
 };
 
 interface AnchorLinkProps {
-  children?: React.ReactNode | string;
+  children?: React.ReactNode | string | null;
   url: string;
   icon?: React.ReactNode | null;
   style?: GenericObject<string | number>;
@@ -83,7 +96,7 @@ interface AnchorLinkProps {
   [key: string]: any;
 }
 export const AnchorLink = ({
-  children = "children",
+  children = null,
   url,
   icon = null,
   style = {},

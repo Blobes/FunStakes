@@ -27,8 +27,6 @@ interface AppContextType {
   setPage: React.Dispatch<React.SetStateAction<SavedPage>>;
   modalContent: ModalContent | null;
   setModalContent: React.Dispatch<React.SetStateAction<ModalContent | null>>;
-  isOnline: boolean;
-  setOnlineStatus: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const context = createContext<AppContextType | null>(null);
@@ -37,7 +35,8 @@ export const ContextProvider = ({
 }: {
   children: React.ReactNode;
 }) => {
-  const [loginStatus, setLoginStatus] = useState<LoginStatus>("UNKNOWN");
+  const [loginStatus, setLoginStatus] =
+    useState<LoginStatus>("UNAUTHENTICATED");
   const [authUser, setAuthUser] = useState<IUser | null>(null);
   const [snackBarMsgs, setSnackBarMsgs] = useState<SnackBarMsg>({
     messgages: [],
@@ -48,7 +47,6 @@ export const ContextProvider = ({
   const [isAuthLoading, setAuthLoading] = useState(false);
   const [lastPage, setPage] = useState<SavedPage>(clientRoutes.about);
   const [modalContent, setModalContent] = useState<ModalContent | null>(null);
-  const [isOnline, setOnlineStatus] = useState(navigator.onLine);
 
   return (
     <context.Provider
@@ -69,8 +67,6 @@ export const ContextProvider = ({
         setPage,
         modalContent,
         setModalContent,
-        isOnline,
-        setOnlineStatus,
       }}>
       {children}
     </context.Provider>
