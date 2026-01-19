@@ -114,12 +114,13 @@ export const SnackBars = ({
                   gap: theme.gap(1),
                 }}>
                 {msg.content && (
-                  <Typography variant="body2" sx={{ maxWidth: "360px" }}>
-                    {msg.content}
-                  </Typography>
+                  <Typography variant="body2">{msg.content}</Typography>
                 )}
                 {msg.cta && (
-                  <AppButton variant="text" onClick={msg.cta.action}>
+                  <AppButton
+                    variant="text"
+                    onClick={msg.cta.action}
+                    style={{ display: "inline-flex" }}>
                     {msg.cta.label}
                   </AppButton>
                 )}

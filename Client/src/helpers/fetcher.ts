@@ -86,7 +86,7 @@ export const fetchUserWithTokenCheck = async (
     if (err.status === 401) {
       // console.log(`Attempt ${attempt + 1}: Triggering Refresh...`);
       const refreshed = await refreshAccessToken();
-      msg = "Session expired!";
+      msg = "You are logged out!";
       if (refreshed) {
         return fetchUserWithTokenCheck(attempt + 1);
       }
