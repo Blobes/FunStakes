@@ -45,7 +45,6 @@ export const PostCard = ({ post, style = {} }: PostProps) => {
   const [author, setAuthor] = useState<IUser | null>(null);
   const [message, setMessage] = useState<string | null>(null);
   const [isLiking, setIsLiking] = useState(false);
-  const tempUser = getCookie("savedUser");
   const { setSBMessage } = useSharedHooks();
 
   const {
@@ -91,7 +90,7 @@ export const PostCard = ({ post, style = {} }: PostProps) => {
       setModalContent({ content: <AuthStepper /> });
       return;
     }
-    if (!isOnline() && !tempUser) {
+    if (!isOnline()) {
       setSBMessage({
         msg: {
           content: "Something went wrong.",

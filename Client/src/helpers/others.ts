@@ -108,7 +108,8 @@ export const getFromLocalStorage = <T = unknown | any>({
 
 export const matchPaths = (pathname: string, pagePath: string | undefined) => {
   return (
-    pathname === pagePath?.toLowerCase() || pathname.startsWith(`${pagePath}/`)
+    pathname === pagePath?.toLowerCase() ||
+    pathname.toLowerCase().startsWith(`${pagePath}/`)
   );
 };
 

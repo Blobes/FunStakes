@@ -12,12 +12,17 @@ import { Modal, ModalRef } from "@/components/Modal";
 import { useSharedHooks } from "@/hooks";
 import { AuthStepper } from "./auth/login/AuthStepper";
 import { clientRoutes, flaggedRoutes } from "@/helpers/info";
-import { isOnline, matchPaths } from "@/helpers/others";
+import { delay, isOnline, matchPaths } from "@/helpers/others";
 import { useTheme } from "@mui/material/styles";
 import { LeftNav } from "@/navbars/LeftNav";
-import { RightSidebar } from "./right-sidebar/RightSidebar";
+import { RightSidebar } from "./feed-sidebar/RightSidebar";
 import { useStyles } from "@/helpers/styles";
 import { useAuth } from "./auth/authHooks";
+import { ProgressIcon } from "@/components/Loading";
+import { Offline } from "./Offline";
+import Image from "next/image";
+import { img } from "@/assets/exported";
+import { Splash } from "./Splash";
 
 export const AppWrapper = ({ children }: { children: React.ReactNode }) => {
   const pathname = usePathname();
@@ -31,12 +36,19 @@ export const AppWrapper = ({ children }: { children: React.ReactNode }) => {
   const {
     setSBMessage,
     openModal,
-    closeModal,
     isOnWeb,
     isOnAuth,
     removeMessage,
+    isDesktop,
   } = useSharedHooks();
-  const { snackBarMsgs, loginStatus, modalContent, lastPage } = useAppContext();
+  const {
+    snackBarMsgs,
+    loginStatus,
+    modalContent,
+    lastPage,
+    isGlobalLoading,
+    setGlobalLoading,
+  } = useAppContext();
   const [mounted, setMounted] = useState(false);
 
   const flaggedAppRoutes = flaggedRoutes.app.filter((route) =>
@@ -69,45 +81,12 @@ export const AppWrapper = ({ children }: { children: React.ReactNode }) => {
   // 2️⃣ AUTH MODAL STATE REACTIONS
   // ─────────────────────────────
   useEffect(() => {
-    let intervalId: NodeJS.Timeout | null = null;
-    // AUTHENTICATED or not on app route close modal
-    if (
-      loginStatus === "AUTHENTICATED" ||
-      loginStatus === "UNKNOWN" ||
-      !isOnAppRoute
-    ) {
-      closeModal();
-      return;
-    }
     // Not allowed → redirect + exit
     if (!isAllowedRoutes) {
       router.replace(clientRoutes.about.path);
       return;
     }
-
-    const showModal = () => {
-      openModal({
-        content: <AuthStepper />,
-        onClose: () => closeModal(),
-      });
-    };
-    // show once
-    showModal();
-    // repeat every 10 mins
-    intervalId = setInterval(showModal, 60 * 1000 * 10);
-    // single cleanup
-    return () => {
-      if (intervalId) clearInterval(intervalId);
-    };
-  }, [
-    loginStatus,
-    isOnline(),
-    isOnAppRoute,
-    isAllowedRoutes,
-    router,
-    clientRoutes.path,
-    pathname,
-  ]);
+  }, [loginStatus, isOnline(), isAllowedRoutes, router, pathname]);
 
   // ─────────────────────────────
   // 3️⃣ MODAL OPEN / CLOSE
@@ -128,10 +107,11 @@ export const AppWrapper = ({ children }: { children: React.ReactNode }) => {
   useEffect(() => {
     const handleOnline = () => {
       removeMessage(1);
-      !isOnAuthRoute && verifyAuth();
+      verifyAuth();
     };
 
-    const handleOffline = () => {
+    const handleOffline = async () => {
+      setGlobalLoading(true);
       setSBMessage({
         msg: {
           id: 1,
@@ -146,26 +126,21 @@ export const AppWrapper = ({ children }: { children: React.ReactNode }) => {
           },
         },
       });
-      !isOnAuthRoute && verifyAuth();
+      verifyAuth();
+      await delay(1000 * 5);
+      setGlobalLoading(false);
     };
-
-    // const handleFocus = () => {
-    //   !isOnAuthRoute && verifyAuth();
-    // };
 
     window.addEventListener("online", handleOnline);
     window.addEventListener("offline", handleOffline);
-    // window.addEventListener("focus", handleFocus);
-
     return () => {
       window.removeEventListener("online", handleOnline);
       window.removeEventListener("offline", handleOffline);
-      // window.removeEventListener("focus", handleFocus);
     };
   }, [pathname, lastPage, loginStatus, isOnline()]);
 
-  if (!mounted) {
-    return null; // or splash loader
+  if (!mounted || (isOnline() && loginStatus === "UNKNOWN")) {
+    return <Splash />;
   }
 
   return (
@@ -176,48 +151,60 @@ export const AppWrapper = ({ children }: { children: React.ReactNode }) => {
         width: "100%",
         gap: 0,
         backgroundColor: theme.palette.gray[0],
+        alignItems: !isOnline() ? "center" : "unset",
+        justifyContent: !isOnline() ? "center" : "unset",
       }}>
       <BlurEffect />
-      {!isOnAuthRoute && <Header />}
 
-      {isOnWebRoute || isOnAuthRoute ? (
-        children
+      {!isOnline() && loginStatus === "UNKNOWN" ? (
+        isGlobalLoading ? (
+          <ProgressIcon otherProps={{ size: "20px" }} />
+        ) : (
+          <Offline />
+        )
       ) : (
-        <Stack
-          sx={{
-            height: "100%",
-            gap: theme.gap(0),
-            overflowY: "hidden",
-            overflowX: "auto",
-            flexDirection: "row",
-            justifyContent: "center",
-            [theme.breakpoints.down("md")]: {
-              overflowY: "auto",
-              justifyContent: "flex-start",
-              alignItems: "center",
-              flexDirection: "column",
-            },
-            ...scrollBarStyle(),
-          }}>
-          <LeftNav />
-          {children}
-          <RightSidebar />
-        </Stack>
-      )}
+        <>
+          {!isOnAuthRoute && <Header />}
 
-      {snackBarMsgs.messgages && <SnackBars snackBarMsg={snackBarMsgs} />}
-      {modalContent && (
-        <Modal
-          ref={modalRef}
-          content={modalContent.content}
-          header={modalContent.header}
-          shouldClose={modalContent.shouldClose}
-          entryDir={modalContent.entryDir ?? "CENTER"}
-          style={modalContent.style}
-          onClose={modalContent.onClose}
-        />
+          {!isOnAppRoute ? (
+            children
+          ) : (
+            <Stack
+              sx={{
+                height: "100%",
+                gap: theme.gap(0),
+                overflowY: "hidden",
+                overflowX: "auto",
+                flexDirection: "row",
+                justifyContent: "center",
+                [theme.breakpoints.down("md")]: {
+                  overflowY: "auto",
+                  justifyContent: "flex-start",
+                  alignItems: "center",
+                  flexDirection: "column",
+                },
+                ...scrollBarStyle(),
+              }}>
+              {isDesktop && loginStatus === "AUTHENTICATED" && <LeftNav />}
+              {children}
+            </Stack>
+          )}
+          {isOnWebRoute && <Footer />}
+
+          {snackBarMsgs.messgages && <SnackBars snackBarMsg={snackBarMsgs} />}
+          {modalContent && (
+            <Modal
+              ref={modalRef}
+              content={modalContent.content}
+              header={modalContent.header}
+              shouldClose={modalContent.shouldClose}
+              entryDir={modalContent.entryDir ?? "CENTER"}
+              style={modalContent.style}
+              onClose={modalContent.onClose}
+            />
+          )}
+        </>
       )}
-      <Footer />
     </Stack>
   );
 };

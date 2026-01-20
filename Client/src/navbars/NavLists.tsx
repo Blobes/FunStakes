@@ -42,6 +42,14 @@ export const useNavLists = () => {
       url: clientRoutes.about.path,
     },
     {
+      title: clientRoutes.support.title,
+      url: clientRoutes.support.path,
+    },
+    {
+      title: clientRoutes.pricing.title,
+      url: clientRoutes.pricing.path,
+    },
+    {
       title: clientRoutes.blogs.title,
       url: clientRoutes.blogs.path,
     },

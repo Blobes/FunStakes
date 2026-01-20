@@ -70,7 +70,7 @@ export const RenderAdvList: React.FC<RenderListProps> = ({
               if (item.action) item.action();
               if (item.title)
                 setLastPage({
-                  title: item.title.toLowerCase(),
+                  title: item.title,
                   path: item.url ?? "#",
                 });
               if (onClick) onClick();
@@ -122,7 +122,7 @@ export const RenderSimpleList: React.FC<RenderListProps> = ({
               if (item.action) item.action();
               if (item.title)
                 setLastPage({
-                  title: item.title.toLowerCase(),
+                  title: item.title,
                   path: item.url ?? "#",
                 });
               if (onClick) onClick();

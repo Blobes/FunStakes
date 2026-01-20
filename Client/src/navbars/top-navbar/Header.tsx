@@ -55,22 +55,22 @@ export const Header: React.FC = () => {
     router.push(clientRoutes.notifications.path);
   };
 
-  const openMobileWebNav = () =>
-    openModal({
-      content: (
-        <MobileWebNav
-          style={{
-            gap: theme.gap(4),
-          }}
-        />
-      ),
-      source: "navbar",
-      entryDir: "LEFT",
-      onClose: () => closeModal(),
-      style: {
-        content: { otherStyles: { height: "100%" } },
-      },
-    });
+  // const openMobileWebNav = () =>
+  //   openModal({
+  //     content: (
+  //       <MobileWebNav
+  //         style={{
+  //           gap: theme.gap(4),
+  //         }}
+  //       />
+  //     ),
+  //     source: "navbar",
+  //     entryDir: "LEFT",
+  //     onClose: () => closeModal(),
+  //     style: {
+  //       content: { otherStyles: { height: "100%" } },
+  //     },
+  //   });
 
   const openMobileUserNav = () =>
     openModal({
@@ -111,11 +111,11 @@ export const Header: React.FC = () => {
           borderBottom: `1px solid ${theme.palette.gray.trans[1]}`,
         }}>
         {/* Mobile hamburger (logged out only) */}
-        {isOnWebRoute && !isDesktop && (
+        {/* {isOnWebRoute && !isDesktop && (
           <IconButton onClick={openMobileWebNav} aria-label="Open menu">
             <Menu />
           </IconButton>
-        )}
+        )} */}
 
         {!isOnWebRoute && isLoggedIn && !isDesktop && (
           <IconButton
@@ -127,7 +127,7 @@ export const Header: React.FC = () => {
 
         {/* Logo */}
         <AnchorLink
-          url={clientRoutes.about.path}
+          url={clientRoutes.home.path}
           onClick={handleLogoClick}
           style={{ display: "inline-flex" }}
           icon={
@@ -144,39 +144,51 @@ export const Header: React.FC = () => {
         />
 
         {/* Search */}
-        {isLoggedIn && <SearchBar />}
+        {isDesktop && isLoggedIn && !isOnWebRoute && <SearchBar />}
 
         {/* Right controls */}
         <Stack direction="row" alignItems="center" spacing={theme.gap(8)}>
-          {isOnWebRoute && isDesktop && (
+          {/* {isOnWebRoute && isDesktop && (
             <DesktopWebNav
               style={{
                 display: { xs: "none", md: "flex", flexDirection: "row" },
                 gap: theme.gap(4),
               }}
             />
-          )}
+          )} */}
           {/* <ThemeMode /> */}
 
-          {isOnline() && isLoggedIn && (
-            <>
-              {isDesktop && <DesktopUserNav menuRef={menuRef} />}
-              <UserAvatar
-                toolTipValue={isOnWebRoute ? "Back to timeline" : "Open menu"}
-                style={{ width: "34px", height: "34px" }}
-                action={(e) => {
-                  if (isOnWebRoute) router.replace(clientRoutes.about.path);
-                  else
+          {isOnline() &&
+            isLoggedIn &&
+            (!isOnWebRoute ? (
+              <>
+                {isDesktop && <DesktopUserNav menuRef={menuRef} />}
+                <UserAvatar
+                  toolTipValue="Open menu"
+                  style={{ width: "34px", height: "34px" }}
+                  action={(e) => {
                     isDesktop
                       ? menuRef.current?.openMenu(e.currentTarget)
                       : openMobileUserNav();
-                }}
-              />
-            </>
-          )}
-          {(!isOnline() || loginStatus === "UNKNOWN") && (
+                  }}
+                />
+              </>
+            ) : (
+              <AppButton
+                href={clientRoutes.home.path}
+                variant="outlined"
+                style={{ fontSize: "14px" }}
+                onClick={(e) => {
+                  e.preventDefault();
+                  router.push(clientRoutes.login.path);
+                }}>
+                Go to funstakes.com
+              </AppButton>
+            ))}
+
+          {/* {(!isOnline() || loginStatus === "UNKNOWN") && (
             <IOfflineAvatar style={{ width: "34px", height: "34px" }} />
-          )}
+          )} */}
 
           {loginStatus === "UNAUTHENTICATED" && (
             <AppButton

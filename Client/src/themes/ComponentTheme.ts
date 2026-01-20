@@ -31,6 +31,7 @@ const componentTheme = createTheme({
             borderRadius: theme.radius.full,
             alignSelf: "flex-start",
             height: "40px",
+            fontWeight: "600",
           }),
         contained: ({ theme }) =>
           theme.unstable_sx({
@@ -47,7 +48,7 @@ const componentTheme = createTheme({
           }),
         outlined: ({ theme }) =>
           theme.unstable_sx({
-            borderColor: theme.palette.gray[300],
+            borderColor: theme.palette.gray.trans[2],
             color: theme.palette.gray[300],
             "&:hover": {
               backgroundColor: theme.fixedColors.mainTrans,

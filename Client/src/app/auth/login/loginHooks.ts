@@ -17,7 +17,7 @@ import {
   getLockRemaining,
 } from "@/helpers/auth";
 import { useRef } from "react";
-import { clientRoutes, flaggedRoutes, serverRoutes } from "@/helpers/info";
+import { clientRoutes, serverRoutes } from "@/helpers/info";
 
 interface LoginCredentials {
   email: string;
@@ -32,7 +32,7 @@ interface CheckEmailResponse {
 }
 
 export const useLogin = () => {
-  const { setAuthUser, lastPage, setLoginStatus, setInlineMsg, isAuthLoading } =
+  const { setAuthUser, setLoginStatus, setInlineMsg, isAuthLoading } =
     useAppContext();
   const { setSBMessage, setLastPage, isOnWeb, isOnAuth } = useSharedHooks();
   const MAX_ATTEMPTS = 3;
@@ -120,13 +120,7 @@ export const useLogin = () => {
       const savedPath = savedPage ? savedPage.path : "";
       const isLastWeb = isOnWeb(savedPath);
 
-      setLastPage(
-        isLastWeb
-          ? clientRoutes.home
-          : !isLastWeb && savedPage
-          ? savedPage
-          : clientRoutes.home
-      );
+      setLastPage(!isLastWeb && savedPage ? savedPage : clientRoutes.home);
 
       //Clear cookies
       deleteCookie("loginAttempts");

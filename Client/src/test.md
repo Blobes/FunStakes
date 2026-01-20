@@ -142,3 +142,62 @@ light: "#10142C",
 main: red[300],
 dark: red[100],
 },
+
+// ─────────────────────────────
+// 2️⃣ AUTH MODAL STATE REACTIONS
+// ─────────────────────────────
+useEffect(() => {
+let intervalId: NodeJS.Timeout | null = null;
+// AUTHENTICATED or not on app route close modal
+if (
+loginStatus === "AUTHENTICATED" ||
+loginStatus === "UNKNOWN" ||
+!isOnAppRoute
+) {
+closeModal();
+return;
+}
+// Not allowed → redirect + exit
+if (!isAllowedRoutes) {
+router.replace(clientRoutes.about.path);
+return;
+}
+
+    const showModal = () => {
+      openModal({
+        content: <AuthStepper />,
+        onClose: () => closeModal(),
+      });
+    };
+    // show once
+    showModal();
+    // repeat every 10 mins
+    intervalId = setInterval(showModal, 60 * 1000 * 10);
+    // single cleanup
+    return () => {
+      if (intervalId) clearInterval(intervalId);
+    };
+
+}, [
+loginStatus,
+isOnline(),
+isOnAppRoute,
+isAllowedRoutes,
+router,
+clientRoutes.path,
+pathname,
+]);
+
+if (!existingVisitor) {
+setCookie(
+"existingVisitor",
+(Math.random() _ 1e6).toFixed(0).toString(),
+60 _ 24 \* 7
+);
+}
+
+// const handleFocus = () => {
+// !isOnAuthRoute && verifyAuth();
+// };
+
+// window.addEventListener("focus", handleFocus);

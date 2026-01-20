@@ -19,6 +19,7 @@ interface EmptyProps {
   };
   primaryCta?: {
     type?: "BUTTON" | "ICON";
+    variant?: "contained" | "outlined";
     label?: string | React.ReactNode;
     toolTip?: string;
     action: () => void;
@@ -96,7 +97,7 @@ export const Empty: React.FC<EmptyProps> = ({
       {primaryCta &&
         (primaryCtaType === "BUTTON" ? (
           <AppButton
-            variant="contained"
+            variant={primaryCta.variant || "contained"}
             style={{
               fontSize: "14px",
               padding: theme.boxSpacing(2, 6),

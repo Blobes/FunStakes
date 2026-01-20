@@ -28,20 +28,11 @@ export const useAuth = () => {
     const isOnAuthRoute = isOnAuth(pathname);
     const savedPage = getFromLocalStorage<SavedPage>();
     const pagePath = !isOnAuthRoute ? pathname : lastPage.path;
-    const existingVisitor = getCookie("existingVisitor");
     setLastPage(
       isOnAuthRoute && savedPage
         ? savedPage
         : { title: extractPageTitle(pagePath), path: pagePath }
     );
-
-    if (!existingVisitor) {
-      setCookie(
-        "existingVisitor",
-        (Math.random() * 1e6).toFixed(0).toString(),
-        60 * 24 * 7
-      );
-    }
 
     try {
       const res = await fetchUserWithTokenCheck();
@@ -59,23 +50,20 @@ export const useAuth = () => {
       }
 
       // Fully logged out
-      if (isOnline() && !authToken) {
-        setAuthUser(null);
-        setLoginStatus("UNAUTHENTICATED");
-        setSBMessage({
-          msg: {
-            content: res.message,
-            msgStatus: "ERROR",
-            hasClose: true,
-          },
-        });
-        !existingVisitor && setLastPage(clientRoutes.about);
-        return;
-      }
+      setAuthUser(null);
+      setLoginStatus("UNAUTHENTICATED");
+      setSBMessage({
+        msg: {
+          content: res.message,
+          msgStatus: "ERROR",
+          hasClose: true,
+        },
+      });
+      return;
     } catch (err: any) {
       setAuthUser(null);
       setLoginStatus("UNAUTHENTICATED");
-      setLastPage(clientRoutes.about);
+      setLastPage(clientRoutes.home);
       setSBMessage({
         msg: { content: "Unable to verify session", msgStatus: "ERROR" },
       });
@@ -89,10 +77,13 @@ export const useAuth = () => {
       //  Send logout request to backend
       await fetcher(serverRoutes.logout, { method: "POST" });
       setAuthUser(null);
-      deleteCookie("user_snapshot");
       setLoginStatus("UNAUTHENTICATED");
-      setLastPage(clientRoutes.about);
-      router.replace(clientRoutes.about.path);
+      if (pathname !== clientRoutes.home.path) {
+        setLastPage(clientRoutes.home);
+        router.replace(clientRoutes.home.path);
+      } else {
+        router.refresh();
+      }
     } catch (error: any) {
       setSBMessage({
         msg: { content: error.message, msgStatus: "ERROR" },
