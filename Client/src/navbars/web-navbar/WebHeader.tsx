@@ -48,7 +48,7 @@ export const WebHeader: React.FC = () => {
       source: "navbar",
       onClose: () => closeModal(),
       style: {
-        content: { otherStyles: { height: "100%" } },
+        base: { content: { height: "100%" } },
       },
     });
 

@@ -1,7 +1,9 @@
 "use client";
 
+import { NetworkStatus } from "@/types";
+
 export const getInitialsWithColors = (
-  value: string
+  value: string,
 ): { initials: string; textColor: string; bgColor: string } => {
   const parts = value.trim().split(/\s+/);
   const initials =
@@ -26,7 +28,7 @@ export const getInitialsWithColors = (
 export const setCookie = (name: string, value: string, minutes: number) => {
   const expires = new Date(Date.now() + minutes * 60000).toUTCString();
   document.cookie = `${name}=${encodeURIComponent(
-    value
+    value,
   )}; expires=${expires}; path=/`;
 };
 
@@ -87,8 +89,8 @@ export const extractPageTitle = (path: string) => {
   return path === "/"
     ? "Home"
     : path === "/web"
-    ? "About"
-    : path.replace(/\/$/, "").split("/").pop() || "";
+      ? "About"
+      : path.replace(/\/$/, "").split("/").pop() || "";
 };
 
 interface LocalItem {
@@ -113,4 +115,36 @@ export const matchPaths = (pathname: string, pagePath: string | undefined) => {
   );
 };
 
-export const isOnline = () => navigator.onLine;
+export const checkSignal = async (): Promise<NetworkStatus> => {
+  let status;
+  if (!navigator.onLine) {
+    status = "offline";
+    return "OFFLINE";
+  }
+
+  // If navigator says we are online, but the request is taking too long:
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), 5000); // 5 second timeout
+  try {
+    // Ping a tiny resource or your own health endpoint
+    await fetch(`/favicon.ico?t=${Date.now()}`, {
+      method: "HEAD",
+      signal: controller.signal,
+      cache: "no-store",
+    });
+    status = "online";
+    return "STABLE";
+  } catch (err) {
+    // If it aborted or failed, the network is "unstable"
+    status = "unstable";
+    return "UNSTABLE";
+  } finally {
+    console.log(status);
+    clearTimeout(timeoutId);
+  }
+};
+
+// export const isOnline = async () => (await checkSignal()) === "STABLE";
+// export const isUnstableNetwork = async () =>
+//   (await checkSignal()) === "UNSTABLE";
+// export const isOffline = async () => (await checkSignal()) === "OFFLINE";

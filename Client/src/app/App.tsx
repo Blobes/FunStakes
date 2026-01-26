@@ -10,7 +10,7 @@ import { Footer } from "@/navbars/Footer";
 import { Modal, ModalRef } from "@/components/Modal";
 import { useController } from "@/hooks/generalHooks";
 import { clientRoutes, flaggedRoutes } from "@/helpers/info";
-import { delay, isOnline, matchPaths } from "@/helpers/others";
+import { delay, matchPaths } from "@/helpers/others";
 import { useTheme } from "@mui/material/styles";
 import { useAuth } from "./auth/authHooks";
 import { ProgressIcon } from "@/components/Loading";
@@ -28,15 +28,11 @@ export const App = ({ children }: { children: React.ReactNode }) => {
 
   // Always initialize hooks here — top of the component
   const modalRef = useRef<ModalRef>(null);
-  const { openModal, isOnWeb, isOnAuth, isDesktop, } = useController();
+  const { openModal, isOnWeb, isOnAuth, verifySignal, isOnline,
+    isUnstableNetwork, isOffline } = useController();
   const { setSBMessage, removeMessage, } = useSnackbar();
-  const {
-    snackBarMsgs,
-    loginStatus,
-    modalContent,
-    lastPage,
-    isGlobalLoading,
-    setGlobalLoading,
+  const { snackBarMsgs, loginStatus, modalContent, lastPage,
+    isGlobalLoading, setGlobalLoading, networkStatus
   } = useAppContext();
   const [mounted, setMounted] = useState(false);
 
@@ -63,6 +59,9 @@ export const App = ({ children }: { children: React.ReactNode }) => {
         .then(() => console.log("SW registered"))
         .catch((err) => console.error("SW registration failed:", err));
     }
+    // Verify network signal
+    verifySignal();
+    // Verify user auth
     verifyAuth();
   }, []);
 
@@ -72,7 +71,7 @@ export const App = ({ children }: { children: React.ReactNode }) => {
       router.replace(clientRoutes.about.path);
       return;
     }
-  }, [loginStatus, isOnline(), isAllowedRoutes, router, pathname]);
+  }, [isAllowedRoutes, router, pathname]);
 
   // ─────────────────────────────
   // 3️⃣ MODAL OPEN / CLOSE
@@ -94,10 +93,10 @@ export const App = ({ children }: { children: React.ReactNode }) => {
     const handleOnline = () => {
       removeMessage(1);
       verifyAuth();
+      verifySignal();
     };
 
     const handleOffline = async () => {
-      setGlobalLoading(true);
       setSBMessage({
         msg: {
           id: 1,
@@ -112,9 +111,6 @@ export const App = ({ children }: { children: React.ReactNode }) => {
           },
         },
       });
-      verifyAuth();
-      await delay(1000 * 5);
-      setGlobalLoading(false);
     };
 
     window.addEventListener("online", handleOnline);
@@ -123,9 +119,9 @@ export const App = ({ children }: { children: React.ReactNode }) => {
       window.removeEventListener("online", handleOnline);
       window.removeEventListener("offline", handleOffline);
     };
-  }, [pathname, lastPage, loginStatus, isOnline()]);
+  }, [pathname, lastPage, loginStatus]);
 
-  if (!mounted || (isOnline() && loginStatus === "UNKNOWN")) {
+  if (!mounted || (isOnline && loginStatus === "UNKNOWN")) {
     return <Splash />;
   }
 
@@ -137,12 +133,12 @@ export const App = ({ children }: { children: React.ReactNode }) => {
         width: "100%",
         gap: 0,
         backgroundColor: theme.palette.gray[0],
-        alignItems: !isOnline() ? "center" : "unset",
-        justifyContent: !isOnline() ? "center" : "unset",
+        alignItems: !isOnline ? "center" : "unset",
+        justifyContent: !isOnline ? "center" : "unset",
       }}>
       <BlurEffect />
 
-      {!isOnline() && loginStatus === "UNKNOWN" ? (
+      {(isOffline || isUnstableNetwork) && loginStatus === "UNKNOWN" ? (
         isGlobalLoading ? (
           <ProgressIcon otherProps={{ size: "20px" }} />
         ) : (
@@ -165,9 +161,11 @@ export const App = ({ children }: { children: React.ReactNode }) => {
             <Modal
               ref={modalRef}
               content={modalContent.content}
+              showHeader={modalContent.showHeader}
               header={modalContent.header}
-              shouldClose={modalContent.shouldClose}
-              entryDir={modalContent.entryDir ?? "CENTER"}
+              clickToClose={modalContent.clickToClose}
+              dragToClose={modalContent.dragToClose}
+              transition={modalContent.transition}
               style={modalContent.style}
               onClose={modalContent.onClose}
             />

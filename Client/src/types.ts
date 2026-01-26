@@ -3,7 +3,12 @@
 import { ModalProps } from "./components/Modal";
 
 export type LoginStatus = "UNKNOWN" | "AUTHENTICATED" | "UNAUTHENTICATED";
+
 export type ResponseStatus = "SUCCESS" | "ERROR" | "INFO" | "WARNING" | null;
+
+export type NetworkStatus = "STABLE" | "UNSTABLE" | "OFFLINE";
+
+export type Direction = "left" | "right" | "up" | "down";
 
 export type GenericObject<T> = {
   [key: string]: T | GenericObject<T>;

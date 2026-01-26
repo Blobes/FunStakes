@@ -7,9 +7,17 @@ import { MouseEvent, useEffect, useState } from "react";
 import { useTheme } from "@mui/material/styles";
 import { flaggedRoutes } from "../helpers/info";
 import { useRouter } from "next/navigation";
+import { checkSignal, delay } from "@/helpers/others";
 
 export const useController = () => {
-  const { setPage, setModalContent, modalContent } = useAppContext();
+  const {
+    setPage,
+    setModalContent,
+    modalContent,
+    networkStatus,
+    setNetworkStatus,
+    setGlobalLoading,
+  } = useAppContext();
   const theme = useTheme();
   const router = useRouter();
 
@@ -23,11 +31,13 @@ export const useController = () => {
     setModalContent((prev) => (prev === update ? prev : update));
   };
 
-  const closeModal = () => {
-    setTimeout(() => setModalContent(null), 200);
+  const closeModal = async () => {
+    await delay(200);
+    setModalContent(null);
   };
 
   const isDesktop = useMediaQuery(theme.breakpoints.up("md"));
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
   const isOnWeb = (path: string) => flaggedRoutes.web.includes(path);
   const isOnAuth = (path: string) => flaggedRoutes.auth.includes(path);
@@ -82,15 +92,33 @@ export const useController = () => {
     return scrollDir;
   };
 
+  // Network signal
+  const verifySignal = async () => {
+    setGlobalLoading(true);
+    const status = await checkSignal();
+    setNetworkStatus(status);
+    await delay(1000 * 5);
+    setGlobalLoading(false);
+  };
+
+  const isOnline = networkStatus === "STABLE";
+  const isUnstableNetwork = networkStatus === "UNSTABLE";
+  const isOffline = networkStatus === "OFFLINE";
+
   return {
     setLastPage,
     openModal,
     closeModal,
     isDesktop,
+    isMobile,
     isOnWeb,
     isOnAuth,
     handleWindowResize,
     handleLinkClick,
     handleScrolling,
+    verifySignal,
+    isOnline,
+    isUnstableNetwork,
+    isOffline,
   };
 };

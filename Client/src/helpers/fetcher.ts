@@ -59,7 +59,7 @@ export const fetcher = async <T>(
 interface TokenCheckResponse {
   payload: IUser | null;
   message?: string;
-  status?: "SUCCESS" | "ERROR";
+  status?: "SUCCESS" | "UNAUTHORIZED" | "ERROR";
 }
 
 export const fetchUserWithTokenCheck = async (
@@ -69,6 +69,18 @@ export const fetchUserWithTokenCheck = async (
     const res = await fetcher<{ user: IUser }>(serverRoutes.verifyAuthToken);
     return { payload: res.user, status: "SUCCESS" };
   } catch (err: any) {
+    // Check if it's a network/timeout error (status is usually undefined or 0)
+    // or a generic server error (500, 502, 503, 504)
+    const isNetworkError = !err.status || err.status >= 500;
+
+    if (isNetworkError) {
+      return {
+        payload: null,
+        status: "ERROR", // Add this new status
+        message: "Network is unstable. Retrying...",
+      };
+    }
+
     // 1. Stop the loop if we've tried 2 times
     if (attempt >= 2) {
       console.error(
@@ -76,14 +88,14 @@ export const fetchUserWithTokenCheck = async (
       );
       return {
         payload: null,
-        message: "Can't refresh session. Refresh the page.",
-        status: "ERROR",
+        message: "Session expired. Please log in again.",
+        status: "UNAUTHORIZED",
       };
     }
 
     let msg = err.message;
     // 2. Catch 401 (Missing/Expired) OR 403 (Invalid)
-    if (err.status === 401) {
+    if (err.status === 401 || err.status === 403) {
       // console.log(`Attempt ${attempt + 1}: Triggering Refresh...`);
       const refreshed = await refreshAccessToken();
       msg = null;
@@ -94,7 +106,7 @@ export const fetchUserWithTokenCheck = async (
     return {
       payload: null,
       message: msg,
-      status: "ERROR",
+      status: "UNAUTHORIZED",
     };
   }
 };

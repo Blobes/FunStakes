@@ -7,10 +7,10 @@ type ExtendedGenericObject<T> = GenericObject<T> & {
 
 declare module "@mui/material/styles" {
   interface Palette {
-    gray: ExtendedGenericObject<string>;
+    gray: ExtendedGenericObject<string | (() => any)>;
   }
   interface PaletteOptions {
-    gray?: ExtendedGenericObject<string>;
+    gray?: ExtendedGenericObject<string | (() => any)>;
   }
   interface Theme {
     fixedColors: GenericObject<string>;
@@ -19,7 +19,7 @@ declare module "@mui/material/styles" {
       val1: number,
       val2?: number,
       val3?: number,
-      val4?: number
+      val4?: number,
     ) => string;
     gap: (value: number) => string;
   }
@@ -30,7 +30,7 @@ declare module "@mui/material/styles" {
       val1: number,
       val2?: number,
       val3?: number,
-      val4?: number
+      val4?: number,
     ) => string;
     gap?: (value: number) => string;
   }

@@ -12,7 +12,6 @@ import { UserAvatar } from "@/components/UserAvatar";
 import { AnchorLink, AppButton } from "@/components/Buttons";
 import { MenuRef } from "@/components/Menus";
 import { clientRoutes } from "@/helpers/info";
-import { isOnline } from "@/helpers/others";
 import { img } from "@/assets/exported";
 import Image from "next/image";
 import { Bell } from "lucide-react";
@@ -22,7 +21,8 @@ interface AppHeaderProps {
 }
 export const AppHeader: React.FC<AppHeaderProps> = ({ scrollRef }) => {
   const { loginStatus } = useAppContext();
-  const { setLastPage, openModal, closeModal, isDesktop, handleWindowResize, handleLinkClick, handleScrolling } = useController();
+  const { setLastPage, openModal, closeModal, isDesktop, handleWindowResize,
+    handleLinkClick, handleScrolling, } = useController();
   const theme = useTheme();
   const router = useRouter();
   const isLoggedIn = loginStatus === "AUTHENTICATED";
@@ -54,11 +54,10 @@ export const AppHeader: React.FC<AppHeaderProps> = ({ scrollRef }) => {
       source: "navbar",
       onClose: closeModal,
       style: {
-        content: {
-          otherStyles: {
-            height: "100%",
-            backgroundColor: theme.palette.gray[0],
-          },
+        base: { overlay: { padding: theme.boxSpacing(6) } },
+        smallScreen: {
+          overlay: { padding: theme.boxSpacing(2) },
+          content: { height: "100%" }
         },
         header: {
           justifyContent: "space-between",
@@ -124,7 +123,7 @@ export const AppHeader: React.FC<AppHeaderProps> = ({ scrollRef }) => {
 
       {/* Right controls */}
       <Stack direction="row" alignItems="center" spacing={theme.gap(8)}>
-        {isOnline() && isLoggedIn && (
+        {isLoggedIn && (
           <>
             {isDesktop && <DesktopUserNav menuRef={menuRef} />}
             <UserAvatar

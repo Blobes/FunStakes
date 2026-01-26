@@ -1,15 +1,8 @@
 "use client";
 
-import { Box, IconButton, Paper, Stack, Typography } from "@mui/material";
+import { IconButton, Paper, Stack, Typography } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import { Close } from "@mui/icons-material";
-import {
-  fadeIn,
-  fadeOut,
-  moveIn,
-  moveOut,
-  shrinkWidth,
-} from "../helpers/animations";
 import { SnackBarMsg } from "@/types";
 import { AppButton } from "./Buttons";
 import { Info, CircleCheck, CircleAlert } from "lucide-react";
@@ -31,7 +24,9 @@ export const Snackbars = ({
   const { setSBTimer, removeMessage } = useSnackbar();
   const { setSnackBarMsgs } = useAppContext();
 
-  if (!snackBarMsg.messgages || snackBarMsg.messgages.length === 0) return null;
+  if (!snackBarMsg.messgages || snackBarMsg.messgages.length === 0) {
+    return null
+  };
 
   useEffect(() => {
     setSBTimer();

@@ -8,23 +8,26 @@ import {
   extractPageTitle,
   getCookie,
   getFromLocalStorage,
-  isOnline,
 } from "@/helpers/others";
 import { SavedPage } from "@/types";
 import { usePathname, useRouter } from "next/navigation";
 import { useSnackbar } from "@/hooks/snackbarHooks";
 
 export const useAuth = () => {
-  const { setAuthUser, lastPage, setLoginStatus, setSnackBarMsgs } =
-    useAppContext();
-  const { setLastPage, isOnAuth } = useController();
+  const {
+    setAuthUser,
+    lastPage,
+    setLoginStatus,
+    setSnackBarMsgs,
+    loginStatus,
+  } = useAppContext();
+  const { setLastPage, isOnAuth, isOffline } = useController();
   const { setSBMessage } = useSnackbar();
   const router = useRouter();
   const pathname = usePathname();
 
   // Verify authentication
   const verifyAuth = async () => {
-    const authToken = getCookie("access_token");
     const isOnAuthRoute = isOnAuth(pathname);
     const savedPage = getFromLocalStorage<SavedPage>();
     const pagePath = !isOnAuthRoute ? pathname : lastPage.path;
@@ -38,31 +41,22 @@ export const useAuth = () => {
     try {
       const res = await fetchUserWithTokenCheck();
       // Fully authenticated
-      if (isOnline() && res.payload) {
+      if (res.status === "SUCCESS" && res.payload) {
         setAuthUser(res.payload);
         setLoginStatus("AUTHENTICATED");
-        setSBMessage({
-          msg: {
-            content: res.message,
-            msgStatus: "ERROR",
-            hasClose: true,
-          },
-        });
         return;
       }
 
       // Set login status to unkown when offline
-      if (!isOnline()) {
+      if (res.status === "ERROR" || isOffline) {
         setLoginStatus("UNKNOWN");
         return;
       }
 
       // Fully logged out
-
-      console.log("Hmm");
       setAuthUser(null);
       setLoginStatus("UNAUTHENTICATED");
-      res.message &&
+      if (res.message)
         setSBMessage({
           msg: {
             content: res.message,
@@ -70,15 +64,12 @@ export const useAuth = () => {
             hasClose: true,
           },
         });
-      return;
     } catch (err: any) {
       setAuthUser(null);
-      setLoginStatus("UNAUTHENTICATED");
-      setLastPage(clientRoutes.home);
+      setLoginStatus("UNKNOWN");
       setSBMessage({
         msg: { content: "Unable to verify session", msgStatus: "ERROR" },
       });
-      return;
     }
   };
 

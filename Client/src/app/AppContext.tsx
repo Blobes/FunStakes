@@ -7,8 +7,10 @@ import {
   LoginStatus,
   ModalContent,
   SavedPage,
+  NetworkStatus,
 } from "@/types";
 import { clientRoutes } from "@/helpers/info";
+import { checkSignal } from "@/helpers/others";
 
 interface AppContextType {
   loginStatus: LoginStatus;
@@ -27,6 +29,8 @@ interface AppContextType {
   setPage: React.Dispatch<React.SetStateAction<SavedPage>>;
   modalContent: ModalContent | null;
   setModalContent: React.Dispatch<React.SetStateAction<ModalContent | null>>;
+  networkStatus: NetworkStatus;
+  setNetworkStatus: React.Dispatch<React.SetStateAction<NetworkStatus>>;
 }
 
 const context = createContext<AppContextType | null>(null);
@@ -46,6 +50,7 @@ export const ContextProvider = ({
   const [isAuthLoading, setAuthLoading] = useState(false);
   const [lastPage, setPage] = useState<SavedPage>(clientRoutes.about);
   const [modalContent, setModalContent] = useState<ModalContent | null>(null);
+  const [networkStatus, setNetworkStatus] = useState<NetworkStatus>("STABLE");
 
   return (
     <context.Provider
@@ -66,6 +71,7 @@ export const ContextProvider = ({
         setPage,
         modalContent,
         setModalContent,
+        networkStatus, setNetworkStatus
       }}>
       {children}
     </context.Provider>

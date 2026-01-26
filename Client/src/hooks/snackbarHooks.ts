@@ -53,7 +53,7 @@ export const useSnackbar = () => {
     return () => timers.forEach((id) => clearInterval(id));
   };
 
-  const removeSBMessage = (id: number) => {
+  const removeSBMessage = async (id: number) => {
     setSnackBarMsgs((prev) => {
       const updatedMsgs = prev.messgages?.filter((m) => m.id !== id) || [];
       return {

@@ -22,7 +22,7 @@ let designSystem = createTheme({
           trans: {
             1: "rgba(1, 13, 23, 0.06)",
             2: "rgba(1, 13, 23, 0.12)",
-            overlay: "rgba(1, 13, 23, 0.50)",
+            overlay: (trans?: number) => `rgba(1, 13, 23, ${trans ?? 0.5})`,
           },
         },
         info: {
@@ -50,9 +50,9 @@ let designSystem = createTheme({
           200: "#617A99",
           300: "#ffffff",
           trans: {
-            1: "rgba(255, 255, 255, 0.08)",
-            2: "rgba(255, 255, 255, 0.20)",
-            overlay: "rgba(1, 13, 23, 0.50)",
+            1: "rgba(173, 218, 255, 0.08)",
+            2: "rgba(173, 218, 255, 0.20)",
+            overlay: (trans?: number) => `rgba(1, 13, 23, ${trans ?? 0.5})`,
           },
         },
         info: {

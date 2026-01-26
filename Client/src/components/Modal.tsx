@@ -7,13 +7,13 @@ import React, {
   useState,
   MouseEvent,
 } from "react";
-import { IconButton, Stack } from "@mui/material";
+import { Box, IconButton, Stack } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import { Close } from "@mui/icons-material";
-import { fadeIn, fadeOut, moveIn, moveOut } from "../helpers/animations";
 import { useStyles } from "@/hooks/styleHooks";
-import { GenericObject } from "@/types";
+import { Direction, GenericObject } from "@/types";
 import { Transition, TransitionType } from "./Transition";
+import { useController } from "@/hooks/generalHooks";
 
 export interface ModalRef {
   openModal: () => void;
@@ -21,44 +21,39 @@ export interface ModalRef {
 }
 
 export interface ModalProps {
-  header?: React.ReactNode;
   content: React.ReactNode;
-  shouldClose?: boolean;
   showHeader?: boolean;
+  header?: React.ReactNode;
+  clickToClose?: boolean;
+  dragToClose?: boolean;
   onClose?: () => void;
-  transition?: { type: TransitionType, direction: "left" | "right" | "up" | "down" },
+  transition?: { type: TransitionType, baseDir: Direction, mobileDir?: Direction };
   style?: {
-    overlay?: GenericObject<string>;
-    content?: {
-      width?: { xs?: string; sm?: string; md?: string };
-      maxWidth?: { xs?: string; sm?: string; md?: string };
-      otherStyles?: GenericObject<string>;
-    };
-    header?: any;
+    base?: { overlay?: GenericObject<string>, content?: GenericObject<string> };
+    smallScreen?: { overlay?: GenericObject<string>, content?: GenericObject<string> };
+    mediumScreen?: { overlay?: GenericObject<string>, content?: GenericObject<string> };
+    header?: GenericObject<string>;
   };
 }
 
 export const Modal = forwardRef<ModalRef, ModalProps>(
   (
-    {
-      header,
-      content,
-      transition,
-      shouldClose = true,
-      showHeader = true,
-      onClose,
-      style,
+    { header, content, transition, clickToClose = true, dragToClose = false,
+      showHeader = true, onClose, style,
     },
     ref
   ) => {
-    const [isOpen, setOpen] = useState(false);
-    const [shouldRemove, setShouldRemove] = useState(true);
+
     const containerRef = useRef<HTMLDivElement>(null);
     const closeRef = useRef<HTMLButtonElement>(null);
     const { scrollBarStyle } = useStyles();
+    const { isDesktop, isMobile } = useController();
     const theme = useTheme();
-    const { overlay, content: { width, maxWidth, otherStyles } = {} } =
-      style || {};
+    // States
+    const [isOpen, setOpen] = useState(false);
+    const [shouldRemove, setShouldRemove] = useState(true);
+    const [dragY, setDragY] = useState(0);
+    const [startY, setStartY] = useState(0);
 
     useImperativeHandle(ref, () => ({
       openModal: () => {
@@ -80,14 +75,39 @@ export const Modal = forwardRef<ModalRef, ModalProps>(
       }
     };
 
-    const transOptions = transition || { type: "slide", direction: "left" }
+    // Close Drag Event
+    const handleTouchStart = (e: React.TouchEvent) => {
+      setStartY(e.touches[0].clientY);
+    };
+    const handleTouchMove = (e: React.TouchEvent) => {
+      const currentY = e.touches[0].clientY;
+      const diff = currentY - startY;
+      // Only allow dragging downwards (positive Y)
+      if (diff > 0) {
+        setDragY(diff);
+      }
+    };
+    const handleTouchEnd = () => {
+      // If dragged down more than 150px, close it
+      if (dragY > 150) {
+        setOpen(false);
+        if (onClose) onClose();
+      }
+      // Reset position if not closed
+      setDragY(0);
+    };
+
+    const transOptions = transition || { type: "slide", baseDir: "left" }
     const transType = transOptions.type
-    const transDir = transOptions.direction
+    const baseTransDir = transOptions.baseDir
+    const mobileTransDir = transOptions.mobileDir
+    const direction = !isDesktop && mobileTransDir ? mobileTransDir : baseTransDir
+    const overlayFn = theme.palette.gray.trans.overlay as (t?: number) => string;
 
     return (
       <Stack //Overlay container
         ref={containerRef}
-        {...(shouldClose ? { onClick: handleClose } : {})}
+        {...(clickToClose ? { onClick: handleClose } : {})}
         sx={{
           position: "fixed",
           top: 0,
@@ -98,74 +118,126 @@ export const Modal = forwardRef<ModalRef, ModalProps>(
           visibility: !shouldRemove ? "visible" : "hidden",
           transition: "opacity 0.3s ease-in-out, visibility 0.3s",
           opacity: isOpen ? 1 : 0,
-          // animation: `${isOpen ? fadeIn : fadeOut} 0.2s linear forwards`,
+          backgroundColor: overlayFn(isOpen ? 0.5 - dragY / 400 : 0),
+          backdropFilter: `blur(${isOpen ? Math.max(0, 8 - dragY / 50) : 0}px)`,
+          marginLeft: "0!important",
+          padding: theme.boxSpacing(12),
           alignItems: transType === "slide"
-            ? (transDir === "right" ? "flex-start" : transDir === "left" ? "flex-end" : "center")
+            ? (baseTransDir === "right" ? "flex-start" : baseTransDir === "left" ? "flex-end" : "center")
             : "center",
           justifyContent: transType === "slide"
-            ? (transDir === "right" ? "flex-start" : transDir === "left" ? "flex-end" : "center")
+            ? (baseTransDir === "down" ? "flex-start" : baseTransDir === "up" ? "flex-end" : "center")
             : "center",
-          marginLeft: "0!important",
-          padding: {
-            xs: theme.boxSpacing(4, 2),
-            sm: theme.boxSpacing(12, 12),
+          ...style?.base?.overlay,
+
+          // Mobile styling
+          [theme.breakpoints.down("sm")]: {
+            ...(mobileTransDir && {
+              alignItems: transType === "slide"
+                ? (mobileTransDir === "right" ? "flex-start" : mobileTransDir === "left" ? "flex-end" : "center")
+                : "center",
+              justifyContent: transType === "slide"
+                ? (mobileTransDir === "down" ? "flex-start" : mobileTransDir === "up" ? "flex-end" : "center")
+                : "center",
+            }),
+            padding: theme.boxSpacing(4, 2),
+            ...style?.smallScreen?.overlay
           },
-          backgroundColor: theme.palette.gray.trans.overlay,
-          ...(isOpen && overlay),
-          backdropFilter: "blur(8px)",
+
         }}>
+
         {/* Drawer Content Container */}
-        <Transition show={isOpen} {...transOptions} onExited={() => setShouldRemove(true)}>
+        <Transition type={transType} show={isOpen}
+          direction={direction} timeout={400} onExited={() => setShouldRemove(true)}>
           <Stack
             sx={{
               maxHeight: "100%",
-              width: width?.xs ?? "90%",
-              maxWidth: maxWidth?.xs ?? "100%",
-              [theme.breakpoints.up("sm")]: {
-                width: width?.sm ?? "80%",
-                maxWidth: maxWidth?.sm ?? "350px",
-              },
-              [theme.breakpoints.up("md")]: {
-                width: width?.md ?? "40%",
-                maxWidth: maxWidth?.md ?? "400px",
-              },
               gap: theme.gap(0),
-              backgroundColor: theme.palette.gray[50],
+              backgroundColor: theme.palette.gray[0],
               borderRadius: theme.radius[3],
               overflow: "hidden",
-              ...otherStyles,
+              width: style?.base?.content?.width ?? "40%",
+              maxWidth: style?.base?.content?.maxWidth ?? "400px",
+              // Drag styling
+              ...(dragY > 0 && {
+                // This allows the Slide to happen, but adds our dragY on top of it
+                transform: `translateY(var(--drag-offset, 0px)) !important`,
+                // We only want a transition when the user lets go (snapping back)
+                transition: dragY === 0
+                  ? "transform 0.3s cubic-bezier(0, 0, 0.2, 1) !important"
+                  : "none !important",
+              }),
+              ...style?.base?.content,
+
+              // Medium screen
+              [theme.breakpoints.down("md")]: {
+                width: style?.mediumScreen?.content?.width ?? "80%",
+                maxWidth: style?.mediumScreen?.content?.maxWidth ?? "350px",
+                ...style?.mediumScreen?.content
+              },
+              // Small screen
+              [theme.breakpoints.down("sm")]: {
+                width: style?.smallScreen?.content?.width ?? "95%",
+                maxWidth: style?.smallScreen?.content?.maxWidth ?? "100%",
+                ...style?.smallScreen?.content
+              },
+              "--drag-offset": `${dragY}px`,
             }}>
             {
-              /* Modal with Header and Close */
+              /* Modal with Header*/
               showHeader && (
                 <Stack
-                  direction={"row"}
+                  {...(dragToClose && {
+                    onTouchStart: handleTouchStart,
+                    onTouchMove: handleTouchMove,
+                    onTouchEnd: handleTouchEnd
+                  })}
+
                   sx={{
                     position: "sticky",
-                    padding: theme.boxSpacing(2),
-                    justifyContent: "flex-end",
                     alignItems: "center",
-                    gap: theme.gap(2),
-                    borderBottom: header
-                      ? `1px solid ${theme.palette.gray.trans[1]}`
-                      : "none",
-                    ...style?.header,
+                    gap: theme.gap(0),
+                    touchAction: 'none',
+                    cursor: dragToClose ? "grab" : "default"
                   }}>
-                  {header && header}
-                  {shouldClose && (
-                    <IconButton
-                      aria-label="Drawer closer"
-                      aria-controls="close-drawer"
-                      aria-haspopup="true"
-                      ref={closeRef}
-                      onClick={handleClose}>
-                      <Close
-                        sx={{
-                          width: "20px",
-                          height: "20px",
-                        }}
-                      />
-                    </IconButton>
+                  {isMobile && dragToClose && (
+                    <Box sx={{
+                      width: "50px",
+                      height: "6px",
+                      borderRadius: theme.radius.full,
+                      marginTop: theme.boxSpacing(8),
+                      backgroundColor: theme.palette.gray.trans[2]
+                    }} />
+                  )}
+                  {(header || clickToClose) && (
+                    <Stack
+                      direction={"row"}
+                      sx={{
+                        width: "100%",
+                        justifyContent: "flex-end",
+                        alignItems: "center",
+                        gap: theme.gap(2),
+                        padding: theme.boxSpacing(2),
+                        ...style?.header,
+                        borderBottom: `1px solid ${theme.palette.gray.trans[1]}`
+                      }}>
+                      {header && header}
+                      {clickToClose && (
+                        <IconButton
+                          aria-label="Drawer closer"
+                          aria-controls="close-drawer"
+                          aria-haspopup="true"
+                          ref={closeRef}
+                          onClick={handleClose}>
+                          <Close
+                            sx={{
+                              width: "20px",
+                              height: "20px",
+                            }}
+                          />
+                        </IconButton>
+                      )}
+                    </Stack>
                   )}
                 </Stack>
               )
@@ -185,8 +257,9 @@ export const Modal = forwardRef<ModalRef, ModalProps>(
               {content}
             </Stack>
           </Stack>
-        </Transition>
-      </Stack>
+
+        </Transition >
+      </Stack >
     );
   }
 );
