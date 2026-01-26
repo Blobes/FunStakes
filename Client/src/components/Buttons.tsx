@@ -45,7 +45,7 @@ export const AppButton = ({
     fontWeight: "800",
     height: "unset",
     color: theme.palette.gray[300],
-    padding: theme.boxSpacing(0, 5),
+    padding: theme.boxSpacing(0),
     minWidth: "unset",
     alignSelf: "unset",
   };
@@ -54,9 +54,9 @@ export const AppButton = ({
     overrideStyle === "full"
       ? style
       : {
-          ...(variant === "text" ? textVarDefaultStyle : defaultStyle),
-          ...style,
-        };
+        ...(variant === "text" ? textVarDefaultStyle : defaultStyle),
+        ...style,
+      };
   // If it's a link, wrap button inside AnchorLink
   if (href) {
     return (

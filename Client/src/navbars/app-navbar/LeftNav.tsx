@@ -1,5 +1,5 @@
 import { Stack, Typography, useTheme } from "@mui/material";
-import { useStyles } from "@/helpers/styles";
+import { useStyles } from "@/hooks/styleHooks";
 import { useRouter } from "next/navigation";
 
 export const LeftNav = () => {
@@ -10,9 +10,9 @@ export const LeftNav = () => {
   return (
     <Stack
       sx={{
-        width: "18%",
+        width: "20%",
         maxWidth: "400px",
-        minWidth: "250px",
+        minWidth: "200px",
         padding: theme.boxSpacing(8, 16),
         borderRight: `1px solid ${theme.palette.gray.trans[1]}`,
         ...autoScroll().base,

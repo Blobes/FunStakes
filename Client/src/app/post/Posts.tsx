@@ -13,7 +13,7 @@ import { ProgressIcon } from "@/components/Loading";
 import { Empty } from "@/components/Empty";
 import { useRouter } from "next/navigation";
 import { RadioTower } from "lucide-react";
-import { useStyles } from "@/helpers/styles";
+import { useStyles } from "@/hooks/styleHooks";
 
 export const Posts = () => {
   const theme = useTheme();
@@ -58,7 +58,7 @@ export const Posts = () => {
           border: "none",
           maxWidth: "unset",
           minWidth: "unset",
-          ...autoScroll().mobile,
+          ...(!isLoading && autoScroll().mobile),
         },
       }}>
       {loginStatus === "AUTHENTICATED" && <CreatePost />}
@@ -69,7 +69,7 @@ export const Posts = () => {
             alignItems: "center",
             justifyContent: "center",
           }}>
-          <ProgressIcon otherProps={{ size: 30 }} />
+          <ProgressIcon otherProps={{ size: 24 }} />
         </Stack>
       ) : posts.length < 1 ? (
         <Empty

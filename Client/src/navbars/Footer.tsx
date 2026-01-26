@@ -4,7 +4,7 @@ import { Divider, Stack, Typography, useMediaQuery } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import { useNavLists } from "./NavLists";
 import { AnchorLink } from "@/components/Buttons";
-import { useSharedHooks } from "@/hooks";
+import { useController } from "@/hooks/generalHooks";
 import { useRouter } from "next/navigation";
 import React from "react";
 
@@ -12,7 +12,7 @@ export const Footer = () => {
   const theme = useTheme();
 
   const { footerNavList } = useNavLists();
-  const { setLastPage } = useSharedHooks();
+  const { setLastPage } = useController();
   const router = useRouter();
 
   const handleClick = (

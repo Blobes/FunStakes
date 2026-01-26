@@ -3,22 +3,22 @@
 import { fetcher, fetchUserWithTokenCheck } from "@/helpers/fetcher";
 import { clientRoutes, serverRoutes } from "@/helpers/info";
 import { useAppContext } from "../AppContext";
-import { useSharedHooks } from "@/hooks";
+import { useController } from "@/hooks/generalHooks";
 import {
   extractPageTitle,
   getCookie,
   getFromLocalStorage,
-  deleteCookie,
   isOnline,
-  setCookie,
 } from "@/helpers/others";
 import { SavedPage } from "@/types";
 import { usePathname, useRouter } from "next/navigation";
+import { useSnackbar } from "@/hooks/snackbarHooks";
 
 export const useAuth = () => {
   const { setAuthUser, lastPage, setLoginStatus, setSnackBarMsgs } =
     useAppContext();
-  const { setSBMessage, setLastPage, isOnAuth } = useSharedHooks();
+  const { setLastPage, isOnAuth } = useController();
+  const { setSBMessage } = useSnackbar();
   const router = useRouter();
   const pathname = usePathname();
 
@@ -28,10 +28,11 @@ export const useAuth = () => {
     const isOnAuthRoute = isOnAuth(pathname);
     const savedPage = getFromLocalStorage<SavedPage>();
     const pagePath = !isOnAuthRoute ? pathname : lastPage.path;
+
     setLastPage(
       isOnAuthRoute && savedPage
         ? savedPage
-        : { title: extractPageTitle(pagePath), path: pagePath }
+        : { title: extractPageTitle(pagePath), path: pagePath },
     );
 
     try {
@@ -40,6 +41,13 @@ export const useAuth = () => {
       if (isOnline() && res.payload) {
         setAuthUser(res.payload);
         setLoginStatus("AUTHENTICATED");
+        setSBMessage({
+          msg: {
+            content: res.message,
+            msgStatus: "ERROR",
+            hasClose: true,
+          },
+        });
         return;
       }
 
@@ -50,15 +58,18 @@ export const useAuth = () => {
       }
 
       // Fully logged out
+
+      console.log("Hmm");
       setAuthUser(null);
       setLoginStatus("UNAUTHENTICATED");
-      setSBMessage({
-        msg: {
-          content: res.message,
-          msgStatus: "ERROR",
-          hasClose: true,
-        },
-      });
+      res.message &&
+        setSBMessage({
+          msg: {
+            content: res.message,
+            msgStatus: "ERROR",
+            hasClose: true,
+          },
+        });
       return;
     } catch (err: any) {
       setAuthUser(null);

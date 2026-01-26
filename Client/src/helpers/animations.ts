@@ -20,12 +20,12 @@ export const fadeOut = keyframes`
 `;
 
 interface Move {
-  dir?: "LEFT" | "RIGHT" | "CENTER";
+  dir?: "LEFT" | "RIGHT" | "CENTER" | "BOTTOM";
   from?: string;
   to?: string;
 }
 export const moveIn = (
-  params: Move = { dir: "RIGHT", from: "-14px", to: "10px" }
+  params: Move = { dir: "RIGHT", from: "-14px", to: "10px" },
 ) => {
   const { dir, from, to } = params;
   switch (dir) {
@@ -58,11 +58,20 @@ export const moveIn = (
           transform: scale(1);
         }
       `;
+    case "BOTTOM":
+      return keyframes`
+            from {
+              transform: translateY(${to});
+            }
+            to {
+              transform: translateY(${from});
+            }
+          `;
   }
 };
 
 export const moveOut = (
-  params: Move = { dir: "RIGHT", from: "10px", to: "-14px" }
+  params: Move = { dir: "RIGHT", from: "10px", to: "-14px" },
 ) => {
   const { dir, from, to } = params;
   switch (dir) {
@@ -95,6 +104,15 @@ export const moveOut = (
           transform: scale(0.8);
         }
       `;
+    case "BOTTOM":
+      return keyframes`
+            from {
+              transform: translateY(${from});
+            }
+            to {
+              transform: translateY(${to});
+            }
+          `;
   }
 };
 
@@ -114,4 +132,10 @@ export const shrinkWidth = keyframes`
   to {
    width : 0%;
   }
+`;
+
+// Define rotation animation
+export const rotate = keyframes`
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
 `;

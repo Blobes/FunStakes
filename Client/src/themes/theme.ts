@@ -17,12 +17,12 @@ let designSystem = createTheme({
           0: "#ffffff",
           50: grey[50],
           100: grey[300],
-          200: grey[600],
-          300: grey[900],
+          200: "#536077",
+          300: "#101926",
           trans: {
-            1: "rgba(0, 0, 0, 0.06)",
-            2: "rgba(0, 0, 0, 0.12)",
-            overlay: "rgba(0, 0, 0, 0.50)",
+            1: "rgba(1, 13, 23, 0.06)",
+            2: "rgba(1, 13, 23, 0.12)",
+            overlay: "rgba(1, 13, 23, 0.50)",
           },
         },
         info: {
@@ -46,13 +46,13 @@ let designSystem = createTheme({
         gray: {
           0: "#010516",
           50: "#171D3A",
-          100: grey[700],
-          200: grey[500],
+          100: "#324763",
+          200: "#617A99",
           300: "#ffffff",
           trans: {
             1: "rgba(255, 255, 255, 0.08)",
             2: "rgba(255, 255, 255, 0.20)",
-            overlay: "rgba(0, 0, 0, 0.50)",
+            overlay: "rgba(1, 13, 23, 0.50)",
           },
         },
         info: {

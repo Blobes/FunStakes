@@ -8,7 +8,7 @@ import { useTheme } from "@mui/material/styles";
 import { useRouter } from "next/navigation";
 import { delay } from "@/helpers/others";
 import { useEffect, useState } from "react";
-import { useSharedHooks } from "@/hooks";
+import { useController } from "@/hooks/generalHooks";
 import { PasswordInput } from "@/components/InputFields";
 import { InlineMsg } from "@/components/InlineMsg";
 import { BasicTooltip } from "@/components/Tooltips";
@@ -43,7 +43,7 @@ export const Login: React.FC<LoginProps> = ({
   } = useLogin();
   const { inlineMsg, setInlineMsg, isAuthLoading, setAuthLoading, lastPage } =
     useAppContext();
-  const { isOnWeb } = useSharedHooks();
+  const { isOnWeb } = useController();
   const [msg, setMsg] = useState("");
   const [passwordValidity, setPasswordValidity] = useState<
     "valid" | "invalid"
@@ -83,7 +83,7 @@ export const Login: React.FC<LoginProps> = ({
       password: password,
     });
     if (res) {
-      const { payload, message: status } = res;
+      const { payload, status } = res;
       if (payload && status === "SUCCESS") {
         setStep?.("email");
         const isLastWeb = isOnWeb(lastPage.path);

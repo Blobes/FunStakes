@@ -2,7 +2,7 @@ import { ThemeProvider } from "@mui/material/styles";
 import theme from "@/themes/theme";
 import CssBaseline from "@mui/material/CssBaseline";
 import { ContextProvider } from "./AppContext";
-import { AppWrapper } from "./AppWrapper";
+import {  App } from "./App";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -45,7 +45,7 @@ export default function RootLayout({
         <ContextProvider>
           <ThemeProvider theme={theme}>
             <CssBaseline />
-            <AppWrapper>{children}</AppWrapper>
+            <App>{children}</App>
           </ThemeProvider>
         </ContextProvider>
         <noscript>You need to enable JavaScript to run this app!</noscript>

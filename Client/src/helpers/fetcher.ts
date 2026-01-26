@@ -9,7 +9,7 @@ const DEFAULT_TIMEOUT = 5000; // Default timeout in milliseconds
 export const fetcher = async <T>(
   endpoint: string,
   options: RequestInit = {},
-  timeout = DEFAULT_TIMEOUT
+  timeout = DEFAULT_TIMEOUT,
 ): Promise<T> => {
   const controller = new AbortController();
   const signal = controller.signal;
@@ -35,7 +35,7 @@ export const fetcher = async <T>(
     if (!response.ok) {
       const errorData = await response.json();
       const error = new Error(
-        errorData.message || "Something went wrong"
+        errorData.message || "Something went wrong",
       ) as any;
       error.status = response.status;
       throw error;
@@ -63,7 +63,7 @@ interface TokenCheckResponse {
 }
 
 export const fetchUserWithTokenCheck = async (
-  attempt = 0
+  attempt = 0,
 ): Promise<TokenCheckResponse> => {
   try {
     const res = await fetcher<{ user: IUser }>(serverRoutes.verifyAuthToken);
@@ -72,7 +72,7 @@ export const fetchUserWithTokenCheck = async (
     // 1. Stop the loop if we've tried 2 times
     if (attempt >= 2) {
       console.error(
-        "Stopping infinite refresh loop. Check server-side cookie/JWT logic."
+        "Stopping infinite refresh loop. Check server-side cookie/JWT logic.",
       );
       return {
         payload: null,
@@ -86,7 +86,7 @@ export const fetchUserWithTokenCheck = async (
     if (err.status === 401) {
       // console.log(`Attempt ${attempt + 1}: Triggering Refresh...`);
       const refreshed = await refreshAccessToken();
-      msg = "You are currently logged out!";
+      msg = null;
       if (refreshed) {
         return fetchUserWithTokenCheck(attempt + 1);
       }

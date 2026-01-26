@@ -11,8 +11,9 @@ import { IconButton, Stack } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import { Close } from "@mui/icons-material";
 import { fadeIn, fadeOut, moveIn, moveOut } from "../helpers/animations";
-import { useStyles } from "@/helpers/styles";
+import { useStyles } from "@/hooks/styleHooks";
 import { GenericObject } from "@/types";
+import { Transition, TransitionType } from "./Transition";
 
 export interface ModalRef {
   openModal: () => void;
@@ -25,7 +26,7 @@ export interface ModalProps {
   shouldClose?: boolean;
   showHeader?: boolean;
   onClose?: () => void;
-  entryDir?: "LEFT" | "RIGHT" | "CENTER";
+  transition?: { type: TransitionType, direction: "left" | "right" | "up" | "down" },
   style?: {
     overlay?: GenericObject<string>;
     content?: {
@@ -42,7 +43,7 @@ export const Modal = forwardRef<ModalRef, ModalProps>(
     {
       header,
       content,
-      entryDir = "RIGHT",
+      transition,
       shouldClose = true,
       showHeader = true,
       onClose,
@@ -62,11 +63,10 @@ export const Modal = forwardRef<ModalRef, ModalProps>(
     useImperativeHandle(ref, () => ({
       openModal: () => {
         setShouldRemove(false);
-        setOpen(true), 50;
+        setOpen(true);
       },
       closeModal: () => {
         setOpen(false);
-        setShouldRemove(true);
       },
     }));
 
@@ -76,10 +76,13 @@ export const Modal = forwardRef<ModalRef, ModalProps>(
         (closeRef.current && closeRef.current.contains(e.target as HTMLElement))
       ) {
         setOpen(false);
-        setTimeout(() => setShouldRemove(true), 200);
         if (onClose) onClose();
       }
     };
+
+    const transOptions = transition || { type: "slide", direction: "left" }
+    const transType = transOptions.type
+    const transDir = transOptions.direction
 
     return (
       <Stack //Overlay container
@@ -93,15 +96,15 @@ export const Modal = forwardRef<ModalRef, ModalProps>(
           height: "100%",
           zIndex: 999,
           visibility: !shouldRemove ? "visible" : "hidden",
+          transition: "opacity 0.3s ease-in-out, visibility 0.3s",
           opacity: isOpen ? 1 : 0,
-          animation: `${isOpen ? fadeIn : fadeOut} 0.2s linear forwards`,
-          alignItems:
-            entryDir === "LEFT"
-              ? "flex-start"
-              : entryDir === "RIGHT"
-              ? "flex-end"
-              : "center",
-          justifyContent: "center",
+          // animation: `${isOpen ? fadeIn : fadeOut} 0.2s linear forwards`,
+          alignItems: transType === "slide"
+            ? (transDir === "right" ? "flex-start" : transDir === "left" ? "flex-end" : "center")
+            : "center",
+          justifyContent: transType === "slide"
+            ? (transDir === "right" ? "flex-start" : transDir === "left" ? "flex-end" : "center")
+            : "center",
           marginLeft: "0!important",
           padding: {
             xs: theme.boxSpacing(4, 2),
@@ -112,86 +115,77 @@ export const Modal = forwardRef<ModalRef, ModalProps>(
           backdropFilter: "blur(8px)",
         }}>
         {/* Drawer Content Container */}
-        <Stack
-          sx={{
-            maxHeight: "100%",
-            width: width?.xs ?? "90%",
-            maxWidth: maxWidth?.xs ?? "100%",
-            [theme.breakpoints.up("sm")]: {
-              width: width?.sm ?? "80%",
-              maxWidth: maxWidth?.sm ?? "350px",
-            },
-            [theme.breakpoints.up("md")]: {
-              width: width?.md ?? "40%",
-              maxWidth: maxWidth?.md ?? "400px",
-            },
-            gap: theme.gap(0),
-            backgroundColor: theme.palette.gray[50],
-            borderRadius: theme.radius[3],
-            overflow: "hidden",
-            animation: isOpen
-              ? `${moveIn({
-                  dir: entryDir,
-                  from: "-0px",
-                  to: "4px",
-                })} 0.2s linear forwards`
-              : `${moveOut({
-                  dir: entryDir,
-                  from: "4px",
-                  to: "-10px",
-                })} 0.2s linear forwards`,
-            ...otherStyles,
-          }}>
-          {
-            /* Modal with Header and Close */
-            showHeader && (
-              <Stack
-                direction={"row"}
-                sx={{
-                  position: "sticky",
-                  padding: theme.boxSpacing(2),
-                  justifyContent: "flex-end",
-                  alignItems: "center",
-                  gap: theme.gap(2),
-                  borderBottom: header
-                    ? `1px solid ${theme.palette.gray.trans[1]}`
-                    : "none",
-                  ...style?.header,
-                }}>
-                {header && header}
-                {shouldClose && (
-                  <IconButton
-                    aria-label="Drawer closer"
-                    aria-controls="close-drawer"
-                    aria-haspopup="true"
-                    ref={closeRef}
-                    onClick={handleClose}>
-                    <Close
-                      sx={{
-                        width: "20px",
-                        height: "20px",
-                      }}
-                    />
-                  </IconButton>
-                )}
-              </Stack>
-            )
-          }
-          {/* Modal Body */}
+        <Transition show={isOpen} {...transOptions} onExited={() => setShouldRemove(true)}>
           <Stack
             sx={{
-              height: "100%",
-              overflowY: "auto",
-              padding: theme.boxSpacing(10),
-              [theme.breakpoints.up("md")]: {
-                padding: theme.boxSpacing(14),
+              maxHeight: "100%",
+              width: width?.xs ?? "90%",
+              maxWidth: maxWidth?.xs ?? "100%",
+              [theme.breakpoints.up("sm")]: {
+                width: width?.sm ?? "80%",
+                maxWidth: maxWidth?.sm ?? "350px",
               },
-              gap: theme.gap(8),
-              ...(scrollBarStyle() as any),
+              [theme.breakpoints.up("md")]: {
+                width: width?.md ?? "40%",
+                maxWidth: maxWidth?.md ?? "400px",
+              },
+              gap: theme.gap(0),
+              backgroundColor: theme.palette.gray[50],
+              borderRadius: theme.radius[3],
+              overflow: "hidden",
+              ...otherStyles,
             }}>
-            {content}
+            {
+              /* Modal with Header and Close */
+              showHeader && (
+                <Stack
+                  direction={"row"}
+                  sx={{
+                    position: "sticky",
+                    padding: theme.boxSpacing(2),
+                    justifyContent: "flex-end",
+                    alignItems: "center",
+                    gap: theme.gap(2),
+                    borderBottom: header
+                      ? `1px solid ${theme.palette.gray.trans[1]}`
+                      : "none",
+                    ...style?.header,
+                  }}>
+                  {header && header}
+                  {shouldClose && (
+                    <IconButton
+                      aria-label="Drawer closer"
+                      aria-controls="close-drawer"
+                      aria-haspopup="true"
+                      ref={closeRef}
+                      onClick={handleClose}>
+                      <Close
+                        sx={{
+                          width: "20px",
+                          height: "20px",
+                        }}
+                      />
+                    </IconButton>
+                  )}
+                </Stack>
+              )
+            }
+            {/* Modal Body */}
+            <Stack
+              sx={{
+                height: "100%",
+                overflowY: "auto",
+                padding: theme.boxSpacing(10),
+                [theme.breakpoints.up("md")]: {
+                  padding: theme.boxSpacing(14),
+                },
+                gap: theme.gap(8),
+                ...(scrollBarStyle() as any),
+              }}>
+              {content}
+            </Stack>
           </Stack>
-        </Stack>
+        </Transition>
       </Stack>
     );
   }

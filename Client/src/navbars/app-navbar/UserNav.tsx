@@ -13,10 +13,10 @@ import { useTheme } from "@mui/material/styles";
 import { useAppContext } from "@/app/AppContext";
 import { Strip } from "../../components/StripBar";
 import { summarizeNum } from "@/helpers/others";
-import { RenderAdvList, RenderSimpleList } from "../RenderNavLists";
+import { RenderItemList } from "../RenderItemList";
 import { MenuRef, MenuPopup } from "@/components/Menus";
 import { useNavLists } from "../NavLists";
-import { useSharedHooks } from "@/hooks";
+import { useController } from "@/hooks/generalHooks";
 import { CircleCheckBig, WalletMinimal } from "lucide-react";
 import { ThemeMode } from "@/components/ThemeSwitcher";
 
@@ -27,7 +27,6 @@ export const DesktopUserNav = ({
 }) => {
   const theme = useTheme();
   const { userNavList } = useNavLists();
-  const { setLastPage } = useSharedHooks();
   const { setModalContent } = useAppContext();
 
   return (
@@ -44,10 +43,9 @@ export const DesktopUserNav = ({
       <MenuPopup
         ref={menuRef}
         contentElement={
-          <RenderAdvList
+          <RenderItemList
             list={userNavList}
-            setLastPage={setLastPage}
-            onClose={() => {
+            itemAction={() => {
               menuRef.current?.closeMenu();
               setModalContent(null);
             }}
@@ -134,10 +132,10 @@ const UserInfo = () => {
   );
 };
 
-export const MobileUserNav = ({}) => {
+export const MobileUserNav = ({ }) => {
   const theme = useTheme();
   const { userNavList } = useNavLists();
-  const { setLastPage, closeModal } = useSharedHooks();
+  const { closeModal } = useController();
   const menuRef = useRef<MenuRef>(null);
 
   return (
@@ -152,13 +150,13 @@ export const MobileUserNav = ({}) => {
       </Stack>
       <Divider />
       <Stack gap={theme.gap(10)}>
-        <RenderSimpleList
+        <RenderItemList
           list={userNavList}
-          setLastPage={setLastPage}
-          onClose={() => {
+          itemAction={() => {
             menuRef.current?.closeMenu();
             closeModal();
           }}
+          showCurrentPage={false}
           style={{
             gap: theme.gap(10),
             padding: "0",

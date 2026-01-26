@@ -5,8 +5,9 @@ import { Typography, typographyClasses } from "@mui/material";
 import { useTheme, styled } from "@mui/material/styles";
 import { NavItem, GenericObject, SavedPage } from "@/types";
 import { matchPaths } from "@/helpers/others";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { AnchorLink } from "@/components/Buttons";
+import { useController } from "@/hooks/generalHooks";
 
 // Styled wrapper for individual nav items
 const ItemWrapper = styled(AnchorLink)(({ theme }) =>
@@ -35,20 +36,20 @@ const ItemWrapper = styled(AnchorLink)(({ theme }) =>
 // Props for the reusable nav renderer
 export interface RenderListProps {
   list: NavItem[];
-  setLastPage: (page: SavedPage) => void;
-  onClose?: () => void;
+  itemAction?: () => void;
   style?: GenericObject<string>;
+  showCurrentPage?: boolean
 }
 // Renders an advance nav list
-export const RenderAdvList: React.FC<RenderListProps> = ({
+export const RenderItemList: React.FC<RenderListProps> = ({
   list,
-  setLastPage,
-  onClose: onClick,
+  itemAction,
   style = {},
+  showCurrentPage = true
 }) => {
-  const router = useRouter();
   const theme = useTheme();
   const pathname = usePathname();
+  const { handleLinkClick } = useController();
 
   return (
     <>
@@ -64,22 +65,19 @@ export const RenderAdvList: React.FC<RenderListProps> = ({
             key={index}
             url={item.url ?? "#"}
             onClick={(e: React.MouseEvent<HTMLAnchorElement>) => {
-              e.preventDefault();
-              router.push(item.url ?? "#");
-
+              const page = {
+                title: item.title,
+                path: item.url ?? "#",
+              };
+              handleLinkClick(e, page as SavedPage);
               if (item.action) item.action();
-              if (item.title)
-                setLastPage({
-                  title: item.title,
-                  path: item.url ?? "#",
-                });
-              if (onClick) onClick();
+              if (itemAction) itemAction();
             }}
             aria-current={isCurrentPage ? "page" : undefined}
             role="link"
             tabIndex={0}
             sx={{
-              backgroundColor: isCurrentPage
+              backgroundColor: showCurrentPage && isCurrentPage
                 ? theme.palette.gray.trans[1]
                 : "none",
               ...style,
@@ -95,50 +93,3 @@ export const RenderAdvList: React.FC<RenderListProps> = ({
   );
 };
 
-// Renders a simple nav list
-export const RenderSimpleList: React.FC<RenderListProps> = ({
-  list,
-  setLastPage,
-  onClose: onClick,
-  style = {},
-}) => {
-  const router = useRouter();
-
-  return (
-    <>
-      {list.map((item, index) => {
-        if (!item.title && item.element) {
-          // Render the "element" alone if there's no title (Divider, custom element, etc.)
-          return <React.Fragment key={index}>{item.element}</React.Fragment>;
-        }
-        return (
-          <ItemWrapper
-            key={index}
-            url={item.url ?? "#"}
-            onClick={(e: React.MouseEvent<HTMLAnchorElement>) => {
-              e.preventDefault();
-              router.push(item.url ?? "#");
-
-              if (item.action) item.action();
-              if (item.title)
-                setLastPage({
-                  title: item.title,
-                  path: item.url ?? "#",
-                });
-              if (onClick) onClick();
-            }}
-            role="link"
-            tabIndex={0}
-            sx={{
-              ...style,
-            }}>
-            {item.element}
-            {item.title && (
-              <Typography variant="button">{item.title}</Typography>
-            )}
-          </ItemWrapper>
-        );
-      })}
-    </>
-  );
-};

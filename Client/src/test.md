@@ -201,3 +201,145 @@ setCookie(
 // };
 
 // window.addEventListener("focus", handleFocus);
+
+const CTA = () => {
+const theme = useTheme();
+return (
+<Stack sx={{ gap: theme.gap(10) }}>
+<Typography component="h6" variant="h6">
+Join Funstakes Today
+</Typography>
+<Image
+src={img.logo}
+alt="logo"
+style={{
+          width: "100%",
+          height: "150px",
+          objectFit: "cover",
+          borderRadius: `${theme.radius[2]}`,
+          margin: theme.boxSpacing(2, 0),
+        }}
+/>
+<Stack direction="row" sx={{ gap: theme.gap(6), width: "100%" }}>
+<AppButton
+variant="outlined"
+style={{
+            fontSize: "13px",
+            padding: theme.boxSpacing(2, 4),
+            borderColor: theme.palette.gray[100],
+            width: "100%",
+          }}>
+Login
+</AppButton>
+<AppButton
+variant="contained"
+style={{
+            fontSize: "13px",
+            padding: theme.boxSpacing(2, 4),
+            borderColor: theme.palette.gray[100],
+            width: "100%",
+          }}>
+Sign Up
+</AppButton>
+</Stack>
+</Stack>
+);
+};
+
+// Renders a simple nav list
+export const RenderSimpleList: React.FC<RenderListProps> = ({
+list,
+itemAction,
+style = {},
+}) => {
+const { handleLinkClick } = useSharedHooks();
+
+return (
+<>
+{list.map((item, index) => {
+if (!item.title && item.element) {
+// Render the "element" alone if there's no title (Divider, custom element, etc.)
+return <React.Fragment key={index}>{item.element}</React.Fragment>;
+}
+return (
+<ItemWrapper
+key={index}
+url={item.url ?? "#"}
+onClick={(e: React.MouseEvent<HTMLAnchorElement>) => {
+const page = {
+title: item.title,
+path: item.url ?? "#",
+};
+handleLinkClick(e, page as SavedPage);
+
+              if (item.action) item.action();
+              if (itemAction) itemAction();
+            }}
+            role="link"
+            tabIndex={0}
+            sx={{
+              ...style,
+            }}>
+            {item.element}
+            {item.title && (
+              <Typography variant="button">{item.title}</Typography>
+            )}
+          </ItemWrapper>
+        );
+      })}
+    </>
+
+);
+};
+
+// animation: isOpen
+// ? `${moveIn({
+              //     dir: entryDir,
+              //     from: "-0px",
+              //     to: "4px",
+              //   })} 0.2s linear forwards`
+// : `${moveOut({
+              //     dir: entryDir,
+              //     from: "4px",
+              //     to: "-10px",
+              //   })} 0.2s linear forwards`,
+
+{/_ {isTimed && (
+<Box
+sx={{
+                  position: "absolute",
+                  bottom: 0,
+                  left: 0,
+                  height: 2,
+                  animation: progressWidthAnim,
+                  backgroundColor:
+                    msg.msgStatus === "SUCCESS"
+                      ? theme.palette.success.main
+                      : msg.msgStatus === "INFO"
+                      ? theme.palette.info.main
+                      : theme.palette.error.main,
+                }}
+/>
+)} _/}
+
+// const progressWidthAnim = `${shrinkWidth} ${progressDur}s linear forwards`;
+
+const isTimed = msg.behavior === "TIMED";
+const isOpen = !!msg.id;
+//Set the snackbar timer
+setSBTimer();
+
+        const progressDur = msg.duration
+          ? msg.duration
+          : snackBarMsg.defaultDur;
+
+
+           // const boxAnimation =
+        //   progressDur > 0
+        //     ? `${fadeIn} 0.2s linear forwards, ${moveIn({
+        //       dir: entryDir,
+        //       to: "10px",
+        //     })} 0.2s linear forwards`
+        //     : `${fadeOut} 0.2s linear forwards, ${moveOut({
+        //       dir: entryDir,
+        //     })} 0.2s linear forwards`;

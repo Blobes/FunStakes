@@ -1,10 +1,9 @@
 "use client";
 
 import { useAppContext } from "@/app/AppContext";
-import { useSharedHooks } from "@/hooks";
+import { useController } from "@/hooks/generalHooks";
 import { fetcher } from "@/helpers/fetcher";
 import { IUser, SavedPage, SingleResponse } from "@/types";
-import { usePathname } from "next/navigation";
 import {
   deleteCookie,
   getCookie,
@@ -18,6 +17,7 @@ import {
 } from "@/helpers/auth";
 import { useRef } from "react";
 import { clientRoutes, serverRoutes } from "@/helpers/info";
+import { useSnackbar } from "@/hooks/snackbarHooks";
 
 interface LoginCredentials {
   email: string;
@@ -34,16 +34,16 @@ interface CheckEmailResponse {
 export const useLogin = () => {
   const { setAuthUser, setLoginStatus, setInlineMsg, isAuthLoading } =
     useAppContext();
-  const { setSBMessage, setLastPage, isOnWeb, isOnAuth } = useSharedHooks();
+  const { setLastPage, isOnWeb } = useController();
+  const { setSBMessage } = useSnackbar();
   const MAX_ATTEMPTS = 3;
   const LOCKOUT_MIN = 2;
   const loginAttempts = parseInt(getCookie("loginAttempts") || "0", 10);
   const lockTimestamp = getCookie("loginLockTime");
   const countdownRef = useRef<NodeJS.Timeout | null>(null);
-  const pathname = usePathname();
 
   const checkEmail = async (
-    email: string
+    email: string,
   ): Promise<CheckEmailResponse | null> => {
     try {
       const res = await fetcher<CheckEmailResponse>(serverRoutes.checkEmail, {
@@ -83,8 +83,8 @@ export const useLogin = () => {
       } else {
         setInlineMsg(
           `You've exceeded the maximum login attempts. Try again in ${formatRemainingTime(
-            remainingSec
-          )}. Or reset your password.`
+            remainingSec,
+          )}. Or reset your password.`,
         );
       }
       remainingSec--;
@@ -92,7 +92,7 @@ export const useLogin = () => {
   };
 
   const handleLogin = async (
-    credentials: LoginCredentials
+    credentials: LoginCredentials,
   ): Promise<LoginResponse | null> => {
     // Step 1: Check if user is locked
     const isLocked = loginAttempts >= MAX_ATTEMPTS && lockTimestamp;

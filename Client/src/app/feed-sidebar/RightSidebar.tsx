@@ -4,7 +4,7 @@ import { Stack, Typography } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import { ProfileCard } from "./RightSidebarCards";
 import { Followers } from "./Followers";
-import { useStyles } from "@/helpers/styles";
+import { useStyles } from "@/hooks/styleHooks";
 
 export const RightSidebar = () => {
   const theme = useTheme();
@@ -13,7 +13,7 @@ export const RightSidebar = () => {
   return (
     <Stack
       sx={{
-        width: "28%",
+        width: "32%",
         minWidth: "300px",
         maxWidth: "500px",
         gap: theme.gap(8),

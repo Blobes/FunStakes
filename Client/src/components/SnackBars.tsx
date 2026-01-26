@@ -2,7 +2,6 @@
 
 import { Box, IconButton, Paper, Stack, Typography } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
-import { useSharedHooks } from "../hooks";
 import { Close } from "@mui/icons-material";
 import {
   fadeIn,
@@ -14,147 +13,130 @@ import {
 import { SnackBarMsg } from "@/types";
 import { AppButton } from "./Buttons";
 import { Info, CircleCheck, CircleAlert } from "lucide-react";
+import { useEffect } from "react";
+import { useAppContext } from "@/app/AppContext";
+import { useSnackbar } from "@/hooks/snackbarHooks";
+import { GroupTransition, Transition } from "./Transition";
 
-interface SnackBarProps {
-  entryDir?: "LEFT" | "RIGHT";
+interface SnackbarProps {
+  dir?: "left" | "right" | "up" | "down";
   snackBarMsg: SnackBarMsg;
 }
 
-export const SnackBars = ({
-  entryDir = "RIGHT",
+export const Snackbars = ({
+  dir = "up",
   snackBarMsg,
-}: SnackBarProps) => {
+}: SnackbarProps) => {
   const theme = useTheme();
-  const { setSBTimer, removeMessage } = useSharedHooks();
+  const { setSBTimer, removeMessage } = useSnackbar();
+  const { setSnackBarMsgs } = useAppContext();
 
   if (!snackBarMsg.messgages || snackBarMsg.messgages.length === 0) return null;
 
+  useEffect(() => {
+    setSBTimer();
+  }, [setSnackBarMsgs]);
+
   return (
-    <>
-      {snackBarMsg.messgages.map((msg, i) => {
-        const isTimed = msg.behavior === "TIMED";
-
-        //Set the snackbar timer
-        setSBTimer();
-
-        const progressDur = msg.duration
-          ? msg.duration
-          : snackBarMsg.defaultDur;
-
-        const boxAnimation =
-          progressDur > 0
-            ? `${fadeIn} 0.3s linear forwards, ${moveIn({
-                dir: entryDir,
-                to: "10px",
-              })} 0.3s linear forwards`
-            : `${fadeOut} 0.3s linear forwards, ${moveOut({
-                dir: entryDir,
-              })} 0.3s linear forwards`;
-
-        const progressWidthAnim = `${shrinkWidth} ${progressDur}s linear forwards`;
-
-        return (
-          <Paper
-            key={i}
-            variant="elevation"
-            sx={{
-              position: "fixed",
-              bottom: i === 0 ? "10px" : `${(10 + i) * 12}px`, // offset for multiple snackbars
-              right: "10px",
-              width: "94%",
-              maxWidth: { sm: "400px" },
-              zIndex: 1000,
-              padding: theme.boxSpacing(6),
-              display: "flex",
-              alignItems: "center",
-              flexDirection: "row",
-              backgroundColor:
-                msg.msgStatus === "SUCCESS"
-                  ? theme.palette.info.main
-                  : theme.palette.info.light,
-              border: `1px solid ${theme.palette.gray.trans[2]}`,
-              borderRadius: theme.radius[3],
-              overflow: "hidden",
-              gap: theme.gap(10),
-              animation: isTimed ? boxAnimation : "none",
-              "& > svg": {
-                stroke: `${theme.palette.gray[300]}`,
-                marginTop:
-                  msg.title && msg.content && msg.cta && theme.boxSpacing(4),
-                width: "24px",
-                height: "24px",
-              },
-            }}>
-            {msg.msgStatus === "SUCCESS" ? (
-              <CircleCheck />
-            ) : msg.msgStatus === "INFO" ? (
-              <Info />
-            ) : (
-              <CircleAlert />
-            )}
-
-            <Stack
-              sx={{
-                gap: theme.gap(1),
-                alignItems: "flex-start",
-                width: "100%",
-              }}>
-              {msg.title && (
-                <Typography
-                  variant="body1"
-                  sx={{ maxWidth: "360px", fontWeight: 600 }}>
-                  {msg.title}
-                </Typography>
-              )}
-              <Stack
+    <Stack
+      sx={{
+        position: "fixed",
+        ...(dir === "up" ? { bottom: "10px" } : { top: "10px" }),
+        right: "10px",
+        zIndex: 1000,
+        width: "94%",
+        maxWidth: "400px",
+        gap: theme.gap(2),
+        pointerEvents: "none", // Allows clicks to pass through empty space
+      }}
+    >
+      <GroupTransition>
+        {snackBarMsg.messgages.map((msg) => {
+          return (
+            <Transition
+              key={msg.id}
+              type="slide"
+              direction={dir}
+              timeout={300}
+            >
+              <Paper
+                variant="elevation"
                 sx={{
-                  flexDirection: "row",
-                  flexWrap: "wrap",
+                  width: "100%",
+                  padding: theme.boxSpacing(6),
+                  display: "flex",
                   alignItems: "center",
-                  gap: theme.gap(1),
-                }}>
-                {msg.content && (
-                  <Typography variant="body2">{msg.content}</Typography>
-                )}
-                {msg.cta && (
-                  <AppButton
-                    variant="text"
-                    onClick={msg.cta.action}
-                    style={{ display: "inline-flex" }}>
-                    {msg.cta.label}
-                  </AppButton>
-                )}
-              </Stack>
-            </Stack>
-
-            {msg.hasClose && msg.id && (
-              <IconButton
-                onClick={() => removeMessage(msg.id!)}
-                sx={{ cursor: "pointer" }}>
-                <Close sx={{ width: "20px", height: "20px" }} />
-              </IconButton>
-            )}
-
-            {/* {isTimed && (
-              <Box
-                sx={{
-                  position: "absolute",
-                  bottom: 0,
-                  left: 0,
-                  height: 2,
-                  animation: progressWidthAnim,
+                  flexDirection: "row",
                   backgroundColor:
                     msg.msgStatus === "SUCCESS"
-                      ? theme.palette.success.main
-                      : msg.msgStatus === "INFO"
                       ? theme.palette.info.main
-                      : theme.palette.error.main,
-                }}
-              />
-            )} */}
-          </Paper>
-        );
-      })}
-    </>
+                      : theme.palette.info.light,
+                  border: `1px solid ${theme.palette.gray.trans[2]}`,
+                  borderRadius: theme.radius[3],
+                  overflow: "hidden",
+                  gap: theme.gap(10),
+                  "& > svg": {
+                    stroke: `${theme.palette.gray[300]}`,
+                    marginTop:
+                      msg.title && msg.content && msg.cta && theme.boxSpacing(4),
+                    width: "24px",
+                    height: "24px",
+                  },
+                }}>
+                {msg.msgStatus === "SUCCESS" ? (
+                  <CircleCheck />
+                ) : msg.msgStatus === "INFO" ? (
+                  <Info />
+                ) : (
+                  <CircleAlert />
+                )}
+
+                <Stack
+                  sx={{
+                    gap: theme.gap(1),
+                    alignItems: "flex-start",
+                    width: "100%",
+                  }}>
+                  {msg.title && (
+                    <Typography
+                      variant="body1"
+                      sx={{ maxWidth: "360px", fontWeight: 600 }}>
+                      {msg.title}
+                    </Typography>
+                  )}
+                  <Stack
+                    sx={{
+                      flexDirection: "row",
+                      flexWrap: "wrap",
+                      alignItems: "center",
+                      gap: theme.gap(1),
+                    }}>
+                    {msg.content && (
+                      <Typography variant="body2">{msg.content}</Typography>
+                    )}
+                    {msg.cta && (
+                      <AppButton
+                        variant="text"
+                        onClick={msg.cta.action}
+                        style={{ display: "inline-flex" }}>
+                        {msg.cta.label}
+                      </AppButton>
+                    )}
+                  </Stack>
+                </Stack>
+
+                {msg.hasClose && msg.id && (
+                  <IconButton
+                    onClick={() => removeMessage(msg.id!)}
+                    sx={{ cursor: "pointer" }}>
+                    <Close sx={{ width: "20px", height: "20px" }} />
+                  </IconButton>
+                )}
+              </Paper>
+            </Transition>
+          );
+        })}
+      </GroupTransition>
+    </Stack>
   );
 };

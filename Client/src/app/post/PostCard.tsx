@@ -20,11 +20,11 @@ import { heartBeat } from "@/helpers/animations";
 import { usePost } from "./postHooks";
 import { Post } from "@/types";
 import { red } from "@mui/material/colors";
-import { delay, getCookie, isOnline, summarizeNum } from "@/helpers/others";
+import { delay, isOnline, summarizeNum } from "@/helpers/others";
 import { AuthStepper } from "@/app/auth/login/AuthStepper";
 import { Empty } from "@/components/Empty";
 import { Heart } from "lucide-react";
-import { useSharedHooks } from "@/hooks";
+import { useSnackbar } from "@/hooks/snackbarHooks";
 
 interface PostProps {
   post: Post;
@@ -45,7 +45,7 @@ export const PostCard = ({ post, style = {} }: PostProps) => {
   const [author, setAuthor] = useState<IUser | null>(null);
   const [message, setMessage] = useState<string | null>(null);
   const [isLiking, setIsLiking] = useState(false);
-  const { setSBMessage } = useSharedHooks();
+  const { setSBMessage } = useSnackbar();
 
   const {
     _id,
@@ -136,7 +136,7 @@ export const PostCard = ({ post, style = {} }: PostProps) => {
     return (
       <Empty
         tagline={message || "Loading author..."}
-        style={{ container: { margin: theme.boxSpacing(8, 8, 0, 8) } }}
+        style={{ container: { margin: theme.boxSpacing(6, 6, 0, 6) } }}
       />
     );
 
@@ -146,7 +146,7 @@ export const PostCard = ({ post, style = {} }: PostProps) => {
     return (
       <Empty
         tagline="This post has been deleted by the author."
-        style={{ container: { margin: theme.boxSpacing(8, 8, 0, 8) } }}
+        style={{ container: { margin: theme.boxSpacing(6, 6, 0, 6) } }}
       />
     );
 
@@ -166,7 +166,7 @@ export const PostCard = ({ post, style = {} }: PostProps) => {
       }}>
       {/* Post Header */}
       <CardHeader
-        sx={{ padding: theme.boxSpacing(0, 8, 0, 4) }}
+        sx={{ padding: theme.boxSpacing(0, 6, 0, 4) }}
         avatar={
           <UserAvatar
             userInfo={{
@@ -196,7 +196,7 @@ export const PostCard = ({ post, style = {} }: PostProps) => {
       />
 
       {/* Content */}
-      <CardContent sx={{ padding: theme.boxSpacing(0, 8) }}>
+      <CardContent sx={{ padding: theme.boxSpacing(0, 6) }}>
         <Typography variant="body2">{content}</Typography>
       </CardContent>
 

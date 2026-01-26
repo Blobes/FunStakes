@@ -198,6 +198,12 @@ const componentTheme = createTheme({
             background: "unset",
             borderRadius: theme.radius[0],
             boxShadow: "none",
+            minHeight: "44px",
+            padding: theme.boxSpacing(6),
+            [theme.breakpoints.down("md")]: {
+              minHeight: "32px",
+              padding: theme.boxSpacing(5),
+            },
           }),
       },
     },
@@ -208,8 +214,8 @@ const componentTheme = createTheme({
         root: ({ theme }) =>
           theme.unstable_sx({
             [theme.breakpoints.down("lg")]: {
-              minHeight: "40px",
-              padding: theme.boxSpacing(6),
+              minHeight: "32px",
+              padding: theme.boxSpacing(3),
             },
           }),
       },

@@ -2,14 +2,14 @@
 
 import { fetcher } from "@/helpers/fetcher";
 import { serverRoutes } from "@/helpers/info";
-import { useSharedHooks } from "@/hooks";
+import { useSnackbar } from "@/hooks/snackbarHooks";
 import { IUser, ListResponse, SingleResponse } from "@/types";
 
 export const useUser = () => {
-  const { setSBMessage } = useSharedHooks();
+  const { setSBMessage } = useSnackbar();
 
   const getUser = async (
-    userId: string
+    userId: string,
   ): Promise<{
     payload: IUser | null;
     message: string;
@@ -19,7 +19,7 @@ export const useUser = () => {
         serverRoutes.user(userId),
         {
           method: "GET",
-        }
+        },
       );
       return { payload: res.payload ?? null, message: res.message };
     } catch (error: any) {
@@ -40,7 +40,7 @@ export const useUser = () => {
         serverRoutes.followers(userId),
         {
           method: "GET",
-        }
+        },
       );
 
       return { payload: res.payload ?? null, message: res.message };

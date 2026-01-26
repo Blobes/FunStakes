@@ -3,24 +3,19 @@
 import { useTheme } from "@mui/material/styles";
 import { AuthStepper } from "./AuthStepper";
 import { Stack } from "@mui/material";
-import { useEffect } from "react";
 import { useAppContext } from "@/app/AppContext";
 import { useRouter } from "next/navigation";
-import { getFromLocalStorage } from "@/helpers/others";
-import { SavedPage } from "@/types";
 import { clientRoutes } from "@/helpers/info";
 import { Empty } from "@/components/Empty";
 import { ShieldCheck } from "lucide-react";
-import { useSharedHooks } from "@/hooks";
+import { useController } from "@/hooks/generalHooks";
 import { useAuth } from "../authHooks";
 
 export default function LoginPage() {
   const theme = useTheme();
   const { loginStatus } = useAppContext();
   const router = useRouter();
-  const savedPage = getFromLocalStorage<SavedPage>();
-  const savedPath = savedPage?.path;
-  const { setLastPage } = useSharedHooks();
+  const { setLastPage } = useController();
   const { handleLogout } = useAuth();
 
   const handleBack = () => {
