@@ -1,17 +1,36 @@
 import "@mui/material/styles";
 import { GenericObject } from "../types";
 
-type ExtendedGenericObject<T> = GenericObject<T> & {
-  trans: GenericObject<T>;
-};
+// type ExtendedGenericObject<T> = GenericObject<T> & {
+//   trans: GenericObject<T>;
+// };
 
 declare module "@mui/material/styles" {
   interface Palette {
-    gray: ExtendedGenericObject<string | (() => any)>;
+    gray: {
+      0: string;
+      50: string;
+      100: string;
+      200: string;
+      300: string;
+      trans: {
+        1: string;
+        2: string;
+        // Explicitly define overlay as a function
+        overlay: (trans?: number) => string;
+      };
+    };
   }
   interface PaletteOptions {
-    gray?: ExtendedGenericObject<string | (() => any)>;
+    gray?: Partial<Palette["gray"]>;
   }
+
+  // interface Palette {
+  //   gray: ExtendedGenericObject<string | (() => any)>;
+  // }
+  // interface PaletteOptions {
+  //   gray?: ExtendedGenericObject<string | (() => any)>;
+  // }
   interface Theme {
     fixedColors: GenericObject<string>;
     radius: GenericObject<string>;

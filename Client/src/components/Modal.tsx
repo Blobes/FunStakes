@@ -118,7 +118,7 @@ export const Modal = forwardRef<ModalRef, ModalProps>(
           visibility: !shouldRemove ? "visible" : "hidden",
           transition: "opacity 0.3s ease-in-out, visibility 0.3s",
           opacity: isOpen ? 1 : 0,
-          backgroundColor: overlayFn(isOpen ? 0.5 - dragY / 400 : 0),
+          backgroundColor: theme.palette.gray.trans.overlay(isOpen ? 0.5 - dragY / 400 : 0),
           backdropFilter: `blur(${isOpen ? Math.max(0, 8 - dragY / 50) : 0}px)`,
           marginLeft: "0!important",
           padding: theme.boxSpacing(12),
