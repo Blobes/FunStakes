@@ -4,7 +4,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { Stack } from "@mui/material";
 import { BlurEffect } from "../components/BlurEffect";
-import { Snackbars } from "../components/Snackbars";
+import { SnackBars } from "@/components/Snackbars";
 import { useAppContext } from "./AppContext";
 import { Footer } from "@/navbars/Footer";
 import { Modal, ModalRef } from "@/components/Modal";
@@ -156,7 +156,7 @@ export const App = ({ children }: { children: React.ReactNode }) => {
 
           {isOnWebRoute && <Footer />}
 
-          {snackBarMsgs.messgages && <Snackbars snackBarMsg={snackBarMsgs} />}
+          {snackBarMsgs.messgages && <SnackBars snackBarMsg={snackBarMsgs} />}
           {modalContent && (
             <Modal
               ref={modalRef}

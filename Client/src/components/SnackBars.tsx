@@ -16,7 +16,7 @@ interface SnackbarProps {
   snackBarMsg: SnackBarMsg;
 }
 
-export const Snackbars = ({
+export const SnackBars = ({
   dir = "up",
   snackBarMsg,
 }: SnackbarProps) => {
