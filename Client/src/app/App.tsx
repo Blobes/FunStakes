@@ -4,7 +4,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { Stack } from "@mui/material";
 import { BlurEffect } from "../components/BlurEffect";
-import { SnackBars } from "@/components/Snackbars";
+import { SnackBars } from "@/components/SnackBars";
 import { useAppContext } from "./AppContext";
 import { Footer } from "@/navbars/Footer";
 import { Modal, ModalRef } from "@/components/Modal";
