@@ -116,12 +116,9 @@ export const matchPaths = (pathname: string, pagePath: string | undefined) => {
 };
 
 export const checkSignal = async (): Promise<NetworkStatus> => {
-  let status;
   if (!navigator.onLine) {
-    status = "offline";
     return "OFFLINE";
   }
-
   // If navigator says we are online, but the request is taking too long:
   const controller = new AbortController();
   const timeoutId = setTimeout(() => controller.abort(), 5000); // 5 second timeout
@@ -132,19 +129,11 @@ export const checkSignal = async (): Promise<NetworkStatus> => {
       signal: controller.signal,
       cache: "no-store",
     });
-    status = "online";
     return "STABLE";
   } catch (err) {
     // If it aborted or failed, the network is "unstable"
-    status = "unstable";
     return "UNSTABLE";
   } finally {
-    console.log(status);
     clearTimeout(timeoutId);
   }
 };
-
-// export const isOnline = async () => (await checkSignal()) === "STABLE";
-// export const isUnstableNetwork = async () =>
-//   (await checkSignal()) === "UNSTABLE";
-// export const isOffline = async () => (await checkSignal()) === "OFFLINE";

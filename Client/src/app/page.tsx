@@ -3,7 +3,7 @@
 import { useEffect } from "react";
 import { getFromLocalStorage } from "@/helpers/others";
 import { useController } from "@/hooks/generalHooks";
-import { SavedPage } from "@/types";
+import { Page } from "@/types";
 import { useTheme } from "@mui/material/styles";
 import { Posts } from "./post/Posts";
 import { usePathname, useRouter } from "next/navigation";
@@ -18,7 +18,7 @@ export default function HomePage() {
   const pathname = usePathname();
   const { isDesktop } = useController();
   const theme = useTheme();
-  const savedPage = getFromLocalStorage<SavedPage>();
+  const savedPage = getFromLocalStorage<Page>();
   const savedPath = savedPage?.path;
   const { loginStatus } = useAppContext();
 

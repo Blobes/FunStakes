@@ -7,6 +7,15 @@ import { outlinedInputClasses } from "@mui/material/OutlinedInput";
 const componentTheme = createTheme({
   // Overriding & Setting Components
   components: {
+    //CSS base line
+    MuiCssBaseline: {
+      styleOverrides: {
+        body: {
+          WebkitTapHighlightColor: "transparent",
+        },
+      },
+    },
+
     // Typography
     MuiTypography: {
       styleOverrides: {

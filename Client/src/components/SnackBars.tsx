@@ -12,17 +12,13 @@ import { useSnackbar } from "@/hooks/snackbarHooks";
 import { GroupTransition, Transition } from "./Transition";
 
 interface SnackbarProps {
-  dir?: "left" | "right" | "up" | "down";
   snackBarMsg: SnackBarMsg;
 }
 
-export const SnackBars = ({
-  dir = "up",
-  snackBarMsg,
-}: SnackbarProps) => {
+export const SnackBars = ({ snackBarMsg }: SnackbarProps) => {
   const theme = useTheme();
   const { setSBTimer, removeMessage } = useSnackbar();
-  const { setSnackBarMsgs } = useAppContext();
+  const { setSnackBarMsg } = useAppContext();
 
   if (!snackBarMsg.messgages || snackBarMsg.messgages.length === 0) {
     return null
@@ -30,19 +26,18 @@ export const SnackBars = ({
 
   useEffect(() => {
     setSBTimer();
-  }, [setSnackBarMsgs]);
+  }, [setSnackBarMsg]);
 
   return (
     <Stack
       sx={{
         position: "fixed",
-        ...(dir === "up" ? { bottom: "10px" } : { top: "10px" }),
+        ...(snackBarMsg.dir === "up" ? { bottom: "10px" } : { top: "10px" }),
         right: "10px",
         zIndex: 1000,
         width: "94%",
         maxWidth: "400px",
         gap: theme.gap(2),
-        pointerEvents: "none", // Allows clicks to pass through empty space
       }}
     >
       <GroupTransition>
@@ -51,7 +46,7 @@ export const SnackBars = ({
             <Transition
               key={msg.id}
               type="slide"
-              direction={dir}
+              direction={snackBarMsg.dir}
               timeout={300}
             >
               <Paper
@@ -99,27 +94,21 @@ export const SnackBars = ({
                       {msg.title}
                     </Typography>
                   )}
-                  <Stack
-                    sx={{
-                      flexDirection: "row",
-                      flexWrap: "wrap",
-                      alignItems: "center",
-                      gap: theme.gap(1),
-                    }}>
-                    {msg.content && (
-                      <Typography variant="body2">{msg.content}</Typography>
-                    )}
-                    {msg.cta && (
-                      <AppButton
-                        variant="text"
-                        onClick={msg.cta.action}
-                        style={{ display: "inline-flex" }}>
-                        {msg.cta.label}
-                      </AppButton>
-                    )}
-                  </Stack>
+
+                  {msg.content && (
+                    <Typography variant="body2" sx={{ width: "100%" }}>{msg.content}
+                      {msg.cta && (
+                        <AppButton
+                          variant="text"
+                          onClick={msg.cta.action}
+                          style={{ marginLeft: theme.boxSpacing(2), color: theme.palette.primary.light }}>
+                          {msg.cta.label}
+                        </AppButton>
+                      )}</Typography>
+                  )}
                 </Stack>
 
+                {/* Close element */}
                 {msg.hasClose && msg.id && (
                   <IconButton
                     onClick={() => removeMessage(msg.id!)}

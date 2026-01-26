@@ -4,12 +4,8 @@ import { fetcher, fetchUserWithTokenCheck } from "@/helpers/fetcher";
 import { clientRoutes, serverRoutes } from "@/helpers/info";
 import { useAppContext } from "../AppContext";
 import { useController } from "@/hooks/generalHooks";
-import {
-  extractPageTitle,
-  getCookie,
-  getFromLocalStorage,
-} from "@/helpers/others";
-import { SavedPage } from "@/types";
+import { extractPageTitle, getFromLocalStorage } from "@/helpers/others";
+import { Page } from "@/types";
 import { usePathname, useRouter } from "next/navigation";
 import { useSnackbar } from "@/hooks/snackbarHooks";
 
@@ -18,8 +14,7 @@ export const useAuth = () => {
     setAuthUser,
     lastPage,
     setLoginStatus,
-    setSnackBarMsgs,
-    loginStatus,
+    setSnackBarMsg: setSnackBarMsgs,
   } = useAppContext();
   const { setLastPage, isOnAuth, isOffline } = useController();
   const { setSBMessage } = useSnackbar();
@@ -29,7 +24,7 @@ export const useAuth = () => {
   // Verify authentication
   const verifyAuth = async () => {
     const isOnAuthRoute = isOnAuth(pathname);
-    const savedPage = getFromLocalStorage<SavedPage>();
+    const savedPage = getFromLocalStorage<Page>();
     const pagePath = !isOnAuthRoute ? pathname : lastPage.path;
 
     setLastPage(

@@ -31,9 +31,8 @@ export const App = ({ children }: { children: React.ReactNode }) => {
   const { openModal, isOnWeb, isOnAuth, verifySignal, isOnline,
     isUnstableNetwork, isOffline } = useController();
   const { setSBMessage, removeMessage, } = useSnackbar();
-  const { snackBarMsgs, loginStatus, modalContent, lastPage,
-    isGlobalLoading, setGlobalLoading, networkStatus
-  } = useAppContext();
+  const { snackBarMsg, loginStatus, modalContent, lastPage,
+    isGlobalLoading, } = useAppContext();
   const [mounted, setMounted] = useState(false);
 
   const flaggedAppRoutes = flaggedRoutes.app.filter((route) =>
@@ -101,7 +100,7 @@ export const App = ({ children }: { children: React.ReactNode }) => {
         msg: {
           id: 1,
           title: "No internet connection",
-          content: "Check your network and refresh the page",
+          content: "Refresh the page.",
           msgStatus: "ERROR",
           behavior: "FIXED",
           hasClose: true,
@@ -140,7 +139,7 @@ export const App = ({ children }: { children: React.ReactNode }) => {
 
       {(isOffline || isUnstableNetwork) && loginStatus === "UNKNOWN" ? (
         isGlobalLoading ? (
-          <ProgressIcon otherProps={{ size: "20px" }} />
+          <ProgressIcon otherProps={{ size: "26px" }} />
         ) : (
           <Offline />
         )
@@ -156,7 +155,7 @@ export const App = ({ children }: { children: React.ReactNode }) => {
 
           {isOnWebRoute && <Footer />}
 
-          {snackBarMsgs.messgages && <SnackBars snackBarMsg={snackBarMsgs} />}
+          {snackBarMsg.messgages && <SnackBars snackBarMsg={snackBarMsg} />}
           {modalContent && (
             <Modal
               ref={modalRef}

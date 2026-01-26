@@ -3,7 +3,7 @@
 import React from "react";
 import { Typography, typographyClasses } from "@mui/material";
 import { useTheme, styled } from "@mui/material/styles";
-import { NavItem, GenericObject, SavedPage } from "@/types";
+import { NavItem, GenericObject, Page } from "@/types";
 import { matchPaths } from "@/helpers/others";
 import { usePathname } from "next/navigation";
 import { AnchorLink } from "@/components/Buttons";
@@ -69,7 +69,7 @@ export const RenderItemList: React.FC<RenderListProps> = ({
                 title: item.title,
                 path: item.url ?? "#",
               };
-              handleLinkClick(e, page as SavedPage);
+              handleLinkClick(e, page as Page);
               if (item.action) item.action();
               if (itemAction) itemAction();
             }}

@@ -3,7 +3,7 @@
 import { useAppContext } from "@/app/AppContext";
 import { useController } from "@/hooks/generalHooks";
 import { fetcher } from "@/helpers/fetcher";
-import { IUser, SavedPage, SingleResponse } from "@/types";
+import { IUser, Page, SingleResponse } from "@/types";
 import {
   deleteCookie,
   getCookie,
@@ -116,7 +116,7 @@ export const useLogin = () => {
       setLoginStatus("AUTHENTICATED");
 
       // const isExcludedRoute = flaggedRoutes.auth.includes(pathname);
-      const savedPage = getFromLocalStorage<SavedPage>();
+      const savedPage = getFromLocalStorage<Page>();
       const savedPath = savedPage ? savedPage.path : "";
       const isLastWeb = isOnWeb(savedPath);
 

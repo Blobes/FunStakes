@@ -1,8 +1,8 @@
 "use client";
 
-import { SavedPage } from "@/types";
+import { Page } from "@/types";
 
-export const clientRoutes: Record<string, SavedPage> = {
+export const clientRoutes: Record<string, Page> = {
   // Web
   about: { title: "About", path: "/web" },
   pricing: { title: "Pricing", path: "/web/pricing" },

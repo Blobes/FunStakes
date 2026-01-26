@@ -30,7 +30,7 @@ export const useSignup = (drawerRef?: React.RefObject<ModalRef>) => {
     setAuthUser,
     setLoginStatus,
     setPage,
-    setSnackBarMsgs,
+    setSnackBarMsg: setSnackBarMsgs,
     setInlineMsg,
   } = useAppContext();
   const router = useRouter();

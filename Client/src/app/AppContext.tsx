@@ -6,27 +6,26 @@ import {
   SnackBarMsg,
   LoginStatus,
   ModalContent,
-  SavedPage,
+  Page,
   NetworkStatus,
 } from "@/types";
 import { clientRoutes } from "@/helpers/info";
-import { checkSignal } from "@/helpers/others";
 
 interface AppContextType {
   loginStatus: LoginStatus;
   setLoginStatus: React.Dispatch<React.SetStateAction<LoginStatus>>;
   authUser: IUser | null;
   setAuthUser: React.Dispatch<React.SetStateAction<IUser | null>>;
-  snackBarMsgs: SnackBarMsg;
-  setSnackBarMsgs: React.Dispatch<React.SetStateAction<SnackBarMsg>>;
+  snackBarMsg: SnackBarMsg;
+  setSnackBarMsg: React.Dispatch<React.SetStateAction<SnackBarMsg>>;
   inlineMsg: string | null;
   setInlineMsg: React.Dispatch<React.SetStateAction<string | null>>;
   isGlobalLoading: boolean;
   setGlobalLoading: React.Dispatch<React.SetStateAction<boolean>>;
   isAuthLoading: boolean;
   setAuthLoading: React.Dispatch<React.SetStateAction<boolean>>;
-  lastPage: SavedPage;
-  setPage: React.Dispatch<React.SetStateAction<SavedPage>>;
+  lastPage: Page;
+  setPage: React.Dispatch<React.SetStateAction<Page>>;
   modalContent: ModalContent | null;
   setModalContent: React.Dispatch<React.SetStateAction<ModalContent | null>>;
   networkStatus: NetworkStatus;
@@ -41,14 +40,15 @@ export const ContextProvider = ({
 }) => {
   const [loginStatus, setLoginStatus] = useState<LoginStatus>("UNKNOWN");
   const [authUser, setAuthUser] = useState<IUser | null>(null);
-  const [snackBarMsgs, setSnackBarMsgs] = useState<SnackBarMsg>({
+  const [snackBarMsg, setSnackBarMsg] = useState<SnackBarMsg>({
     messgages: [],
     defaultDur: 5,
+    dir: "up"
   });
   const [inlineMsg, setInlineMsg] = useState<string | null>(null);
   const [isGlobalLoading, setGlobalLoading] = useState(false);
   const [isAuthLoading, setAuthLoading] = useState(false);
-  const [lastPage, setPage] = useState<SavedPage>(clientRoutes.about);
+  const [lastPage, setPage] = useState<Page>(clientRoutes.about);
   const [modalContent, setModalContent] = useState<ModalContent | null>(null);
   const [networkStatus, setNetworkStatus] = useState<NetworkStatus>("STABLE");
 
@@ -59,8 +59,8 @@ export const ContextProvider = ({
         setLoginStatus,
         authUser,
         setAuthUser,
-        snackBarMsgs,
-        setSnackBarMsgs,
+        snackBarMsg,
+        setSnackBarMsg,
         inlineMsg,
         setInlineMsg,
         isGlobalLoading,

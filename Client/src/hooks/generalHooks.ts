@@ -1,7 +1,7 @@
 "use client";
 
 import { useAppContext } from "@/app/AppContext";
-import { ModalContent, SavedPage } from "@/types";
+import { ModalContent, Page } from "@/types";
 import { useMediaQuery } from "@mui/material";
 import { MouseEvent, useEffect, useState } from "react";
 import { useTheme } from "@mui/material/styles";
@@ -21,7 +21,7 @@ export const useController = () => {
   const theme = useTheme();
   const router = useRouter();
 
-  const setLastPage = ({ title, path }: SavedPage) => {
+  const setLastPage = ({ title, path }: Page) => {
     const pageInfo = { title: title, path: path };
     setPage(pageInfo);
     localStorage.setItem("saved_page", JSON.stringify(pageInfo));
@@ -50,7 +50,7 @@ export const useController = () => {
 
   const handleLinkClick = (
     e: MouseEvent<HTMLAnchorElement | HTMLButtonElement>,
-    page: SavedPage,
+    page: Page,
     savePage: boolean = true,
   ) => {
     e.preventDefault();
@@ -100,7 +100,6 @@ export const useController = () => {
     await delay(1000 * 5);
     setGlobalLoading(false);
   };
-
   const isOnline = networkStatus === "STABLE";
   const isUnstableNetwork = networkStatus === "UNSTABLE";
   const isOffline = networkStatus === "OFFLINE";
