@@ -166,6 +166,9 @@ export const MobileUserNav = ({ }) => {
             },
             [`& .${typographyClasses.root}`]: {
               fontSize: "18px",
+              "&:hover": {
+                color: theme.palette.primary.dark,
+              },
             },
             "& svg": {
               width: "22px",

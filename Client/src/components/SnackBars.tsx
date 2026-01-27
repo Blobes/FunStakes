@@ -2,10 +2,9 @@
 
 import { IconButton, Paper, Stack, Typography } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
-import { Close } from "@mui/icons-material";
 import { SnackBarMsg } from "@/types";
 import { AppButton } from "./Buttons";
-import { Info, CircleCheck, CircleAlert } from "lucide-react";
+import { Info, CircleCheck, CircleAlert, X } from "lucide-react";
 import { useEffect } from "react";
 import { useAppContext } from "@/app/AppContext";
 import { useSnackbar } from "@/hooks/snackbarHooks";
@@ -69,8 +68,8 @@ export const SnackBars = ({ snackBarMsg }: SnackbarProps) => {
                     stroke: `${theme.palette.gray[300]}`,
                     marginTop:
                       msg.title && msg.content && msg.cta && theme.boxSpacing(4),
-                    width: "24px",
-                    height: "24px",
+                    width: "28px",
+                    height: "28px",
                   },
                 }}>
                 {msg.msgStatus === "SUCCESS" ? (
@@ -98,10 +97,7 @@ export const SnackBars = ({ snackBarMsg }: SnackbarProps) => {
                   {msg.content && (
                     <Typography variant="body2" sx={{ width: "100%" }}>{msg.content}
                       {msg.cta && (
-                        <AppButton
-                          variant="text"
-                          onClick={msg.cta.action}
-                          style={{ marginLeft: theme.boxSpacing(2), color: theme.palette.primary.light }}>
+                        <AppButton variant="text" onClick={msg.cta.action}>
                           {msg.cta.label}
                         </AppButton>
                       )}</Typography>
@@ -113,7 +109,10 @@ export const SnackBars = ({ snackBarMsg }: SnackbarProps) => {
                   <IconButton
                     onClick={() => removeMessage(msg.id!)}
                     sx={{ cursor: "pointer" }}>
-                    <Close sx={{ width: "20px", height: "20px" }} />
+                    <X style={{
+                      width: "20px", height: "20px",
+                      stroke: `${theme.palette.gray[300]}`
+                    }} />
                   </IconButton>
                 )}
               </Paper>

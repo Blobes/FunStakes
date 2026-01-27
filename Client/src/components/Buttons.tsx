@@ -44,10 +44,13 @@ export const AppButton = ({
     fontSize: "14px",
     fontWeight: "800",
     height: "unset",
-    color: theme.palette.gray[300],
-    padding: theme.boxSpacing(0),
+    color: theme.palette.primary.dark,
+    padding: theme.boxSpacing(0, 3),
     minWidth: "unset",
     alignSelf: "unset",
+    "&:hover": {
+      backgroundColor: theme.fixedColors.mainTrans,
+    }
   };
 
   const mergedStyle =

@@ -10,24 +10,25 @@ let designSystem = createTheme({
     light: {
       palette: {
         primary: {
+          light: "#8395FF",
           main: "#506AFF",
-          dark: "#4355DC",
+          dark: "#3D59D4",
         },
         gray: {
           0: "#ffffff",
-          50: grey[50],
-          100: grey[300],
+          50: "#E6EDF3",
+          100: "#B9C7DB",
           200: "#536077",
           300: "#101926",
           trans: {
-            1: "rgba(1, 13, 23, 0.06)",
-            2: "rgba(1, 13, 23, 0.12)",
+            1: "rgba(1, 20, 35, 0.06)",
+            2: "rgba(1, 20, 35, 0.12)",
             overlay: (trans?: number) => `rgba(1, 13, 23, ${trans ?? 0.5})`,
           },
         },
         info: {
-          light: "#BBC4E8",
-          main: "#4863FF",
+          light: "#C6CFF1",
+          main: "#90A5FC",
           dark: "#10142C",
         },
         error: {
@@ -40,14 +41,15 @@ let designSystem = createTheme({
     dark: {
       palette: {
         primary: {
+          light: "#485BC6",
           main: "#5D71EC",
-          dark: "#4355DC",
+          dark: "#8497FF",
         },
         gray: {
           0: "#010516",
           50: "#171D3A",
           100: "#324763",
-          200: "#617A99",
+          200: "#8399B4",
           300: "#ffffff",
           trans: {
             1: "rgba(173, 218, 255, 0.08)",
@@ -57,7 +59,7 @@ let designSystem = createTheme({
         },
         info: {
           light: "#10142C",
-          main: "#506AFF",
+          main: "#333F83",
           dark: "#BBC4E8",
         },
         error: {
@@ -72,7 +74,7 @@ let designSystem = createTheme({
   fixedColors: {
     gray50: grey[50],
     gray800: "#06122B",
-    mainTrans: "rgba(63, 121, 228, 0.14)",
+    mainTrans: "rgba(72, 107, 246, 0.12)",
   },
 
   // Overriding & Setting Typography

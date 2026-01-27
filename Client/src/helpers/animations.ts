@@ -116,12 +116,12 @@ export const moveOut = (
   }
 };
 
-export const heartBeat = keyframes`
+export const pulse = (from?: number, to?: number) => keyframes`
   from {
-    transform : scale(1);
+    transform : scale(${from ?? 1});
   }
   to {
-   transform : scale(1.3);
+   transform : scale(${to ?? 1.3});
   }
 `;
 

@@ -1,7 +1,7 @@
 "use client";
 
 import { useLogin } from "@/app/auth/login/loginHooks";
-import { Stack, Typography } from "@mui/material";
+import { IconButton, Stack, Typography } from "@mui/material";
 import { useAppContext } from "@/app/AppContext";
 import { AppButton } from "@/components/Buttons";
 import { useTheme } from "@mui/material/styles";
@@ -131,7 +131,7 @@ export const Login: React.FC<LoginProps> = ({
               textAlign: "left",
               padding: theme.boxSpacing(6, 8),
               borderRadius: theme.radius[3],
-              color: theme.palette.primary.light,
+              color: theme.palette.primary.main,
               border: `1px solid ${theme.fixedColors.mainTrans}`,
               backgroundColor: theme.fixedColors.mainTrans,
               width: "100%",
@@ -139,22 +139,21 @@ export const Login: React.FC<LoginProps> = ({
             }}>
             {email}
           </Typography>
-          <AppButton
-            variant="outlined"
-            style={{
-              padding: theme.boxSpacing(3, 4),
-              color: theme.palette.gray[200],
-              borderColor: theme.palette.gray.trans[1],
-              borderRadius: theme.radius[3],
-              width: "50px",
-            }}
-            onClick={() => {
-              setStep?.("email");
-            }}>
-            <BasicTooltip title={"Change email"}>
-              <Pencil style={{ width: "18px" }} />
-            </BasicTooltip>
-          </AppButton>
+          <BasicTooltip title={"Change email"}>
+            <IconButton
+              sx={{
+                padding: theme.boxSpacing(3, 4),
+                color: theme.palette.gray[200],
+                border: `1px solid ${theme.palette.gray.trans[1]}`,
+                borderRadius: theme.radius[3],
+                width: "48px",
+              }}
+              onClick={() => {
+                setStep?.("email");
+              }}>
+              <Pencil style={{ width: "20px", stroke: theme.palette.gray[200] }} />
+            </IconButton>
+          </BasicTooltip>
         </Stack>
         <PasswordInput
           label="Password"

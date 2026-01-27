@@ -16,7 +16,7 @@ import { UserAvatar } from "@/components/UserAvatar";
 import { Share, MoreHoriz, Bookmark } from "@mui/icons-material";
 import { GenericObject, IUser } from "@/types";
 import { useCallback, useEffect, useState } from "react";
-import { heartBeat } from "@/helpers/animations";
+import { pulse } from "@/helpers/animations";
 import { usePost } from "./postHooks";
 import { Post } from "@/types";
 import { red } from "@mui/material/colors";
@@ -26,6 +26,7 @@ import { Empty } from "@/components/Empty";
 import { Heart } from "lucide-react";
 import { useSnackbar } from "@/hooks/snackbarHooks";
 import { useController } from "@/hooks/generalHooks";
+import { AnimatedWrapper } from "@/components/AnimationWrapper";
 
 interface PostProps {
   post: Post;
@@ -105,7 +106,7 @@ export const PostCard = ({ post, style = {} }: PostProps) => {
     }
 
     setIsLiking(true);
-    await delay();
+    //  await delay();
 
     // Optimistic update
     setPostData((prev) => {
@@ -209,20 +210,25 @@ export const PostCard = ({ post, style = {} }: PostProps) => {
       {/* Actions */}
       <CardActions sx={{ padding: theme.boxSpacing(0, 4) }} disableSpacing>
         <Stack direction="row" gap={theme.gap(2)} width="100%">
+
           <IconButton
             sx={{ padding: theme.boxSpacing(4), borderRadius: theme.radius[3] }}
             onClick={handleLike}>
-            <Heart
-              style={{
-                width: 22,
-                marginRight: theme.boxSpacing(2),
-                ...(isLiking && { animation: `${heartBeat} 0.3s linear ` }),
-                fill: likedByMe ? red[500] : "none",
-                stroke: postData.likedByMe
-                  ? (red[500] as string)
-                  : (theme.palette.gray[200] as string),
-              }}
-            />
+            <AnimatedWrapper sx={{
+              ...(isLiking && { animation: `${pulse()} 0.3s linear ` }),
+            }}>
+              <Heart
+                style={{
+                  width: 22,
+                  marginRight: theme.boxSpacing(2),
+                  fill: likedByMe ? red[500] : "none",
+                  stroke: postData.likedByMe
+                    ? (red[500] as string)
+                    : (theme.palette.gray[200] as string),
+                }}
+              />
+            </AnimatedWrapper>
+
             <Typography variant="body2">
               <b>{summarizeNum(likeCount)}</b>
             </Typography>
