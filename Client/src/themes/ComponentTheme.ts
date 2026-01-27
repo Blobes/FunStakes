@@ -9,11 +9,21 @@ const componentTheme = createTheme({
   components: {
     //CSS base line
     MuiCssBaseline: {
-      styleOverrides: {
+      styleOverrides: (theme) => ({
         body: {
           WebkitTapHighlightColor: "transparent",
+          // Theme switch transition
+          "--theme-transition": theme.transitions.create(
+            ["background-color", "color", "stroke", "fill"],
+            {
+              duration: theme.transitions.duration.standard,
+            },
+          ),
         },
-      },
+        "div, p, svg": {
+          transition: "var(--theme-transition)",
+        },
+      }),
     },
 
     // Typography
