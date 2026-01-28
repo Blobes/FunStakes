@@ -122,17 +122,21 @@ export const checkSignal = async (): Promise<NetworkStatus> => {
   // If navigator says we are online, but the request is taking too long:
   const controller = new AbortController();
   const timeoutId = setTimeout(() => controller.abort(), 5000); // 5 second timeout
+
+  // 2. Ping an EXTERNAL reliable source
   try {
-    // Ping a tiny resource or your own health endpoint
-    await fetch(`/favicon.ico?t=${Date.now()}`, {
+    // Use a tiny 1-pixel image or a headers-only request
+    await fetch("https://www.google.com/generate_204", {
       method: "HEAD",
+      mode: "no-cors", // Crucial for external pings
       signal: controller.signal,
       cache: "no-store",
     });
     return "STABLE";
-  } catch (err) {
+  } catch (err: any) {
     // If it aborted or failed, the network is "unstable"
-    return "UNSTABLE";
+    if (err.name === "AbortError") return "UNSTABLE";
+    return "OFFLINE";
   } finally {
     clearTimeout(timeoutId);
   }

@@ -32,7 +32,7 @@ export const App = ({ children }: { children: React.ReactNode }) => {
     isUnstableNetwork, isOffline } = useController();
   const { setSBMessage, removeMessage, } = useSnackbar();
   const { snackBarMsg, loginStatus, modalContent, lastPage,
-    isGlobalLoading, } = useAppContext();
+    isGlobalLoading } = useAppContext();
   const [mounted, setMounted] = useState(false);
 
   const flaggedAppRoutes = flaggedRoutes.app.filter((route) =>
@@ -120,7 +120,7 @@ export const App = ({ children }: { children: React.ReactNode }) => {
     };
   }, [pathname, lastPage, loginStatus]);
 
-  if (!mounted || (isOnline && loginStatus === "UNKNOWN")) {
+  if (!mounted || loginStatus === "PENDING") {
     return <Splash />;
   }
 
@@ -128,7 +128,7 @@ export const App = ({ children }: { children: React.ReactNode }) => {
     <Stack
       sx={{
         position: "fixed",
-        height: "100vh",
+        height: "100svh",
         width: "100%",
         gap: 0,
         backgroundColor: theme.palette.gray[0],

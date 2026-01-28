@@ -13,7 +13,7 @@ export const fetcher = async <T>(
 ): Promise<T> => {
   const controller = new AbortController();
   const signal = controller.signal;
-  const timeoutId = setTimeout(() => controller.abort(), timeout);
+  const timeoutId = setTimeout(() => controller.abort("timeout"), timeout);
 
   try {
     const headers = {
@@ -46,7 +46,7 @@ export const fetcher = async <T>(
 
     if (error.name === "AbortError") {
       console.log(error);
-      throw new Error("No internet connection.");
+      throw new Error("Connection timed out or failed.");
     }
 
     if (error.message === "Failed to fetch" || error instanceof TypeError) {

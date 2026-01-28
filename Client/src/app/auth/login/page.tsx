@@ -47,10 +47,13 @@ export default function LoginPage() {
         />
       ) : (
         <Empty
-          headline="You are still logged in"
+          headline="You are already signed in"
           tagline="Return to funstakes.com or logout."
           style={{
-            container: { padding: theme.boxSpacing(18) },
+            container: {
+              padding: theme.boxSpacing(18),
+              backgroundColor: theme.palette.gray[50]
+            },
             primaryCta: { width: "100%" },
             icon: {
               width: "40px",

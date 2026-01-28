@@ -1,7 +1,7 @@
 import { Stack, useTheme } from "@mui/material";
 import { img } from "@/assets/exported";
 import Image from "next/image";
-import { pulse, pulseAndRotate, rotate } from "@/helpers/animations";
+import { pulseAndRotate } from "@/helpers/animations";
 import { AnimatedWrapper } from "./AnimationWrapper";
 
 
@@ -11,7 +11,7 @@ export const Splash = () => {
     <Stack
       sx={{
         position: "fixed",
-        height: "100vh",
+        height: "100svh",
         width: "100%",
         gap: 0,
         backgroundColor: theme.palette.gray[0],

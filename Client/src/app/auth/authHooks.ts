@@ -16,7 +16,8 @@ export const useAuth = () => {
     setLoginStatus,
     setSnackBarMsg: setSnackBarMsgs,
   } = useAppContext();
-  const { setLastPage, isOnAuth, isOffline } = useController();
+  const { setLastPage, isOnAuth, isOffline, isOnline, isUnstableNetwork } =
+    useController();
   const { setSBMessage } = useSnackbar();
   const router = useRouter();
   const pathname = usePathname();
@@ -43,7 +44,7 @@ export const useAuth = () => {
       }
 
       // Set login status to unkown when offline
-      if (res.status === "ERROR" || isOffline) {
+      if (res.status === "ERROR" || isOffline || isUnstableNetwork) {
         setLoginStatus("UNKNOWN");
         return;
       }

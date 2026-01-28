@@ -22,7 +22,7 @@ interface AppHeaderProps {
 export const AppHeader: React.FC<AppHeaderProps> = ({ scrollRef }) => {
   const { loginStatus } = useAppContext();
   const { setLastPage, openModal, closeModal, isDesktop, handleWindowResize,
-    handleLinkClick, handleScrolling, } = useController();
+    handleLinkClick, handleScrolling, isOnline } = useController();
   const theme = useTheme();
   const router = useRouter();
   const isLoggedIn = loginStatus === "AUTHENTICATED";
