@@ -131,11 +131,12 @@ export const Login: React.FC<LoginProps> = ({
               textAlign: "left",
               padding: theme.boxSpacing(6, 8),
               borderRadius: theme.radius[3],
-              color: theme.palette.primary.main,
+              color: theme.palette.primary.dark,
               border: `1px solid ${theme.fixedColors.mainTrans}`,
               backgroundColor: theme.fixedColors.mainTrans,
               width: "100%",
               fontWeight: "500",
+              fontSize: "16px"
             }}>
             {email}
           </Typography>

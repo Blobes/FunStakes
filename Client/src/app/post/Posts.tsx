@@ -14,6 +14,8 @@ import { Empty } from "@/components/Empty";
 import { useRouter } from "next/navigation";
 import { RadioTower } from "lucide-react";
 import { useStyles } from "@/hooks/styleHooks";
+import Image from "next/image";
+import { img } from "@/assets/exported";
 
 export const Posts = () => {
   const theme = useTheme();
@@ -104,6 +106,7 @@ export const Posts = () => {
       ) : (
         posts.map((post) => <PostCard key={post._id} post={post} />)
       )}
+      <Image alt="" src={img.pic} width={400} height={800} />
     </Stack>
   );
 };
