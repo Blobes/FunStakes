@@ -14,13 +14,13 @@ const componentTheme = createTheme({
           WebkitTapHighlightColor: "transparent",
           // Theme switch transition
           "--theme-transition": theme.transitions.create(
-            ["background-color", "color", "stroke", "fill"],
+            ["background-color", "stroke", "fill"],
             {
               duration: theme.transitions.duration.standard,
             },
           ),
         },
-        "div, p, svg": {
+        "div, svg": {
           transition: "var(--theme-transition)",
         },
       }),

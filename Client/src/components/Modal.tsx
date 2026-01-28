@@ -27,7 +27,10 @@ export interface ModalProps {
   clickToClose?: boolean;
   dragToClose?: boolean;
   onClose?: () => void;
-  transition?: { type: TransitionType, baseDir: Direction, mobileDir?: Direction };
+  transition?: {
+    base?: { type: TransitionType, direction?: Direction },
+    mobile?: { type: TransitionType, direction?: Direction }
+  };
   style?: {
     base?: { overlay?: GenericObject<string>, content?: GenericObject<string> };
     smallScreen?: { overlay?: GenericObject<string>, content?: GenericObject<string> };
@@ -97,12 +100,15 @@ export const Modal = forwardRef<ModalRef, ModalProps>(
       setDragY(0);
     };
 
-    const transOptions = transition || { type: "slide", baseDir: "left" }
-    const transType = transOptions.type
-    const baseTransDir = transOptions.baseDir
-    const mobileTransDir = transOptions.mobileDir
-    const direction = !isDesktop && mobileTransDir ? mobileTransDir : baseTransDir
-    const overlayFn = theme.palette.gray.trans.overlay as (t?: number) => string;
+    const baseTrans = transition?.base || { type: "slide", direction: "left" }
+    const mobileTrans = transition?.mobile || {
+      type: baseTrans.type,
+      direction: baseTrans.direction ?? "up"
+    }
+    let transOptions = isDesktop ? baseTrans : mobileTrans;
+    const transType = transOptions.type;
+    const transDir = transOptions.direction ?? (isDesktop ? "left" : "up");
+    transOptions.direction = transDir
 
     return (
       <Stack //Overlay container
@@ -122,33 +128,27 @@ export const Modal = forwardRef<ModalRef, ModalProps>(
           backdropFilter: `blur(${isOpen ? Math.max(0, 8 - dragY / 50) : 0}px)`,
           marginLeft: "0!important",
           padding: theme.boxSpacing(12),
+          // Alignment
           alignItems: transType === "slide"
-            ? (baseTransDir === "right" ? "flex-start" : baseTransDir === "left" ? "flex-end" : "center")
+            ? (transDir === "right" ? "flex-start"
+              : transDir === "left" ? "flex-end" : "center")
             : "center",
           justifyContent: transType === "slide"
-            ? (baseTransDir === "down" ? "flex-start" : baseTransDir === "up" ? "flex-end" : "center")
+            ? (transDir === "down" ? "flex-start"
+              : transDir === "up" ? "flex-end" : "center")
             : "center",
           ...style?.base?.overlay,
 
           // Mobile styling
-          [theme.breakpoints.down("sm")]: {
-            ...(mobileTransDir && {
-              alignItems: transType === "slide"
-                ? (mobileTransDir === "right" ? "flex-start" : mobileTransDir === "left" ? "flex-end" : "center")
-                : "center",
-              justifyContent: transType === "slide"
-                ? (mobileTransDir === "down" ? "flex-start" : mobileTransDir === "up" ? "flex-end" : "center")
-                : "center",
-            }),
+          ...(!isDesktop && {
             padding: theme.boxSpacing(4, 2),
             ...style?.smallScreen?.overlay
-          },
-
+          }),
         }}>
 
         {/* Drawer Content Container */}
-        <Transition type={transType} show={isOpen}
-          direction={direction} timeout={400} onExited={() => setShouldRemove(true)}>
+        <Transition show={isOpen}
+          timeout={400} {...transOptions} onExited={() => setShouldRemove(true)}>
           <Stack
             sx={{
               maxHeight: "100%",

@@ -10,7 +10,7 @@ import { Empty } from "@/components/Empty";
 import { ShieldCheck } from "lucide-react";
 import { useController } from "@/hooks/generalHooks";
 import { useAuth } from "../authHooks";
-import { DoodlePattern } from "@/assets/exported";
+import { img } from "@/assets/exported";
 
 export default function LoginPage() {
   const theme = useTheme();
@@ -32,9 +32,23 @@ export default function LoginPage() {
         alignItems: "center",
         justifyContent: "center",
         padding: theme.boxSpacing(10),
+        "& > *": { zIndex: 1 },
+        //Fade effect
+        "&::before": {
+          content: '""',
+          position: "absolute",
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          backgroundImage: `url(${img.doodle})`,
+          backgroundRepeat: "repeat",
+          backgroundSize: "800px",
+          opacity: 0.3,
+          zIndex: 0,
+        },
+
       }}>
-      {/* Background pattern */}
-      <DoodlePattern />
       {loginStatus === "UNAUTHENTICATED" ? (
         <AuthStepper
           style={{

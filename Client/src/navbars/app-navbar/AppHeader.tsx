@@ -34,7 +34,7 @@ export const AppHeader: React.FC<AppHeaderProps> = ({ scrollRef }) => {
   useEffect(() => {
     window.addEventListener("resize", handleWindowResize);
 
-    openMobileUserNav()
+    //  openMobileUserNav()
 
     return () => window.removeEventListener("resize", handleWindowResize);
   }, []);
@@ -97,7 +97,7 @@ export const AppHeader: React.FC<AppHeaderProps> = ({ scrollRef }) => {
       )}
 
       {/* Logo */}
-      {!isLoggedIn && (
+      {!isLoggedIn || !isDesktop && (
         <AnchorLink
           url={clientRoutes.home.path}
           onClick={(e: React.MouseEvent<HTMLAnchorElement>) => {
