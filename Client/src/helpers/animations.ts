@@ -139,3 +139,8 @@ export const rotate = keyframes`
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
 `;
+
+export const pulseAndRotate = keyframes`
+  from { transform: scale(1) rotate(0deg); }
+  to { transform: scale(1.1) rotate(360deg); }
+`;

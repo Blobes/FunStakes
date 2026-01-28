@@ -1,6 +1,7 @@
 "use client";
 
 import { useTheme } from "@mui/material/styles";
+import { img } from "@/assets/exported";
 
 export const useStyles = () => {
   const theme = useTheme();
@@ -41,5 +42,22 @@ export const useStyles = () => {
     },
   });
 
-  return { scrollBarStyle, autoScroll };
+  const applyBGPattern = () => ({
+    "& > *": { zIndex: 1 }, // Keep the parent container at the top
+    "&::before": {
+      content: '""',
+      position: "absolute",
+      top: 0,
+      left: 0,
+      right: 0,
+      bottom: 0,
+      backgroundImage: `url(${img.doodle})`,
+      backgroundRepeat: "repeat",
+      backgroundSize: "800px",
+      opacity: 0.3,
+      zIndex: 0,
+    },
+  });
+
+  return { scrollBarStyle, autoScroll, applyBGPattern };
 };

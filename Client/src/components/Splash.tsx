@@ -1,7 +1,7 @@
 import { Stack, useTheme } from "@mui/material";
 import { img } from "@/assets/exported";
 import Image from "next/image";
-import { pulse } from "@/helpers/animations";
+import { pulse, pulseAndRotate, rotate } from "@/helpers/animations";
 import { AnimatedWrapper } from "./AnimationWrapper";
 
 
@@ -20,7 +20,7 @@ export const Splash = () => {
       }}>
       <AnimatedWrapper sx={{
         borderRadius: theme.radius.full,
-        animation: `${pulse(1, 1.1)} 0.8s ease-in-out infinite alternate`,
+        animation: `${pulseAndRotate} 0.8s ease-in-out infinite alternate`
       }}>
         <Image
           src={img.logo}
