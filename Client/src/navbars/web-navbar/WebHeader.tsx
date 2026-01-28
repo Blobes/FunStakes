@@ -8,10 +8,11 @@ import { useAppContext } from "@/app/AppContext";
 import { useController } from "@/hooks/generalHooks";
 import { DesktopWebNav, MobileWebNav } from "./WebNav";
 import { AnchorLink, AppButton } from "@/components/Buttons";
-import { clientRoutes } from "@/helpers/info";
+import { clientRoutes } from "@/helpers/routes";
 import { img } from "@/assets/exported";
 import Image from "next/image";
 import { Menu } from "lucide-react";
+import { zIndexes } from "@/helpers/others";
 
 export const WebHeader: React.FC = () => {
   const { loginStatus } = useAppContext();
@@ -60,7 +61,7 @@ export const WebHeader: React.FC = () => {
       aria-label="Main navigation"
       role="navigation"
       sx={{
-        zIndex: 500,
+        zIndex: zIndexes[500],
         display: "flex",
         justifyContent: "space-between",
         alignItems: "center",

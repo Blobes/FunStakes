@@ -13,7 +13,7 @@ import { PasswordInput } from "@/components/InputFields";
 import { InlineMsg } from "@/components/InlineMsg";
 import { BasicTooltip } from "@/components/Tooltips";
 import { GenericObject } from "@/types";
-import { clientRoutes } from "@/helpers/info";
+import { clientRoutes } from "@/helpers/routes";
 import { ProgressIcon } from "@/components/Loading";
 import { Pencil } from "lucide-react";
 

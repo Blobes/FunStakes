@@ -1,7 +1,7 @@
 "use client";
 
 import { IUser } from "@/types";
-import { serverRoutes } from "./info";
+import { serverRoutes } from "./routes";
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 const DEFAULT_TIMEOUT = 5000; // Default timeout in milliseconds

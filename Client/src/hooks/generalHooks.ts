@@ -5,7 +5,7 @@ import { ModalContent, Page } from "@/types";
 import { useMediaQuery } from "@mui/material";
 import { MouseEvent, useEffect, useState } from "react";
 import { useTheme } from "@mui/material/styles";
-import { flaggedRoutes } from "../helpers/info";
+import { flaggedRoutes } from "../helpers/routes";
 import { useRouter } from "next/navigation";
 import { checkSignal, delay } from "@/helpers/others";
 

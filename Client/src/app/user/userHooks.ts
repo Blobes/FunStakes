@@ -1,7 +1,7 @@
 "use client";
 
 import { fetcher } from "@/helpers/fetcher";
-import { serverRoutes } from "@/helpers/info";
+import { serverRoutes } from "@/helpers/routes";
 import { useSnackbar } from "@/hooks/snackbarHooks";
 import { IUser, ListResponse, SingleResponse } from "@/types";
 

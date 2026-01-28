@@ -5,7 +5,7 @@ import { AuthStepper } from "./AuthStepper";
 import { Stack } from "@mui/material";
 import { useAppContext } from "@/app/AppContext";
 import { useRouter } from "next/navigation";
-import { clientRoutes } from "@/helpers/info";
+import { clientRoutes } from "@/helpers/routes";
 import { Empty } from "@/components/Empty";
 import { ShieldCheck } from "lucide-react";
 import { useController } from "@/hooks/generalHooks";

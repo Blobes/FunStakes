@@ -1,6 +1,6 @@
 "use client";
 import { useAuth } from "@/app/auth/authHooks";
-import { clientRoutes } from "@/helpers/info";
+import { clientRoutes } from "@/helpers/routes";
 import { NavItem } from "@/types";
 import {
   AudioLines,

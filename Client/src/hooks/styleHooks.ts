@@ -2,6 +2,7 @@
 
 import { useTheme } from "@mui/material/styles";
 import { img } from "@/assets/exported";
+import { zIndexes } from "@/helpers/others";
 
 export const useStyles = () => {
   const theme = useTheme();
@@ -43,7 +44,7 @@ export const useStyles = () => {
   });
 
   const applyBGPattern = () => ({
-    "& > *": { zIndex: 1 }, // Keep the parent container at the top
+    "& > *": { zIndex: zIndexes[5] }, // Keep the parent container at the top
     "&::before": {
       content: '""',
       position: "absolute",
@@ -55,7 +56,7 @@ export const useStyles = () => {
       backgroundRepeat: "repeat",
       backgroundSize: "800px",
       opacity: 0.3,
-      zIndex: 0,
+      zIndex: zIndexes.minimum,
     },
   });
 

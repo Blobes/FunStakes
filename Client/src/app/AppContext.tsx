@@ -9,7 +9,7 @@ import {
   Page,
   NetworkStatus,
 } from "@/types";
-import { clientRoutes } from "@/helpers/info";
+import { clientRoutes } from "@/helpers/routes";
 
 interface AppContextType {
   loginStatus: LoginStatus;

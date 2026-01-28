@@ -9,6 +9,7 @@ import { useEffect } from "react";
 import { useAppContext } from "@/app/AppContext";
 import { useSnackbar } from "@/hooks/snackbarHooks";
 import { GroupTransition, Transition } from "./Transition";
+import { zIndexes } from "@/helpers/others";
 
 interface SnackbarProps {
   snackBarMsg: SnackBarMsg;
@@ -33,7 +34,7 @@ export const SnackBars = ({ snackBarMsg }: SnackbarProps) => {
         position: "fixed",
         ...(snackBarMsg.dir === "up" ? { bottom: "10px" } : { top: "10px" }),
         right: "10px",
-        zIndex: 1000,
+        zIndex: zIndexes.maximum,
         width: "94%",
         maxWidth: "400px",
         gap: theme.gap(2),

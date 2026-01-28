@@ -8,7 +8,7 @@ import { useNavLists } from "../NavLists";
 import { useController } from "@/hooks/generalHooks";
 import { AppButton } from "@/components/Buttons";
 import { useAppContext } from "@/app/AppContext";
-import { clientRoutes } from "@/helpers/info";
+import { clientRoutes } from "@/helpers/routes";
 
 interface WebNavProps {
   style?: any;

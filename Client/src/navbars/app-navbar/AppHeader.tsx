@@ -11,10 +11,11 @@ import { SearchContainer } from "@/components/Search";
 import { UserAvatar } from "@/components/UserAvatar";
 import { AnchorLink, AppButton } from "@/components/Buttons";
 import { MenuRef } from "@/components/Menus";
-import { clientRoutes } from "@/helpers/info";
+import { clientRoutes } from "@/helpers/routes";
 import { img } from "@/assets/exported";
 import Image from "next/image";
 import { Bell } from "lucide-react";
+import { zIndexes } from "@/helpers/others";
 
 interface AppHeaderProps {
   scrollRef?: React.RefObject<HTMLElement | null>;
@@ -74,7 +75,7 @@ export const AppHeader: React.FC<AppHeaderProps> = ({ scrollRef }) => {
       aria-label="Main navigation"
       role="navigation"
       sx={{
-        zIndex: 500,
+        zIndex: zIndexes[500],
         display: "flex",
         flexDirection: "row",
         justifyContent: "space-between",

@@ -14,6 +14,7 @@ import { useStyles } from "@/hooks/styleHooks";
 import { Direction, GenericObject } from "@/types";
 import { Transition, TransitionType } from "./Transition";
 import { useController } from "@/hooks/generalHooks";
+import { zIndexes } from "@/helpers/others";
 
 export interface ModalRef {
   openModal: () => void;
@@ -120,7 +121,7 @@ export const Modal = forwardRef<ModalRef, ModalProps>(
           left: 0,
           width: "100%",
           height: "100%",
-          zIndex: 999,
+          zIndex: zIndexes.maximum,
           visibility: !shouldRemove ? "visible" : "hidden",
           transition: "opacity 0.3s ease-in-out, visibility 0.3s",
           opacity: isOpen ? 1 : 0,

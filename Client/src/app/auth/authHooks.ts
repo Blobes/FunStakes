@@ -1,7 +1,7 @@
 "use client";
 
 import { fetcher, fetchUserWithTokenCheck } from "@/helpers/fetcher";
-import { clientRoutes, serverRoutes } from "@/helpers/info";
+import { clientRoutes, serverRoutes } from "@/helpers/routes";
 import { useAppContext } from "../AppContext";
 import { useController } from "@/hooks/generalHooks";
 import { extractPageTitle, getFromLocalStorage } from "@/helpers/others";

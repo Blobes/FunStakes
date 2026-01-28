@@ -9,7 +9,7 @@ import { useAppContext } from "./AppContext";
 import { Footer } from "@/navbars/Footer";
 import { Modal, ModalRef } from "@/components/Modal";
 import { useController } from "@/hooks/generalHooks";
-import { clientRoutes, flaggedRoutes } from "@/helpers/info";
+import { clientRoutes, flaggedRoutes } from "@/helpers/routes";
 import { matchPaths } from "@/helpers/others";
 import { useTheme } from "@mui/material/styles";
 import { useAuth } from "./auth/authHooks";

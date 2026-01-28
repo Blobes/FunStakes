@@ -16,7 +16,7 @@ import {
   getLockRemaining,
 } from "@/helpers/auth";
 import { useRef } from "react";
-import { clientRoutes, serverRoutes } from "@/helpers/info";
+import { clientRoutes, serverRoutes } from "@/helpers/routes";
 import { useSnackbar } from "@/hooks/snackbarHooks";
 
 interface LoginCredentials {

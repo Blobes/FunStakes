@@ -10,7 +10,7 @@ import {
   enqueueLike,
   processQueue,
 } from "@/helpers/post";
-import { serverRoutes } from "@/helpers/info";
+import { serverRoutes } from "@/helpers/routes";
 
 export const usePost = () => {
   const getAllPost = async (): Promise<{
@@ -20,7 +20,7 @@ export const usePost = () => {
     try {
       const res = await fetcher<ListResponse<Post & { likedByMe: boolean }>>(
         serverRoutes.postsRoot,
-        { method: "GET" }
+        { method: "GET" },
       );
       return { payload: res.payload ?? null, message: res.message };
     } catch (error: any) {
@@ -35,7 +35,7 @@ export const usePost = () => {
   const fetchAuthor = useCallback(async (authorId: string) => {
     try {
       const res = await fetcher<SingleResponse<IUser>>(
-        serverRoutes.user(authorId)
+        serverRoutes.user(authorId),
       );
       return res.payload;
     } catch {
@@ -55,7 +55,7 @@ export const usePost = () => {
           serverRoutes.likePost(postId),
           {
             method: "PUT",
-          }
+          },
         );
         return res.payload;
       } catch {
@@ -63,7 +63,7 @@ export const usePost = () => {
         return null;
       }
     },
-    []
+    [],
   );
   // run sync like when online + app boot
   if (typeof window !== "undefined") {
