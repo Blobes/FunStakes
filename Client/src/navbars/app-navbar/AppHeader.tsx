@@ -97,7 +97,7 @@ export const AppHeader: React.FC<AppHeaderProps> = ({ scrollRef }) => {
       )}
 
       {/* Logo */}
-      {!isLoggedIn || !isDesktop && (
+      {(!isLoggedIn || isLoggedIn && !isDesktop) && (
         <AnchorLink
           url={clientRoutes.home.path}
           onClick={(e: React.MouseEvent<HTMLAnchorElement>) => {
@@ -119,7 +119,7 @@ export const AppHeader: React.FC<AppHeaderProps> = ({ scrollRef }) => {
       )}
 
       {/* Search */}
-      {isDesktop && isLoggedIn && <SearchContainer />}
+      {(isDesktop && isLoggedIn) && <SearchContainer />}
 
       {/* Right controls */}
       <Stack direction="row" alignItems="center" spacing={theme.gap(8)}>
