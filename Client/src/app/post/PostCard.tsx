@@ -197,6 +197,7 @@ export const PostCard = ({ post, style = {} }: PostProps) => {
             flex: "none"
           }} />
 
+        {/* Follow user icon */}
         <IconButton sx={{
           padding: theme.boxSpacing(1),
           borderRadius: theme.radius[1],
@@ -206,6 +207,7 @@ export const PostCard = ({ post, style = {} }: PostProps) => {
           }} size={18} />
         </IconButton>
 
+        {/* More action icon */}
         <IconButton sx={{
           padding: theme.boxSpacing(1),
           borderRadius: theme.radius[1],
@@ -215,7 +217,6 @@ export const PostCard = ({ post, style = {} }: PostProps) => {
             stroke: theme.palette.gray[200],
           }} size={18} />
         </IconButton>
-
       </Stack>
 
       {/* Content text */}
@@ -261,7 +262,7 @@ export const PostCard = ({ post, style = {} }: PostProps) => {
           padding: theme.boxSpacing(4, 6),
           borderTop: `1px solid ${theme.palette.gray.trans[1]}`,
           borderBottom: `1px solid ${theme.palette.gray.trans[1]}`,
-          fontSize: "13px"
+          fontSize: "14px"
         }}
       />
 

@@ -1,50 +1,42 @@
 import { DateType } from "@/types";
 
 export const formatDate = (
-  dateValue: string | number,
+  dateValue: string | number | Date,
   type: DateType = "shortened",
 ): string => {
-  // 1. Convert to date string
-  const dateString = new Date(dateValue).toLocaleString();
+  // 1. Create date object safely
+  // If dateValue is a string like "22/08/2025", we need to flip it to "2025-08-22" for Safari
+  let date: Date;
+  if (typeof dateValue === "string" && dateValue.includes("/")) {
+    const [d, m, y] = dateValue.split(",")[0].split("/");
+    const time = dateValue.split(",")[1] || "";
+    date = new Date(`${y}-${m}-${d}${time ? "T" + time.trim() : ""}`);
+  } else {
+    date = new Date(dateValue);
+  }
 
-  // 2. Parse custom format: "22/08/2025, 15:08:44"
-  const [datePart, timePart] = dateString.split(", ");
-  const [day, month, year] = datePart.split("/").map(Number);
-  const [hours, minutes, seconds] = timePart.split(":").map(Number);
+  // Check for Invalid Date
+  if (isNaN(date.getTime())) return "Invalid Date";
 
-  const date = new Date(year, month - 1, day, hours, minutes, seconds);
   const now = new Date();
   const diffInSeconds = Math.floor((now.getTime() - date.getTime()) / 1000);
 
-  // RETURN COMPLETE VERSION
+  // RETURN COMPLETE VERSION / DATE-ONLY
   if (type === "complete" || type === "date-only") {
-    const months = [
-      "Feb",
-      "Mar",
-      "Apr",
-      "May",
-      "Jun",
-      "Jul",
-      "Aug",
-      "Sep",
-      "Oct",
-      "Nov",
-      "Dec",
-      "Jan",
-    ];
-    // Using Intl for localized and clean formatting
     const dayNum = date.getDate();
     const monthStr = date.toLocaleString("en-US", { month: "short" });
     const yearShort = date.getFullYear().toString().slice(-2);
 
-    let hr = date.getHours();
-    const min = date.getMinutes().toString().padStart(2, "0");
-    const ampm = hr >= 12 ? "PM" : "AM";
-    hr = hr % 12 || 12;
+    if (type === "date-only") return `${dayNum} ${monthStr} ${yearShort}`;
 
-    return type === "complete"
-      ? `${dayNum} ${monthStr} ${yearShort} – ${hr}:${min} ${ampm}`
-      : `${dayNum} ${monthStr} ${yearShort}`;
+    // Formatting time: 12:10 PM
+    const timeStr = date.toLocaleString("en-US", {
+      hour: "numeric",
+      minute: "2-digit",
+      hour12: true,
+    });
+
+    return `${dayNum} ${monthStr} ${yearShort} – ${timeStr}`;
   }
 
   // RETURN SHORTENED VERSION

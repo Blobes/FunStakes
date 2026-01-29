@@ -149,7 +149,7 @@ export const Modal = forwardRef<ModalRef, ModalProps>(
 
         {/* Drawer Content Container */}
         <Transition show={isOpen}
-          timeout={400} {...transOptions} onExited={() => setShouldRemove(true)}>
+          timeout={200} {...transOptions} onExited={() => setShouldRemove(true)}>
           <Stack
             sx={{
               maxHeight: "100%",

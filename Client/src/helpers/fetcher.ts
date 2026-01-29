@@ -72,14 +72,13 @@ export const fetchUserWithTokenCheck = async (
   } catch (err: any) {
     // Check if it's a network/timeout error
     const isTimeout = err.name === "AbortError" && err.reason === "timeout";
+
     const isBrowserAbort =
       err.name === "AbortError" && err.reason !== "timeout";
-
     // If the browser killed the request due to refresh/navigation
     if (isBrowserAbort) {
-      return { payload: null, status: "ERROR" }; // Don't trigger ERROR state
+      return { payload: null, status: "ERROR" };
     }
-
     // A real network fail usually has no status AND is a TypeError
     const isFetchFailed =
       (err.message === "Failed to fetch" || err.name === "TypeError") &&
