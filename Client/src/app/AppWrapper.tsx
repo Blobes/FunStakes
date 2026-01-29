@@ -55,7 +55,7 @@ export const AppWrapper = ({ children }: { children: React.ReactNode }) => {
         </Stack>
       )}
 
-      {/* Logged in and NOT on desktop view */}
+      {/* Logged in and NOT on a desktop screen */}
       {loginStatus === "AUTHENTICATED" && !isDesktop && (
         <Stack
           ref={scrollRef}
@@ -66,6 +66,7 @@ export const AppWrapper = ({ children }: { children: React.ReactNode }) => {
             justifyContent: "flex-start",
             alignItems: "center",
             flexDirection: "column",
+            paddingBottom: theme.boxSpacing(23),
             ...scrollBarStyle(),
           }}>
           {!isOnAuthRoute && <AppHeader scrollRef={scrollRef} />}

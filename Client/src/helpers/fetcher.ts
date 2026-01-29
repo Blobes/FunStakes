@@ -63,7 +63,6 @@ interface TokenCheckResponse {
   message?: string;
   status?: "SUCCESS" | "UNAUTHORIZED" | "ERROR";
 }
-
 export const fetchUserWithTokenCheck = async (
   attempt = 0,
 ): Promise<TokenCheckResponse> => {
