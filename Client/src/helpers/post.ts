@@ -1,7 +1,7 @@
 "use client";
 
 import { fetcher } from "./fetcher";
-import { serverRoutes } from "./info";
+import { serverRoutes } from "./routes";
 
 // POST LIKE HANDLING HELPERS
 const pendingLikesKey = "pendingLikes";

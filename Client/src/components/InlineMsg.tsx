@@ -3,10 +3,10 @@ import { useTheme } from "@mui/material/styles";
 
 interface MsgProps {
   msg: string;
-  type?: "SUCCESS" | "ERROR" | "NORMAL";
+  type?: "SUCCESS" | "ERROR";
 }
 
-export const InlineMsg: React.FC<MsgProps> = ({ msg, type = "NORMAL" }) => {
+export const InlineMsg: React.FC<MsgProps> = ({ msg, type = "ERROR" }) => {
   const theme = useTheme();
   return (
     <Typography
@@ -14,18 +14,11 @@ export const InlineMsg: React.FC<MsgProps> = ({ msg, type = "NORMAL" }) => {
       sx={{
         p: theme.boxSpacing(3, 5),
         borderRadius: theme.radius[2],
-        color:
-          type === "NORMAL"
-            ? theme.palette.gray[100]
-            : type === "SUCCESS"
-            ? theme.palette.success.main
-            : theme.palette.error.main,
+        border: `1px solid ${theme.palette.gray.trans[1]}`,
         backgroundColor:
-          type === "NORMAL"
-            ? theme.palette.gray.trans[2]
-            : type === "SUCCESS"
-            ? theme.palette.success.light
-            : theme.palette.error.light,
+          type === "SUCCESS"
+            ? theme.palette.info.main
+            : theme.palette.info.light,
       }}>
       {msg}
     </Typography>

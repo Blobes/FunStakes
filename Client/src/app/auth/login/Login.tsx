@@ -1,20 +1,19 @@
 "use client";
 
-import { useAuth } from "@/app/auth/login/authHooks";
-import { CircularProgress, Stack, Typography } from "@mui/material";
+import { useLogin } from "@/app/auth/login/hook";
+import { IconButton, Stack, Typography } from "@mui/material";
 import { useAppContext } from "@/app/AppContext";
 import { AppButton } from "@/components/Buttons";
 import { useTheme } from "@mui/material/styles";
 import { useRouter } from "next/navigation";
-import { delay, getFromLocalStorage } from "@/helpers/others";
+import { delay } from "@/helpers/global";
 import { useEffect, useState } from "react";
-import { useSharedHooks } from "@/hooks";
+import { useController } from "@/hooks/global";
 import { PasswordInput } from "@/components/InputFields";
 import { InlineMsg } from "@/components/InlineMsg";
-import { Edit } from "@mui/icons-material";
 import { BasicTooltip } from "@/components/Tooltips";
 import { GenericObject } from "@/types";
-import { clientRoutes } from "@/helpers/info";
+import { clientRoutes } from "@/helpers/routes";
 import { ProgressIcon } from "@/components/Loading";
 import { Pencil } from "lucide-react";
 
@@ -41,10 +40,10 @@ export const Login: React.FC<LoginProps> = ({
     MAX_ATTEMPTS,
     lockTimestamp,
     startLockCountdown,
-  } = useAuth();
-  const { inlineMsg, setInlineMsg, isAuthLoading, setAuthLoading } =
+  } = useLogin();
+  const { inlineMsg, setInlineMsg, isAuthLoading, setAuthLoading, lastPage } =
     useAppContext();
-  const { setSBMessage } = useSharedHooks();
+  const { isOnWeb } = useController();
   const [msg, setMsg] = useState("");
   const [passwordValidity, setPasswordValidity] = useState<
     "valid" | "invalid"
@@ -84,21 +83,11 @@ export const Login: React.FC<LoginProps> = ({
       password: password,
     });
     if (res) {
-      const { payload, message: timedMsg, fixedMsg, status } = res;
-
+      const { payload, status } = res;
       if (payload && status === "SUCCESS") {
-        !isAuthLoading &&
-          setSBMessage({
-            msg: { content: timedMsg, msgStatus: status },
-          });
         setStep?.("email");
-        router.push(
-          getFromLocalStorage()
-            ? getFromLocalStorage().path
-            : clientRoutes.timeline
-        );
-      } else {
-        setInlineMsg(fixedMsg ?? null);
+        const isLastWeb = isOnWeb(lastPage.path);
+        router.push(isLastWeb ? clientRoutes.home.path : lastPage.path);
       }
     }
     setAuthLoading(false);
@@ -142,30 +131,30 @@ export const Login: React.FC<LoginProps> = ({
               textAlign: "left",
               padding: theme.boxSpacing(6, 8),
               borderRadius: theme.radius[3],
-              color: theme.palette.primary.light,
+              color: theme.palette.primary.dark,
               border: `1px solid ${theme.fixedColors.mainTrans}`,
               backgroundColor: theme.fixedColors.mainTrans,
               width: "100%",
               fontWeight: "500",
+              fontSize: "16px"
             }}>
             {email}
           </Typography>
-          <AppButton
-            variant="outlined"
-            style={{
-              padding: theme.boxSpacing(3, 4),
-              color: theme.palette.gray[200],
-              borderColor: theme.palette.gray.trans[1],
-              borderRadius: theme.radius[3],
-              width: "50px",
-            }}
-            onClick={() => {
-              setStep?.("email");
-            }}>
-            <BasicTooltip title={"Change email"}>
-              <Pencil style={{ width: "18px" }} />
-            </BasicTooltip>
-          </AppButton>
+          <BasicTooltip title={"Change email"}>
+            <IconButton
+              sx={{
+                padding: theme.boxSpacing(3, 4),
+                color: theme.palette.gray[200],
+                border: `1px solid ${theme.palette.gray.trans[1]}`,
+                borderRadius: theme.radius[3],
+                width: "48px",
+              }}
+              onClick={() => {
+                setStep?.("email");
+              }}>
+              <Pencil style={{ width: "20px", stroke: theme.palette.gray[200] }} />
+            </IconButton>
+          </BasicTooltip>
         </Stack>
         <PasswordInput
           label="Password"

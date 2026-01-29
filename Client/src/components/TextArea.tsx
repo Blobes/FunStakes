@@ -2,24 +2,24 @@ import { styled } from "@mui/material/styles";
 import { TextareaAutosize } from "@mui/material";
 import { GenericObject } from "../types";
 import { useState } from "react";
-import { useStyles } from "../helpers/styles";
+import { useStyles } from "../hooks/style";
 
 const StyledLabel = styled("label")<{ shrink: boolean }>(
   ({ theme, shrink }) =>
-    ({
-      position: "absolute",
-      left: theme.boxSpacing(2),
-      top: shrink ? theme.boxSpacing(1) : theme.boxSpacing(3),
-      fontSize: shrink ? 12 : 17,
-      color: theme.palette.gray[200],
-      transition: "all 0.2s ease",
-      pointerEvents: "none",
-      width: "100%",
-      textWrap: "nowrap",
-      textOverflow: "ellipsis",
-      overflow: "hidden",
-      padding: theme.boxSpacing(0),
-    } as any)
+  ({
+    position: "absolute",
+    left: theme.boxSpacing(2),
+    top: shrink ? theme.boxSpacing(1) : theme.boxSpacing(3),
+    fontSize: shrink ? 12 : 17,
+    color: theme.palette.gray[200],
+    transition: "all 0.2s ease",
+    pointerEvents: "none",
+    width: "100%",
+    textWrap: "nowrap",
+    textOverflow: "ellipsis",
+    overflow: "hidden",
+    padding: theme.boxSpacing(0),
+  } as any)
 );
 
 interface TextAreaProps {

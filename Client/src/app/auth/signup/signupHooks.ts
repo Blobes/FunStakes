@@ -1,13 +1,14 @@
 "use client";
 
 import { useAppContext } from "@/app/AppContext";
-import { useSharedHooks } from "@/hooks";
+import { useController } from "@/hooks/global";
 import { fetcher } from "@/helpers/fetcher";
 import { IUser, SingleResponse } from "@/types";
 import { useRouter } from "next/navigation";
 import { ModalRef } from "@/components/Modal";
-import { deleteCookie, getCookie, setCookie } from "@/helpers/others";
 import { useRef } from "react";
+import { useSnackbar } from "@/hooks/snackbar";
+import { deleteCookie } from "@/helpers/storage";
 
 interface LoginCredentials {
   email: string;
@@ -24,19 +25,18 @@ interface SignupInfo {
   lastName: string;
 }
 
-export const useAuth = (drawerRef?: React.RefObject<ModalRef>) => {
+export const useSignup = (drawerRef?: React.RefObject<ModalRef>) => {
   const {
     setAuthUser,
     setLoginStatus,
     setPage,
-    setSnackBarMsgs,
+    setSnackBarMsg: setSnackBarMsgs,
     setInlineMsg,
   } = useAppContext();
-  const { setSBMessage: setFbMessage } = useSharedHooks();
   const router = useRouter();
 
   const handleLogin = async (
-    credentials: LoginCredentials
+    credentials: LoginCredentials,
   ): Promise<LoginResponse | null> => {
     try {
       // Step 2: Attempt login request
@@ -61,7 +61,7 @@ export const useAuth = (drawerRef?: React.RefObject<ModalRef>) => {
       const msg = error.message || "";
       const isPasswordErr = msg.toLowerCase().includes("password");
       const isEmailOrNetworkErr = ["server", "network", "email"].some((sub) =>
-        msg.toLowerCase().includes(sub)
+        msg.toLowerCase().includes(sub),
       );
       // Increment attempt count if password is wrong
 
@@ -74,7 +74,7 @@ export const useAuth = (drawerRef?: React.RefObject<ModalRef>) => {
   };
 
   const handleSignup = async (
-    info: SignupInfo
+    info: SignupInfo,
   ): Promise<SingleResponse<IUser> | null> => {
     return null;
   };

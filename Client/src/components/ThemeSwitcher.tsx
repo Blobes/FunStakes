@@ -37,7 +37,7 @@ export const ThemeMode: React.FC = () => {
         aria-checked={effectiveMode === "dark"}
         onClick={toggleMode}
         sx={{
-          width: 44,
+          width: 48,
           padding: theme.boxSpacing(1),
           borderRadius: theme.radius.full,
           backgroundColor: theme.palette.gray.trans[1],
@@ -53,8 +53,8 @@ export const ThemeMode: React.FC = () => {
         {/* THUMB */}
         <Stack
           sx={{
-            width: 22,
-            height: 22,
+            width: 26,
+            height: 26,
             borderRadius: theme.radius.full,
             backgroundColor: theme.palette.gray[0],
             padding: theme.boxSpacing(2),

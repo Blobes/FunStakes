@@ -9,8 +9,22 @@ interface EmptyProps {
   headline?: string;
   tagline?: string;
   icon?: React.ReactNode;
-  style?: { container?: any; headline?: any; tagline?: any; icon?: any };
-  cta?: {
+  style?: {
+    container?: any;
+    headline?: any;
+    tagline?: any;
+    icon?: any;
+    primaryCta?: any;
+    secondaryCta?: any;
+  };
+  primaryCta?: {
+    type?: "BUTTON" | "ICON";
+    variant?: "contained" | "outlined";
+    label?: string | React.ReactNode;
+    toolTip?: string;
+    action: () => void;
+  };
+  secondaryCta?: {
     type?: "BUTTON" | "ICON";
     label?: string | React.ReactNode;
     toolTip?: string;
@@ -23,17 +37,19 @@ export const Empty: React.FC<EmptyProps> = ({
   tagline,
   icon,
   style,
-  cta,
+  primaryCta,
+  secondaryCta,
 }) => {
   const theme = useTheme();
-  const ctaType = cta?.type || "BUTTON";
+  const primaryCtaType = primaryCta?.type || "BUTTON";
+  const secondaryCtaType = secondaryCta?.type || "BUTTON";
   return (
     <Stack
       sx={{
         backgroundColor: theme.palette.gray.trans[1],
         padding: theme.boxSpacing(12, 8),
         textAlign: "center",
-        borderRadius: theme.radius[2],
+        borderRadius: theme.radius[3],
         alignItems: "center",
         justifyContent: "center",
         ...style?.container,
@@ -77,23 +93,39 @@ export const Empty: React.FC<EmptyProps> = ({
           {tagline}
         </Typography>
       )}
-      {/* CTA */}
-      {cta &&
-        (ctaType === "BUTTON" ? (
+      {/* CTAs */}
+      {primaryCta &&
+        (primaryCtaType === "BUTTON" ? (
           <AppButton
-            variant="contained"
+            variant={primaryCta.variant || "contained"}
             style={{
               fontSize: "14px",
               padding: theme.boxSpacing(2, 6),
               marginTop: theme.boxSpacing(6),
+              ...style?.primaryCta,
             }}
-            onClick={cta.action}>
-            {cta.label || "Start"}
+            onClick={primaryCta.action}>
+            {primaryCta.label || "Start"}
           </AppButton>
         ) : (
-          <BasicTooltip title={cta.toolTip || ""}>
-            <IconButton onClick={cta.action}>
-              {cta.label || <RefreshCcw />}
+          <BasicTooltip title={primaryCta.toolTip || ""}>
+            <IconButton onClick={primaryCta.action}>
+              {primaryCta.label || <RefreshCcw />}
+            </IconButton>
+          </BasicTooltip>
+        ))}
+      {secondaryCta &&
+        (secondaryCtaType === "BUTTON" ? (
+          <AppButton
+            variant="text"
+            onClick={secondaryCta.action}
+            style={{ ...style?.secondaryCta }}>
+            {secondaryCta.label || "Start"}
+          </AppButton>
+        ) : (
+          <BasicTooltip title={secondaryCta.toolTip || ""}>
+            <IconButton onClick={secondaryCta.action}>
+              {secondaryCta.label || <RefreshCcw />}
             </IconButton>
           </BasicTooltip>
         ))}

@@ -1,149 +1,126 @@
 "use client";
 
-import { Box, IconButton, Paper, Stack, Typography } from "@mui/material";
+import { IconButton, Paper, Stack, Typography } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
-import { useSharedHooks } from "../hooks";
-import { CheckCircle, Close, Info, Warning } from "@mui/icons-material";
-import {
-  fadeIn,
-  fadeOut,
-  moveIn,
-  moveOut,
-  shrinkWidth,
-} from "../helpers/animations";
 import { SnackBarMsg } from "@/types";
 import { AppButton } from "./Buttons";
+import { Info, CircleCheck, CircleAlert, X } from "lucide-react";
+import { useEffect } from "react";
+import { useAppContext } from "@/app/AppContext";
+import { useSnackbar } from "@/hooks/snackbar";
+import { GroupTransition, Transition } from "./Transition";
+import { zIndexes } from "@/helpers/global";
 
-interface SnackBarProps {
-  entryDir?: "LEFT" | "RIGHT";
+interface SnackbarProps {
   snackBarMsg: SnackBarMsg;
 }
 
-export const SnackBars = ({
-  entryDir = "RIGHT",
-  snackBarMsg,
-}: SnackBarProps) => {
+export const SnackBars = ({ snackBarMsg }: SnackbarProps) => {
   const theme = useTheme();
-  const { setSBTimer, removeMessage } = useSharedHooks();
+  const { setSBTimer, removeMessage } = useSnackbar();
+  const { setSnackBarMsg } = useAppContext();
 
-  if (!snackBarMsg.messgages || snackBarMsg.messgages.length === 0) return null;
+  if (!snackBarMsg.messgages || snackBarMsg.messgages.length === 0) {
+    return null
+  };
+
+  useEffect(() => {
+    setSBTimer();
+  }, [setSnackBarMsg]);
 
   return (
-    <>
-      {snackBarMsg.messgages.map((msg, i) => {
-        const isTimed = msg.behavior === "TIMED";
-
-        //Set the snackbar timer
-        setSBTimer();
-
-        const progressDur = msg.duration
-          ? msg.duration
-          : snackBarMsg.defaultDur;
-
-        const boxAnimation =
-          progressDur > 0
-            ? `${fadeIn} 0.3s linear forwards, ${moveIn(
-                entryDir
-              )} 0.3s linear forwards`
-            : `${fadeOut} 0.3s linear forwards, ${moveOut(
-                entryDir
-              )} 0.3s linear forwards`;
-
-        const progressWidthAnim = `${shrinkWidth} ${progressDur}s linear forwards`;
-
-        return (
-          <Paper
-            key={i}
-            variant="elevation"
-            sx={{
-              position: "absolute",
-              top: `${10 + i * 80}px`, // offset for multiple snackbars
-              right: "10px",
-              maxWidth: { xs: "290px", sm: "500px" },
-              zIndex: 1000,
-              padding: theme.boxSpacing(8),
-              display: "flex",
-              alignItems: "flex-start",
-              flexDirection: "row",
-              backgroundColor:
-                msg.msgStatus === "SUCCESS"
-                  ? theme.palette.success.light
-                  : msg.msgStatus === "INFO"
-                  ? theme.palette.info.light
-                  : theme.palette.error.light,
-              border: `1px solid ${theme.palette.gray.trans[2]}`,
-              borderRadius: theme.radius[3],
-              overflow: "hidden",
-              gap: theme.gap(10),
-              animation: isTimed ? boxAnimation : "none",
-              "& > svg": {
-                fill:
-                  msg.msgStatus === "SUCCESS" ? theme.palette.success.main : "",
-                marginTop:
-                  msg.title && msg.content && msg.cta && theme.boxSpacing(4),
-                width: "20px",
-                height: "20px",
-              },
-            }}>
-            {msg.msgStatus === "SUCCESS" ? (
-              <CheckCircle />
-            ) : msg.msgStatus === "INFO" ? (
-              <Info />
-            ) : (
-              <Warning />
-            )}
-
-            <Stack sx={{ gap: theme.gap(2), alignItems: "flex-start" }}>
-              {msg.title && (
-                <Typography
-                  variant="body1"
-                  sx={{ maxWidth: "360px", fontWeight: 500 }}>
-                  {msg.title}
-                </Typography>
-              )}
-              {msg.content && (
-                <Typography variant="body2" sx={{ maxWidth: "360px" }}>
-                  {msg.content}
-                </Typography>
-              )}
-              {msg.cta && (
-                <AppButton
-                  style={{ fontSize: "14px", marginTop: theme.boxSpacing(8) }}
-                  variant="outlined"
-                  onClick={msg.cta.action}>
-                  {msg.cta.label}
-                </AppButton>
-              )}
-            </Stack>
-
-            {msg.hasClose && msg.id && (
-              <IconButton
-                onClick={() => removeMessage(msg.id!)}
-                sx={{ cursor: "pointer" }}>
-                <Close sx={{ width: "20px", height: "20px" }} />
-              </IconButton>
-            )}
-
-            {isTimed && (
-              <Box
+    <Stack
+      sx={{
+        position: "fixed",
+        ...(snackBarMsg.dir === "up" ? { bottom: "10px" } : { top: "10px" }),
+        right: "10px",
+        zIndex: zIndexes.maximum,
+        width: "94%",
+        maxWidth: "400px",
+        gap: theme.gap(2),
+      }}
+    >
+      <GroupTransition>
+        {snackBarMsg.messgages.map((msg) => {
+          return (
+            <Transition
+              key={msg.id}
+              type="slide"
+              direction={snackBarMsg.dir}
+              timeout={300}
+            >
+              <Paper
+                variant="elevation"
                 sx={{
-                  position: "absolute",
-                  bottom: 0,
-                  left: 0,
-                  height: 2,
-                  animation: progressWidthAnim,
+                  width: "100%",
+                  padding: theme.boxSpacing(6),
+                  display: "flex",
+                  alignItems: "center",
+                  flexDirection: "row",
                   backgroundColor:
                     msg.msgStatus === "SUCCESS"
-                      ? theme.palette.success.main
-                      : msg.msgStatus === "INFO"
                       ? theme.palette.info.main
-                      : theme.palette.error.main,
-                }}
-              />
-            )}
-          </Paper>
-        );
-      })}
-    </>
+                      : theme.palette.info.light,
+                  border: `1px solid ${theme.palette.gray.trans[2]}`,
+                  borderRadius: theme.radius[3],
+                  overflow: "hidden",
+                  gap: theme.gap(10),
+                  "& > svg": {
+                    stroke: `${theme.palette.gray[300]}`,
+                    marginTop:
+                      msg.title && msg.content && msg.cta && theme.boxSpacing(4),
+                    width: "28px",
+                    height: "28px",
+                  },
+                }}>
+                {msg.msgStatus === "SUCCESS" ? (
+                  <CircleCheck />
+                ) : msg.msgStatus === "INFO" ? (
+                  <Info />
+                ) : (
+                  <CircleAlert />
+                )}
+
+                <Stack
+                  sx={{
+                    gap: theme.gap(1),
+                    alignItems: "flex-start",
+                    width: "100%",
+                  }}>
+                  {msg.title && (
+                    <Typography
+                      variant="body1"
+                      sx={{ maxWidth: "360px", fontWeight: 600 }}>
+                      {msg.title}
+                    </Typography>
+                  )}
+
+                  {msg.content && (
+                    <Typography variant="body2" sx={{ width: "100%" }}>{msg.content}
+                      {msg.cta && (
+                        <AppButton variant="text" onClick={msg.cta.action}>
+                          {msg.cta.label}
+                        </AppButton>
+                      )}</Typography>
+                  )}
+                </Stack>
+
+                {/* Close element */}
+                {msg.hasClose && msg.id && (
+                  <IconButton
+                    onClick={() => removeMessage(msg.id!)}
+                    sx={{ cursor: "pointer" }}>
+                    <X style={{
+                      width: "20px", height: "20px",
+                      stroke: `${theme.palette.gray[300]}`
+                    }} />
+                  </IconButton>
+                )}
+              </Paper>
+            </Transition>
+          );
+        })}
+      </GroupTransition>
+    </Stack>
   );
 };

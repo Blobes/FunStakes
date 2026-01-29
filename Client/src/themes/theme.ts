@@ -10,30 +10,29 @@ let designSystem = createTheme({
     light: {
       palette: {
         primary: {
+          light: "#8395FF",
           main: "#506AFF",
-          dark: "#4355DC",
+          dark: "#3D59D4",
         },
         gray: {
           0: "#ffffff",
-          50: grey[50],
-          100: grey[300],
-          200: grey[600],
-          300: grey[900],
+          50: "#E8ECF5",
+          100: "#B9C7DB",
+          200: "#536077",
+          300: "#101926",
           trans: {
-            1: "rgba(0, 0, 0, 0.06)",
-            2: "rgba(0, 0, 0, 0.12)",
-            overlay: "rgba(0, 0, 0, 0.50)",
+            1: "rgba(1, 20, 35, 0.06)",
+            2: "rgba(1, 20, 35, 0.12)",
+            overlay: (trans?: number) => `rgba(1, 13, 23, ${trans ?? 0.5})`,
           },
         },
-        success: {
-          light: "#CBD3F1",
-          main: "#425BEF",
-          dark: "#161C3D",
+        info: {
+          light: "#C6CFF1",
+          main: "#90A5FC",
+          dark: "#10142C",
         },
         error: {
-          light: red[50],
           main: red[400],
-          dark: "#1D0505",
         },
         tonalOffset: 0.6,
         contrastThreshold: 4.5,
@@ -42,30 +41,29 @@ let designSystem = createTheme({
     dark: {
       palette: {
         primary: {
+          light: "#485BC6",
           main: "#5D71EC",
-          dark: "#4355DC",
+          dark: "#8497FF",
         },
         gray: {
-          0: "#010516", // "#020516",
-          50: "#07103B",
-          100: grey[700],
-          200: grey[500],
+          0: "#010516",
+          50: "#171D3A",
+          100: "#324763",
+          200: "#8399B4",
           300: "#ffffff",
           trans: {
-            1: "rgba(255, 255, 255, 0.08)",
-            2: "rgba(255, 255, 255, 0.20)",
-            overlay: "rgba(0, 0, 0, 0.50)",
+            1: "rgba(173, 218, 255, 0.08)",
+            2: "rgba(173, 218, 255, 0.20)",
+            overlay: (trans?: number) => `rgba(1, 13, 23, ${trans ?? 0.5})`,
           },
         },
-        success: {
+        info: {
           light: "#10142C",
-          main: "#506AFF",
+          main: "#333F83",
           dark: "#BBC4E8",
         },
         error: {
-          light: "#1D0505",
           main: red[300],
-          dark: red[100],
         },
         tonalOffset: 0.6,
         contrastThreshold: 4.5,
@@ -76,7 +74,7 @@ let designSystem = createTheme({
   fixedColors: {
     gray50: grey[50],
     gray800: "#06122B",
-    mainTrans: "rgba(63, 121, 228, 0.14)",
+    mainTrans: "rgba(72, 107, 246, 0.12)",
   },
 
   // Overriding & Setting Typography

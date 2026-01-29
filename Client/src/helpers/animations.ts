@@ -18,11 +18,16 @@ export const fadeOut = keyframes`
     opacity: 0;
   }
 `;
+
+interface Move {
+  dir?: "LEFT" | "RIGHT" | "CENTER" | "BOTTOM";
+  from?: string;
+  to?: string;
+}
 export const moveIn = (
-  dir: "LEFT" | "RIGHT" | "CENTER",
-  from: string = "-14px",
-  to: string = "10px"
+  params: Move = { dir: "RIGHT", from: "-14px", to: "10px" },
 ) => {
+  const { dir, from, to } = params;
   switch (dir) {
     case "LEFT":
       return keyframes`
@@ -53,14 +58,22 @@ export const moveIn = (
           transform: scale(1);
         }
       `;
+    case "BOTTOM":
+      return keyframes`
+            from {
+              transform: translateY(${to});
+            }
+            to {
+              transform: translateY(${from});
+            }
+          `;
   }
 };
 
 export const moveOut = (
-  dir: "LEFT" | "RIGHT" | "CENTER",
-  from: string = "10px",
-  to: string = "-14px"
+  params: Move = { dir: "RIGHT", from: "10px", to: "-14px" },
 ) => {
+  const { dir, from, to } = params;
   switch (dir) {
     case "LEFT":
       return keyframes`
@@ -91,15 +104,24 @@ export const moveOut = (
           transform: scale(0.8);
         }
       `;
+    case "BOTTOM":
+      return keyframes`
+            from {
+              transform: translateY(${from});
+            }
+            to {
+              transform: translateY(${to});
+            }
+          `;
   }
 };
 
-export const heartBeat = keyframes`
+export const pulse = (from?: number, to?: number) => keyframes`
   from {
-    transform : scale(1);
+    transform : scale(${from ?? 1});
   }
   to {
-   transform : scale(1.3);
+   transform : scale(${to ?? 1.3});
   }
 `;
 
@@ -110,4 +132,15 @@ export const shrinkWidth = keyframes`
   to {
    width : 0%;
   }
+`;
+
+// Define rotation animation
+export const rotate = keyframes`
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+`;
+
+export const pulseAndRotate = keyframes`
+  from { transform: scale(1) rotate(0deg); }
+  to { transform: scale(1.1) rotate(360deg); }
 `;

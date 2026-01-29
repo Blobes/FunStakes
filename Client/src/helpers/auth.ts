@@ -1,10 +1,10 @@
 "use client";
 
-import { deleteCookie } from "./others";
+import { deleteCookie } from "./storage";
 
 export const getLockRemaining = (
   lockTimestamp: string | number | null,
-  maxMinutes: number
+  maxMinutes: number,
 ) => {
   if (!lockTimestamp) return 0;
   const timestamp =

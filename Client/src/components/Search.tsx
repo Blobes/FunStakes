@@ -1,10 +1,10 @@
 "use client";
 
-import React from "react";
-import { styled } from "@mui/material/styles";
-import { InputBase } from "@mui/material";
-import SearchIcon from "@mui/icons-material/Search";
-import { SearchOutlined, SearchTwoTone } from "@mui/icons-material";
+import { styled, useTheme } from "@mui/material/styles";
+import { InputBase, Stack, Typography } from "@mui/material";
+import { Search as SearchIcon } from "lucide-react";
+import { useAnimation } from "@/hooks/animation";
+import { zIndexes } from "@/helpers/global";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -54,7 +54,7 @@ export const SearchBar = () => {
   return (
     <Search>
       <SearchIconWrapper>
-        <SearchOutlined />
+        <SearchIcon />
       </SearchIconWrapper>
       <StyledInputBase
         placeholder="Explore something"
@@ -64,3 +64,42 @@ export const SearchBar = () => {
     </Search>
   );
 };
+
+export const SearchContainer = () => {
+  const theme = useTheme();
+  const { animateBorder } = useAnimation();
+  return (
+    <Stack flexDirection="row" sx={{
+      padding: theme.boxSpacing(4, 5),
+      borderRadius: theme.radius.full,
+      border: `1px solid ${theme.fixedColors.mainTrans}`,
+      backgroundColor: theme.palette.gray[50],
+      width: "40%",
+      alignItems: "center",
+      zIndex: zIndexes[5],
+      transition: "all 0.2s ease-in",
+      cursor: "text",
+      // Apply border animation
+      ...animateBorder({
+        borderColor: theme.palette.primary.main,
+      }),
+      "&:hover": {
+        backgroundColor: theme.palette.gray[0],
+        border: `1px solid ${theme.palette.primary.main}`,
+      },
+    }}>
+      <SearchIcon size="18" stroke={theme.palette.primary.dark} />
+      <Typography
+        component="p"
+        variant="body3"
+        sx={{
+          color: theme.palette.gray[200],
+          width: "100%",
+          fontWeight: "500",
+        }}>
+        Search & explore
+      </Typography>
+    </Stack>
+  );
+};
+

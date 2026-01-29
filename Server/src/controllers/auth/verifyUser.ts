@@ -1,4 +1,4 @@
-import verifyToken from "@/middlewares/verifyToken";
+import verifyAuthToken from "@/middlewares/verifyAuthToken";
 import { Request, Response } from "express";
 import { UserModel } from "@/models";
 
@@ -16,4 +16,4 @@ const verifyUser = async (req: Request, res: Response) => {
   res.status(200).json({ user });
 };
 
-export default [verifyToken, verifyUser];
+export default [verifyAuthToken, verifyUser];

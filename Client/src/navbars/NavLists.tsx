@@ -1,12 +1,13 @@
 "use client";
-import { useAuth } from "@/app/auth/login/authHooks";
-import { clientRoutes } from "@/helpers/info";
+import { useAuth } from "@/app/auth/authHook";
+import { clientRoutes } from "@/helpers/routes";
 import { NavItem } from "@/types";
 import {
   AudioLines,
   BadgeQuestionMark,
   Bell,
   Bookmark,
+  CircleDashed,
   Gem,
   House,
   LogOut,
@@ -23,67 +24,75 @@ export const useNavLists = () => {
   // Web navigation list visible to all users on the web
   const webNavList: NavItem[] = [
     {
-      title: "Support",
+      title: clientRoutes.support.title,
       element: <BadgeQuestionMark />,
-      url: clientRoutes.support,
+      url: clientRoutes.support.path,
     },
     {
-      title: "Pricing",
+      title: clientRoutes.pricing.title,
       element: <Gem />,
-      url: clientRoutes.pricing,
+      url: clientRoutes.pricing.path,
     },
   ];
 
   // Footer navigation list visible to all users
   const footerNavList: NavItem[] = [
     {
-      title: "About",
-      url: clientRoutes.about,
+      title: clientRoutes.about.title,
+      url: clientRoutes.about.path,
     },
     {
-      title: "Blogs",
-      url: clientRoutes.blogs,
+      title: clientRoutes.support.title,
+      url: clientRoutes.support.path,
     },
     {
-      title: "Privacy",
-      url: clientRoutes.privacy,
+      title: clientRoutes.pricing.title,
+      url: clientRoutes.pricing.path,
     },
     {
-      title: "Terms",
-      url: clientRoutes.terms,
+      title: clientRoutes.blogs.title,
+      url: clientRoutes.blogs.path,
     },
     {
-      title: "News",
-      url: clientRoutes.news,
+      title: clientRoutes.privacy.title,
+      url: clientRoutes.privacy.path,
+    },
+    {
+      title: clientRoutes.terms.title,
+      url: clientRoutes.terms.path,
+    },
+    {
+      title: clientRoutes.news.title,
+      url: clientRoutes.news.path,
     },
   ];
 
   // User profile navigation list visible to only logged-in users
   const userNavList: NavItem[] = [
     {
-      title: "Profile",
+      title: clientRoutes.profile.title,
       element: <User />,
-      url: clientRoutes.profile,
+      url: clientRoutes.profile.path,
     },
     {
-      title: "Premium",
+      title: clientRoutes.pricing.title,
       element: <Gem />,
-      url: clientRoutes.pricing,
+      url: clientRoutes.pricing.path,
     },
     {
-      title: "Wallet",
+      title: clientRoutes.wallet.title,
       element: <WalletMinimal />,
-      url: clientRoutes.pricing,
+      url: clientRoutes.wallet.path,
     },
     {
-      title: "Bookmarks",
+      title: clientRoutes.bookmarks.title,
       element: <Bookmark />,
-      url: clientRoutes.bookmarks,
+      url: clientRoutes.bookmarks.path,
     },
     {
-      title: "Settings",
+      title: clientRoutes.settings.title,
       element: <Settings />,
-      url: clientRoutes.pricing,
+      url: clientRoutes.settings.path,
     },
 
     {
@@ -96,34 +105,39 @@ export const useNavLists = () => {
   // Left Sidebar navigation list visible to only logged-in users
   const sidebarNavList: NavItem[] = [
     {
-      title: "Timeline",
+      title: clientRoutes.home.title,
       element: <House />,
-      url: clientRoutes.timeline,
+      url: clientRoutes.home.path,
     },
     {
-      title: "Explore",
+      title: clientRoutes.explore.title,
       element: <Search />,
-      url: clientRoutes.explore,
+      url: clientRoutes.explore.path,
     },
     {
-      title: "Stakes",
+      title: clientRoutes.stakes.title,
       element: <Pentagon />,
-      url: clientRoutes.stakes,
+      url: clientRoutes.stakes.path,
     },
     {
-      title: "Voice Out",
+      title: clientRoutes.vibes.title,
+      element: <CircleDashed />,
+      url: clientRoutes.vibes.path,
+    },
+    {
+      title: clientRoutes.voices.title,
       element: <AudioLines />,
-      url: clientRoutes.settings,
+      url: clientRoutes.voices.path,
     },
     {
-      title: "Notifications",
+      title: clientRoutes.notifications.title,
       element: <Bell />,
-      url: clientRoutes.inbox,
+      url: clientRoutes.notifications.path,
     },
     {
-      title: "Inbox",
+      title: clientRoutes.inbox.title,
       element: <Mail />,
-      url: clientRoutes.inbox,
+      url: clientRoutes.inbox.path,
     },
   ];
 

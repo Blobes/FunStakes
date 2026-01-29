@@ -7,6 +7,25 @@ import { outlinedInputClasses } from "@mui/material/OutlinedInput";
 const componentTheme = createTheme({
   // Overriding & Setting Components
   components: {
+    //CSS base line
+    MuiCssBaseline: {
+      styleOverrides: (theme) => ({
+        body: {
+          WebkitTapHighlightColor: "transparent",
+          // Theme switch transition
+          "--theme-transition": theme.transitions.create(
+            ["background-color", "stroke", "fill"],
+            {
+              duration: theme.transitions.duration.standard,
+            },
+          ),
+        },
+        "div, svg": {
+          transition: "var(--theme-transition)",
+        },
+      }),
+    },
+
     // Typography
     MuiTypography: {
       styleOverrides: {
@@ -31,6 +50,7 @@ const componentTheme = createTheme({
             borderRadius: theme.radius.full,
             alignSelf: "flex-start",
             height: "40px",
+            fontWeight: "600",
           }),
         contained: ({ theme }) =>
           theme.unstable_sx({
@@ -47,7 +67,7 @@ const componentTheme = createTheme({
           }),
         outlined: ({ theme }) =>
           theme.unstable_sx({
-            borderColor: theme.palette.gray[300],
+            borderColor: theme.palette.gray.trans[2],
             color: theme.palette.gray[300],
             "&:hover": {
               backgroundColor: theme.fixedColors.mainTrans,
@@ -189,6 +209,7 @@ const componentTheme = createTheme({
       },
     },
 
+    // App Bar
     MuiAppBar: {
       styleOverrides: {
         root: ({ theme }) =>
@@ -196,6 +217,25 @@ const componentTheme = createTheme({
             background: "unset",
             borderRadius: theme.radius[0],
             boxShadow: "none",
+            minHeight: "44px",
+            padding: theme.boxSpacing(6),
+            [theme.breakpoints.down("md")]: {
+              minHeight: "32px",
+              padding: theme.boxSpacing(5),
+            },
+          }),
+      },
+    },
+
+    // Tool Bar
+    MuiToolbar: {
+      styleOverrides: {
+        root: ({ theme }) =>
+          theme.unstable_sx({
+            [theme.breakpoints.down("lg")]: {
+              minHeight: "32px",
+              padding: theme.boxSpacing(3),
+            },
           }),
       },
     },
@@ -215,7 +255,7 @@ const componentTheme = createTheme({
         root: ({ theme }) =>
           theme.unstable_sx({
             "--TextField-default": theme.palette.gray[50],
-            "--TextField-success": theme.palette.success.main,
+            "--TextField-success": theme.palette.info.main,
             "--TextField-error": theme.palette.error.main,
 
             "& .MuiInputBase-input": {

@@ -1,17 +1,17 @@
 "use client";
 
-import { useAuth } from "@/app/auth/login/authHooks";
+import { useLogin } from "@/app/auth/login/hook";
 import { Stack, Typography } from "@mui/material";
 import { useAppContext } from "@/app/AppContext";
 import { AppButton } from "@/components/Buttons";
 import { useTheme } from "@mui/material/styles";
 import { useRouter } from "next/navigation";
 import { ModalRef } from "@/components/Modal";
-import { validateEmail } from "@/helpers/input-validation";
+import { validateEmail } from "@/helpers/inputValidation";
 import { useEffect, useState } from "react";
 import { TextInput } from "@/components/InputFields";
 import { GenericObject } from "@/types";
-import { delay } from "@/helpers/others";
+import { delay } from "@/helpers/global";
 import { InlineMsg } from "@/components/InlineMsg";
 import { ProgressIcon } from "@/components/Loading";
 import { Mail } from "lucide-react";
@@ -35,7 +35,7 @@ export const CheckEmail: React.FC<CheckProps> = ({
   setEmailProp,
   style = {},
 }) => {
-  const { checkEmail } = useAuth();
+  const { checkEmail } = useLogin();
   const { isAuthLoading, setAuthLoading, inlineMsg } = useAppContext();
   const [validity, setValidity] = useState<"valid" | "invalid">();
   const [msg, setMsg] = useState("");

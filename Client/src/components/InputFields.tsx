@@ -1,7 +1,7 @@
 import { useTheme } from "@mui/material/styles";
 import { IconButton, InputAdornment, TextField } from "@mui/material";
 import { useState } from "react";
-import { Eye, EyeOff, User } from "lucide-react";
+import { Eye, EyeClosed } from "lucide-react";
 
 interface InputProps {
   variant?: "outlined" | "filled";
@@ -128,17 +128,12 @@ export const PasswordInput = ({
                 }
                 onClick={toggleShowPassword}
                 onMouseDown={handleMouseDown}
-                onMouseUp={handleMouseUp}>
+                onMouseUp={handleMouseUp}
+                sx={{ "& > svg": { stroke: theme.palette.gray[200] } }}
+              >
                 {showPassword ? (
-                  <Eye
-                    size={22}
-                    style={{ stroke: theme.palette.gray[200] as string }}
-                  />
-                ) : (
-                  <EyeOff
-                    size={22}
-                    style={{ stroke: theme.palette.gray[200] as string }}
-                  />
+                  <Eye size={22} />
+                ) : (<EyeClosed size={22} />
                 )}
               </IconButton>
             </InputAdornment>

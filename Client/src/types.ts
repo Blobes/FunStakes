@@ -2,8 +2,17 @@
 
 import { ModalProps } from "./components/Modal";
 
-export type LoginStatus = "UNKNOWN" | "AUTHENTICATED" | "UNAUTHENTICATED";
-export type ResponseStatus = "SUCCESS" | "ERROR" | "INFO" | "WARNING" | null;
+export type LoginStatus =
+  | "UNKNOWN"
+  | "AUTHENTICATED"
+  | "UNAUTHENTICATED"
+  | "PENDING";
+
+export type NetworkStatus = "STABLE" | "UNSTABLE" | "OFFLINE" | "UNKNOWN";
+
+export type Direction = "left" | "right" | "up" | "down";
+
+export type DateType = "shortened" | "complete" | "date-only";
 
 export type GenericObject<T> = {
   [key: string]: T | GenericObject<T>;
@@ -58,7 +67,7 @@ export interface NavItem {
 }
 
 export interface NavBarProps {
-  setLastPage: (page: SavedPage) => void;
+  setLastPage: (page: Page) => void;
   list: NavItem[];
 }
 
@@ -71,11 +80,13 @@ export interface ModalContent extends ModalProps {
   source?: string;
 }
 
+export type SnackbarStatus = "SUCCESS" | "ERROR" | "INFO" | "WARNING" | null;
+
 export interface MsgType {
   id?: number;
   title?: string | null;
   content?: string | null;
-  msgStatus?: ResponseStatus;
+  msgStatus?: SnackbarStatus;
   behavior?: "FIXED" | "TIMED";
   duration?: number;
   hasClose?: boolean;
@@ -88,18 +99,19 @@ export interface MsgType {
 export interface SnackBarMsg {
   messgages?: MsgType[];
   defaultDur: number;
+  dir?: Direction;
 }
 
 export interface SingleResponse<T> {
   message: string;
   payload: T | null;
-  status: ResponseStatus;
+  status: SnackbarStatus;
 }
 
 export interface ListResponse<T> {
   message: string;
   payload?: T[] | null;
-  status: ResponseStatus;
+  status: SnackbarStatus;
 }
 
 export interface InputValidation {
@@ -114,7 +126,7 @@ export interface Step {
   allowPrevious?: boolean;
 }
 
-export interface SavedPage {
+export interface Page {
   title: string;
   path: string;
 }

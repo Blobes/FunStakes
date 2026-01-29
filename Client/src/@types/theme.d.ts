@@ -1,17 +1,36 @@
 import "@mui/material/styles";
 import { GenericObject } from "../types";
 
-type ExtendedGenericObject<T> = GenericObject<T> & {
-  trans: GenericObject<T>;
-};
+// type ExtendedGenericObject<T> = GenericObject<T> & {
+//   trans: GenericObject<T>;
+// };
 
 declare module "@mui/material/styles" {
   interface Palette {
-    gray: ExtendedGenericObject<string>;
+    gray: {
+      0: string;
+      50: string;
+      100: string;
+      200: string;
+      300: string;
+      trans: {
+        1: string;
+        2: string;
+        // Explicitly define overlay as a function
+        overlay: (trans?: number) => string;
+      };
+    };
   }
   interface PaletteOptions {
-    gray?: ExtendedGenericObject<string>;
+    gray?: Partial<Palette["gray"]>;
   }
+
+  // interface Palette {
+  //   gray: ExtendedGenericObject<string | (() => any)>;
+  // }
+  // interface PaletteOptions {
+  //   gray?: ExtendedGenericObject<string | (() => any)>;
+  // }
   interface Theme {
     fixedColors: GenericObject<string>;
     radius: GenericObject<string>;
@@ -19,7 +38,7 @@ declare module "@mui/material/styles" {
       val1: number,
       val2?: number,
       val3?: number,
-      val4?: number
+      val4?: number,
     ) => string;
     gap: (value: number) => string;
   }
@@ -27,10 +46,10 @@ declare module "@mui/material/styles" {
     fixedColors?: GenericObject<string>;
     radius?: GenericObject<string>;
     boxSpacing?: (
-      val1: number,
-      val2?: number,
-      val3?: number,
-      val4?: number
+      top: number,
+      right?: number,
+      bottom?: number,
+      left?: number,
     ) => string;
     gap?: (value: number) => string;
   }
