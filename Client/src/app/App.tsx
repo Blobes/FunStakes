@@ -19,6 +19,7 @@ import { Splash } from "../components/Splash";
 import { WebHeader } from "@/navbars/web-navbar/WebHeader";
 import { AppWrapper } from "./AppWrapper";
 import { useSnackbar } from "@/hooks/snackbar";
+import { registerSW } from "@/helpers/registerSW";
 
 export const App = ({ children }: { children: React.ReactNode }) => {
   const pathname = usePathname();
@@ -50,18 +51,19 @@ export const App = ({ children }: { children: React.ReactNode }) => {
   // ─────────────────────────────
   // 1️⃣ MOUNT + INITIAL AUTH CHECK & SERVICE WORKER REGISTRATION
   // ─────────────────────────────
+
+  useEffect(() => {
+    registerSW()
+  }, []);
+
   useEffect(() => {
     setMounted(true);
-    if (process.env.NODE_ENV === "production" && "serviceWorker" in navigator) {
-      navigator.serviceWorker
-        .register("/service-worker.js")
-        .then(() => console.log("SW registered"))
-        .catch((err) => console.error("SW registration failed:", err));
+    const init = async () => {
+      await delay(500)
+      verifySignal();
+      verifyAuth();
     }
-    // Verify network signal
-    verifySignal();
-    // Verify user auth
-    verifyAuth();
+    init();
   }, [networkStatus]);
 
   useEffect(() => {

@@ -2,6 +2,7 @@
 
 import { IUser } from "@/types";
 import { serverRoutes } from "./routes";
+import { delay } from "./global";
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 const DEFAULT_TIMEOUT = 5000; // Default timeout in milliseconds
@@ -96,7 +97,7 @@ export const fetchUserWithTokenCheck = async (
     }
 
     // 1. Stop the loop if we've tried 2 times
-    if (attempt >= 2) {
+    if (attempt >= 3) {
       console.error("Stopping infinite refresh loop.");
       return {
         payload: null,
@@ -107,10 +108,14 @@ export const fetchUserWithTokenCheck = async (
 
     // 2. Catch 401 (Missing/Expired) OR 403 (Invalid)
     if (err.status === 401 || err.status === 403) {
-      // console.log(`Attempt ${attempt + 1}: Triggering Refresh...`);
+      if (attempt === 0) {
+        await delay(500);
+        return fetchUserWithTokenCheck(1);
+      }
+      // If we already waited or if the wait didn't work, try to refresh.
       const refreshed = await refreshAccessToken();
-      msg = null;
       if (refreshed) {
+        // Increment attempt here to prevent infinite refresh loops
         return fetchUserWithTokenCheck(attempt + 1);
       }
     }

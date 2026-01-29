@@ -2,7 +2,7 @@
 
 // Delay function
 export const delay = (ms: number = 1500) =>
-  new Promise<void>((resolve) => setTimeout(resolve, ms));
+  new Promise((resolve) => setTimeout(resolve, ms));
 
 // Extract page title from path
 export const extractPageTitle = (path: string) => {
