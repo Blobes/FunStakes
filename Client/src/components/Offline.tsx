@@ -1,13 +1,26 @@
-import { useTheme } from "@mui/material";
+import { Typography, useTheme } from "@mui/material";
 import { useRouter } from "next/navigation";
 import { Empty } from "@/components/Empty";
 import { Unplug } from "lucide-react";
+import { ProgressIcon } from "./Loading";
+import { useAppContext } from "@/app/AppContext";
 
 export const Offline = () => {
   const theme = useTheme();
   const router = useRouter();
-  return (
-    <Empty
+  const { isGlobalLoading } = useAppContext();
+
+  return isGlobalLoading ? (
+    <>
+      <ProgressIcon otherProps={{ size: "30px" }} />
+      <Typography variant="body1"
+        sx={{
+          marginTop: theme.boxSpacing(10),
+          textAlign: "center",
+          fontWeight: "500"
+        }}>Retrieving connection...</Typography>
+    </>) :
+    (<Empty
       headline="Oops, something went wrong"
       tagline="Check your internet connection."
       style={{
@@ -28,5 +41,5 @@ export const Offline = () => {
         action: () => router.refresh(),
       }}
     />
-  );
+    )
 };

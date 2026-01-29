@@ -50,7 +50,8 @@ export const fetcher = async <T>(
     }
 
     if (error.message === "Failed to fetch" || error instanceof TypeError) {
-      throw new Error("Failed to fetch");
+      error.status = 0;
+      throw error;
     }
     throw error;
   }
@@ -70,22 +71,28 @@ export const fetchUserWithTokenCheck = async (
     return { payload: res.user, status: "SUCCESS" };
   } catch (err: any) {
     // Check if it's a network/timeout error
-    const isTimeout = err.name === "AbortError";
-    const hasResponse = err.status !== undefined && err.status !== null;
+    const isTimeout = err.name === "AbortError" && err.reason === "timeout";
+    const isBrowserAbort =
+      err.name === "AbortError" && err.reason !== "timeout";
+
+    // If the browser killed the request due to refresh/navigation
+    if (isBrowserAbort) {
+      return { payload: null, status: "ERROR" }; // Don't trigger ERROR state
+    }
+
+    // A real network fail usually has no status AND is a TypeError
     const isFetchFailed =
       (err.message === "Failed to fetch" || err.name === "TypeError") &&
-      !hasResponse;
-    const isServerError = err.status >= 500;
+      !err.status;
 
-    if (isFetchFailed || isTimeout || isServerError) {
-      // If it was an Abort but NOT a timeout, it's just a UI lifecycle event (ignore it)
-      if (isTimeout && err.reason !== "timeout") {
-        return { payload: null, status: "ERROR" };
-      }
+    let msg = err.message;
+
+    if (isFetchFailed || isTimeout || err.status >= 500) {
+      msg = null;
       return {
         payload: null,
         status: "ERROR",
-        message: isTimeout ? "Request timed out." : "Network is unstable.",
+        message: isFetchFailed ? msg : "Connection failed or timed out",
       };
     }
 
@@ -99,7 +106,6 @@ export const fetchUserWithTokenCheck = async (
       };
     }
 
-    let msg = err.message;
     // 2. Catch 401 (Missing/Expired) OR 403 (Invalid)
     if (err.status === 401 || err.status === 403) {
       // console.log(`Attempt ${attempt + 1}: Triggering Refresh...`);

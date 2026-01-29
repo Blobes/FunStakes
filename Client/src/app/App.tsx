@@ -2,7 +2,7 @@
 
 import React, { useEffect, useRef, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
-import { Stack } from "@mui/material";
+import { Stack, Typography } from "@mui/material";
 import { BlurEffect } from "../components/BlurEffect";
 import { SnackBars } from "@/components/SnackBars";
 import { useAppContext } from "./AppContext";
@@ -137,40 +137,35 @@ export const App = ({ children }: { children: React.ReactNode }) => {
       }}>
       <BlurEffect />
 
-      {(isOffline || isUnstableNetwork) && loginStatus === "UNKNOWN" ? (
-        isGlobalLoading ? (
-          <ProgressIcon otherProps={{ size: "26px" }} />
-        ) : (
-          <Offline />
-        )
-      ) : (
-        <>
-          {!isOnAuthRoute && isOnWebRoute && <WebHeader />}
+      {(isOffline || isUnstableNetwork) && loginStatus === "UNKNOWN" ?
+        <Offline /> : (
+          <>
+            {!isOnAuthRoute && isOnWebRoute && <WebHeader />}
 
-          {!isOnAppRoute ? (
-            children
-          ) : (
-            <AppWrapper>{children}</AppWrapper>
-          )}
+            {!isOnAppRoute ? (
+              children
+            ) : (
+              <AppWrapper>{children}</AppWrapper>
+            )}
 
-          {isOnWebRoute && <Footer />}
+            {isOnWebRoute && <Footer />}
 
-          {snackBarMsg.messgages && <SnackBars snackBarMsg={snackBarMsg} />}
-          {modalContent && (
-            <Modal
-              ref={modalRef}
-              content={modalContent.content}
-              showHeader={modalContent.showHeader}
-              header={modalContent.header}
-              clickToClose={modalContent.clickToClose}
-              dragToClose={modalContent.dragToClose}
-              transition={modalContent.transition}
-              style={modalContent.style}
-              onClose={modalContent.onClose}
-            />
-          )}
-        </>
-      )}
+            {snackBarMsg.messgages && <SnackBars snackBarMsg={snackBarMsg} />}
+            {modalContent && (
+              <Modal
+                ref={modalRef}
+                content={modalContent.content}
+                showHeader={modalContent.showHeader}
+                header={modalContent.header}
+                clickToClose={modalContent.clickToClose}
+                dragToClose={modalContent.dragToClose}
+                transition={modalContent.transition}
+                style={modalContent.style}
+                onClose={modalContent.onClose}
+              />
+            )}
+          </>
+        )}
     </Stack>
   );
 };
