@@ -30,9 +30,10 @@ export const Strip = ({ items = [], style = {} }: StripProps) => {
             sx={{
               display: "flex",
               alignItems: "center",
-              gap: theme.gap(3),
+              gap: theme.gap(2),
               color: theme.palette.gray[200],
               textAlign: "center",
+              fontSize: "inherit"
             }}>
             {item.element && item.element}
             {item.text && item.text}

@@ -2,7 +2,7 @@ import { styled } from "@mui/material/styles";
 import { TextareaAutosize } from "@mui/material";
 import { GenericObject } from "../types";
 import { useState } from "react";
-import { useStyles } from "../hooks/styleHooks";
+import { useStyles } from "../hooks/style";
 
 const StyledLabel = styled("label")<{ shrink: boolean }>(
   ({ theme, shrink }) =>

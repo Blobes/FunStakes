@@ -3,7 +3,7 @@
 import { Box } from "@mui/material";
 import { useTheme, styled } from "@mui/material/styles";
 import { blue } from "@mui/material/colors";
-import { zIndexes } from "@/helpers/others";
+import { zIndexes } from "@/helpers/global";
 
 const Blur = styled("div")(({ theme }) =>
   theme.unstable_sx({

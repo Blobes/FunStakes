@@ -1,5 +1,5 @@
 import { Stack, Typography, useTheme } from "@mui/material";
-import { useStyles } from "@/hooks/styleHooks";
+import { useStyles } from "@/hooks/style";
 import { useRouter } from "next/navigation";
 
 export const LeftNav = () => {

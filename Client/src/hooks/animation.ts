@@ -1,6 +1,6 @@
 "use client";
 
-import { zIndexes } from "@/helpers/others";
+import { zIndexes } from "@/helpers/global";
 import { rotate } from "../helpers/animations";
 
 interface AnimateBorder {

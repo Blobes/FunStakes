@@ -2,7 +2,7 @@
 
 import { fetcher } from "@/helpers/fetcher";
 import { serverRoutes } from "@/helpers/routes";
-import { useSnackbar } from "@/hooks/snackbarHooks";
+import { useSnackbar } from "@/hooks/snackbar";
 import { IUser, ListResponse, SingleResponse } from "@/types";
 
 export const useUser = () => {

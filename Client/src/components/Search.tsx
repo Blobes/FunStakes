@@ -3,8 +3,8 @@
 import { styled, useTheme } from "@mui/material/styles";
 import { InputBase, Stack, Typography } from "@mui/material";
 import { Search as SearchIcon } from "lucide-react";
-import { useAnimation } from "@/hooks/animationHooks";
-import { zIndexes } from "@/helpers/others";
+import { useAnimation } from "@/hooks/animation";
+import { zIndexes } from "@/helpers/global";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",

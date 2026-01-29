@@ -12,6 +12,8 @@ export type NetworkStatus = "STABLE" | "UNSTABLE" | "OFFLINE";
 
 export type Direction = "left" | "right" | "up" | "down";
 
+export type DateType = "shortened" | "complete" | "date-only";
+
 export type GenericObject<T> = {
   [key: string]: T | GenericObject<T>;
 };

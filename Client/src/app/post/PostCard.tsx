@@ -5,28 +5,27 @@ import {
   Card,
   Typography,
   IconButton,
-  CardHeader,
-  CardMedia,
-  CardContent,
-  CardActions,
 } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import { useAppContext } from "@/app/AppContext";
 import { UserAvatar } from "@/components/UserAvatar";
-import { Share, MoreHoriz, Bookmark } from "@mui/icons-material";
 import { GenericObject, IUser } from "@/types";
 import { useCallback, useEffect, useState } from "react";
 import { pulse } from "@/helpers/animations";
-import { usePost } from "./postHooks";
+import { usePost } from "./hooks";
 import { Post } from "@/types";
 import { red } from "@mui/material/colors";
-import { delay, summarizeNum } from "@/helpers/others";
+import { summarizeNum } from "@/helpers/numberSum";
 import { AuthStepper } from "@/app/auth/login/AuthStepper";
 import { Empty } from "@/components/Empty";
-import { Heart } from "lucide-react";
-import { useSnackbar } from "@/hooks/snackbarHooks";
-import { useController } from "@/hooks/generalHooks";
+import { EllipsisVertical, Heart, Send, UserPlus, Bookmark, MessageCircle } from "lucide-react";
+import { useSnackbar } from "@/hooks/snackbar";
+import { useController } from "@/hooks/global";
 import { AnimatedWrapper } from "@/components/AnimationWrapper";
+import { img } from "@/assets/exported";
+import Image from "next/image";
+import { Strip } from "@/components/StripBar";
+import { SmartDate } from "@/components/SmartDate";
 
 interface PostProps {
   post: Post;
@@ -36,7 +35,7 @@ interface PostProps {
 export const PostCard = ({ post, style = {} }: PostProps) => {
   const theme = useTheme();
   const { loginStatus, setModalContent } = useAppContext();
-  const { isOffline, isUnstableNetwork } = useController();
+  const { isOffline, isUnstableNetwork, isDesktop } = useController();
   const {
     handlePostLike,
     fetchAuthor,
@@ -50,15 +49,8 @@ export const PostCard = ({ post, style = {} }: PostProps) => {
   const [isLiking, setIsLiking] = useState(false);
   const { setSBMessage } = useSnackbar();
 
-  const {
-    _id,
-    authorId,
-    content,
-    postImage,
-    createdAt,
-    status,
-    likeCount,
-    likedByMe,
+  const { _id, authorId, content, postImage, createdAt,
+    status, likeCount, likedByMe,
   } = postData;
 
   // Fetch author once
@@ -106,7 +98,6 @@ export const PostCard = ({ post, style = {} }: PostProps) => {
     }
 
     setIsLiking(true);
-    //  await delay();
 
     // Optimistic update
     setPostData((prev) => {
@@ -144,6 +135,7 @@ export const PostCard = ({ post, style = {} }: PostProps) => {
     );
 
   const authorFullName = `${author.firstName} ${author.lastName}`;
+  const postImg = postImage ?? img.pic
 
   if (status === "DELETED")
     return (
@@ -159,68 +151,153 @@ export const PostCard = ({ post, style = {} }: PostProps) => {
         backgroundColor: "unset",
         backgroundImage: "unset",
         borderRadius: "unset",
-        padding: theme.boxSpacing(6, 0),
+        padding: theme.boxSpacing(8, 0, 0, 0),
         display: "flex",
         flexDirection: "column",
-        gap: theme.gap(4),
+        gap: theme.gap(0),
         flexGrow: "0",
         flexShrink: "0",
+        borderBottom: `1px solid ${theme.palette.gray.trans[1]}`,
         ...style,
       }}>
       {/* Post Header */}
-      <CardHeader
-        sx={{ padding: theme.boxSpacing(0, 6, 0, 4) }}
-        avatar={
-          <UserAvatar
-            userInfo={{
-              firstName: author.firstName,
-              lastName: author.lastName,
-              profileImage: author.profileImage,
-            }}
-            style={{ width: "40px", height: "40px", fontSize: "20px" }}
-            aria-label={authorFullName}
-          />
-        }
-        action={
-          <IconButton>
-            <MoreHoriz sx={{ fill: theme.palette.gray[200] }} />
-          </IconButton>
-        }
-        title={
-          <Typography variant="body2">
-            <b>{authorFullName}</b>
+      <Stack direction="row"
+        sx={{
+          padding: theme.boxSpacing(0, 6, 0, 4),
+          alignItems: "flex-start",
+          gap: theme.gap(1)
+        }}>
+        <UserAvatar
+          userInfo={{
+            firstName: author.firstName,
+            lastName: author.lastName,
+            profileImage: author.profileImage,
+          }}
+          style={{ width: "32px", height: "32px", fontSize: "16px" }}
+          aria-label={authorFullName}
+        />
+        <Stack sx={{ width: "100%", gap: theme.gap(0), minWidth: "40px" }}>
+          <Typography variant="body2" noWrap={true} sx={{ fontWeight: "bold" }}>
+            {authorFullName}
           </Typography>
-        }
-        subheader={
-          <Typography variant="body3" sx={{ color: theme.palette.gray[200] }}>
-            {new Date(createdAt).toLocaleString()}
+          <Typography variant="body3" noWrap={true} sx={{
+            color: theme.palette.gray[200],
+            lineHeight: "1.1em"
+          }}>
+            @{author.username}
           </Typography>
-        }
-      />
+        </Stack>
 
-      {/* Content */}
-      <CardContent sx={{ padding: theme.boxSpacing(0, 6) }}>
-        <Typography variant="body2">{content}</Typography>
-      </CardContent>
+        {/* Date & time */}
+        <SmartDate variant="body3" timestamp={createdAt}
+          dateType={isDesktop ? "date-only" : "shortened"}
+          sx={{
+            width: "fit-content",
+            color: theme.palette.gray[200],
+            marginX: theme.boxSpacing(2),
+            flex: "none"
+          }} />
 
-      {postImage && (
-        <CardMedia component="img" image={postImage} alt="Post image" />
+        <IconButton sx={{
+          padding: theme.boxSpacing(1),
+          borderRadius: theme.radius[1],
+        }}>
+          <UserPlus style={{
+            stroke: theme.palette.gray[200],
+          }} size={18} />
+        </IconButton>
+
+        <IconButton sx={{
+          padding: theme.boxSpacing(1),
+          borderRadius: theme.radius[1],
+          marginRight: theme.boxSpacing(-3)
+        }}>
+          <EllipsisVertical style={{
+            stroke: theme.palette.gray[200],
+          }} size={18} />
+        </IconButton>
+
+      </Stack>
+
+      {/* Content text */}
+      <Typography variant="body2"
+        sx={{ padding: theme.boxSpacing(4, 6) }}>
+        {content}
+      </Typography>
+      {/* Content media */}
+      {postImg && (
+        <Image src={postImg} alt="Post image"
+          style={{ width: "100%" }} />
       )}
 
-      {/* Actions */}
-      <CardActions sx={{ padding: theme.boxSpacing(0, 4) }} disableSpacing>
-        <Stack direction="row" gap={theme.gap(2)} width="100%">
+      {/* Info Strip */}
+      <Strip
+        items={[
+          {
+            text: likeCount > 1 ? "Likes" : "Like",
+            element: (
+              <strong style={{ color: theme.palette.gray[300] as string }}>
+                {summarizeNum(likeCount)}
+              </strong>
+            ),
+          },
+          {
+            text: 1500 > 1 ? "Replies" : "Reply",
+            element: (
+              <strong style={{ color: theme.palette.gray[300] as string }}>
+                {summarizeNum(1500)}
+              </strong>
+            ),
+          },
+          {
+            text: 20000 > 1 ? " Views" : " View",
+            element: (
+              <strong style={{ color: theme.palette.gray[300] as string }}>
+                {summarizeNum(20000)}
+              </strong>
+            ),
+          },
+        ]}
+        style={{
+          padding: theme.boxSpacing(4, 6),
+          borderTop: `1px solid ${theme.palette.gray.trans[1]}`,
+          borderBottom: `1px solid ${theme.palette.gray.trans[1]}`,
+          fontSize: "13px"
+        }}
+      />
 
+      {/* Actions */}
+      <Stack direction="row" sx={{
+        padding: theme.boxSpacing(4, 6),
+        "& svg": {
+          stroke: theme.palette.gray[200],
+        }
+      }}>
+        <Stack sx={{
+          flexDirection: "row",
+          gap: theme.gap(6),
+          width: "100%",
+          alignItems: "center",
+          "& > button:hover": {
+            transform: "scale(1.08)",
+            transition: "transform 0.3s ease-in-out",
+            background: "none",
+          }
+
+        }} >
+          {/* Like */}
           <IconButton
-            sx={{ padding: theme.boxSpacing(4), borderRadius: theme.radius[3] }}
+            sx={{
+              padding: theme.boxSpacing(0),
+              borderRadius: theme.radius[0],
+            }}
             onClick={handleLike}>
             <AnimatedWrapper sx={{
               ...(isLiking && { animation: `${pulse()} 0.3s linear ` }),
             }}>
               <Heart
+                size={26}
                 style={{
-                  width: 22,
-                  marginRight: theme.boxSpacing(2),
                   fill: likedByMe ? red[500] : "none",
                   stroke: postData.likedByMe
                     ? (red[500] as string)
@@ -228,33 +305,34 @@ export const PostCard = ({ post, style = {} }: PostProps) => {
                 }}
               />
             </AnimatedWrapper>
-
-            <Typography variant="body2">
-              <b>{summarizeNum(likeCount)}</b>
-            </Typography>
           </IconButton>
 
-          <IconButton
-            sx={{
-              padding: theme.boxSpacing(4),
-              borderRadius: theme.radius[3],
-            }}>
-            <Bookmark
-              sx={{
-                width: 22,
-                mr: theme.boxSpacing(2),
-                fill: theme.palette.gray[200],
-              }}
-            />
-            <Typography variant="body2">
-              <b>12.4k</b>
-            </Typography>
+          {/* Comments */}
+          <IconButton sx={{ padding: theme.boxSpacing(0), borderRadius: theme.radius[0] }}>
+            <MessageCircle size={24} />
+          </IconButton>
+
+          {/* Share */}
+          <IconButton sx={{ padding: theme.boxSpacing(0), borderRadius: theme.radius[0] }}>
+            <Send size={24} />
           </IconButton>
         </Stack>
-        <IconButton>
-          <Share sx={{ fill: theme.palette.gray[200] }} />
+
+        {/* Bookmark */}
+        <IconButton
+          sx={{
+            padding: theme.boxSpacing(0),
+            borderRadius: theme.radius[0],
+            "&:hover": {
+              transform: "scale(1.08)",
+              transition: "transform 0.3s ease-in-out",
+              background: "none",
+            }
+          }}>
+          <Bookmark size={24}
+          />
         </IconButton>
-      </CardActions>
+      </Stack>
     </Card>
   );
 };

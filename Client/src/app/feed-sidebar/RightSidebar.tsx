@@ -4,7 +4,7 @@ import { Stack, Typography } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import { ProfileCard } from "./RightSidebarCards";
 import { Followers } from "./Followers";
-import { useStyles } from "@/hooks/styleHooks";
+import { useStyles } from "@/hooks/style";
 
 export const RightSidebar = () => {
   const theme = useTheme();

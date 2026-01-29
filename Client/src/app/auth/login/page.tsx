@@ -8,9 +8,9 @@ import { useRouter } from "next/navigation";
 import { clientRoutes } from "@/helpers/routes";
 import { Empty } from "@/components/Empty";
 import { ShieldCheck } from "lucide-react";
-import { useController } from "@/hooks/generalHooks";
+import { useController } from "@/hooks/global";
 import { useAuth } from "../authHooks";
-import { useStyles } from "@/hooks/styleHooks";
+import { useStyles } from "@/hooks/style";
 
 export default function LoginPage() {
   const theme = useTheme();

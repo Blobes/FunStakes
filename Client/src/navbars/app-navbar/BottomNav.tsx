@@ -1,8 +1,8 @@
 import { AppBar, Stack, Typography, useTheme } from "@mui/material";
-import { useStyles } from "@/hooks/styleHooks";
+import { useStyles } from "@/hooks/style";
 import { useRouter } from "next/navigation";
-import { useController } from "@/hooks/generalHooks";
-import { zIndexes } from "@/helpers/others";
+import { useController } from "@/hooks/global";
+import { zIndexes } from "@/helpers/global";
 
 interface NavProps {
   scrollRef?: React.RefObject<HTMLElement | null>;

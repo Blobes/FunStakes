@@ -3,7 +3,7 @@
 import { forwardRef, useImperativeHandle, useState, ReactNode } from "react";
 import { Menu, paperClasses } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
-import { zIndexes } from "@/helpers/others";
+import { zIndexes } from "@/helpers/global";
 
 export interface MenuRef {
   openMenu: (anchor: HTMLElement) => void;

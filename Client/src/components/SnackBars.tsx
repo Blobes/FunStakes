@@ -7,9 +7,9 @@ import { AppButton } from "./Buttons";
 import { Info, CircleCheck, CircleAlert, X } from "lucide-react";
 import { useEffect } from "react";
 import { useAppContext } from "@/app/AppContext";
-import { useSnackbar } from "@/hooks/snackbarHooks";
+import { useSnackbar } from "@/hooks/snackbar";
 import { GroupTransition, Transition } from "./Transition";
-import { zIndexes } from "@/helpers/others";
+import { zIndexes } from "@/helpers/global";
 
 interface SnackbarProps {
   snackBarMsg: SnackBarMsg;

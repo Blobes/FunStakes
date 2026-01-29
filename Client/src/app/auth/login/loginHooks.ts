@@ -1,15 +1,10 @@
 "use client";
 
 import { useAppContext } from "@/app/AppContext";
-import { useController } from "@/hooks/generalHooks";
+import { useController } from "@/hooks/global";
 import { fetcher } from "@/helpers/fetcher";
 import { IUser, Page, SingleResponse } from "@/types";
-import {
-  deleteCookie,
-  getCookie,
-  getFromLocalStorage,
-  setCookie,
-} from "@/helpers/others";
+
 import {
   clearLoginLock,
   formatRemainingTime,
@@ -17,7 +12,13 @@ import {
 } from "@/helpers/auth";
 import { useRef } from "react";
 import { clientRoutes, serverRoutes } from "@/helpers/routes";
-import { useSnackbar } from "@/hooks/snackbarHooks";
+import { useSnackbar } from "@/hooks/snackbar";
+import {
+  deleteCookie,
+  getCookie,
+  getFromLocalStorage,
+  setCookie,
+} from "@/helpers/storage";
 
 interface LoginCredentials {
   email: string;

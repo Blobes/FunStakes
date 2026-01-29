@@ -1,11 +1,11 @@
 "use client";
 
-import { useController } from "@/hooks/generalHooks";
+import { useController } from "@/hooks/global";
 import { Stack } from "@mui/material";
 import { useAppContext } from "./AppContext";
 import { LeftNav } from "@/navbars/app-navbar/LeftNav";
 import { useTheme } from "@mui/material/styles";
-import { useStyles } from "@/hooks/styleHooks";
+import { useStyles } from "@/hooks/style";
 import { AppHeader } from "@/navbars/app-navbar/AppHeader";
 import { usePathname } from "next/navigation";
 import { BottomNav } from "@/navbars/app-navbar/BottomNav";

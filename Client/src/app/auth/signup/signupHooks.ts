@@ -1,14 +1,14 @@
 "use client";
 
 import { useAppContext } from "@/app/AppContext";
-import { useController } from "@/hooks/generalHooks";
+import { useController } from "@/hooks/global";
 import { fetcher } from "@/helpers/fetcher";
 import { IUser, SingleResponse } from "@/types";
 import { useRouter } from "next/navigation";
 import { ModalRef } from "@/components/Modal";
-import { deleteCookie, getCookie, setCookie } from "@/helpers/others";
 import { useRef } from "react";
-import { useSnackbar } from "@/hooks/snackbarHooks";
+import { useSnackbar } from "@/hooks/snackbar";
+import { deleteCookie } from "@/helpers/storage";
 
 interface LoginCredentials {
   email: string;

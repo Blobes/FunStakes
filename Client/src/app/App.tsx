@@ -8,9 +8,9 @@ import { SnackBars } from "@/components/SnackBars";
 import { useAppContext } from "./AppContext";
 import { Footer } from "@/navbars/Footer";
 import { Modal, ModalRef } from "@/components/Modal";
-import { useController } from "@/hooks/generalHooks";
+import { useController } from "@/hooks/global";
 import { clientRoutes, flaggedRoutes } from "@/helpers/routes";
-import { matchPaths } from "@/helpers/others";
+import { matchPaths } from "@/helpers/global";
 import { useTheme } from "@mui/material/styles";
 import { useAuth } from "./auth/authHooks";
 import { ProgressIcon } from "@/components/Loading";
@@ -18,7 +18,7 @@ import { Offline } from "../components/Offline";
 import { Splash } from "../components/Splash";
 import { WebHeader } from "@/navbars/web-navbar/WebHeader";
 import { AppWrapper } from "./AppWrapper";
-import { useSnackbar } from "@/hooks/snackbarHooks";
+import { useSnackbar } from "@/hooks/snackbar";
 
 export const App = ({ children }: { children: React.ReactNode }) => {
   const pathname = usePathname();

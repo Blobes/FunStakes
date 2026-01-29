@@ -2,7 +2,7 @@
 
 import React from "react";
 import { Avatar, IconButton } from "@mui/material";
-import { getInitialsWithColors } from "@/helpers/others";
+import { getInitialsAndColors } from "@/helpers/colorExtractor";
 import { BasicTooltip } from "@/components/Tooltips";
 import { GenericObject } from "@/types";
 import { useTheme } from "@mui/material/styles";
@@ -32,7 +32,7 @@ export const UserAvatar = ({
   }
   const { firstName, lastName, profileImage } = info;
 
-  const initials = getInitialsWithColors(`${firstName} ${lastName}`);
+  const initials = getInitialsAndColors(`${firstName} ${lastName}`);
   const { marginTop, ...others } = style;
 
   return (

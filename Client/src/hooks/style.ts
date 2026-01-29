@@ -2,7 +2,7 @@
 
 import { useTheme } from "@mui/material/styles";
 import { img } from "@/assets/exported";
-import { zIndexes } from "@/helpers/others";
+import { zIndexes } from "@/helpers/global";
 
 export const useStyles = () => {
   const theme = useTheme();

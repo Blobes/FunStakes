@@ -3,11 +3,12 @@
 import { fetcher, fetchUserWithTokenCheck } from "@/helpers/fetcher";
 import { clientRoutes, serverRoutes } from "@/helpers/routes";
 import { useAppContext } from "../AppContext";
-import { useController } from "@/hooks/generalHooks";
-import { extractPageTitle, getFromLocalStorage } from "@/helpers/others";
+import { useController } from "@/hooks/global";
+import { extractPageTitle } from "@/helpers/global";
 import { Page } from "@/types";
 import { usePathname, useRouter } from "next/navigation";
-import { useSnackbar } from "@/hooks/snackbarHooks";
+import { useSnackbar } from "@/hooks/snackbar";
+import { getFromLocalStorage } from "@/helpers/storage";
 
 export const useAuth = () => {
   const {
@@ -46,6 +47,7 @@ export const useAuth = () => {
       // Set login status to unkown when offline
       if (res.status === "ERROR" || isOffline || isUnstableNetwork) {
         setLoginStatus("UNKNOWN");
+        console.log("error here");
         return;
       }
 

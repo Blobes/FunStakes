@@ -4,7 +4,7 @@ import { Divider, Stack, Typography, useMediaQuery } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import { useNavLists } from "./NavLists";
 import { AnchorLink } from "@/components/Buttons";
-import { useController } from "@/hooks/generalHooks";
+import { useController } from "@/hooks/global";
 import { useRouter } from "next/navigation";
 import React from "react";
 

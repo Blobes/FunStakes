@@ -7,7 +7,8 @@ import { MouseEvent, useEffect, useState } from "react";
 import { useTheme } from "@mui/material/styles";
 import { flaggedRoutes } from "../helpers/routes";
 import { useRouter } from "next/navigation";
-import { checkSignal, delay } from "@/helpers/others";
+import { delay } from "@/helpers/global";
+import { checkSignal } from "@/helpers/signal";
 
 export const useController = () => {
   const {

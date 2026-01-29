@@ -4,10 +4,10 @@ import React from "react";
 import { Typography, typographyClasses } from "@mui/material";
 import { useTheme, styled } from "@mui/material/styles";
 import { NavItem, GenericObject, Page } from "@/types";
-import { matchPaths } from "@/helpers/others";
+import { matchPaths } from "@/helpers/global";
 import { usePathname } from "next/navigation";
 import { AnchorLink } from "@/components/Buttons";
-import { useController } from "@/hooks/generalHooks";
+import { useController } from "@/hooks/global";
 
 // Styled wrapper for individual nav items
 const ItemWrapper = styled(AnchorLink)(({ theme }) =>

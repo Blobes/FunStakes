@@ -10,11 +10,11 @@ import React, {
 import { Box, IconButton, Stack } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import { Close } from "@mui/icons-material";
-import { useStyles } from "@/hooks/styleHooks";
+import { useStyles } from "@/hooks/style";
 import { Direction, GenericObject } from "@/types";
 import { Transition, TransitionType } from "./Transition";
-import { useController } from "@/hooks/generalHooks";
-import { zIndexes } from "@/helpers/others";
+import { useController } from "@/hooks/global";
+import { zIndexes } from "@/helpers/global";
 
 export interface ModalRef {
   openModal: () => void;

@@ -10,7 +10,7 @@ import { GenericObject, IUser } from "@/types";
 import { useEffect, useState } from "react";
 import { Post } from "@/types";
 import { AnchorLink, AppButton } from "@/components/Buttons";
-import { summarizeNum } from "@/helpers/others";
+import { summarizeNum } from "@/helpers/numberSum";
 import { Strip } from "@/components/StripBar";
 import { img } from "@/assets/exported";
 

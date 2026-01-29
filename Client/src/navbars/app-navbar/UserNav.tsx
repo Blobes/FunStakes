@@ -12,11 +12,11 @@ import {
 import { useTheme } from "@mui/material/styles";
 import { useAppContext } from "@/app/AppContext";
 import { Strip } from "../../components/StripBar";
-import { summarizeNum } from "@/helpers/others";
+import { summarizeNum } from "@/helpers/numberSum";
 import { RenderItemList } from "../RenderItemList";
 import { MenuRef, MenuPopup } from "@/components/Menus";
 import { useNavLists } from "../NavLists";
-import { useController } from "@/hooks/generalHooks";
+import { useController } from "@/hooks/global";
 import { CircleCheckBig, WalletMinimal } from "lucide-react";
 import { ThemeMode } from "@/components/ThemeSwitcher";
 
@@ -98,9 +98,6 @@ const UserInfo = () => {
       </Stack>
       <Divider />
       <Strip
-        style={{
-          justifyContent: "space-between",
-        }}
         items={[
           {
             text: followers?.length! > 1 ? " Followers" : " Follower",
@@ -127,6 +124,9 @@ const UserInfo = () => {
             ),
           },
         ]}
+        style={{
+          justifyContent: "space-between",
+        }}
       />
     </Stack>
   );

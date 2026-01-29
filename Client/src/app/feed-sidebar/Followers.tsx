@@ -5,7 +5,7 @@ import { useUser } from "../user/userHooks";
 import { useEffect, useState } from "react";
 import { PersonOffSharp } from "@mui/icons-material";
 import { FollowerCard } from "./RightSidebarCards";
-import { delay } from "@/helpers/others";
+import { delay } from "@/helpers/global";
 import { ProgressIcon } from "@/components/Loading";
 import { Empty } from "@/components/Empty";
 

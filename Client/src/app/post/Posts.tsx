@@ -6,16 +6,14 @@ import { PostCard } from "./PostCard";
 import { CreatePost } from "./CreatePost";
 import { useEffect, useState } from "react";
 import { Post } from "@/types";
-import { usePost } from "./postHooks";
+import { usePost } from "./hooks";
 import { useAppContext } from "@/app/AppContext";
-import { delay } from "@/helpers/others";
+import { delay } from "@/helpers/global";
 import { ProgressIcon } from "@/components/Loading";
 import { Empty } from "@/components/Empty";
 import { useRouter } from "next/navigation";
 import { RadioTower } from "lucide-react";
-import { useStyles } from "@/hooks/styleHooks";
-import Image from "next/image";
-import { img } from "@/assets/exported";
+import { useStyles } from "@/hooks/style";
 
 export const Posts = () => {
   const theme = useTheme();
@@ -106,7 +104,6 @@ export const Posts = () => {
       ) : (
         posts.map((post) => <PostCard key={post._id} post={post} />)
       )}
-      <Image alt="" src={img.pic} width={400} height={800} />
     </Stack>
   );
 };

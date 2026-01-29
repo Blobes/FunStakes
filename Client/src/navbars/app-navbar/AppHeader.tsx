@@ -5,7 +5,7 @@ import { AppBar, Stack, IconButton, } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import { useRouter } from "next/navigation";
 import { useAppContext } from "@/app/AppContext";
-import { useController } from "@/hooks/generalHooks";
+import { useController } from "@/hooks/global";
 import { DesktopUserNav, MobileUserNav } from "./UserNav";
 import { SearchContainer } from "@/components/Search";
 import { UserAvatar } from "@/components/UserAvatar";
@@ -15,7 +15,7 @@ import { clientRoutes } from "@/helpers/routes";
 import { img } from "@/assets/exported";
 import Image from "next/image";
 import { Bell } from "lucide-react";
-import { zIndexes } from "@/helpers/others";
+import { zIndexes } from "@/helpers/global";
 
 interface AppHeaderProps {
   scrollRef?: React.RefObject<HTMLElement | null>;
@@ -23,7 +23,7 @@ interface AppHeaderProps {
 export const AppHeader: React.FC<AppHeaderProps> = ({ scrollRef }) => {
   const { loginStatus } = useAppContext();
   const { setLastPage, openModal, closeModal, isDesktop, handleWindowResize,
-    handleLinkClick, handleScrolling, isOnline } = useController();
+    handleLinkClick, handleScrolling } = useController();
   const theme = useTheme();
   const router = useRouter();
   const isLoggedIn = loginStatus === "AUTHENTICATED";

@@ -1,8 +1,8 @@
 "use client";
 
 import { useEffect } from "react";
-import { getFromLocalStorage } from "@/helpers/others";
-import { useController } from "@/hooks/generalHooks";
+import { getFromLocalStorage } from "@/helpers/storage";
+import { useController } from "@/hooks/global";
 import { Page } from "@/types";
 import { useTheme } from "@mui/material/styles";
 import { Posts } from "./post/Posts";

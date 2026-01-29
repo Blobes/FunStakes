@@ -5,14 +5,14 @@ import { AppBar, Stack, IconButton } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import { usePathname } from "next/navigation";
 import { useAppContext } from "@/app/AppContext";
-import { useController } from "@/hooks/generalHooks";
+import { useController } from "@/hooks/global";
 import { DesktopWebNav, MobileWebNav } from "./WebNav";
 import { AnchorLink, AppButton } from "@/components/Buttons";
 import { clientRoutes } from "@/helpers/routes";
 import { img } from "@/assets/exported";
 import Image from "next/image";
 import { Menu } from "lucide-react";
-import { zIndexes } from "@/helpers/others";
+import { zIndexes } from "@/helpers/global";
 
 export const WebHeader: React.FC = () => {
   const { loginStatus } = useAppContext();
