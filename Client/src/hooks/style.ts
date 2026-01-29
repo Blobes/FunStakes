@@ -3,15 +3,17 @@
 import { useTheme } from "@mui/material/styles";
 import { img } from "@/assets/exported";
 import { zIndexes } from "@/helpers/global";
+import { useController } from "./global";
 
 export const useStyles = () => {
   const theme = useTheme();
+  const { isDesktop } = useController();
 
   const scrollBarStyle = () => {
     return {
       "&::-webkit-scrollbar": {
-        height: "6px",
-        width: "6px",
+        height: isDesktop ? "6px" : "2px",
+        width: isDesktop ? "6px" : "2px",
       },
       "&::-webkit-scrollbar-track": {
         borderRadius: theme.radius[2],
