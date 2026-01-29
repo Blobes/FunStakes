@@ -50,7 +50,7 @@ export const ContextProvider = ({
   const [isAuthLoading, setAuthLoading] = useState(false);
   const [lastPage, setPage] = useState<Page>(clientRoutes.about);
   const [modalContent, setModalContent] = useState<ModalContent | null>(null);
-  const [networkStatus, setNetworkStatus] = useState<NetworkStatus>("STABLE");
+  const [networkStatus, setNetworkStatus] = useState<NetworkStatus>("UNKNOWN");
 
   return (
     <context.Provider

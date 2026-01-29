@@ -6,7 +6,7 @@ import { PostCard } from "./PostCard";
 import { CreatePost } from "./CreatePost";
 import { useEffect, useState } from "react";
 import { Post } from "@/types";
-import { usePost } from "./hooks";
+import { usePost } from "./hook";
 import { useAppContext } from "@/app/AppContext";
 import { delay } from "@/helpers/global";
 import { ProgressIcon } from "@/components/Loading";

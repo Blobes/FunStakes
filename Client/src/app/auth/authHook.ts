@@ -47,21 +47,23 @@ export const useAuth = () => {
       // Set login status to unkown when offline
       if (res.status === "ERROR" || isOffline || isUnstableNetwork) {
         setLoginStatus("UNKNOWN");
-        console.log("error here");
+        if (res.message)
+          setSBMessage({
+            msg: {
+              content: res.message,
+              msgStatus: "ERROR",
+              hasClose: true,
+            },
+          });
         return;
       }
 
       // Fully logged out
-      setAuthUser(null);
-      setLoginStatus("UNAUTHENTICATED");
-      if (res.message)
-        setSBMessage({
-          msg: {
-            content: res.message,
-            msgStatus: "ERROR",
-            hasClose: true,
-          },
-        });
+      if (isOnline && res.status === "UNAUTHORIZED") {
+        setAuthUser(null);
+        setLoginStatus("UNAUTHENTICATED");
+        return;
+      }
     } catch (err: any) {
       setAuthUser(null);
       setLoginStatus("UNKNOWN");

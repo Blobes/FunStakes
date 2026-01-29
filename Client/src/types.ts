@@ -8,7 +8,7 @@ export type LoginStatus =
   | "UNAUTHENTICATED"
   | "PENDING";
 
-export type NetworkStatus = "STABLE" | "UNSTABLE" | "OFFLINE";
+export type NetworkStatus = "STABLE" | "UNSTABLE" | "OFFLINE" | "UNKNOWN";
 
 export type Direction = "left" | "right" | "up" | "down";
 

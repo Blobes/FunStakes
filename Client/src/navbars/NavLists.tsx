@@ -1,5 +1,5 @@
 "use client";
-import { useAuth } from "@/app/auth/authHooks";
+import { useAuth } from "@/app/auth/authHook";
 import { clientRoutes } from "@/helpers/routes";
 import { NavItem } from "@/types";
 import {

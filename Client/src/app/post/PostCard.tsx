@@ -12,7 +12,7 @@ import { UserAvatar } from "@/components/UserAvatar";
 import { GenericObject, IUser } from "@/types";
 import { useCallback, useEffect, useState } from "react";
 import { pulse } from "@/helpers/animations";
-import { usePost } from "./hooks";
+import { usePost } from "./hook";
 import { Post } from "@/types";
 import { red } from "@mui/material/colors";
 import { summarizeNum } from "@/helpers/numberSum";
@@ -190,7 +190,6 @@ export const PostCard = ({ post, style = {} }: PostProps) => {
 
         {/* Date & time */}
         <SmartDate variant="body3" timestamp={createdAt}
-          dateType={isDesktop ? "date-only" : "shortened"}
           sx={{
             width: "fit-content",
             color: theme.palette.gray[200],

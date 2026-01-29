@@ -50,7 +50,7 @@ export const fetcher = async <T>(
     }
 
     if (error.message === "Failed to fetch" || error instanceof TypeError) {
-      throw new Error("Network connection failed");
+      throw new Error("Failed to fetch");
     }
     throw error;
   }
@@ -69,27 +69,33 @@ export const fetchUserWithTokenCheck = async (
     const res = await fetcher<{ user: IUser }>(serverRoutes.verifyAuthToken);
     return { payload: res.user, status: "SUCCESS" };
   } catch (err: any) {
-    // Check if it's a network/timeout error (status is usually undefined or 0)
-    // or a generic server error (500, 502, 503, 504)
-    const isNetworkError = !err.status || err.status >= 500;
+    // Check if it's a network/timeout error
+    const isTimeout = err.name === "AbortError";
+    const hasResponse = err.status !== undefined && err.status !== null;
+    const isFetchFailed =
+      (err.message === "Failed to fetch" || err.name === "TypeError") &&
+      !hasResponse;
+    const isServerError = err.status >= 500;
 
-    if (isNetworkError) {
+    if (isFetchFailed || isTimeout || isServerError) {
+      // If it was an Abort but NOT a timeout, it's just a UI lifecycle event (ignore it)
+      if (isTimeout && err.reason !== "timeout") {
+        return { payload: null, status: "ERROR" };
+      }
       return {
         payload: null,
-        status: "ERROR", // Add this new status
-        message: "Network is unstable. Retrying...",
+        status: "ERROR",
+        message: isTimeout ? "Request timed out." : "Network is unstable.",
       };
     }
 
     // 1. Stop the loop if we've tried 2 times
     if (attempt >= 2) {
-      console.error(
-        "Stopping infinite refresh loop. Check server-side cookie/JWT logic.",
-      );
+      console.error("Stopping infinite refresh loop.");
       return {
         payload: null,
-        message: "Session expired. Please log in again.",
         status: "UNAUTHORIZED",
+        message: "Session expired. Please log in again.",
       };
     }
 
@@ -103,10 +109,11 @@ export const fetchUserWithTokenCheck = async (
         return fetchUserWithTokenCheck(attempt + 1);
       }
     }
+
     return {
       payload: null,
-      message: msg,
       status: "UNAUTHORIZED",
+      message: msg,
     };
   }
 };

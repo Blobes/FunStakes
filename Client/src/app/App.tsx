@@ -10,9 +10,9 @@ import { Footer } from "@/navbars/Footer";
 import { Modal, ModalRef } from "@/components/Modal";
 import { useController } from "@/hooks/global";
 import { clientRoutes, flaggedRoutes } from "@/helpers/routes";
-import { matchPaths } from "@/helpers/global";
+import { delay, matchPaths } from "@/helpers/global";
 import { useTheme } from "@mui/material/styles";
-import { useAuth } from "./auth/authHooks";
+import { useAuth } from "./auth/authHook";
 import { ProgressIcon } from "@/components/Loading";
 import { Offline } from "../components/Offline";
 import { Splash } from "../components/Splash";
@@ -32,7 +32,7 @@ export const App = ({ children }: { children: React.ReactNode }) => {
     isUnstableNetwork, isOffline } = useController();
   const { setSBMessage, removeMessage, } = useSnackbar();
   const { snackBarMsg, loginStatus, modalContent, lastPage,
-    isGlobalLoading } = useAppContext();
+    isGlobalLoading, networkStatus } = useAppContext();
   const [mounted, setMounted] = useState(false);
 
   const flaggedAppRoutes = flaggedRoutes.app.filter((route) =>
@@ -62,7 +62,7 @@ export const App = ({ children }: { children: React.ReactNode }) => {
     verifySignal();
     // Verify user auth
     verifyAuth();
-  }, []);
+  }, [networkStatus]);
 
   useEffect(() => {
     // Not allowed → redirect + exit
@@ -89,10 +89,10 @@ export const App = ({ children }: { children: React.ReactNode }) => {
   // 4️⃣ BROWSER EVENTS
   // ─────────────────────────────
   useEffect(() => {
-    const handleOnline = () => {
+    const handleOnline = async () => {
       removeMessage(1);
-      verifyAuth();
       verifySignal();
+      verifyAuth();
     };
 
     const handleOffline = async () => {
@@ -118,7 +118,7 @@ export const App = ({ children }: { children: React.ReactNode }) => {
       window.removeEventListener("online", handleOnline);
       window.removeEventListener("offline", handleOffline);
     };
-  }, [pathname, lastPage, loginStatus]);
+  }, [pathname, lastPage, loginStatus,]);
 
   if (!mounted || loginStatus === "PENDING") {
     return <Splash />;

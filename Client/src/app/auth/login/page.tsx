@@ -9,7 +9,7 @@ import { clientRoutes } from "@/helpers/routes";
 import { Empty } from "@/components/Empty";
 import { ShieldCheck } from "lucide-react";
 import { useController } from "@/hooks/global";
-import { useAuth } from "../authHooks";
+import { useAuth } from "../authHook";
 import { useStyles } from "@/hooks/style";
 
 export default function LoginPage() {

@@ -9,9 +9,9 @@ export const Offline = () => {
   return (
     <Empty
       headline="Oops, something went wrong"
-      tagline="Try refreshing the page."
+      tagline="Check your internet connection."
       style={{
-        container: { padding: theme.boxSpacing(0), background: "none" },
+        container: { padding: theme.boxSpacing(16), background: "none" },
         icon: {
           width: "60px",
           height: "60px",

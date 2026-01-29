@@ -1,6 +1,6 @@
 "use client";
 
-import { useLogin } from "@/app/auth/login/loginHooks";
+import { useLogin } from "@/app/auth/login/hook";
 import { CircularProgress, Stack, Typography } from "@mui/material";
 import { useAppContext } from "@/app/AppContext";
 import { AppButton } from "@/components/Buttons";
