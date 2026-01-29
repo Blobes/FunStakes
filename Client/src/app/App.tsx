@@ -135,7 +135,7 @@ export const App = ({ children }: { children: React.ReactNode }) => {
         alignItems: !isOnline ? "center" : "unset",
         justifyContent: !isOnline ? "center" : "unset",
       }}>
-      <BlurEffect />
+      {/* <BlurEffect /> */}
 
       {(isOffline || isUnstableNetwork) && loginStatus === "UNKNOWN" ?
         <Offline /> : (
