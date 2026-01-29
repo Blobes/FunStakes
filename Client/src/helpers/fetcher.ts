@@ -107,6 +107,7 @@ export const fetchUserWithTokenCheck = async (
 
     // 2. Catch 401 (Missing/Expired) OR 403 (Invalid)
     if (err.status === 401 || err.status === 403) {
+      msg = null;
       if (attempt === 0) {
         await delay(500);
         return fetchUserWithTokenCheck(1);
