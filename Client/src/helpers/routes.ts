@@ -4,23 +4,22 @@ import { Page } from "@/types";
 
 export const clientRoutes: Record<string, Page> = {
   // Web
-  about: { title: "About", path: "/web" },
-  pricing: { title: "Pricing", path: "/web/pricing" },
-  blogs: { title: "Blogs", path: "/web/blogs" },
-  support: { title: "Support", path: "/web/support" },
-  privacy: { title: "Privacy", path: "/web/privacy" },
-  terms: { title: "Terms", path: "/web/terms" },
-  news: { title: "News", path: "/web/news" },
+  about: { title: "About", path: "/about" },
+  pricing: { title: "Pricing", path: "/pricing" },
+  blogs: { title: "Blogs", path: "/blogs" },
+  support: { title: "Support", path: "/support" },
+  privacy: { title: "Privacy", path: "/privacy" },
+  terms: { title: "Terms", path: "/terms" },
+  news: { title: "News", path: "/news" },
 
   // Auth
-  login: { title: "Login", path: "/auth/login" },
-  signup: { title: "Signup", path: "/auth/signup" },
+  login: { title: "Login", path: "/login" },
+  signup: { title: "Signup", path: "/signup" },
 
   // App
   home: { title: "Home", path: "/" },
   profile: { title: "Profile", path: "/profile" },
   bookmarks: { title: "Bookmarks", path: "/bookmarks" },
-  // timeline: { title: "Timeline", path: "/timeline" },
   stakes: { title: "Stakes", path: "/stakes" },
   explore: { title: "Explore", path: "/explore" },
   inbox: { title: "Inbox", path: "/inbox" },

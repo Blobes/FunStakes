@@ -1,5 +1,5 @@
-const STATIC_CACHE = "funstakes-static-v2";
-const API_CACHE = "funstakes-api-v2";
+const STATIC_CACHE = "funstakes-static-v3";
+const API_CACHE = "funstakes-api-v3";
 
 // Install
 self.addEventListener("install", (event) => {
@@ -15,9 +15,9 @@ self.addEventListener("activate", (event) => {
         Promise.all(
           keys
             .filter((k) => ![STATIC_CACHE, API_CACHE].includes(k))
-            .map((k) => caches.delete(k))
-        )
-      )
+            .map((k) => caches.delete(k)),
+        ),
+      ),
   );
   self.clients.claim();
 });
@@ -48,7 +48,17 @@ self.addEventListener("fetch", (event) => {
   }
 
   /* STATIC WEB PAGES */
-  if (url.pathname.startsWith("/web")) {
+  const staticPages = [
+    "/about",
+    "/support",
+    "/pricing",
+    "/privacy",
+    "/terms",
+    "/blogs",
+    "/news",
+  ];
+  const isWeb = staticPages.some((page) => url.pathname.startsWith(page));
+  if (isWeb) {
     event.respondWith(cacheFirst(request, STATIC_CACHE));
     return;
   }

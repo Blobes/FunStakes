@@ -1,9 +1,9 @@
 import { ThemeProvider } from "@mui/material/styles";
 import theme from "@/themes/theme";
 import CssBaseline from "@mui/material/CssBaseline";
-import { ContextProvider } from "./AppContext";
-import {  App } from "./App";
+import { ContextProvider } from "./GlobalContext";
 import { Metadata } from "next";
+import { GlobalManager } from "./GlobalManager";
 
 export const metadata: Metadata = {
   title: "Funstakes",
@@ -45,7 +45,7 @@ export default function RootLayout({
         <ContextProvider>
           <ThemeProvider theme={theme}>
             <CssBaseline />
-            <App>{children}</App>
+            <GlobalManager>{children}</GlobalManager>
           </ThemeProvider>
         </ContextProvider>
         <noscript>You need to enable JavaScript to run this app!</noscript>

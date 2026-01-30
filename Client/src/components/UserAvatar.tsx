@@ -6,7 +6,7 @@ import { getInitialsAndColors } from "@/helpers/colorExtractor";
 import { BasicTooltip } from "@/components/Tooltips";
 import { GenericObject } from "@/types";
 import { useTheme } from "@mui/material/styles";
-import { useAppContext } from "@/app/AppContext";
+import { useGlobalContext } from "@/app/GlobalContext";
 
 interface UserAvatarProps {
   userInfo?: { firstName?: string; lastName?: string; profileImage?: string };
@@ -24,7 +24,7 @@ export const UserAvatar = ({
   toolTipValue = "",
 }: UserAvatarProps) => {
   const theme = useTheme();
-  const { authUser } = useAppContext();
+  const { authUser } = useGlobalContext();
   const info = userInfo ?? authUser;
 
   if (!info) {

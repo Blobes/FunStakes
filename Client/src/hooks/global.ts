@@ -1,6 +1,6 @@
 "use client";
 
-import { useAppContext } from "@/app/AppContext";
+import { useGlobalContext } from "@/app/GlobalContext";
 import { ModalContent, Page } from "@/types";
 import { useMediaQuery } from "@mui/material";
 import { MouseEvent, useEffect, useState } from "react";
@@ -18,7 +18,7 @@ export const useController = () => {
     networkStatus,
     setNetworkStatus,
     setGlobalLoading,
-  } = useAppContext();
+  } = useGlobalContext();
   const theme = useTheme();
   const router = useRouter();
 

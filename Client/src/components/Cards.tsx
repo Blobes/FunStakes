@@ -15,4 +15,4 @@ import {
   Link,
 } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
-import { useAppContext } from "@/app/AppContext";
+import { useGlobalContext } from "@/app/GlobalContext";

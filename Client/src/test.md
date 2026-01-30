@@ -341,3 +341,28 @@ setSBTimer();
         //     : `${fadeOut} 0.2s linear forwards, ${moveOut({
         //       dir: entryDir,
         //     })} 0.2s linear forwards`;
+
+export const ScrollableContainer = styled(Stack)(({ theme }) =>
+theme.unstable_sx({
+overflowY: "auto",
+height: "100%",
+[theme.breakpoints.down("md")]: {
+height: "fit-content",
+width: "100%",
+overflowY: "unset",
+minWidth: "200px",
+},
+"&::-webkit-scrollbar": {
+width: "0px",
+},
+})
+);
+
+const flaggedAppRoutes = flaggedRoutes.app.filter((route) =>
+matchPaths(pathname, route)
+);
+const isAllowedRoutes =
+flaggedRoutes.auth.includes(pathname) ||
+flaggedRoutes.web.some((r) => matchPaths(pathname, r)) ||
+flaggedAppRoutes.length > 0;
+const isOnAppRoute = flaggedAppRoutes.length > 0;

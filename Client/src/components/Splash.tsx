@@ -3,18 +3,14 @@ import { img } from "@/assets/exported";
 import Image from "next/image";
 import { pulseAndRotate } from "@/helpers/animations";
 import { AnimatedWrapper } from "./AnimationWrapper";
+import { RootUIContainer } from "./Containers";
 
 
 export const Splash = () => {
   const theme = useTheme();
   return (
-    <Stack
-      sx={{
-        position: "fixed",
-        height: "100svh",
-        width: "100%",
-        gap: 0,
-        backgroundColor: theme.palette.gray[0],
+    <RootUIContainer
+      style={{
         alignItems: "center",
         justifyContent: "center",
       }}>
@@ -28,6 +24,6 @@ export const Splash = () => {
           width={54}
           height={54} />
       </AnimatedWrapper>
-    </Stack>
+    </RootUIContainer>
   );
 };

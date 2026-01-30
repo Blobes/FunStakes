@@ -97,7 +97,7 @@ export interface MsgType {
 }
 
 export interface SnackBarMsg {
-  messgages?: MsgType[];
+  messages?: MsgType[];
   defaultDur: number;
   dir?: Direction;
 }
