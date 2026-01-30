@@ -11,9 +11,9 @@ import {
 } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import { useGlobalContext } from "@/app/GlobalContext";
-import { Strip } from "../components/StripBar";
+import { Strip } from "../../../components/StripBar";
 import { summarizeNum } from "@/helpers/numberSum";
-import { RenderItemList } from "../components/RenderItems";
+import { RenderItemList } from "../../../components/RenderItems";
 import { MenuRef, MenuPopup } from "@/components/Menus";
 import { useNavLists } from "./NavLists";
 import { useController } from "@/hooks/global";

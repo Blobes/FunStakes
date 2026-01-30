@@ -1,8 +1,8 @@
 "use client"
 
 import { BlurEffect } from "@/components/BlurEffect";
-import { Footer } from "./nav/Footer";
-import { Header } from "./nav/Header";
+import { Footer } from "./navbars/Footer";
+import { Header } from "./navbars/Header";
 import { RootUIContainer } from "@/components/Containers";
 
 export default function WebLayout({

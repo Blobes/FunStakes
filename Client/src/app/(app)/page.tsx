@@ -11,7 +11,7 @@ import { Stack, Typography } from "@mui/material";
 import { RightSidebar } from "./sidebar/RightSidebar";
 import { useGlobalContext } from "../GlobalContext";
 import { AppButton } from "@/components/Buttons";
-import { Footer } from "../(web)/nav/Footer";
+import { Footer } from "../(web)/navbars/Footer";
 
 export default function HomePage() {
   const router = useRouter();

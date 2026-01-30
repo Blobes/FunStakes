@@ -1,4 +1,4 @@
-import { Stack, Typography, useTheme } from "@mui/material";
+import { Typography, useTheme } from "@mui/material";
 import { useRouter } from "next/navigation";
 import { Empty } from "@/components/Empty";
 import { Unplug } from "lucide-react";
@@ -16,15 +16,16 @@ export const Offline = () => {
       style={{
         alignItems: "center",
         justifyContent: "center",
+        gap: theme.gap(30)
       }}>
       {isGlobalLoading ? (
         <>
           <ProgressIcon otherProps={{ size: "30px" }} />
-          <Typography variant="body1"
+          <Typography variant="body2"
             sx={{
-              marginTop: theme.boxSpacing(10),
               textAlign: "center",
-              fontWeight: "500"
+              fontWeight: "500",
+              fontStyle: "italic"
             }}>Retrieving connection...</Typography>
         </>) :
         (<Empty

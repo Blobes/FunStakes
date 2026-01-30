@@ -3,12 +3,12 @@
 import { useController } from "@/hooks/global";
 import { Stack } from "@mui/material";
 import { useGlobalContext } from "../GlobalContext";
-import { LeftNav } from "@/navbars/LeftNav";
+import { LeftNav } from "@/app/(app)/navbars/LeftNav";
 import { useTheme } from "@mui/material/styles";
 import { useStyles } from "@/hooks/style";
-import { AppHeader } from "@/navbars/Header";
+import { AppHeader } from "@/app/(app)/navbars/Header";
 import { usePathname } from "next/navigation";
-import { BottomNav } from "@/navbars/BottomNav";
+import { BottomNav } from "@/app/(app)/navbars/BottomNav";
 import { useRef } from "react";
 
 export const AppWrapper = ({ children }: { children: React.ReactNode }) => {
