@@ -3,7 +3,6 @@
 import React, { useEffect } from "react";
 import { AppBar, Stack, IconButton } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
-import { usePathname } from "next/navigation";
 import { useGlobalContext } from "@/app/GlobalContext";
 import { useController } from "@/hooks/global";
 import { DesktopNav, MobileNav } from "./Nav";
@@ -21,7 +20,7 @@ export const Header: React.FC = () => {
     closeModal,
     isDesktop,
     handleWindowResize,
-    handleLinkClick,
+    handleClick,
   } = useController();
   const theme = useTheme();
   const isLoggedIn = loginStatus === "AUTHENTICATED";
@@ -29,6 +28,7 @@ export const Header: React.FC = () => {
   /* ---------------------------------- effects --------------------------------- */
   useEffect(() => {
     window.addEventListener("resize", handleWindowResize);
+    // openMobileWebNav()
     return () => window.removeEventListener("resize", handleWindowResize);
   }, []);
 
@@ -66,81 +66,79 @@ export const Header: React.FC = () => {
         gap: theme.gap(6),
         borderBottom: `1px solid ${theme.palette.gray.trans[1]}`,
       }}>
-
-
-
       {/* Logo */}
       <AnchorLink
         url={clientRoutes.home.path}
-        onClick={(e: React.MouseEvent<HTMLAnchorElement>) =>
-          handleLinkClick(e, clientRoutes.about)
-        }
-        style={{ display: "inline-flex" }}
-        icon={
-          <Image
-            src={img.logo}
-            alt="logo"
-            style={{
-              width: 38,
-              height: 38,
-              borderRadius: `${theme.radius.full}`,
-            }}
-          />
-        }
-      />
+        onClick={() =>
+          handleClick(clientRoutes.about)
+        }>
+        <Image
+          src={img.logo}
+          alt="logo"
+          style={{
+            width: 34,
+            height: 34,
+            borderRadius: `${theme.radius.full}`,
+          }}
+        />
+      </AnchorLink>
 
       {/* Right controls */}
-      {isDesktop && (
-        <Stack direction="row" alignItems="center" spacing={theme.gap(8)}>
-          <DesktopNav
-            style={{
-              display: { xs: "none", md: "flex", flexDirection: "row" },
-              gap: theme.gap(4),
-            }}
-          />
+      {
+        isDesktop && (
+          <Stack direction="row" alignItems="center" spacing={theme.gap(8)}>
+            <DesktopNav
+              style={{
+                display: { xs: "none", md: "flex", flexDirection: "row" },
+                gap: theme.gap(4),
+              }}
+            />
 
-          {isLoggedIn && (
-            <AppButton
-              href={clientRoutes.home.path}
-              variant="outlined"
-              style={{ fontSize: "14px" }}
-              onClick={(e: React.MouseEvent<HTMLButtonElement>) =>
-                handleLinkClick(e, clientRoutes.home)
-              }>
-              Go to funstakes.com
-            </AppButton>
-          )}
-
-          {loginStatus === "UNAUTHENTICATED" && (
-            <Stack direction="row" alignItems="center" spacing={theme.gap(0)}>
+            {isLoggedIn && (
               <AppButton
-                href={clientRoutes.signup.path}
-                style={{ fontSize: "14px" }}
-                onClick={(e: React.MouseEvent<HTMLButtonElement>) =>
-                  handleLinkClick(e, clientRoutes.signup, false)
-                }>
-                Sign up
-              </AppButton>
-              <AppButton
-                href={clientRoutes.login.path}
+                href={clientRoutes.home.path}
                 variant="outlined"
                 style={{ fontSize: "14px" }}
-                onClick={(e: React.MouseEvent<HTMLButtonElement>) =>
-                  handleLinkClick(e, clientRoutes.login, false)
+                onClick={(e: React.MouseEvent) =>
+                  handleClick(clientRoutes.home, e, { type: "element" })
                 }>
-                Login
+                Go to funstakes.com
               </AppButton>
-            </Stack>
-          )}
-        </Stack>)}
+            )}
+
+            {loginStatus === "UNAUTHENTICATED" && (
+              <Stack direction="row" alignItems="center" spacing={theme.gap(0)}>
+                <AppButton
+                  href={clientRoutes.signup.path}
+                  style={{ fontSize: "14px" }}
+                  onClick={(e: React.MouseEvent<HTMLButtonElement>) =>
+                    handleClick(clientRoutes.signup, e, { type: "element", savePage: false })
+                  }>
+                  Sign up
+                </AppButton>
+                <AppButton
+                  href={clientRoutes.login.path}
+                  variant="outlined"
+                  style={{ fontSize: "14px" }}
+                  onClick={(e: React.MouseEvent<HTMLButtonElement>) =>
+                    handleClick(clientRoutes.login, e, { type: "element", savePage: false })
+                  }>
+                  Login
+                </AppButton>
+              </Stack>
+            )}
+          </Stack>)
+      }
 
       {/* Mobile hamburger (logged out only) */}
-      {!isDesktop && (
-        <IconButton onClick={openMobileWebNav} aria-label="Open menu">
-          <Menu />
-        </IconButton>
-      )}
+      {
+        !isDesktop && (
+          <IconButton onClick={openMobileWebNav} aria-label="Open menu">
+            <Menu />
+          </IconButton>
+        )
+      }
 
-    </AppBar>
+    </AppBar >
   );
 };

@@ -116,7 +116,7 @@ let designSystem = createTheme({
   },
 
   // Spacing Between Elements
-  gap: (value: number) => `${value * 2}px`,
+  gap: (value = 0) => `${value * 2}px`,
 });
 
 designSystem = responsiveFontSizes(designSystem);

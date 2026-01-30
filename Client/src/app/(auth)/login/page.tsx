@@ -52,16 +52,13 @@ export default function LoginPage() {
           style={{
             container: {
               padding: theme.boxSpacing(18),
-              backgroundColor: theme.palette.gray[50]
+              backgroundColor: theme.palette.gray[0],
+              border: `1px solid ${theme.fixedColors.mainTrans}`
             },
             primaryCta: { width: "100%" },
             icon: {
               width: "40px",
               height: "40px",
-              svg: {
-                fill: "none",
-                strokeWidth: "1px",
-              },
             },
           }}
           icon={<ShieldCheck />}

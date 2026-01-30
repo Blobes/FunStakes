@@ -12,23 +12,8 @@ export const Footer = () => {
   const theme = useTheme();
 
   const { footerNavList } = useNavLists();
-  const { setLastPage } = useController();
-  const router = useRouter();
+  const { handleClick } = useController();
 
-  const handleClick = (
-    e: React.MouseEvent<HTMLAnchorElement>,
-    title?: string,
-    url?: string
-  ) => {
-    e.preventDefault();
-    if (title && url) {
-      setLastPage({
-        title: title,
-        path: url,
-      });
-      router.push(url);
-    }
-  };
 
   return (
     <Stack
@@ -44,8 +29,9 @@ export const Footer = () => {
         <React.Fragment key={index}>
           <AnchorLink
             url={item.url ?? "#"}
-            onClick={(e: React.MouseEvent<HTMLAnchorElement>) => {
-              handleClick(e, item.title, item.url);
+            onClick={() => {
+              if (item.title && item.url)
+                handleClick({ title: item.title, path: item.url })
             }}
             style={{
               color: theme.palette.gray[200],

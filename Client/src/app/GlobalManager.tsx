@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useEffect, useRef, useState } from "react";
-import { usePathname, useRouter } from "next/navigation";
 import { SnackBars } from "@/components/SnackBars";
 import { useGlobalContext } from "./GlobalContext";
 import { Modal, ModalRef } from "@/components/Modal";
@@ -10,16 +9,12 @@ import { delay } from "@/helpers/global";
 import { useAuth } from "@/app/(auth)/authHook";
 import { Offline } from "../components/Offline";
 import { Splash } from "../components/Splash";
-import { useSnackbar } from "@/hooks/snackbar";
 import { registerSW } from "@/helpers/registerSW";
 
 export const GlobalManager = ({ children }: { children: React.ReactNode }) => {
-    const pathname = usePathname();
-    const router = useRouter();
-    const { verifyAuth } = useAuth();
+    const { verifyAuth, handleBrowserEvents } = useAuth();
     const modalRef = useRef<ModalRef>(null);
     const { openModal, verifySignal, isUnstableNetwork, isOffline } = useController();
-    const { setSBMessage, removeMessage, } = useSnackbar();
     const { snackBarMsg, loginStatus, modalContent, lastPage,
         networkStatus } = useGlobalContext();
     const [mounted, setMounted] = useState(false);
@@ -28,6 +23,8 @@ export const GlobalManager = ({ children }: { children: React.ReactNode }) => {
     // SERVICE WORKER REGISTRATION
     useEffect(() => {
         registerSW()
+        //Browser Events
+        handleBrowserEvents()
     }, []);
 
     // MOUNT & INITIAL AUTH CHECK
@@ -46,11 +43,11 @@ export const GlobalManager = ({ children }: { children: React.ReactNode }) => {
                 });
             }
             await verifySignal();
-            await delay(1000)
+            await delay(500)
             await verifyAuth();
         }
         init();
-    }, []);
+    }, [networkStatus]);
 
     // MODAL OPEN / CLOSE
     useEffect(() => {
@@ -63,47 +60,18 @@ export const GlobalManager = ({ children }: { children: React.ReactNode }) => {
         });
     }, [modalContent, openModal]);
 
-    // BROWSER EVENTS
-    useEffect(() => {
-        const handleOnline = async () => {
-            removeMessage(1);
-            verifySignal();
-            verifyAuth();
-        };
 
-        const handleOffline = async () => {
-            setSBMessage({
-                msg: {
-                    id: 1,
-                    title: "No internet connection",
-                    content: "Refresh the page.",
-                    msgStatus: "ERROR",
-                    behavior: "FIXED",
-                    hasClose: true,
-                    cta: {
-                        label: "Refresh",
-                        action: () => router.refresh(),
-                    },
-                },
-            });
-        };
-
-        window.addEventListener("online", handleOnline);
-        window.addEventListener("offline", handleOffline);
-        return () => {
-            window.removeEventListener("online", handleOnline);
-            window.removeEventListener("offline", handleOffline);
-        };
-    }, [pathname, lastPage, loginStatus,]);
-
+    // RENDER UIs
+    // Conditionally render the splash UI
     if (!mounted || loginStatus === "PENDING") {
         return <Splash />;
     }
-
+    // Conditionally render the offline UI
     if ((isOffline || isUnstableNetwork) && loginStatus === "UNKNOWN") {
         return <Offline />;
     }
 
+    // Conditionally render the app UIs
     return (
         <>
             {children}

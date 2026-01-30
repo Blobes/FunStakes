@@ -63,7 +63,9 @@ export const Empty: React.FC<EmptyProps> = ({
             "& svg": {
               width: "100%",
               height: "100%",
-              fill: theme.palette.gray[200],
+              strokeColor: theme.palette.gray[300],
+              strokeWidth: "1.2px",
+              fill: "none",
               ...style?.icon?.svg,
             },
             ...style?.icon,
@@ -101,7 +103,7 @@ export const Empty: React.FC<EmptyProps> = ({
             style={{
               fontSize: "14px",
               padding: theme.boxSpacing(2, 6),
-              marginTop: theme.boxSpacing(6),
+              margin: theme.boxSpacing(10, 0, 2, 0),
               ...style?.primaryCta,
             }}
             onClick={primaryCta.action}>
@@ -119,7 +121,7 @@ export const Empty: React.FC<EmptyProps> = ({
           <AppButton
             variant="text"
             onClick={secondaryCta.action}
-            style={{ ...style?.secondaryCta }}>
+            style={{ padding: theme.boxSpacing(2, 6), ...style?.secondaryCta }}>
             {secondaryCta.label || "Start"}
           </AppButton>
         ) : (

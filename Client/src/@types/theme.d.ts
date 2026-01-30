@@ -35,10 +35,10 @@ declare module "@mui/material/styles" {
     fixedColors: GenericObject<string>;
     radius: GenericObject<string>;
     boxSpacing: (
-      val1: number,
-      val2?: number,
-      val3?: number,
-      val4?: number,
+      top: number,
+      right?: number,
+      bottom?: number,
+      left?: number,
     ) => string;
     gap: (value: number) => string;
   }

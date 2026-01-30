@@ -6,7 +6,7 @@ import { useTheme } from "@mui/material/styles";
 import { useRouter } from "next/navigation";
 import { useGlobalContext } from "@/app/GlobalContext";
 import { useController } from "@/hooks/global";
-import { DesktopUserNav, MobileUserNav } from "./UserNav";
+import { DesktopNav, MobileNav } from "./Nav";
 import { SearchContainer } from "@/components/Search";
 import { UserAvatar } from "@/components/UserAvatar";
 import { AnchorLink, AppButton } from "@/components/Buttons";
@@ -23,7 +23,7 @@ interface AppHeaderProps {
 export const AppHeader: React.FC<AppHeaderProps> = ({ scrollRef }) => {
   const { loginStatus } = useGlobalContext();
   const { setLastPage, openModal, closeModal, isDesktop, handleWindowResize,
-    handleLinkClick, handleScrolling } = useController();
+    handleClick, handleScrolling } = useController();
   const theme = useTheme();
   const router = useRouter();
   const isLoggedIn = loginStatus === "AUTHENTICATED";
@@ -34,9 +34,7 @@ export const AppHeader: React.FC<AppHeaderProps> = ({ scrollRef }) => {
   /* ---------------------------------- effects --------------------------------- */
   useEffect(() => {
     window.addEventListener("resize", handleWindowResize);
-
-    //openMobileUserNav()
-
+    // openMobileNav()
     return () => window.removeEventListener("resize", handleWindowResize);
   }, []);
 
@@ -48,10 +46,10 @@ export const AppHeader: React.FC<AppHeaderProps> = ({ scrollRef }) => {
     router.push(clientRoutes.notifications.path);
   };
 
-  const openMobileUserNav = () =>
+  const openMobileNav = () =>
     openModal({
       header: <UserAvatar style={{ width: "35px", height: "35px" }} />,
-      content: <MobileUserNav />,
+      content: <MobileNav />,
       source: "navbar",
       onClose: closeModal,
       style: {
@@ -101,22 +99,19 @@ export const AppHeader: React.FC<AppHeaderProps> = ({ scrollRef }) => {
       {(!isLoggedIn || isLoggedIn && !isDesktop) && (
         <AnchorLink
           url={clientRoutes.home.path}
-          onClick={(e: React.MouseEvent<HTMLAnchorElement>) => {
-            handleLinkClick(e, clientRoutes.home);
+          onClick={() => {
+            handleClick(clientRoutes.home);
           }}
           style={{ display: "inline-flex" }}
-          icon={
-            <Image
-              src={img.logo}
-              alt="logo"
-              style={{
-                width: 34,
-                height: 34,
-                borderRadius: `${theme.radius.full}`,
-              }}
-            />
-          }
-        />
+        ><Image
+            src={img.logo}
+            alt="logo"
+            style={{
+              width: 34,
+              height: 34,
+              borderRadius: `${theme.radius.full}`,
+            }}
+          /></AnchorLink>
       )}
 
       {/* Search */}
@@ -126,7 +121,7 @@ export const AppHeader: React.FC<AppHeaderProps> = ({ scrollRef }) => {
       <Stack direction="row" alignItems="center" spacing={theme.gap(8)}>
         {isLoggedIn && (
           <>
-            {isDesktop && <DesktopUserNav menuRef={menuRef} />}
+            {isDesktop && <DesktopNav menuRef={menuRef} />}
             <UserAvatar
               toolTipValue="Open menu"
               style={{
@@ -138,7 +133,7 @@ export const AppHeader: React.FC<AppHeaderProps> = ({ scrollRef }) => {
               action={(e) => {
                 isDesktop
                   ? menuRef.current?.openMenu(e.currentTarget)
-                  : openMobileUserNav();
+                  : openMobileNav();
               }}
             />
           </>
@@ -150,8 +145,8 @@ export const AppHeader: React.FC<AppHeaderProps> = ({ scrollRef }) => {
             href={clientRoutes.login.path}
             variant="outlined"
             style={{ fontSize: "14px" }}
-            onClick={(e: React.MouseEvent<HTMLButtonElement>) =>
-              handleLinkClick(e, clientRoutes.login, false)
+            onClick={(e: React.MouseEvent) =>
+              handleClick(clientRoutes.login, e, { type: "element", savePage: false })
             }>
             Sign in
           </AppButton>

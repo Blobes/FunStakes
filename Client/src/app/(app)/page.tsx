@@ -12,11 +12,12 @@ import { RightSidebar } from "./sidebar/RightSidebar";
 import { useGlobalContext } from "../GlobalContext";
 import { AppButton } from "@/components/Buttons";
 import { Footer } from "../(web)/navbars/Footer";
+import { clientRoutes } from "@/helpers/routes";
 
 export default function HomePage() {
   const router = useRouter();
   const pathname = usePathname();
-  const { isDesktop } = useController();
+  const { isDesktop, handleClick } = useController();
   const theme = useTheme();
   const savedPage = getFromLocalStorage<Page>();
   const savedPath = savedPage?.path;
@@ -52,10 +53,11 @@ export default function HomePage() {
         <Typography component="h5">
           Join millions of stakers on FunStakes
         </Typography>
-        <AppButton onClick={() => router.replace("/auth/login")}>
+        <AppButton href={clientRoutes.signup.path} onClick={(e: React.MouseEvent) =>
+          handleClick(clientRoutes.signup, e, { type: "element", savePage: false })}>
           Get started
         </AppButton>
-      </Stack>
+      </Stack >
       <Footer />
     </>
 

@@ -36,10 +36,6 @@ export const Offline = () => {
             icon: {
               width: "60px",
               height: "60px",
-              svg: {
-                fill: "none",
-                strokeWidth: "1.2px",
-              },
             },
           }}
           icon={<Unplug />}

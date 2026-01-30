@@ -56,7 +56,6 @@ export const CreatePost = () => {
         }}>
         <AppButton
           variant="contained"
-          iconLeft={<Image sx={{ width: "20px", fill: "#E9741B" }} />}
           style={{
             fontSize: "14px",
             backgroundColor: theme.palette.gray.trans[1],
@@ -65,11 +64,10 @@ export const CreatePost = () => {
               backgroundColor: theme.palette.gray.trans[2],
             },
           }}>
-          Image
+          <Image sx={{ width: "20px", fill: "#E9741B" }} /> Image
         </AppButton>
         <AppButton
           variant="contained"
-          iconLeft={<PlayCircle sx={{ width: "20px", fill: "#18CD63" }} />}
           style={{
             fontSize: "14px",
             backgroundColor: theme.palette.gray.trans[1],
@@ -78,7 +76,7 @@ export const CreatePost = () => {
               backgroundColor: theme.palette.gray.trans[2],
             },
           }}>
-          Video
+          <PlayCircle sx={{ width: "20px", fill: "#18CD63" }} /> Video
         </AppButton>
       </Stack>
     </Stack>

@@ -49,15 +49,21 @@ export const useController = () => {
     }
   };
 
-  const handleLinkClick = (
-    e: MouseEvent<HTMLAnchorElement | HTMLButtonElement>,
+  interface ClickOptions {
+    type?: "element" | "link";
+    savePage?: boolean;
+  }
+  const handleClick = (
     page: Page,
-    savePage: boolean = true,
+    e?: React.MouseEvent,
+    option: ClickOptions = { type: "link", savePage: true },
   ) => {
-    e.preventDefault();
-    if (savePage) setLastPage(page);
+    if (option.savePage) setLastPage(page);
     if (modalContent) closeModal();
-    router.push(page.path);
+    if (option.type === "element") {
+      e?.preventDefault();
+      router.push(page.path);
+    }
   };
 
   const handleScrolling = (ref?: React.RefObject<HTMLElement | null>) => {
@@ -115,7 +121,7 @@ export const useController = () => {
     isOnWeb,
     isOnAuth,
     handleWindowResize,
-    handleLinkClick,
+    handleClick,
     handleScrolling,
     verifySignal,
     isOnline,

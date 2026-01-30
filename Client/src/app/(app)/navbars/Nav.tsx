@@ -20,7 +20,7 @@ import { useController } from "@/hooks/global";
 import { CircleCheckBig, WalletMinimal } from "lucide-react";
 import { ThemeMode } from "@/components/ThemeSwitcher";
 
-export const DesktopUserNav = ({
+export const DesktopNav = ({
   menuRef,
 }: {
   menuRef: React.RefObject<MenuRef>;
@@ -132,7 +132,7 @@ const UserInfo = () => {
   );
 };
 
-export const MobileUserNav = ({ }) => {
+export const MobileNav = ({ }) => {
   const theme = useTheme();
   const { userNavList } = useNavLists();
   const { closeModal } = useController();
@@ -159,16 +159,14 @@ export const MobileUserNav = ({ }) => {
           showCurrentPage={false}
           style={{
             gap: theme.gap(10),
-            padding: "0",
+            padding: 0,
             background: "none",
+            width: "100%",
+            textAlign: "left",
+            fontSize: "18px",
             "&:hover": {
               background: "none",
-            },
-            [`& .${typographyClasses.root}`]: {
-              fontSize: "18px",
-              "&:hover": {
-                color: theme.palette.primary.dark,
-              },
+              color: theme.palette.primary.dark + "!important",
             },
             "& svg": {
               width: "22px",

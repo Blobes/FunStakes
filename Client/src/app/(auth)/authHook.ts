@@ -13,9 +13,15 @@ import { getFromLocalStorage } from "@/helpers/storage";
 export const useAuth = () => {
   const { setAuthUser, lastPage, setLoginStatus, setSnackBarMsg } =
     useGlobalContext();
-  const { setLastPage, isOnAuth, isOffline, isOnline, isUnstableNetwork } =
-    useController();
-  const { setSBMessage } = useSnackbar();
+  const {
+    setLastPage,
+    isOnAuth,
+    isOffline,
+    isOnline,
+    isUnstableNetwork,
+    verifySignal,
+  } = useController();
+  const { setSBMessage, removeMessage } = useSnackbar();
   const router = useRouter();
   const pathname = usePathname();
 
@@ -33,7 +39,6 @@ export const useAuth = () => {
           : { title: extractPageTitle(pagePath), path: pagePath },
       );
     }
-
     try {
       const res = await fetchUserWithTokenCheck();
 
@@ -43,17 +48,14 @@ export const useAuth = () => {
         setLoginStatus("AUTHENTICATED");
         return;
       }
-
       // SILENT RETRY: The "Cold Boot" Fix
       // If we get UNAUTHORIZED on the first try, wait 800ms and try one more time
       // This catches instances where cookies weren't attached because the browser was idle
       if (res.status === "UNAUTHORIZED" && retryCount === 0 && isOnline) {
         console.warn("Auth failed on cold boot. Performing silent retry...");
-        //  await new Promise((resolve) => setTimeout(resolve, 800));
-        await delay(1500);
+        await delay(1000);
         return verifyAuth(1);
       }
-
       // NETWORK ERROR / OFFLINE
       if (res.status === "ERROR" || isOffline || isUnstableNetwork) {
         setLoginStatus("UNKNOWN");
@@ -78,7 +80,7 @@ export const useAuth = () => {
     } catch (err: any) {
       // If a hard crash happens, try one silent retry before showing error
       if (retryCount === 0 && isOnline) {
-        await new Promise((resolve) => setTimeout(resolve, 800));
+        await delay(800);
         return verifyAuth(1);
       }
       setAuthUser(null);
@@ -87,6 +89,38 @@ export const useAuth = () => {
         msg: { content: "Unable to verify session", msgStatus: "ERROR" },
       });
     }
+  };
+
+  const handleBrowserEvents = () => {
+    const online = async () => {
+      removeMessage(1);
+      await verifySignal();
+      await delay(500);
+      await verifyAuth();
+    };
+
+    const offline = () => {
+      setSBMessage({
+        msg: {
+          id: 1,
+          title: "No internet connection",
+          content: "Refresh the page.",
+          msgStatus: "ERROR",
+          behavior: "FIXED",
+          hasClose: true,
+          cta: {
+            label: "Refresh",
+            action: () => router.refresh(),
+          },
+        },
+      });
+    };
+    window.addEventListener("online", online);
+    window.addEventListener("offline", offline);
+    return () => {
+      window.removeEventListener("online", online);
+      window.removeEventListener("offline", offline);
+    };
   };
 
   // Logout
@@ -115,5 +149,6 @@ export const useAuth = () => {
   return {
     verifyAuth,
     handleLogout,
+    handleBrowserEvents,
   };
 };

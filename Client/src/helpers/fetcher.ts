@@ -96,7 +96,7 @@ export const fetchUserWithTokenCheck = async (
     }
 
     // 1. Stop the loop if we've tried 2 times
-    if (attempt >= 3) {
+    if (attempt >= 2) {
       console.error("Stopping infinite refresh loop.");
       return {
         payload: null,
@@ -109,7 +109,7 @@ export const fetchUserWithTokenCheck = async (
     if (err.status === 401 || err.status === 403) {
       msg = null;
       if (attempt === 0) {
-        await delay(1000);
+        await delay(500);
         return fetchUserWithTokenCheck(1);
       }
       // If we already waited or if the wait didn't work, try to refresh.
