@@ -1,5 +1,5 @@
 "use client";
-import { useAuth } from "@/app/auth/authHook";
+import { useAuth } from "@/app/(auth)/authHook";
 import { clientRoutes } from "@/helpers/routes";
 import { NavItem } from "@/types";
 import {
@@ -18,54 +18,9 @@ import {
   User,
   WalletMinimal,
 } from "lucide-react";
+
 export const useNavLists = () => {
   const { handleLogout } = useAuth();
-
-  // Web navigation list visible to all users on the web
-  const webNavList: NavItem[] = [
-    {
-      title: clientRoutes.support.title,
-      element: <BadgeQuestionMark />,
-      url: clientRoutes.support.path,
-    },
-    {
-      title: clientRoutes.pricing.title,
-      element: <Gem />,
-      url: clientRoutes.pricing.path,
-    },
-  ];
-
-  // Footer navigation list visible to all users
-  const footerNavList: NavItem[] = [
-    {
-      title: clientRoutes.about.title,
-      url: clientRoutes.about.path,
-    },
-    {
-      title: clientRoutes.support.title,
-      url: clientRoutes.support.path,
-    },
-    {
-      title: clientRoutes.pricing.title,
-      url: clientRoutes.pricing.path,
-    },
-    {
-      title: clientRoutes.blogs.title,
-      url: clientRoutes.blogs.path,
-    },
-    {
-      title: clientRoutes.privacy.title,
-      url: clientRoutes.privacy.path,
-    },
-    {
-      title: clientRoutes.terms.title,
-      url: clientRoutes.terms.path,
-    },
-    {
-      title: clientRoutes.news.title,
-      url: clientRoutes.news.path,
-    },
-  ];
 
   // User profile navigation list visible to only logged-in users
   const userNavList: NavItem[] = [
@@ -141,5 +96,5 @@ export const useNavLists = () => {
     },
   ];
 
-  return { webNavList, userNavList, footerNavList, sidebarNavList };
+  return { userNavList, sidebarNavList };
 };

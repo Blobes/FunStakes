@@ -1,10 +1,10 @@
 "use client";
 
-import { useAppContext } from "@/app/AppContext";
+import { useGlobalContext } from "@/app/GlobalContext";
 import { MsgType } from "@/types";
 
 export const useSnackbar = () => {
-  const { snackBarMsg, setSnackBarMsg } = useAppContext();
+  const { snackBarMsg, setSnackBarMsg } = useGlobalContext();
 
   interface SBMessage {
     msg?: MsgType;
@@ -24,15 +24,15 @@ export const useSnackbar = () => {
     setTimeout(() => {
       setSnackBarMsg((prev) => ({
         ...prev,
-        messgages: override ? [newMsg] : [...(prev.messgages ?? []), newMsg],
+        messages: override ? [newMsg] : [...(prev.messages ?? []), newMsg],
       }));
     }, delay);
   };
 
   const setSBTimer = () => {
-    if (!snackBarMsg.messgages || snackBarMsg.messgages.length === 0) return;
+    if (!snackBarMsg.messages || snackBarMsg.messages.length === 0) return;
 
-    const timers = snackBarMsg.messgages.map((msg) => {
+    const timers = snackBarMsg.messages.map((msg) => {
       let remaining = msg.duration ?? snackBarMsg.defaultDur;
       if (msg.behavior === "TIMED") {
         const intervalId = setInterval(() => {
@@ -51,10 +51,10 @@ export const useSnackbar = () => {
 
   const removeSBMessage = async (id: number) => {
     setSnackBarMsg((prev) => {
-      const updatedMsgs = prev.messgages?.filter((m) => m.id !== id) || [];
+      const updatedMsgs = prev.messages?.filter((m) => m.id !== id) || [];
       return {
         ...prev,
-        messgages: updatedMsgs,
+        messages: updatedMsgs,
       };
     });
   };

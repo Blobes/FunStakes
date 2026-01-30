@@ -109,7 +109,7 @@ export const fetchUserWithTokenCheck = async (
     if (err.status === 401 || err.status === 403) {
       msg = null;
       if (attempt === 0) {
-        await delay(500);
+        await delay(1000);
         return fetchUserWithTokenCheck(1);
       }
       // If we already waited or if the wait didn't work, try to refresh.

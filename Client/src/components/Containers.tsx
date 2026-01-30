@@ -1,18 +1,26 @@
-import { styled } from "@mui/material/styles";
-import { Stack } from "@mui/material";
+"use client"
 
-export const ScrollableContainer = styled(Stack)(({ theme }) =>
-  theme.unstable_sx({
-    overflowY: "auto",
-    height: "100%",
-    [theme.breakpoints.down("md")]: {
-      height: "fit-content",
-      width: "100%",
-      overflowY: "unset",
-      minWidth: "200px",
-    },
-    "&::-webkit-scrollbar": {
-      width: "0px",
-    },
-  })
-);
+import { Stack } from "@mui/material";
+import { useTheme } from "@mui/material/styles";
+
+
+interface UIProps {
+  children: React.ReactNode;
+  style?: any
+}
+export const RootUIContainer = ({ children, style }: UIProps) => {
+  const theme = useTheme();
+  return (
+    <Stack
+      sx={{
+        position: "fixed",
+        height: "100svh",
+        width: "100%",
+        gap: 0,
+        backgroundColor: theme.palette.gray[0],
+        ...style
+      }}>
+      {children}
+    </Stack>
+  )
+}

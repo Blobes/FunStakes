@@ -6,7 +6,7 @@ import { SnackBarMsg } from "@/types";
 import { AppButton } from "./Buttons";
 import { Info, CircleCheck, CircleAlert, X } from "lucide-react";
 import { useEffect } from "react";
-import { useAppContext } from "@/app/AppContext";
+import { useGlobalContext } from "@/app/GlobalContext";
 import { useSnackbar } from "@/hooks/snackbar";
 import { GroupTransition, Transition } from "./Transition";
 import { zIndexes } from "@/helpers/global";
@@ -18,9 +18,9 @@ interface SnackbarProps {
 export const SnackBars = ({ snackBarMsg }: SnackbarProps) => {
   const theme = useTheme();
   const { setSBTimer, removeMessage } = useSnackbar();
-  const { setSnackBarMsg } = useAppContext();
+  const { setSnackBarMsg } = useGlobalContext();
 
-  if (!snackBarMsg.messgages || snackBarMsg.messgages.length === 0) {
+  if (!snackBarMsg.messages || snackBarMsg.messages.length === 0) {
     return null
   };
 
@@ -41,7 +41,7 @@ export const SnackBars = ({ snackBarMsg }: SnackbarProps) => {
       }}
     >
       <GroupTransition>
-        {snackBarMsg.messgages.map((msg) => {
+        {snackBarMsg.messages.map((msg) => {
           return (
             <Transition
               key={msg.id}

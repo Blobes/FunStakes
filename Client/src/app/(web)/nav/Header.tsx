@@ -1,0 +1,146 @@
+"use client";
+
+import React, { useEffect } from "react";
+import { AppBar, Stack, IconButton } from "@mui/material";
+import { useTheme } from "@mui/material/styles";
+import { usePathname } from "next/navigation";
+import { useGlobalContext } from "@/app/GlobalContext";
+import { useController } from "@/hooks/global";
+import { DesktopNav, MobileNav } from "./Nav";
+import { AnchorLink, AppButton } from "@/components/Buttons";
+import { clientRoutes } from "@/helpers/routes";
+import { img } from "@/assets/exported";
+import Image from "next/image";
+import { Menu } from "lucide-react";
+import { zIndexes } from "@/helpers/global";
+
+export const Header: React.FC = () => {
+  const { loginStatus } = useGlobalContext();
+  const {
+    openModal,
+    closeModal,
+    isDesktop,
+    handleWindowResize,
+    handleLinkClick,
+  } = useController();
+  const theme = useTheme();
+  const isLoggedIn = loginStatus === "AUTHENTICATED";
+
+  /* ---------------------------------- effects --------------------------------- */
+  useEffect(() => {
+    window.addEventListener("resize", handleWindowResize);
+    return () => window.removeEventListener("resize", handleWindowResize);
+  }, []);
+
+  /* -------------------------------- handlers --------------------------------- */
+
+  const openMobileWebNav = () =>
+    openModal({
+      content: (
+        <MobileNav
+          style={{
+            gap: theme.gap(4),
+          }}
+        />
+      ),
+      source: "navbar",
+      onClose: () => closeModal(),
+      style: {
+        base: { content: { height: "100%" } },
+      },
+    });
+
+  /* ---------------------------------- render ---------------------------------- */
+  return (
+    <AppBar
+      position="sticky"
+      component="nav"
+      aria-label="Main navigation"
+      role="navigation"
+      sx={{
+        zIndex: zIndexes[500],
+        display: "flex",
+        justifyContent: "space-between",
+        alignItems: "center",
+        flexDirection: "row",
+        gap: theme.gap(6),
+        borderBottom: `1px solid ${theme.palette.gray.trans[1]}`,
+      }}>
+
+
+
+      {/* Logo */}
+      <AnchorLink
+        url={clientRoutes.home.path}
+        onClick={(e: React.MouseEvent<HTMLAnchorElement>) =>
+          handleLinkClick(e, clientRoutes.about)
+        }
+        style={{ display: "inline-flex" }}
+        icon={
+          <Image
+            src={img.logo}
+            alt="logo"
+            style={{
+              width: 38,
+              height: 38,
+              borderRadius: `${theme.radius.full}`,
+            }}
+          />
+        }
+      />
+
+      {/* Right controls */}
+      {isDesktop && (
+        <Stack direction="row" alignItems="center" spacing={theme.gap(8)}>
+          <DesktopNav
+            style={{
+              display: { xs: "none", md: "flex", flexDirection: "row" },
+              gap: theme.gap(4),
+            }}
+          />
+
+          {isLoggedIn && (
+            <AppButton
+              href={clientRoutes.home.path}
+              variant="outlined"
+              style={{ fontSize: "14px" }}
+              onClick={(e: React.MouseEvent<HTMLButtonElement>) =>
+                handleLinkClick(e, clientRoutes.home)
+              }>
+              Go to funstakes.com
+            </AppButton>
+          )}
+
+          {loginStatus === "UNAUTHENTICATED" && (
+            <Stack direction="row" alignItems="center" spacing={theme.gap(0)}>
+              <AppButton
+                href={clientRoutes.signup.path}
+                style={{ fontSize: "14px" }}
+                onClick={(e: React.MouseEvent<HTMLButtonElement>) =>
+                  handleLinkClick(e, clientRoutes.signup, false)
+                }>
+                Sign up
+              </AppButton>
+              <AppButton
+                href={clientRoutes.login.path}
+                variant="outlined"
+                style={{ fontSize: "14px" }}
+                onClick={(e: React.MouseEvent<HTMLButtonElement>) =>
+                  handleLinkClick(e, clientRoutes.login, false)
+                }>
+                Login
+              </AppButton>
+            </Stack>
+          )}
+        </Stack>)}
+
+      {/* Mobile hamburger (logged out only) */}
+      {!isDesktop && (
+        <IconButton onClick={openMobileWebNav} aria-label="Open menu">
+          <Menu />
+        </IconButton>
+      )}
+
+    </AppBar>
+  );
+};

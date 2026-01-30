@@ -16,7 +16,7 @@ export const extractPageTitle = (path: string) => {
 export const matchPaths = (pathname: string, pagePath: string | undefined) => {
   return (
     pathname === pagePath?.toLowerCase() ||
-    pathname.toLowerCase().startsWith(`${pagePath}/`)
+    pathname.toLowerCase().startsWith(`/${pagePath}`)
   );
 };
 
