@@ -4,50 +4,60 @@ import { fetcher, fetchUserWithTokenCheck } from "@/helpers/fetcher";
 import { clientRoutes, serverRoutes } from "@/helpers/routes";
 import { useGlobalContext } from "../GlobalContext";
 import { useController } from "@/hooks/global";
-import { extractPageTitle } from "@/helpers/global";
+import { delay, extractPageTitle } from "@/helpers/global";
 import { Page } from "@/types";
 import { usePathname, useRouter } from "next/navigation";
 import { useSnackbar } from "@/hooks/snackbar";
 import { getFromLocalStorage } from "@/helpers/storage";
 
 export const useAuth = () => {
-  const {
-    setAuthUser,
-    lastPage,
-    setLoginStatus,
-    setSnackBarMsg: setSnackBarMsgs,
-  } = useGlobalContext();
+  const { setAuthUser, lastPage, setLoginStatus, setSnackBarMsg } =
+    useGlobalContext();
   const { setLastPage, isOnAuth, isOffline, isOnline, isUnstableNetwork } =
     useController();
   const { setSBMessage } = useSnackbar();
   const router = useRouter();
   const pathname = usePathname();
 
-  // Verify authentication
-  const verifyAuth = async () => {
+  // Verify authentication with Silent Retry for cold boots
+  const verifyAuth = async (retryCount = 0) => {
     const isOnAuthRoute = isOnAuth(pathname);
     const savedPage = getFromLocalStorage<Page>();
     const pagePath = !isOnAuthRoute ? pathname : lastPage.path;
 
-    setLastPage(
-      isOnAuthRoute && savedPage
-        ? savedPage
-        : { title: extractPageTitle(pagePath), path: pagePath },
-    );
+    // We only set the last page on the first attempt to avoid redundant storage writes
+    if (retryCount === 0) {
+      setLastPage(
+        isOnAuthRoute && savedPage
+          ? savedPage
+          : { title: extractPageTitle(pagePath), path: pagePath },
+      );
+    }
 
     try {
       const res = await fetchUserWithTokenCheck();
-      // Fully authenticated
+
+      // SUCCESS: Fully authenticated
       if (res.status === "SUCCESS" && res.payload) {
         setAuthUser(res.payload);
         setLoginStatus("AUTHENTICATED");
         return;
       }
 
-      // Set login status to unkown when offline
+      // SILENT RETRY: The "Cold Boot" Fix
+      // If we get UNAUTHORIZED on the first try, wait 800ms and try one more time
+      // This catches instances where cookies weren't attached because the browser was idle
+      if (res.status === "UNAUTHORIZED" && retryCount === 0 && isOnline) {
+        console.warn("Auth failed on cold boot. Performing silent retry...");
+        //  await new Promise((resolve) => setTimeout(resolve, 800));
+        await delay(1500);
+        return verifyAuth(1);
+      }
+
+      // NETWORK ERROR / OFFLINE
       if (res.status === "ERROR" || isOffline || isUnstableNetwork) {
         setLoginStatus("UNKNOWN");
-        if (res.message)
+        if (res.message) {
           setSBMessage({
             msg: {
               content: res.message,
@@ -55,16 +65,22 @@ export const useAuth = () => {
               hasClose: true,
             },
           });
+        }
         return;
       }
 
-      // Fully logged out
+      // UNAUTHENTICATED: Only set this if the retry also failed
       if (isOnline && res.status === "UNAUTHORIZED") {
         setAuthUser(null);
         setLoginStatus("UNAUTHENTICATED");
         return;
       }
     } catch (err: any) {
+      // If a hard crash happens, try one silent retry before showing error
+      if (retryCount === 0 && isOnline) {
+        await new Promise((resolve) => setTimeout(resolve, 800));
+        return verifyAuth(1);
+      }
       setAuthUser(null);
       setLoginStatus("UNKNOWN");
       setSBMessage({
@@ -93,7 +109,7 @@ export const useAuth = () => {
       console.error("Logout failed:", error);
     }
     //Reset feedback state
-    setSnackBarMsgs((prev) => ({ ...prev, messages: [], inlineMsg: null }));
+    setSnackBarMsg((prev) => ({ ...prev, messages: [], inlineMsg: null }));
   };
 
   return {
