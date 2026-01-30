@@ -56,6 +56,7 @@ export const useController = () => {
   ) => {
     e.preventDefault();
     if (savePage) setLastPage(page);
+    if (modalContent) closeModal();
     router.push(page.path);
   };
 
