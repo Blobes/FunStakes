@@ -27,39 +27,51 @@ export default function HomePage() {
     if (savedPath && savedPath !== pathname) router.push(savedPage.path);
   }, [savedPath]);
 
-  return loginStatus === "AUTHENTICATED" ? (
-    isDesktop ?
-      <Stack sx={{
-        height: "100%",
-        flexDirection: "row",
-        overflow: "hidden",
-        borderTop: `1px solid ${theme.palette.gray.trans[1]}`,
-      }}>
-        <Posts />
-        <RightSidebar />
-      </Stack> : <Posts />
-  ) : (
+  return (
     <>
-      <Stack
-        sx={{
-          alignItems: "center",
-          textAlign: "center",
-          justifyContent: "center",
-          height: "100%",
-          width: "100%",
-          minHeight: "fit-content",
-          padding: theme.boxSpacing(12),
-        }}>
-        <Typography component="h5">
-          Join millions of stakers on FunStakes
-        </Typography>
-        <AppButton href={clientRoutes.signup.path} onClick={(e: React.MouseEvent) =>
-          handleClick(clientRoutes.signup, e, { type: "element", savePage: false })}>
-          Get started
-        </AppButton>
-      </Stack >
-      <Footer />
-    </>
+      {loginStatus === "AUTHENTICATED" && (
+        isDesktop ? (
+          <Stack sx={{
+            height: "100%",
+            flexDirection: "row",
+            overflow: "hidden",
+            borderTop: `1px solid ${theme.palette.gray.trans[1]}`,
+          }}>
+            <Posts />
+            <RightSidebar />
+          </Stack>
+        ) : (
+          <Posts />
+        )
+      )}
 
+      {loginStatus === "UNAUTHENTICATED" && (
+        <>
+          <Stack
+            sx={{
+              alignItems: "center",
+              textAlign: "center",
+              justifyContent: "center",
+              height: "100%",
+              width: "100%",
+              minHeight: "fit-content",
+              padding: theme.boxSpacing(12),
+            }}>
+            <Typography variant="h5" component="h5"> {/* Added variant for MUI consistency */}
+              Join millions of stakers on FunStakes
+            </Typography>
+            <AppButton
+              href={clientRoutes.signup.path}
+              onClick={(e: React.MouseEvent) =>
+                handleClick(clientRoutes.signup, e, { type: "element", savePage: false })
+              }
+            >
+              Get started
+            </AppButton>
+          </Stack>
+          <Footer />
+        </>
+      )}
+    </>
   );
 }

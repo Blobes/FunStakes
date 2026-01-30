@@ -32,22 +32,22 @@ export const GlobalManager = ({ children }: { children: React.ReactNode }) => {
         setMounted(true);
         const init = async () => {
             // 1. Wait for Service Worker to be fully active and controlling the page
-            if ('serviceWorker' in navigator &&
-                navigator.serviceWorker.controller === null) {
-                await new Promise((resolve) => {
-                    navigator
-                        .serviceWorker
-                        .addEventListener('controllerchange', resolve, { once: true });
-                    // Timeout fallback so we don't hang forever
-                    setTimeout(resolve, 1000);
-                });
-            }
+            // if ('serviceWorker' in navigator &&
+            //     navigator.serviceWorker.controller === null) {
+            //     await new Promise((resolve) => {
+            //         navigator
+            //             .serviceWorker
+            //             .addEventListener('controllerchange', resolve, { once: true });
+            //         // Timeout fallback so we don't hang forever
+            //         setTimeout(resolve, 1000);
+            //     });
+            // }
             await verifySignal();
             await delay(500)
             await verifyAuth();
         }
         init();
-    }, [networkStatus]);
+    }, [networkStatus, loginStatus]);
 
     // MODAL OPEN / CLOSE
     useEffect(() => {
