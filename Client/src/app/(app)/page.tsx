@@ -23,9 +23,9 @@ export default function HomePage() {
   const savedPath = savedPage?.path;
   const { loginStatus } = useGlobalContext();
 
-  useEffect(() => {
-    if (savedPath && savedPath !== pathname) router.push(savedPage.path);
-  }, [pathname]);
+  // useEffect(() => {
+  //   if (savedPath && savedPath !== pathname) router.push(savedPage.path);
+  // }, [pathname]);
 
   return (
     <>
