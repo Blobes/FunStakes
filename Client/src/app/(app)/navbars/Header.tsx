@@ -152,9 +152,9 @@ export const AppHeader: React.FC<AppHeaderProps> = ({ scrollRef }) => {
             href={clientRoutes.login.path}
             variant="outlined"
             style={{ fontSize: "14px" }}
-            onClick={(e: React.MouseEvent) =>
+            onClick={() =>
               navigateTo(clientRoutes.login,
-                { type: "element", savePage: false, loadPage: true, event: e })
+                { type: "element", savePage: false, loadPage: true })
             }>
             Sign in
           </AppButton>

@@ -8,7 +8,7 @@ interface ButtonProps {
   children?: React.ReactNode | string;
   style?: GenericObject<string>;
   overrideStyle?: "full" | "partial";
-  onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
+  onClick?: (event: React.MouseEvent) => void;
   href?: string;
   options?: GenericObject<any>;
   submit?: boolean;
@@ -54,14 +54,27 @@ export const AppButton = ({
       ...style,
     };
 
+  const buttonProps = {
+    variant,
+    sx: mergedStyle,
+    ...(onClick && { onClick: (e: React.MouseEvent) => onClick(e) }),
+    ...options,
+  };
+
+  if (href) {
+    return (
+      <Button
+        component={NextLink}
+        href={href}
+        {...buttonProps}>
+        {children}
+      </Button>
+    );
+  }
   return (
     <Button
-      {...(href && { href: href })}
-      variant={variant}
-      sx={mergedStyle}
       type={submit ? "submit" : "button"}
-      onClick={!submit ? onClick : undefined}
-      {...options}>
+      {...buttonProps}>
       {children}
     </Button>
   );

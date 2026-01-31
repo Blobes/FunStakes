@@ -47,10 +47,11 @@ export const MenuPopup = forwardRef<MenuRef, MenuProps>(
 
           [`& .${paperClasses.root}`]: {
             borderRadius: theme.radius[2],
-            paddingY: theme.boxSpacing(3),
+            padding: theme.boxSpacing(4),
             border: `1px solid ${theme.palette.gray[50]}`,
-            minWidth: 220,
-            maxWidth: 350,
+            width: "fit-content",
+            minWidth: 200,
+            maxWidth: 250,
             "& ul": {
               display: "flex",
               flexDirection: "column",

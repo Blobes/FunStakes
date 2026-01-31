@@ -168,7 +168,7 @@ export const Login: React.FC<LoginProps> = ({
           submit
           style={{
             fontSize: "16px",
-            padding: theme.boxSpacing(5, 8),
+            padding: theme.boxSpacing(5, 9),
             width: "100%",
           }}
           options={{

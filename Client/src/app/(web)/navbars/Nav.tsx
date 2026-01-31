@@ -72,8 +72,8 @@ export const MobileNav: React.FC<NavProps> = ({ style }) => {
           href={clientRoutes.home.path}
           variant="outlined"
           style={{ fontSize: "14px" }}
-          onClick={(e: React.MouseEvent) =>
-            navigateTo(clientRoutes.home, { type: "element", loadPage: true, event: e })
+          onClick={() =>
+            navigateTo(clientRoutes.home, { type: "element", loadPage: true, })
           }>
           Go to funstakes.com
         </AppButton>
@@ -84,9 +84,9 @@ export const MobileNav: React.FC<NavProps> = ({ style }) => {
           <AppButton
             href={clientRoutes.signup.path}
             style={{ fontSize: "14px" }}
-            onClick={(e: React.MouseEvent) =>
+            onClick={() =>
               navigateTo(clientRoutes.signup,
-                { type: "element", savePage: false, loadPage: true, event: e })
+                { type: "element", savePage: false, loadPage: true, })
             }>
             Sign up
           </AppButton>
@@ -94,9 +94,9 @@ export const MobileNav: React.FC<NavProps> = ({ style }) => {
             href={clientRoutes.login.path}
             variant="outlined"
             style={{ fontSize: "14px" }}
-            onClick={(e: React.MouseEvent) =>
+            onClick={() =>
               navigateTo(clientRoutes.login,
-                { type: "element", savePage: false, loadPage: true, event: e })
+                { type: "element", savePage: false, loadPage: true, })
             }>
             Login
           </AppButton>

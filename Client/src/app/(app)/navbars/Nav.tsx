@@ -5,9 +5,7 @@ import {
   Typography,
   Divider,
   Stack,
-  svgIconClasses,
   IconButton,
-  typographyClasses,
 } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import { useGlobalContext } from "@/app/GlobalContext";
@@ -50,12 +48,13 @@ export const DesktopNav = ({
             }}
             style={{
               padding: theme.boxSpacing(4, 8),
-              borderRadius: "unset",
               gap: theme.gap(8),
+              textAlign: "left",
               "& svg": {
-                fill: theme.palette.gray[200],
+                stroke: theme.palette.gray[200],
                 width: "20px",
                 height: "20px",
+                flex: "none"
               },
             }}
           />

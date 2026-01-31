@@ -12,8 +12,7 @@ import { getFromLocalStorage } from "@/helpers/storage";
 import { usePage } from "@/hooks/page";
 
 export const useAuth = () => {
-  const { setAuthUser, lastPage, setLoginStatus, setSnackBarMsg } =
-    useGlobalContext();
+  const { setAuthUser, setLoginStatus, setSnackBarMsg } = useGlobalContext();
   const { isOffline, isOnline, isUnstableNetwork, verifySignal } =
     useController();
   const { setLastPage, isOnAuth } = usePage();

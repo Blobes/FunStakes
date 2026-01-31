@@ -2,7 +2,6 @@
 
 import { IUser } from "@/types";
 import { serverRoutes } from "./routes";
-import { delay } from "./global";
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 const DEFAULT_TIMEOUT = 5000; // Default timeout in milliseconds
@@ -67,7 +66,6 @@ export const fetchUserWithTokenCheck =
   async (): Promise<TokenCheckResponse> => {
     try {
       const res = await fetcher<{ user: IUser }>(serverRoutes.verifyAuthToken);
-      console.log(true);
       return { payload: res.user, status: "SUCCESS" };
     } catch (err: any) {
       let msg = err.message;

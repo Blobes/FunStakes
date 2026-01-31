@@ -12,8 +12,8 @@ export const ProgressIcon = ({ style, otherProps, info }: ProgressProps) => {
   return (
     <>
       <CircularProgress
+        sx={{ color: theme.palette.primary.dark, ...style }}
         {...otherProps}
-        sx={{ color: theme.palette.primary.light, ...style }}
       />
       {info && <Typography variant="body2"
         sx={{
