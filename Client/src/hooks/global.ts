@@ -56,11 +56,14 @@ export const useController = () => {
   const handleClick = (
     page: Page,
     e?: React.MouseEvent,
-    option: ClickOptions = { type: "link", savePage: true },
+    option: ClickOptions = {},
   ) => {
-    if (option.savePage) setLastPage(page);
+    const type = option.type ?? "link";
+    const savePage = option.savePage ?? true;
+
+    if (savePage) setLastPage(page);
     if (modalContent) closeModal();
-    if (option.type === "element") {
+    if (type === "element") {
       e?.preventDefault();
       router.push(page.path);
     }
