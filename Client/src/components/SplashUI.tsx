@@ -6,7 +6,7 @@ import { AnimatedWrapper } from "./AnimationWrapper";
 import { RootUIContainer } from "./Containers";
 
 
-export const Splash = () => {
+export const SplashUI = () => {
   const theme = useTheme();
   return (
     <RootUIContainer

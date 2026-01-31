@@ -37,7 +37,6 @@ export const DesktopNav = ({
           md: "flex",
         },
         position: "absolute",
-        // flexDirection: "",
         gap: theme.gap(4),
       }}>
       <MenuPopup
@@ -53,7 +52,7 @@ export const DesktopNav = ({
               padding: theme.boxSpacing(4, 8),
               borderRadius: "unset",
               gap: theme.gap(8),
-              [`& .${svgIconClasses.root}`]: {
+              "& svg": {
                 fill: theme.palette.gray[200],
                 width: "20px",
                 height: "20px",

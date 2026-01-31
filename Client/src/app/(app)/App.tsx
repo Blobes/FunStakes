@@ -11,7 +11,7 @@ import { usePathname } from "next/navigation";
 import { BottomNav } from "@/app/(app)/navbars/BottomNav";
 import { useRef } from "react";
 
-export const AppWrapper = ({ children }: { children: React.ReactNode }) => {
+export const App = ({ children }: { children: React.ReactNode }) => {
   const { isDesktop } = useController();
   const theme = useTheme();
   const { loginStatus } = useGlobalContext();

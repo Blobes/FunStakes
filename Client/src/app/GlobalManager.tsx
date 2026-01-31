@@ -7,43 +7,35 @@ import { Modal, ModalRef } from "@/components/Modal";
 import { useController } from "@/hooks/global";
 import { delay } from "@/helpers/global";
 import { useAuth } from "@/app/(auth)/authHook";
-import { Offline } from "../components/Offline";
-import { Splash } from "../components/Splash";
+import { OfflineUI } from "../components/OfflineUI";
+import { SplashUI } from "../components/SplashUI";
 import { registerSW } from "@/helpers/registerSW";
+import { usePathname } from "next/navigation";
+import { usePage } from "@/hooks/page";
 
 export const GlobalManager = ({ children }: { children: React.ReactNode }) => {
     const { verifyAuth, handleBrowserEvents } = useAuth();
     const modalRef = useRef<ModalRef>(null);
     const { openModal, verifySignal, isUnstableNetwork, isOffline } = useController();
-    const { snackBarMsg, loginStatus, modalContent, lastPage,
-        networkStatus } = useGlobalContext();
+    const { handleCurrentPage } = usePage()
+    const { snackBarMsg, loginStatus, modalContent,
+        networkStatus, isGlobalLoading } = useGlobalContext();
     const [mounted, setMounted] = useState(false);
+    const pathname = usePathname()
 
 
-    // SERVICE WORKER REGISTRATION
+    //  MOUNT && SERVICE WORKER REGISTRATION
     useEffect(() => {
+        setMounted(true);
         registerSW()
         //Browser Events
         handleBrowserEvents()
     }, []);
 
-    // MOUNT & INITIAL AUTH CHECK
+    // AUTH CHECK & NETWORK SIGNAL CHECK
     useEffect(() => {
-        setMounted(true);
         const init = async () => {
-            // 1. Wait for Service Worker to be fully active and controlling the page
-            // if ('serviceWorker' in navigator &&
-            //     navigator.serviceWorker.controller === null) {
-            //     await new Promise((resolve) => {
-            //         navigator
-            //             .serviceWorker
-            //             .addEventListener('controllerchange', resolve, { once: true });
-            //         // Timeout fallback so we don't hang forever
-            //         setTimeout(resolve, 1000);
-            //     });
-            // }
             await verifySignal();
-            // await delay(500)
             await verifyAuth();
         }
         init();
@@ -60,15 +52,20 @@ export const GlobalManager = ({ children }: { children: React.ReactNode }) => {
         });
     }, [modalContent, openModal]);
 
+    // PAGE LOAD HANDLER
+    useEffect(() => {
+        handleCurrentPage()
+    }, [pathname]);
+
 
     // RENDER UIs
     // Conditionally render the splash UI
-    if (!mounted || loginStatus === "PENDING") {
-        return <Splash />;
+    if (!mounted || loginStatus === "PENDING" || isGlobalLoading) {
+        return <SplashUI />;
     }
     // Conditionally render the offline UI
     if ((isOffline || isUnstableNetwork) && loginStatus === "UNKNOWN") {
-        return <Offline />;
+        return <OfflineUI />;
     }
 
     // Conditionally render the app UIs

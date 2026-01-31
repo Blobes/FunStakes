@@ -8,6 +8,7 @@ import { matchPaths } from "@/helpers/global";
 import { usePathname } from "next/navigation";
 import { AnchorLink } from "@/components/Buttons";
 import { useController } from "@/hooks/global";
+import { usePage } from "@/hooks/page";
 
 
 // Props for the reusable nav renderer
@@ -26,7 +27,7 @@ export const RenderItemList: React.FC<RenderListProps> = ({
 }) => {
   const theme = useTheme();
   const pathname = usePathname();
-  const { handleClick } = useController();
+  const { navigateTo } = usePage();
 
   const { fontSize, fontWeight, color, ...restStyle } = style
 
@@ -35,7 +36,6 @@ export const RenderItemList: React.FC<RenderListProps> = ({
     gap: theme.gap(3),
     padding: theme.boxSpacing(2, 6),
     borderRadius: theme.radius.full,
-
     "&:hover": {
       backgroundColor: theme.palette.gray.trans[1],
       outline: "none",
@@ -66,7 +66,7 @@ export const RenderItemList: React.FC<RenderListProps> = ({
                 title: item.title,
                 path: item.url ?? "#",
               };
-              handleClick(page as Page);
+              navigateTo(page as Page);
               if (item.action) item.action();
               if (itemAction) itemAction();
             }}

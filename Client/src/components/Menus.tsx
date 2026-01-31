@@ -43,13 +43,18 @@ export const MenuPopup = forwardRef<MenuRef, MenuProps>(
         sx={{
           alignItems: "center",
           zIndex: zIndexes.maximum,
-          flexDirection: "column",
           padding: theme.boxSpacing(2, 0),
+
           [`& .${paperClasses.root}`]: {
             borderRadius: theme.radius[2],
             paddingY: theme.boxSpacing(3),
             border: `1px solid ${theme.palette.gray[50]}`,
             minWidth: 220,
+            maxWidth: 350,
+            "& ul": {
+              display: "flex",
+              flexDirection: "column",
+            }
           },
         }}>
         {contentElement}

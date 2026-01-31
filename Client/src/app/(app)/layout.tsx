@@ -1,6 +1,6 @@
 "use client"
 
-import { AppWrapper } from "./AppWrapper";
+import { App } from "./App";
 import { RootUIContainer } from "@/components/Containers";
 
 export default function AppLayout({
@@ -10,7 +10,7 @@ export default function AppLayout({
 }>) {
   return (
     <RootUIContainer>
-      <AppWrapper>{children}</AppWrapper>
+      <App>{children}</App>
     </RootUIContainer>
   )
 }

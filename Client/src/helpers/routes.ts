@@ -31,7 +31,7 @@ export const clientRoutes: Record<string, Page> = {
   voices: { title: "Voices", path: "/voices" },
 } as const;
 
-export const flaggedRoutes = {
+export const registeredRoutes = {
   auth: [clientRoutes.login.path, clientRoutes.signup.path],
   web: [
     clientRoutes.about.path,
@@ -44,6 +44,8 @@ export const flaggedRoutes = {
   ],
   app: [clientRoutes.home.path, clientRoutes.post.path],
 };
+
+export const disallowedRoutes: string[] = [];
 
 export const serverRoutes = {
   // Auth

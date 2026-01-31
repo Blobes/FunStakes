@@ -9,6 +9,7 @@ import { useController } from "@/hooks/global";
 import { AppButton } from "@/components/Buttons";
 import { useGlobalContext } from "@/app/GlobalContext";
 import { clientRoutes } from "@/helpers/routes";
+import { usePage } from "@/hooks/page";
 
 interface NavProps {
   style?: any;
@@ -43,7 +44,7 @@ export const MobileNav: React.FC<NavProps> = ({ style }) => {
   const theme = useTheme();
   const { headerNavList } = useNavLists();
   const menuRef = useRef<MenuRef>(null);
-  const { handleClick } = useController();
+  const { navigateTo } = usePage();
   const { loginStatus } = useGlobalContext();
 
   return (
@@ -72,7 +73,7 @@ export const MobileNav: React.FC<NavProps> = ({ style }) => {
           variant="outlined"
           style={{ fontSize: "14px" }}
           onClick={(e: React.MouseEvent) =>
-            handleClick(clientRoutes.home, e, { type: "element" })
+            navigateTo(clientRoutes.home, { type: "element", loadPage: true, event: e })
           }>
           Go to funstakes.com
         </AppButton>
@@ -84,7 +85,8 @@ export const MobileNav: React.FC<NavProps> = ({ style }) => {
             href={clientRoutes.signup.path}
             style={{ fontSize: "14px" }}
             onClick={(e: React.MouseEvent) =>
-              handleClick(clientRoutes.signup, e, { type: "element", savePage: false })
+              navigateTo(clientRoutes.signup,
+                { type: "element", savePage: false, loadPage: true, event: e })
             }>
             Sign up
           </AppButton>
@@ -93,7 +95,8 @@ export const MobileNav: React.FC<NavProps> = ({ style }) => {
             variant="outlined"
             style={{ fontSize: "14px" }}
             onClick={(e: React.MouseEvent) =>
-              handleClick(clientRoutes.login, e, { type: "element", savePage: false })
+              navigateTo(clientRoutes.login,
+                { type: "element", savePage: false, loadPage: true, event: e })
             }>
             Login
           </AppButton>

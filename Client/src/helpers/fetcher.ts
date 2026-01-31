@@ -70,42 +70,28 @@ export const fetchUserWithTokenCheck =
       console.log(true);
       return { payload: res.user, status: "SUCCESS" };
     } catch (err: any) {
-      // Check if it's a network/timeout error
-      const isTimeout = err.name === "AbortError" && err.reason === "timeout";
-
-      const isBrowserAbort =
-        err.name === "AbortError" && err.reason !== "timeout";
-      // If the browser killed the request due to refresh/navigation
-      if (isBrowserAbort) {
-        return { payload: null, status: "ERROR" };
-      }
-      // A real network fail usually has no status AND is a TypeError
-      const isFetchFailed =
-        (err.message === "Failed to fetch" || err.name === "TypeError") &&
-        !err.status;
-
       let msg = err.message;
+      // Check if it's a network error
+      const isNetworkError =
+        err.name === "AbortError" ||
+        err.name === "TypeError" ||
+        err.message === "Failed to fetch" ||
+        err.status >= 500;
 
-      if (isFetchFailed || isTimeout || err.status >= 500) {
-        msg = null;
+      if (isNetworkError) {
+        // If it's a browser abort (navigation), return silently
+        if (err.name === "AbortError" && err.reason !== "timeout") {
+          return { payload: null, status: "ERROR" };
+        }
+        // Otherwise, it's a legitimate connection failure or timeout
         return {
           payload: null,
           status: "ERROR",
-          message: isFetchFailed ? msg : "Connection failed or timed out",
+          message: "Connection failed or timed out",
         };
       }
 
-      // // 1. Stop the loop if we've tried 2 times
-      // if (attempt >= 1) {
-      //   console.error("Stopping infinite refresh loop.");
-      //   return {
-      //     payload: null,
-      //     status: "UNAUTHORIZED",
-      //     message: "Session expired. Please log in again.",
-      //   };
-      // }
-
-      // 2. Catch 401 (Missing/Expired) OR 403 (Invalid)
+      // Catch 401 (Missing/Expired) OR 403 (Invalid)
       if (err.status === 401 || err.status === 403) {
         msg = null;
         // Try to refresh once
@@ -120,15 +106,9 @@ export const fetchUserWithTokenCheck =
           } catch {
             // If the retry after refresh fails, it's a hard UNAUTHORIZED
             console.error("Retry failed");
-            // return {
-            //   payload: null,
-            //   status: "UNAUTHORIZED",
-            //   message: "Session expired. Please log in again.",
-            // };
           }
         }
       }
-      console.log(false);
       return {
         payload: null,
         status: "UNAUTHORIZED",

@@ -12,16 +12,12 @@ import { img } from "@/assets/exported";
 import Image from "next/image";
 import { Menu } from "lucide-react";
 import { zIndexes } from "@/helpers/global";
+import { usePage } from "@/hooks/page";
 
 export const Header: React.FC = () => {
   const { loginStatus } = useGlobalContext();
-  const {
-    openModal,
-    closeModal,
-    isDesktop,
-    handleWindowResize,
-    handleClick,
-  } = useController();
+  const { openModal, closeModal, isDesktop, handleWindowResize } = useController()
+  const { navigateTo } = usePage();
   const theme = useTheme();
   const isLoggedIn = loginStatus === "AUTHENTICATED";
 
@@ -74,7 +70,7 @@ export const Header: React.FC = () => {
       <AnchorLink
         url={clientRoutes.about.path}
         onClick={() =>
-          handleClick(clientRoutes.about)
+          navigateTo(clientRoutes.about)
         }>
         <Image
           src={img.logo}
@@ -104,7 +100,8 @@ export const Header: React.FC = () => {
                 variant="outlined"
                 style={{ fontSize: "14px" }}
                 onClick={(e: React.MouseEvent) =>
-                  handleClick(clientRoutes.home, e, { type: "element" })
+                  navigateTo(clientRoutes.home,
+                    { type: "element", loadPage: true, event: e })
                 }>
                 Go to funstakes.com
               </AppButton>
@@ -116,7 +113,8 @@ export const Header: React.FC = () => {
                   href={clientRoutes.signup.path}
                   style={{ fontSize: "14px" }}
                   onClick={(e: React.MouseEvent) =>
-                    handleClick(clientRoutes.signup, e, { type: "element", savePage: false })
+                    navigateTo(clientRoutes.signup,
+                      { type: "element", savePage: false, loadPage: true, event: e })
                   }>
                   Sign up
                 </AppButton>
@@ -125,7 +123,8 @@ export const Header: React.FC = () => {
                   variant="outlined"
                   style={{ fontSize: "14px" }}
                   onClick={(e: React.MouseEvent) =>
-                    handleClick(clientRoutes.login, e, { type: "element", savePage: false })
+                    navigateTo(clientRoutes.login,
+                      { type: "element", savePage: false, loadPage: true, event: e })
                   }>
                   Login
                 </AppButton>

@@ -3,6 +3,7 @@ import { useStyles } from "@/hooks/style";
 import { useRouter } from "next/navigation";
 import { useController } from "@/hooks/global";
 import { zIndexes } from "@/helpers/global";
+import { usePageScroll } from "@/hooks/pageScroll";
 
 interface NavProps {
   scrollRef?: React.RefObject<HTMLElement | null>;
@@ -10,9 +11,8 @@ interface NavProps {
 export const BottomNav: React.FC<NavProps> = ({ scrollRef }) => {
 
   const theme = useTheme();
-  const router = useRouter();
-  const { handleScrolling } = useController();
-  const scrollDir = handleScrolling(scrollRef);
+  const { handlePageScroll } = usePageScroll();
+  const scrollDir = handlePageScroll(scrollRef);
 
   return (
     <AppBar

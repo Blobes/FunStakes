@@ -8,7 +8,6 @@ import { useTheme } from "@mui/material/styles";
 import { useRouter } from "next/navigation";
 import { delay } from "@/helpers/global";
 import { useEffect, useState } from "react";
-import { useController } from "@/hooks/global";
 import { PasswordInput } from "@/components/InputFields";
 import { InlineMsg } from "@/components/InlineMsg";
 import { BasicTooltip } from "@/components/Tooltips";
@@ -16,6 +15,7 @@ import { GenericObject } from "@/types";
 import { clientRoutes } from "@/helpers/routes";
 import { ProgressIcon } from "@/components/ProgressIcon";
 import { Pencil } from "lucide-react";
+import { usePage } from "@/hooks/page";
 
 interface LoginProps {
   email: string;
@@ -43,7 +43,7 @@ export const Login: React.FC<LoginProps> = ({
   } = useLogin();
   const { inlineMsg, setInlineMsg, isAuthLoading, setAuthLoading, lastPage } =
     useGlobalContext();
-  const { isOnWeb } = useController();
+  const { isOnWeb } = usePage();
   const [msg, setMsg] = useState("");
   const [passwordValidity, setPasswordValidity] = useState<
     "valid" | "invalid"

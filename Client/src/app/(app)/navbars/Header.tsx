@@ -16,26 +16,28 @@ import { img } from "@/assets/exported";
 import Image from "next/image";
 import { Bell } from "lucide-react";
 import { zIndexes } from "@/helpers/global";
+import { usePage } from "@/hooks/page";
+import { usePageScroll } from "@/hooks/pageScroll";
 
 interface AppHeaderProps {
   scrollRef?: React.RefObject<HTMLElement | null>;
 }
 export const AppHeader: React.FC<AppHeaderProps> = ({ scrollRef }) => {
   const { loginStatus } = useGlobalContext();
-  const { setLastPage, openModal, closeModal, isDesktop, handleWindowResize,
-    handleClick, handleScrolling } = useController();
+  const { openModal, closeModal, isDesktop, handleWindowResize } = useController();
+  const { setLastPage, navigateTo } = usePage();
+  const { handlePageScroll } = usePageScroll();
   const theme = useTheme();
   const router = useRouter();
   const isLoggedIn = loginStatus === "AUTHENTICATED";
   const menuRef = useRef<MenuRef>(null);
-  const scrollDir = handleScrolling(scrollRef);
+  const scrollDir = handlePageScroll(scrollRef);
 
 
   /* ---------------------------------- effects --------------------------------- */
   useEffect(() => {
     window.addEventListener("resize", handleWindowResize);
     //  openMobileNav()
-
     return () => window.removeEventListener("resize", handleWindowResize);
   }, []);
 
@@ -105,7 +107,7 @@ export const AppHeader: React.FC<AppHeaderProps> = ({ scrollRef }) => {
         <AnchorLink
           url={clientRoutes.home.path}
           onClick={() => {
-            handleClick(clientRoutes.home);
+            navigateTo(clientRoutes.home);
           }}
           style={{ display: "inline-flex" }}
         ><Image
@@ -151,7 +153,8 @@ export const AppHeader: React.FC<AppHeaderProps> = ({ scrollRef }) => {
             variant="outlined"
             style={{ fontSize: "14px" }}
             onClick={(e: React.MouseEvent) =>
-              handleClick(clientRoutes.login, e, { type: "element", savePage: false })
+              navigateTo(clientRoutes.login,
+                { type: "element", savePage: false, loadPage: true, event: e })
             }>
             Sign in
           </AppButton>

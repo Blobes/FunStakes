@@ -30,6 +30,8 @@ interface Context {
   setModalContent: React.Dispatch<React.SetStateAction<ModalContent | null>>;
   networkStatus: NetworkStatus;
   setNetworkStatus: React.Dispatch<React.SetStateAction<NetworkStatus>>;
+  checkingSignal: boolean;
+  setSignalCheck: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const context = createContext<Context | null>(null);
@@ -51,6 +53,7 @@ export const ContextProvider = ({
   const [lastPage, setPage] = useState<Page>(clientRoutes.about);
   const [modalContent, setModalContent] = useState<ModalContent | null>(null);
   const [networkStatus, setNetworkStatus] = useState<NetworkStatus>("UNKNOWN");
+  const [checkingSignal, setSignalCheck] = useState(false);
 
   return (
     <context.Provider
@@ -71,7 +74,9 @@ export const ContextProvider = ({
         setPage,
         modalContent,
         setModalContent,
-        networkStatus, setNetworkStatus
+        networkStatus, setNetworkStatus,
+        checkingSignal,
+        setSignalCheck
       }}>
       {children}
     </context.Provider>

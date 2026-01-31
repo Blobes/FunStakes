@@ -9,18 +9,14 @@ import { Page } from "@/types";
 import { usePathname, useRouter } from "next/navigation";
 import { useSnackbar } from "@/hooks/snackbar";
 import { getFromLocalStorage } from "@/helpers/storage";
+import { usePage } from "@/hooks/page";
 
 export const useAuth = () => {
   const { setAuthUser, lastPage, setLoginStatus, setSnackBarMsg } =
     useGlobalContext();
-  const {
-    setLastPage,
-    isOnAuth,
-    isOffline,
-    isOnline,
-    isUnstableNetwork,
-    verifySignal,
-  } = useController();
+  const { isOffline, isOnline, isUnstableNetwork, verifySignal } =
+    useController();
+  const { setLastPage, isOnAuth } = usePage();
   const { setSBMessage, removeMessage } = useSnackbar();
   const router = useRouter();
   const pathname = usePathname();

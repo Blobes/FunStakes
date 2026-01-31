@@ -366,3 +366,15 @@ flaggedRoutes.auth.includes(pathname) ||
 flaggedRoutes.web.some((r) => matchPaths(pathname, r)) ||
 flaggedAppRoutes.length > 0;
 const isOnAppRoute = flaggedAppRoutes.length > 0;
+
+// 1. Wait for Service Worker to be fully active and controlling the page
+// if ('serviceWorker' in navigator &&
+// navigator.serviceWorker.controller === null) {
+// await new Promise((resolve) => {
+// navigator
+// .serviceWorker
+// .addEventListener('controllerchange', resolve, { once: true });
+// // Timeout fallback so we don't hang forever
+// setTimeout(resolve, 1000);
+// });
+// }

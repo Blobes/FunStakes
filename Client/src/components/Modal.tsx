@@ -15,7 +15,7 @@ import { Direction, GenericObject } from "@/types";
 import { Transition, TransitionType } from "./Transition";
 import { useController } from "@/hooks/global";
 import { zIndexes } from "@/helpers/global";
-import { useDragClose } from "@/hooks/modal";
+import { useDragClose } from "@/hooks/drag";
 
 export interface ModalRef {
   openModal: () => void;
@@ -96,9 +96,6 @@ export const Modal = forwardRef<ModalRef, ModalProps>(
         if (onClose) onClose();
       }
     };
-
-
-
 
     return (
       <Stack //Overlay container
@@ -231,8 +228,8 @@ export const Modal = forwardRef<ModalRef, ModalProps>(
                           onClick={handleClose}>
                           <Close
                             sx={{
-                              width: "20px",
-                              height: "20px",
+                              width: "22px",
+                              height: "22px",
                             }}
                           />
                         </IconButton>

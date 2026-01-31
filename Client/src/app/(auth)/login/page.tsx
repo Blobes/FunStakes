@@ -8,15 +8,15 @@ import { useRouter } from "next/navigation";
 import { clientRoutes } from "@/helpers/routes";
 import { Empty } from "@/components/Empty";
 import { ShieldCheck } from "lucide-react";
-import { useController } from "@/hooks/global";
 import { useAuth } from "../authHook";
 import { useStyles } from "@/hooks/style";
+import { usePage } from "@/hooks/page";
 
 export default function LoginPage() {
   const theme = useTheme();
   const { loginStatus } = useGlobalContext();
   const router = useRouter();
-  const { setLastPage } = useController();
+  const { setLastPage } = usePage();
   const { handleLogout } = useAuth();
   const { applyBGPattern } = useStyles()
 

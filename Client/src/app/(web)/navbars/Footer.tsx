@@ -4,15 +4,14 @@ import { Divider, Stack, } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import { useNavLists } from "./NavLists";
 import { AnchorLink } from "@/components/Buttons";
-import { useController } from "@/hooks/global";
-import { useRouter } from "next/navigation";
 import React from "react";
+import { usePage } from "@/hooks/page";
 
 export const Footer = () => {
   const theme = useTheme();
 
   const { footerNavList } = useNavLists();
-  const { handleClick } = useController();
+  const { navigateTo } = usePage();
 
 
   return (
@@ -31,7 +30,7 @@ export const Footer = () => {
             url={item.url ?? "#"}
             onClick={() => {
               if (item.title && item.url)
-                handleClick({ title: item.title, path: item.url })
+                navigateTo({ title: item.title, path: item.url, }, { loadPage: true })
             }}
             style={{
               color: theme.palette.gray[200],

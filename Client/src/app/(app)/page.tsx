@@ -13,11 +13,13 @@ import { useGlobalContext } from "../GlobalContext";
 import { AppButton } from "@/components/Buttons";
 import { Footer } from "../(web)/navbars/Footer";
 import { clientRoutes } from "@/helpers/routes";
+import { usePage } from "@/hooks/page";
 
 export default function HomePage() {
   const router = useRouter();
   const pathname = usePathname();
-  const { isDesktop, handleClick } = useController();
+  const { isDesktop } = useController();
+  const { navigateTo } = usePage();
   const theme = useTheme();
   const savedPage = getFromLocalStorage<Page>();
   const savedPath = savedPage?.path;
@@ -63,7 +65,8 @@ export default function HomePage() {
             <AppButton
               href={clientRoutes.signup.path}
               onClick={(e: React.MouseEvent) =>
-                handleClick(clientRoutes.signup, e, { type: "element", savePage: false })
+                navigateTo(clientRoutes.signup,
+                  { type: "element", savePage: false, loadPage: true, event: e })
               }
             >
               Get started
