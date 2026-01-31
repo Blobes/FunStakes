@@ -24,11 +24,9 @@ export const refreshAuthToken = async (
   } catch (err) {
     res.clearCookie("access_token");
     res.clearCookie("refresh_token");
-    res
-      .status(401)
-      .json({
-        message: err || "Expired or invalid refresh token",
-        status: "UNAUTHORIZED",
-      });
+    return res.status(401).json({
+      message: err || "Expired or invalid refresh token",
+      status: "UNAUTHORIZED",
+    });
   }
 };

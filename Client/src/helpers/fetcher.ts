@@ -128,7 +128,7 @@ export const fetchUserWithTokenCheck =
           }
         }
       }
-      console.log(true);
+      console.log(false);
       return {
         payload: null,
         status: "UNAUTHORIZED",

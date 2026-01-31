@@ -23,10 +23,9 @@ const verifyAuthToken = (
   const token = req.cookies.access_token;
 
   if (!token) {
-    res
+    return res
       .status(401)
       .json({ message: "No token provided", status: "UNAUTHORIZED" });
-    return;
   }
 
   jwt.verify(
