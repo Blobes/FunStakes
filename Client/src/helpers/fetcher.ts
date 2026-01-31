@@ -63,70 +63,78 @@ interface TokenCheckResponse {
   message?: string;
   status?: "SUCCESS" | "UNAUTHORIZED" | "ERROR";
 }
-export const fetchUserWithTokenCheck = async (
-  attempt = 0,
-): Promise<TokenCheckResponse> => {
-  try {
-    const res = await fetcher<{ user: IUser }>(serverRoutes.verifyAuthToken);
-    return { payload: res.user, status: "SUCCESS" };
-  } catch (err: any) {
-    // Check if it's a network/timeout error
-    const isTimeout = err.name === "AbortError" && err.reason === "timeout";
+export const fetchUserWithTokenCheck =
+  async (): Promise<TokenCheckResponse> => {
+    try {
+      const res = await fetcher<{ user: IUser }>(serverRoutes.verifyAuthToken);
+      return { payload: res.user, status: "SUCCESS" };
+    } catch (err: any) {
+      // Check if it's a network/timeout error
+      const isTimeout = err.name === "AbortError" && err.reason === "timeout";
 
-    const isBrowserAbort =
-      err.name === "AbortError" && err.reason !== "timeout";
-    // If the browser killed the request due to refresh/navigation
-    if (isBrowserAbort) {
-      return { payload: null, status: "ERROR" };
-    }
-    // A real network fail usually has no status AND is a TypeError
-    const isFetchFailed =
-      (err.message === "Failed to fetch" || err.name === "TypeError") &&
-      !err.status;
+      const isBrowserAbort =
+        err.name === "AbortError" && err.reason !== "timeout";
+      // If the browser killed the request due to refresh/navigation
+      if (isBrowserAbort) {
+        return { payload: null, status: "ERROR" };
+      }
+      // A real network fail usually has no status AND is a TypeError
+      const isFetchFailed =
+        (err.message === "Failed to fetch" || err.name === "TypeError") &&
+        !err.status;
 
-    let msg = err.message;
+      let msg = err.message;
 
-    if (isFetchFailed || isTimeout || err.status >= 500) {
-      msg = null;
-      return {
-        payload: null,
-        status: "ERROR",
-        message: isFetchFailed ? msg : "Connection failed or timed out",
-      };
-    }
+      if (isFetchFailed || isTimeout || err.status >= 500) {
+        msg = null;
+        return {
+          payload: null,
+          status: "ERROR",
+          message: isFetchFailed ? msg : "Connection failed or timed out",
+        };
+      }
 
-    // 1. Stop the loop if we've tried 2 times
-    if (attempt >= 2) {
-      console.error("Stopping infinite refresh loop.");
+      // // 1. Stop the loop if we've tried 2 times
+      // if (attempt >= 1) {
+      //   console.error("Stopping infinite refresh loop.");
+      //   return {
+      //     payload: null,
+      //     status: "UNAUTHORIZED",
+      //     message: "Session expired. Please log in again.",
+      //   };
+      // }
+
+      // 2. Catch 401 (Missing/Expired) OR 403 (Invalid)
+      if (err.status === 401 || err.status === 403) {
+        msg = null;
+        // Try to refresh once
+        const refreshed = await refreshAccessToken();
+        if (refreshed) {
+          // Only one recursive call allowed here
+          try {
+            const retryRes = await fetcher<{ user: IUser }>(
+              serverRoutes.verifyAuthToken,
+            );
+            return { payload: retryRes.user, status: "SUCCESS" };
+          } catch {
+            // If the retry after refresh fails, it's a hard UNAUTHORIZED
+            console.error("Retry failed");
+            return {
+              payload: null,
+              status: "UNAUTHORIZED",
+              message: "Session expired. Please log in again.",
+            };
+          }
+        }
+      }
+
       return {
         payload: null,
         status: "UNAUTHORIZED",
-        message: "Session expired. Please log in again.",
+        message: msg,
       };
     }
-
-    // 2. Catch 401 (Missing/Expired) OR 403 (Invalid)
-    if (err.status === 401 || err.status === 403) {
-      msg = null;
-      if (attempt === 0) {
-        await delay(500);
-        return fetchUserWithTokenCheck(1);
-      }
-      // If we already waited or if the wait didn't work, try to refresh.
-      const refreshed = await refreshAccessToken();
-      if (refreshed) {
-        // Increment attempt here to prevent infinite refresh loops
-        return fetchUserWithTokenCheck(attempt + 1);
-      }
-    }
-
-    return {
-      payload: null,
-      status: "UNAUTHORIZED",
-      message: msg,
-    };
-  }
-};
+  };
 
 const refreshAccessToken = async () => {
   try {

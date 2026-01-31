@@ -43,7 +43,7 @@ export const GlobalManager = ({ children }: { children: React.ReactNode }) => {
             //     });
             // }
             await verifySignal();
-            await delay(500)
+            // await delay(500)
             await verifyAuth();
         }
         init();

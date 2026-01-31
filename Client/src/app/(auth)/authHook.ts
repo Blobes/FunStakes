@@ -31,7 +31,6 @@ export const useAuth = () => {
     const savedPage = getFromLocalStorage<Page>();
     const pagePath = !isOnAuthRoute ? pathname : lastPage.path;
 
-    // We only set the last page on the first attempt to avoid redundant storage writes
     if (retryCount === 0) {
       setLastPage(
         isOnAuthRoute && savedPage
@@ -39,55 +38,47 @@ export const useAuth = () => {
           : { title: extractPageTitle(pagePath), path: pagePath },
       );
     }
+
     try {
       const res = await fetchUserWithTokenCheck();
 
-      // SUCCESS: Fully authenticated
+      // 1️⃣ SUCCESS
       if (res.status === "SUCCESS" && res.payload) {
         setAuthUser(res.payload);
         setLoginStatus("AUTHENTICATED");
         return;
       }
-      // SILENT RETRY: The "Cold Boot" Fix
-      // If we get UNAUTHORIZED on the first try, wait 800ms and try one more time
-      // This catches instances where cookies weren't attached because the browser was idle
+
+      // 2️⃣ SILENT RETRY (Cold Boot Only)
+      // We only trigger this if the fetcher explicitly returned UNAUTHORIZED
+      // and it's our first attempt in the hook.
       if (res.status === "UNAUTHORIZED" && retryCount === 0 && isOnline) {
-        console.warn("Auth failed on cold boot. Performing silent retry...");
-        await delay(1000);
+        console.warn("Attempt 1 failed. Waiting for browser cookie sync...");
+        await delay(500);
         return verifyAuth(1);
       }
-      // NETWORK ERROR / OFFLINE
+
+      // 4️⃣ NETWORK ERROR / OFFLINE
       if (res.status === "ERROR" || isOffline || isUnstableNetwork) {
         setLoginStatus("UNKNOWN");
-        if (res.message) {
+        // Only show error message if it's a real failure, not a simple 401
+        if (res.message)
           setSBMessage({
-            msg: {
-              content: res.message,
-              msgStatus: "ERROR",
-              hasClose: true,
-            },
+            msg: { content: res.message, msgStatus: "ERROR", hasClose: true },
           });
-        }
         return;
       }
 
-      // UNAUTHENTICATED: Only set this if the retry also failed
-      if (isOnline && res.status === "UNAUTHORIZED") {
+      // 3️⃣ FINAL UNAUTHENTICATED STATE
+      if (res.status === "UNAUTHORIZED" && isOnline) {
         setAuthUser(null);
         setLoginStatus("UNAUTHENTICATED");
         return;
       }
     } catch (err: any) {
-      // If a hard crash happens, try one silent retry before showing error
-      if (retryCount === 0 && isOnline) {
-        await delay(800);
-        return verifyAuth(1);
-      }
+      // If we reach here, a critical code error occurred
       setAuthUser(null);
       setLoginStatus("UNKNOWN");
-      setSBMessage({
-        msg: { content: "Unable to verify session", msgStatus: "ERROR" },
-      });
     }
   };
 
