@@ -21,20 +21,7 @@ export const useAuth = () => {
   const router = useRouter();
   const pathname = usePathname();
 
-  // Verify authentication with Silent Retry for cold boots
   const verifyAuth = async (retryCount = 0) => {
-    const isOnAuthRoute = isOnAuth(pathname);
-    const savedPage = getFromLocalStorage<Page>();
-    const pagePath = !isOnAuthRoute ? pathname : lastPage.path;
-
-    if (retryCount === 0) {
-      setLastPage(
-        isOnAuthRoute && savedPage
-          ? savedPage
-          : { title: extractPageTitle(pagePath), path: pagePath },
-      );
-    }
-
     try {
       const res = await fetchUserWithTokenCheck();
 
@@ -66,7 +53,7 @@ export const useAuth = () => {
       }
 
       // 3️⃣ FINAL UNAUTHENTICATED STATE
-      if (res.status === "UNAUTHORIZED" && isOnline) {
+      if (res.status === "UNAUTHORIZED" && retryCount !== 0 && isOnline) {
         setAuthUser(null);
         setLoginStatus("UNAUTHENTICATED");
         return;
