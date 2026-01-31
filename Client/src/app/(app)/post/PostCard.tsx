@@ -227,7 +227,7 @@ export const PostCard = ({ post, style = {} }: PostProps) => {
       {/* Content media */}
       {postImg && (
         <Image src={postImg} alt="Post image"
-          style={{ width: "100%" }} />
+          style={{ width: "100%", height: "auto" }} />
       )}
 
       {/* Info Strip */}

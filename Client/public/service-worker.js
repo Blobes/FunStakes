@@ -28,8 +28,8 @@ self.addEventListener("fetch", (event) => {
 
   if (request.method !== "GET") return;
 
-  /* NEVER CACHE AUTH */
-  if (url.pathname.startsWith("/api/auth")) return;
+  /* NEVER CACHE SERVER APIs */
+  if (url.pathname.startsWith("/api/")) return;
 
   /* NEXT STATIC ASSETS */
   if (url.pathname.startsWith("/_next/static")) {
@@ -63,20 +63,20 @@ self.addEventListener("fetch", (event) => {
     return;
   }
 
-  /* TIMELINE PAGES */
+  /* POST PAGES */
   if (url.pathname === "/" || url.pathname.startsWith("/post")) {
     event.respondWith(networkFirst(request, STATIC_CACHE));
     return;
   }
 
   /* API DATA */
-  if (
-    url.pathname.startsWith("/api/posts") ||
-    url.pathname.startsWith("/api/users")
-  ) {
-    event.respondWith(networkFirst(request, API_CACHE));
-    return;
-  }
+  // if (
+  //   url.pathname.startsWith("/api/posts") ||
+  //   url.pathname.startsWith("/api/users")
+  // ) {
+  //   event.respondWith(networkFirst(request, API_CACHE));
+  //   return;
+  // }
 });
 
 /* ---------- STRATEGIES ---------- */
