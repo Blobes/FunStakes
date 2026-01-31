@@ -17,7 +17,7 @@ export const useDragClose = (config: DragConfig) => {
   const {
     axis,
     direction,
-    threshold = axis === "y" ? 150 : 100,
+    threshold = axis === "y" ? 150 : 250,
     onClose,
   } = config;
 
