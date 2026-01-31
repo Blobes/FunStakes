@@ -1,5 +1,5 @@
 import jwt, { JwtPayload } from "jsonwebtoken";
-import { Request, Response, NextFunction } from "express";
+import { Request, Response, NextFunction, RequestHandler } from "express";
 
 export interface JwtUserPayload {
   id: any;
@@ -15,7 +15,7 @@ export interface AuthRequest extends Request {
   user?: JwtUserPayload;
 }
 
-const verifyAuthToken = (
+const verifyAuthToken: RequestHandler = (
   req: AuthRequest,
   res: Response,
   next: NextFunction,
@@ -23,9 +23,10 @@ const verifyAuthToken = (
   const token = req.cookies.access_token;
 
   if (!token) {
-    return res
+    res
       .status(401)
       .json({ message: "No token provided", status: "UNAUTHORIZED" });
+    return;
   }
 
   jwt.verify(
@@ -36,9 +37,10 @@ const verifyAuthToken = (
       payload: JwtPayload | string | undefined,
     ) => {
       if (err) {
-        return res
+        res
           .status(401)
-          .json({ message: "Invalid access token", status: "UNAUTHORIZED" });
+          .json({ message: "Invalid token", status: "UNAUTHORIZED" });
+        return;
       }
 
       req.user = payload as JwtUserPayload; //attach user data to the request
