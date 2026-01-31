@@ -14,7 +14,12 @@ export const useDragClose = (config: DragConfig) => {
   const [startPos, setStartPos] = useState(0);
   const [dragOffset, setDragOffset] = useState(0);
 
-  const { axis, direction, threshold = 150, onClose } = config;
+  const {
+    axis,
+    direction,
+    threshold = axis === "y" ? 150 : 100,
+    onClose,
+  } = config;
 
   const handleTouchStart = useCallback(
     (e: React.TouchEvent) => {
