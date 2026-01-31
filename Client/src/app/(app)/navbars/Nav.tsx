@@ -126,6 +126,7 @@ const UserInfo = () => {
         ]}
         style={{
           justifyContent: "space-between",
+          fontSize: "14px"
         }}
       />
     </Stack>
