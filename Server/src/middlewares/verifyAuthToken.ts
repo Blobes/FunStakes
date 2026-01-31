@@ -18,7 +18,7 @@ export interface AuthRequest extends Request {
 const verifyAuthToken = (
   req: AuthRequest,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) => {
   const token = req.cookies.access_token;
 
@@ -34,17 +34,17 @@ const verifyAuthToken = (
     process.env.JWT_SECRET as string,
     (
       err: jwt.VerifyErrors | null,
-      payload: JwtPayload | string | undefined
+      payload: JwtPayload | string | undefined,
     ) => {
-      if (err || typeof payload !== "object" || !("id" in payload)) {
+      if (err) {
         return res
           .status(401)
-          .json({ message: "Invalid token", status: "UNAUTHORIZED" });
+          .json({ message: "Invalid access token", status: "UNAUTHORIZED" });
       }
 
       req.user = payload as JwtUserPayload; //attach user data to the request
       next();
-    }
+    },
   );
 };
 

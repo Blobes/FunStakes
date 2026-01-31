@@ -4,16 +4,18 @@ import { genAccessTokens } from "@/helper";
 
 export const refreshAuthToken = async (
   req: Request,
-  res: Response
+  res: Response,
 ): Promise<any> => {
   const refreshToken = req.cookies.refresh_token;
   if (!refreshToken)
-    return res.status(401).json({ message: "No refresh token" });
+    return res
+      .status(401)
+      .json({ message: "No refresh token", status: "UNAUTHORIZED" });
 
   try {
     const payload = jwt.verify(
       refreshToken,
-      process.env.REFRESH_TOKEN_SECRET as string
+      process.env.REFRESH_TOKEN_SECRET as string,
     ) as JwtPayload;
     const user = { _id: payload.id };
     genAccessTokens(user, res);
@@ -22,6 +24,11 @@ export const refreshAuthToken = async (
   } catch (err) {
     res.clearCookie("access_token");
     res.clearCookie("refresh_token");
-    res.status(401).json({ message: "Expired or invalid refresh token" });
+    res
+      .status(401)
+      .json({
+        message: err || "Expired or invalid refresh token",
+        status: "UNAUTHORIZED",
+      });
   }
 };

@@ -67,6 +67,7 @@ export const fetchUserWithTokenCheck =
   async (): Promise<TokenCheckResponse> => {
     try {
       const res = await fetcher<{ user: IUser }>(serverRoutes.verifyAuthToken);
+      console.log(true);
       return { payload: res.user, status: "SUCCESS" };
     } catch (err: any) {
       // Check if it's a network/timeout error
@@ -119,15 +120,15 @@ export const fetchUserWithTokenCheck =
           } catch {
             // If the retry after refresh fails, it's a hard UNAUTHORIZED
             console.error("Retry failed");
-            return {
-              payload: null,
-              status: "UNAUTHORIZED",
-              message: "Session expired. Please log in again.",
-            };
+            // return {
+            //   payload: null,
+            //   status: "UNAUTHORIZED",
+            //   message: "Session expired. Please log in again.",
+            // };
           }
         }
       }
-
+      console.log(true);
       return {
         payload: null,
         status: "UNAUTHORIZED",

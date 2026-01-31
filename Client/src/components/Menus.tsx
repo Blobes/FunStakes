@@ -43,6 +43,7 @@ export const MenuPopup = forwardRef<MenuRef, MenuProps>(
         sx={{
           alignItems: "center",
           zIndex: zIndexes.maximum,
+          flexDirection: "column",
           padding: theme.boxSpacing(2, 0),
           [`& .${paperClasses.root}`]: {
             borderRadius: theme.radius[2],
