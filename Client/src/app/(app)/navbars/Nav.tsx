@@ -126,7 +126,7 @@ const UserInfo = () => {
         ]}
         style={{
           justifyContent: "space-between",
-          fontSize: "14px"
+          fontSize: "13px"
         }}
       />
     </Stack>
@@ -175,7 +175,7 @@ export const MobileNav = ({ }) => {
             },
           }}
         />
-        <Divider />
+        <Divider sx={{ marginTop: theme.boxSpacing(20) }} />
         <ThemeMode />
       </Stack>
     </Stack>
