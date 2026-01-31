@@ -34,7 +34,7 @@ export const AppHeader: React.FC<AppHeaderProps> = ({ scrollRef }) => {
   /* ---------------------------------- effects --------------------------------- */
   useEffect(() => {
     window.addEventListener("resize", handleWindowResize);
-    // openMobileNav()
+    //  openMobileNav()
     return () => window.removeEventListener("resize", handleWindowResize);
   }, []);
 
@@ -51,12 +51,16 @@ export const AppHeader: React.FC<AppHeaderProps> = ({ scrollRef }) => {
       header: <UserAvatar style={{ width: "35px", height: "35px" }} />,
       content: <MobileNav />,
       source: "navbar",
+      dragToClose: true,
+      transition: {
+        mobile: { type: "slide", direction: "left" },
+      },
       onClose: closeModal,
       style: {
         base: { overlay: { padding: theme.boxSpacing(6) } },
         smallScreen: {
-          overlay: { padding: theme.boxSpacing(2) },
-          content: { height: "100%" }
+          overlay: { padding: theme.boxSpacing(0) },
+          content: { height: "100%", borderRadius: "0px" }
         },
         header: {
           justifyContent: "space-between",

@@ -32,7 +32,7 @@ export default function LoginPage() {
         height: "100%",
         alignItems: "center",
         justifyContent: "center",
-        padding: theme.boxSpacing(10),
+        padding: theme.boxSpacing(6),
         //Pattern background with fade effect
         ...applyBGPattern()
       }}>
@@ -42,6 +42,9 @@ export default function LoginPage() {
             container: {
               width: "400px",
               padding: theme.boxSpacing(18, 16),
+              mobile: {
+                padding: theme.boxSpacing(16, 10),
+              },
             },
           }}
         />

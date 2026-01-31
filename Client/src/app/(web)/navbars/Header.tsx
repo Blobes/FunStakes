@@ -28,7 +28,7 @@ export const Header: React.FC = () => {
   /* ---------------------------------- effects --------------------------------- */
   useEffect(() => {
     window.addEventListener("resize", handleWindowResize);
-    // openMobileWebNav()
+    //  openMobileWebNav()
     return () => window.removeEventListener("resize", handleWindowResize);
   }, []);
 
@@ -46,7 +46,11 @@ export const Header: React.FC = () => {
       source: "navbar",
       onClose: () => closeModal(),
       style: {
-        base: { content: { height: "100%" } },
+        base: { overlay: { padding: theme.boxSpacing(6) } },
+        smallScreen: {
+          overlay: { padding: theme.boxSpacing(0) },
+          content: { height: "100%", width: "80%", borderRadius: "0px" }
+        },
       },
     });
 
@@ -68,7 +72,7 @@ export const Header: React.FC = () => {
       }}>
       {/* Logo */}
       <AnchorLink
-        url={clientRoutes.home.path}
+        url={clientRoutes.about.path}
         onClick={() =>
           handleClick(clientRoutes.about)
         }>
@@ -111,7 +115,7 @@ export const Header: React.FC = () => {
                 <AppButton
                   href={clientRoutes.signup.path}
                   style={{ fontSize: "14px" }}
-                  onClick={(e: React.MouseEvent<HTMLButtonElement>) =>
+                  onClick={(e: React.MouseEvent) =>
                     handleClick(clientRoutes.signup, e, { type: "element", savePage: false })
                   }>
                   Sign up
@@ -120,7 +124,7 @@ export const Header: React.FC = () => {
                   href={clientRoutes.login.path}
                   variant="outlined"
                   style={{ fontSize: "14px" }}
-                  onClick={(e: React.MouseEvent<HTMLButtonElement>) =>
+                  onClick={(e: React.MouseEvent) =>
                     handleClick(clientRoutes.login, e, { type: "element", savePage: false })
                   }>
                   Login
