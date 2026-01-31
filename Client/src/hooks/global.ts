@@ -53,7 +53,7 @@ export const useController = () => {
     type?: "element" | "link";
     savePage?: boolean;
   }
-  const handleClick = (
+  const handleClick = async (
     page: Page,
     e?: React.MouseEvent,
     option: ClickOptions = { type: "link", savePage: true },
@@ -62,6 +62,7 @@ export const useController = () => {
     if (modalContent) closeModal();
     if (option.type === "element") {
       e?.preventDefault();
+      await delay();
       router.push(page.path);
     }
   };

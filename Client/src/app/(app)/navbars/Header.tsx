@@ -34,7 +34,8 @@ export const AppHeader: React.FC<AppHeaderProps> = ({ scrollRef }) => {
   /* ---------------------------------- effects --------------------------------- */
   useEffect(() => {
     window.addEventListener("resize", handleWindowResize);
-    openMobileNav()
+    //  openMobileNav()
+
     return () => window.removeEventListener("resize", handleWindowResize);
   }, []);
 

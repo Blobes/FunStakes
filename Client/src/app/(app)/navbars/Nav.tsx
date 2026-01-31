@@ -37,7 +37,7 @@ export const DesktopNav = ({
           md: "flex",
         },
         position: "absolute",
-        flexDirection: "row",
+        // flexDirection: "",
         gap: theme.gap(4),
       }}>
       <MenuPopup

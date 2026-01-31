@@ -227,7 +227,11 @@ export const PostCard = ({ post, style = {} }: PostProps) => {
       {/* Content media */}
       {postImg && (
         <Image src={postImg} alt="Post image"
-          style={{ width: "100%", height: "auto" }} />
+          style={{
+            width: "100%", height: "auto",
+            ...(isDesktop && { maxHeight: "120svh" }),
+            objectFit: "cover"
+          }} />
       )}
 
       {/* Info Strip */}
