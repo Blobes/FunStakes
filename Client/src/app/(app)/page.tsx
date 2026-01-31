@@ -25,7 +25,7 @@ export default function HomePage() {
 
   useEffect(() => {
     if (savedPath && savedPath !== pathname) router.push(savedPage.path);
-  }, [savedPath]);
+  }, [pathname]);
 
   return (
     <>
