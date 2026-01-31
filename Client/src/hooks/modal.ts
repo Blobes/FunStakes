@@ -5,8 +5,9 @@ type Direction = "ltr" | "rtl"; // Left-to-Right or Right-to-Left
 
 interface DragConfig {
   axis: Axis;
-  direction?: Direction; // Required if axis is "x"
-  threshold?: number; // Pixels to drag before triggering close
+  direction?: Direction;
+  threshold?: number;
+  closeAtMiddle?: boolean;
   onClose?: () => void;
 }
 
@@ -17,7 +18,8 @@ export const useDragClose = (config: DragConfig) => {
   const {
     axis,
     direction,
-    threshold = axis === "y" ? 150 : 250,
+    closeAtMiddle = false,
+    threshold = 150,
     onClose,
   } = config;
 
@@ -52,11 +54,17 @@ export const useDragClose = (config: DragConfig) => {
   );
 
   const handleTouchEnd = useCallback(() => {
-    if (dragOffset > threshold) {
+    // Determine the dynamic threshold
+    let finalThreshold = threshold;
+    if (axis === "x" && closeAtMiddle && typeof window !== "undefined") {
+      // Trigger close if dragged past 45% of the screen width
+      finalThreshold = window.innerWidth * 0.35;
+    }
+    if (dragOffset > finalThreshold) {
       if (onClose) onClose();
     }
     setDragOffset(0);
-  }, [dragOffset, threshold, onClose]);
+  }, [dragOffset, threshold, onClose, axis, closeAtMiddle]);
 
   return {
     axis,

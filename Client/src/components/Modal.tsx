@@ -73,8 +73,8 @@ export const Modal = forwardRef<ModalRef, ModalProps>(
       axis: transDir === "up" || transDir === "down" ? "y" : "x",
       direction: transDir === "left" ? "ltr" :
         transDir === "right" ? "rtl" : undefined,
+      closeAtMiddle: true,
       onClose: () => setOpen(false),
-      threshold: 150,
     });
 
     useImperativeHandle(ref, () => ({
@@ -157,7 +157,7 @@ export const Modal = forwardRef<ModalRef, ModalProps>(
 
               // Drag styling
               ...(dragOffset > 0 && {
-                // This allows the Slide to happen, but adds our dragY on top of it
+                // This allows the Slide to happen, but adds our drag X & Y on top of it
                 transform: `translate${axis === "x" ? "X" : "Y"}(var(--drag-offset, 0px))!important`,
                 // We only want a transition when the user lets go (snapping back)
                 transition: dragOffset === 0
