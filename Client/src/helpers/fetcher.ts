@@ -21,7 +21,7 @@ export const fetcher = async <T>(
       ...options.headers,
     };
 
-    const response = await fetch(`${endpoint}`, {
+    const response = await fetch(`${BASE_URL}${endpoint}`, {
       ...options,
       method: options.method || "GET",
       headers,
