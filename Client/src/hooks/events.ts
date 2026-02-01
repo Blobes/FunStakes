@@ -60,9 +60,10 @@ export const useEvent = () => {
   const handlePageLoad = () => {
     const canary = getCookie("logged_in");
     const isSyncing = sessionStorage.getItem("auth_syncing");
+    const isMobile = window.innerWidth < 900;
 
     // If canary is missing on mobile
-    if (!canary && !isDesktop) {
+    if (!canary && isMobile) {
       // Check if we already tried reloading once
       if (isSyncing) {
         console.log("Sync attempted, but no session found. Stopping.");

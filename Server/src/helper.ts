@@ -31,8 +31,10 @@ export const genAccessTokens = (user: any, res: Response) => {
     httpOnly: false,
     secure: true,
     sameSite: "none",
+    path: "/",
     maxAge: 30 * 60 * 1000,
   });
+
   return accessToken;
 };
 
