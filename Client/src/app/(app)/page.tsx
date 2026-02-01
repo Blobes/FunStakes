@@ -30,22 +30,27 @@ export default function HomePage() {
   //   if (savedPath && savedPath !== pathname) router.push(savedPage.path);
   // }, [pathname]);
 
-  return loginStatus === "AUTHENTICATED" ? (
-    isDesktop ? (
-      <Stack sx={{
-        height: "100%",
-        flexDirection: "row",
-        overflow: "hidden",
-        borderTop: `1px solid ${theme.palette.gray.trans[1]}`,
-      }}>
-        <Posts />
-        <RightSidebar />
-      </Stack>
-    ) : (
-      <Posts />
-    )
-  ) : <Welcome />
-
-
+  return (
+    <>
+      {loginStatus === "AUTHENTICATED" && (
+        isDesktop ? (
+          <Stack sx={{
+            height: "100%",
+            flexDirection: "row",
+            overflow: "hidden",
+            borderTop: `1px solid ${theme.palette.gray.trans[1]}`,
+          }}>
+            <Posts />
+            <RightSidebar />
+          </Stack>
+        ) : (
+          <Posts />
+        )
+      )}
+      {loginStatus === "UNAUTHENTICATED" && (
+        <Welcome />
+      )}
+    </>
+  )
 
 }

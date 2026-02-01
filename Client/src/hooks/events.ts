@@ -7,13 +7,13 @@ import { useAuth } from "@/app/(auth)/authHook";
 
 export const useEvent = () => {
   const router = useRouter();
-  const { setSBMessage, removeMessage } = useSnackbar();
+  const { setSBMessage, removeSBMessage: removeMessage } = useSnackbar();
   const { verifySignal } = useController();
   const { verifyAuth } = useAuth();
 
   const handleBrowserEvents = () => {
     const online = async () => {
-      removeMessage(1);
+      removeMessage();
       await verifySignal();
       await verifyAuth();
     };
