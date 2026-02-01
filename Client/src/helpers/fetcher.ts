@@ -103,19 +103,15 @@ export const fetchUserWithTokenCheck =
             return { payload: retryRes.user, status: "SUCCESS" };
           } catch (err: any) {
             console.error("Retry failed");
-            msg = err.message;
             return {
               payload: null,
               status: "ERROR",
-              message: msg,
             };
           }
         }
-        msg = null;
         return {
           payload: null,
           status: "UNAUTHORIZED",
-          message: msg,
         };
       }
 
