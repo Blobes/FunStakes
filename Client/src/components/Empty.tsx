@@ -22,13 +22,15 @@ interface EmptyProps {
     variant?: "contained" | "outlined";
     label?: string | React.ReactNode;
     toolTip?: string;
-    action: () => void;
+    action: () => void | Promise<void>;
+    href?: string
   };
   secondaryCta?: {
     type?: "BUTTON" | "ICON";
     label?: string | React.ReactNode;
     toolTip?: string;
     action: () => void;
+    href?: string
   };
 }
 
@@ -43,6 +45,11 @@ export const Empty: React.FC<EmptyProps> = ({
   const theme = useTheme();
   const primaryCtaType = primaryCta?.type || "BUTTON";
   const secondaryCtaType = secondaryCta?.type || "BUTTON";
+
+  const primHref = primaryCta?.href ? { href: primaryCta?.href } : {}
+  const secHref = secondaryCta?.href ? { href: secondaryCta?.href } : {}
+
+
   return (
     <Stack
       sx={{
@@ -100,6 +107,7 @@ export const Empty: React.FC<EmptyProps> = ({
         (primaryCtaType === "BUTTON" ? (
           <AppButton
             variant={primaryCta.variant || "contained"}
+            {...primHref}
             style={{
               fontSize: "14px",
               padding: theme.boxSpacing(2, 6),
@@ -111,7 +119,7 @@ export const Empty: React.FC<EmptyProps> = ({
           </AppButton>
         ) : (
           <BasicTooltip title={primaryCta.toolTip || ""}>
-            <IconButton onClick={primaryCta.action}>
+            <IconButton onClick={primaryCta.action} {...primHref}>
               {primaryCta.label || <RefreshCcw />}
             </IconButton>
           </BasicTooltip>
@@ -121,12 +129,13 @@ export const Empty: React.FC<EmptyProps> = ({
           <AppButton
             variant="text"
             onClick={secondaryCta.action}
+            {...secHref}
             style={{ padding: theme.boxSpacing(2, 6), ...style?.secondaryCta }}>
             {secondaryCta.label || "Start"}
           </AppButton>
         ) : (
           <BasicTooltip title={secondaryCta.toolTip || ""}>
-            <IconButton onClick={secondaryCta.action}>
+            <IconButton onClick={secondaryCta.action} {...secHref}>
               {secondaryCta.label || <RefreshCcw />}
             </IconButton>
           </BasicTooltip>

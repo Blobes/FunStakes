@@ -50,6 +50,7 @@ export const DesktopNav = ({
               padding: theme.boxSpacing(4, 8),
               gap: theme.gap(8),
               textAlign: "left",
+              width: "100%",
               "& svg": {
                 stroke: theme.palette.gray[200],
                 width: "20px",

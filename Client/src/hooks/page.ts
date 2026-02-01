@@ -46,7 +46,7 @@ export const usePage = () => {
 
     if (loadPage) {
       setGlobalLoading(true);
-      await delay(1000);
+      await delay(2000);
       setGlobalLoading(false);
     }
 

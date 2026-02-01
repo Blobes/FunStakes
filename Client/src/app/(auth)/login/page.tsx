@@ -19,6 +19,7 @@ export default function LoginPage() {
   const { setLastPage } = usePage();
   const { handleLogout } = useAuth();
   const { applyBGPattern } = useStyles()
+  const { navigateTo } = usePage()
 
   const handleBack = () => {
     setLastPage(clientRoutes.home);
@@ -65,7 +66,11 @@ export default function LoginPage() {
             },
           }}
           icon={<ShieldCheck />}
-          primaryCta={{ label: "Go to Funstakes.com", action: handleBack }}
+          primaryCta={{
+            label: "Go to Funstakes.com",
+            action: () => navigateTo(clientRoutes.home),
+            href: clientRoutes.home.path
+          }}
           secondaryCta={{ label: "Logout", action: handleLogout }}
         />
       )}
