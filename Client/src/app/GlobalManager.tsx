@@ -65,7 +65,7 @@ export const GlobalManager = ({ children }: { children: React.ReactNode }) => {
         return <SplashUI />;
     }
     // Conditionally render the offline UI
-    if (isOffline || isUnstableNetwork || loginStatus === "UNKNOWN") {
+    if ((isOffline || isUnstableNetwork) && loginStatus === "UNKNOWN") {
         return <OfflineUI />;
     }
 

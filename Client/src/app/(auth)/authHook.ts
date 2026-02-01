@@ -47,7 +47,6 @@ export const useAuth = () => {
       // If we reach here, a critical code error occurred
       setAuthUser(null);
       setLoginStatus("UNKNOWN");
-    } finally {
     }
   };
 

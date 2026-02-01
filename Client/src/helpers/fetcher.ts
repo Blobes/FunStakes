@@ -69,6 +69,7 @@ export const fetchUserWithTokenCheck =
       return { payload: res.user, status: "SUCCESS" };
     } catch (err: any) {
       let msg = err.message;
+
       // Check if it's a network error
       const isNetworkError =
         err.name === "AbortError" ||
@@ -91,7 +92,6 @@ export const fetchUserWithTokenCheck =
 
       // Catch 401 (Missing/Expired) OR 403 (Invalid)
       if (err.status === 401 || err.status === 403) {
-        msg = null;
         // Try to refresh once
         const refreshed = await refreshAccessToken();
         if (refreshed) {
@@ -101,15 +101,27 @@ export const fetchUserWithTokenCheck =
               serverRoutes.verifyAuthToken,
             );
             return { payload: retryRes.user, status: "SUCCESS" };
-          } catch {
-            // If the retry after refresh fails, it's a hard UNAUTHORIZED
+          } catch (err: any) {
             console.error("Retry failed");
+            msg = err.message;
+            return {
+              payload: null,
+              status: "ERROR",
+              message: msg,
+            };
           }
         }
+        msg = null;
+        return {
+          payload: null,
+          status: "UNAUTHORIZED",
+          message: msg,
+        };
       }
+
       return {
         payload: null,
-        status: "UNAUTHORIZED",
+        status: "ERROR",
         message: msg,
       };
     }
