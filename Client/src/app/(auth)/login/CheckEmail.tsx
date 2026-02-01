@@ -71,7 +71,7 @@ export const CheckEmail: React.FC<CheckProps> = ({
     e.preventDefault();
 
     setAuthLoading(true);
-
+    await delay();
     const res = await checkEmail(email);
     if (res) {
       if (res.emailNotTaken === false) {
@@ -81,7 +81,7 @@ export const CheckEmail: React.FC<CheckProps> = ({
         router.replace(`/auth/signup?email=${email}`);
       }
     }
-    await delay();
+
     setAuthLoading(false);
   };
 
