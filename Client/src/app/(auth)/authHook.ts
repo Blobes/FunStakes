@@ -4,11 +4,9 @@ import { fetcher, fetchUserWithTokenCheck } from "@/helpers/fetcher";
 import { clientRoutes, serverRoutes } from "@/helpers/routes";
 import { useGlobalContext } from "../GlobalContext";
 import { useController } from "@/hooks/global";
-import { delay } from "@/helpers/global";
 import { usePathname, useRouter } from "next/navigation";
 import { useSnackbar } from "@/hooks/snackbar";
 import { usePage } from "@/hooks/page";
-import { deleteCookie, getCookie, setCookie } from "@/helpers/storage";
 
 export const useAuth = () => {
   const { setAuthUser, setLoginStatus, setSnackBarMsg } = useGlobalContext();
@@ -18,25 +16,14 @@ export const useAuth = () => {
   const router = useRouter();
   const pathname = usePathname();
 
-  const verifyAuth = async (retryCount = 0) => {
+  const verifyAuth = async () => {
     try {
       const res = await fetchUserWithTokenCheck();
 
-      // 1️⃣ SUCCESS
       if (res.status === "SUCCESS" && res.payload) {
         setAuthUser(res.payload);
         setLoginStatus("AUTHENTICATED");
-        setCookie("was_logged_in", "true", 60 * 24 * 30);
         return;
-      }
-
-      // 2️⃣ SILENT RETRY (Cold Boot Only)
-      // We only trigger this if the fetcher explicitly returned UNAUTHORIZED
-      // and it's our first attempt in the hook.
-      if (res.status === "UNAUTHORIZED" && retryCount === 0 && isOnline) {
-        console.warn("Attempt 1 failed. Waiting for browser cookie sync...");
-        await delay(500);
-        return verifyAuth(1);
       }
 
       // 4️⃣ NETWORK ERROR / OFFLINE
@@ -51,7 +38,7 @@ export const useAuth = () => {
       }
 
       // 3️⃣ FINAL UNAUTHENTICATED STATE
-      if (res.status === "UNAUTHORIZED" && retryCount !== 0 && isOnline) {
+      if (res.status === "UNAUTHORIZED" && isOnline) {
         setAuthUser(null);
         setLoginStatus("UNAUTHENTICATED");
         return;
@@ -70,7 +57,6 @@ export const useAuth = () => {
       await fetcher(serverRoutes.logout, { method: "POST" });
       setAuthUser(null);
       setLoginStatus("UNAUTHENTICATED");
-      deleteCookie("was_logged_in");
       sessionStorage.removeItem("auth_syncing");
       if (pathname !== clientRoutes.home.path) {
         setLastPage(clientRoutes.home);

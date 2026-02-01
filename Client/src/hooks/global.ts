@@ -44,7 +44,7 @@ export const useController = () => {
     setSignalCheck(true);
     const status = await checkSignal();
     setNetworkStatus(status);
-    await delay(1000);
+    await delay(500);
     setSignalCheck(false);
   };
 

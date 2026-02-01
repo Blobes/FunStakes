@@ -3,7 +3,6 @@
 import { useGlobalContext } from "@/app/GlobalContext";
 import { fetcher } from "@/helpers/fetcher";
 import { IUser, Page, SingleResponse } from "@/types";
-
 import {
   clearLoginLock,
   formatRemainingTime,
@@ -115,7 +114,6 @@ export const useLogin = () => {
 
       setAuthUser(payload);
       setLoginStatus("AUTHENTICATED");
-      setCookie("was_logged_in", "true", 60 * 24 * 30);
 
       // const isExcludedRoute = flaggedRoutes.auth.includes(pathname);
       const savedPage = getFromLocalStorage<Page>();

@@ -5,35 +5,31 @@ import { SnackBars } from "@/components/SnackBars";
 import { useGlobalContext } from "./GlobalContext";
 import { Modal, ModalRef } from "@/components/Modal";
 import { useController } from "@/hooks/global";
-import { delay } from "@/helpers/global";
 import { useAuth } from "@/app/(auth)/authHook";
 import { OfflineUI } from "../components/OfflineUI";
 import { SplashUI } from "../components/SplashUI";
 import { registerSW } from "@/helpers/registerSW";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { usePage } from "@/hooks/page";
 import { useEvent } from "@/hooks/events";
-import { getCookie } from "@/helpers/storage";
+
 
 export const GlobalManager = ({ children }: { children: React.ReactNode }) => {
-    const { handleBrowserEvents, handlePageLoad } = useEvent();
+    const { handleBrowserEvents } = useEvent();
     const { verifyAuth } = useAuth();
     const modalRef = useRef<ModalRef>(null);
     const { openModal, verifySignal, isUnstableNetwork, isOffline } = useController();
     const { handleCurrentPage } = usePage()
-    const { snackBarMsg, loginStatus, modalContent, authUser,
+    const { snackBarMsg, loginStatus, modalContent,
         networkStatus, isGlobalLoading } = useGlobalContext();
     const [mounted, setMounted] = useState(false);
     const pathname = usePathname()
-    const router = useRouter();
 
 
     //  MOUNT && SERVICE WORKER REGISTRATION
     useEffect(() => {
         setMounted(true);
         registerSW();
-        //  handlePageLoad()
-        //Browser Events
         handleBrowserEvents()
     }, []);
 
@@ -60,10 +56,6 @@ export const GlobalManager = ({ children }: { children: React.ReactNode }) => {
     // PAGE LOAD HANDLER
     useEffect(() => {
         handleCurrentPage()
-        // const recentlyAway = getCookie("recently_away");
-        // if (recentlyAway && loginStatus === "UNAUTHENTICATED") {
-        //     router.refresh();
-        // }
     }, [pathname]);
 
 

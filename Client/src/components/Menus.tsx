@@ -9,6 +9,7 @@ export interface MenuRef {
   openMenu: (anchor: HTMLElement) => void;
   closeMenu: () => void;
 }
+
 interface MenuProps {
   contentElement: ReactNode;
 }

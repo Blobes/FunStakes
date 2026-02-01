@@ -4,7 +4,6 @@ import { useTheme } from "@mui/material/styles";
 import { AuthStepper } from "./AuthStepper";
 import { Stack } from "@mui/material";
 import { useGlobalContext } from "@/app/GlobalContext";
-import { useRouter } from "next/navigation";
 import { clientRoutes } from "@/helpers/routes";
 import { Empty } from "@/components/Empty";
 import { ShieldCheck } from "lucide-react";
@@ -15,11 +14,9 @@ import { usePage } from "@/hooks/page";
 export default function LoginPage() {
   const theme = useTheme();
   const { loginStatus } = useGlobalContext();
-  const { setLastPage } = usePage();
   const { handleLogout } = useAuth();
   const { applyBGPattern } = useStyles()
   const { navigateTo } = usePage()
-
 
   return (
     <Stack

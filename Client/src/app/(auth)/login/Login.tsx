@@ -41,7 +41,8 @@ export const Login: React.FC<LoginProps> = ({
     lockTimestamp,
     startLockCountdown,
   } = useLogin();
-  const { inlineMsg, setInlineMsg, isAuthLoading, setAuthLoading, lastPage } =
+  const { inlineMsg, setInlineMsg, isAuthLoading, setAuthLoading,
+    isGlobalLoading, setGlobalLoading, lastPage } =
     useGlobalContext();
   const { isOnWeb } = usePage();
   const [msg, setMsg] = useState("");
@@ -76,8 +77,6 @@ export const Login: React.FC<LoginProps> = ({
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setAuthLoading(true);
-    await delay();
-
     const res = await handleLogin({
       email: email,
       password: password,
@@ -85,11 +84,15 @@ export const Login: React.FC<LoginProps> = ({
     if (res) {
       const { payload, status } = res;
       if (payload && status === "SUCCESS") {
+        setGlobalLoading(true);
         setStep?.("email");
         const isLastWeb = isOnWeb(lastPage.path);
         router.push(isLastWeb ? clientRoutes.home.path : lastPage.path);
+        await delay();
+        setGlobalLoading(false);
       }
     }
+    await delay();
     setAuthLoading(false);
   };
 
