@@ -10,18 +10,22 @@ import { useAuth } from "@/app/(auth)/authHook";
 import { OfflineUI } from "../components/OfflineUI";
 import { SplashUI } from "../components/SplashUI";
 import { registerSW } from "@/helpers/registerSW";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { usePage } from "@/hooks/page";
+import { useEvent } from "@/hooks/events";
+import { getCookie } from "@/helpers/storage";
 
 export const GlobalManager = ({ children }: { children: React.ReactNode }) => {
-    const { verifyAuth, handleBrowserEvents } = useAuth();
+    const { handleBrowserEvents } = useEvent();
+    const { verifyAuth } = useAuth();
     const modalRef = useRef<ModalRef>(null);
     const { openModal, verifySignal, isUnstableNetwork, isOffline } = useController();
     const { handleCurrentPage } = usePage()
-    const { snackBarMsg, loginStatus, modalContent,
+    const { snackBarMsg, loginStatus, modalContent, authUser,
         networkStatus, isGlobalLoading } = useGlobalContext();
     const [mounted, setMounted] = useState(false);
     const pathname = usePathname()
+    const router = useRouter();
 
 
     //  MOUNT && SERVICE WORKER REGISTRATION
@@ -39,7 +43,7 @@ export const GlobalManager = ({ children }: { children: React.ReactNode }) => {
             await verifyAuth();
         }
         init();
-    }, [networkStatus, loginStatus]);
+    }, [networkStatus, loginStatus, authUser]);
 
     // MODAL OPEN / CLOSE
     useEffect(() => {
@@ -55,7 +59,11 @@ export const GlobalManager = ({ children }: { children: React.ReactNode }) => {
     // PAGE LOAD HANDLER
     useEffect(() => {
         handleCurrentPage()
-    }, [pathname]);
+        const recentlyAway = getCookie("recently_away");
+        if (recentlyAway && loginStatus === "UNAUTHENTICATED") {
+            router.refresh();
+        }
+    }, [pathname, loginStatus]);
 
 
     // RENDER UIs

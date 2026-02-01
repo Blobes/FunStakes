@@ -15,16 +15,11 @@ import { usePage } from "@/hooks/page";
 export default function LoginPage() {
   const theme = useTheme();
   const { loginStatus } = useGlobalContext();
-  const router = useRouter();
   const { setLastPage } = usePage();
   const { handleLogout } = useAuth();
   const { applyBGPattern } = useStyles()
   const { navigateTo } = usePage()
 
-  const handleBack = () => {
-    setLastPage(clientRoutes.home);
-    router.replace(clientRoutes.home.path);
-  };
 
   return (
     <Stack

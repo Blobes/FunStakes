@@ -4,19 +4,16 @@ import { fetcher, fetchUserWithTokenCheck } from "@/helpers/fetcher";
 import { clientRoutes, serverRoutes } from "@/helpers/routes";
 import { useGlobalContext } from "../GlobalContext";
 import { useController } from "@/hooks/global";
-import { delay, extractPageTitle } from "@/helpers/global";
-import { Page } from "@/types";
+import { delay } from "@/helpers/global";
 import { usePathname, useRouter } from "next/navigation";
 import { useSnackbar } from "@/hooks/snackbar";
-import { getFromLocalStorage } from "@/helpers/storage";
 import { usePage } from "@/hooks/page";
 
 export const useAuth = () => {
   const { setAuthUser, setLoginStatus, setSnackBarMsg } = useGlobalContext();
-  const { isOffline, isOnline, isUnstableNetwork, verifySignal } =
-    useController();
-  const { setLastPage, isOnAuth } = usePage();
-  const { setSBMessage, removeMessage } = useSnackbar();
+  const { isOffline, isOnline, isUnstableNetwork } = useController();
+  const { setLastPage } = usePage();
+  const { setSBMessage } = useSnackbar();
   const router = useRouter();
   const pathname = usePathname();
 
@@ -64,38 +61,6 @@ export const useAuth = () => {
     }
   };
 
-  const handleBrowserEvents = () => {
-    const online = async () => {
-      removeMessage(1);
-      await verifySignal();
-      await delay(500);
-      await verifyAuth();
-    };
-
-    const offline = () => {
-      setSBMessage({
-        msg: {
-          id: 1,
-          title: "No internet connection",
-          content: "Refresh the page.",
-          msgStatus: "ERROR",
-          behavior: "FIXED",
-          hasClose: true,
-          cta: {
-            label: "Refresh",
-            action: () => router.refresh(),
-          },
-        },
-      });
-    };
-    window.addEventListener("online", online);
-    window.addEventListener("offline", offline);
-    return () => {
-      window.removeEventListener("online", online);
-      window.removeEventListener("offline", offline);
-    };
-  };
-
   // Logout
   const handleLogout = async () => {
     try {
@@ -122,6 +87,5 @@ export const useAuth = () => {
   return {
     verifyAuth,
     handleLogout,
-    handleBrowserEvents,
   };
 };
