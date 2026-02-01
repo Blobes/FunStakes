@@ -43,7 +43,6 @@ export const fetcher = async <T>(
     return await response.json();
   } catch (error: any) {
     clearTimeout(timeoutId);
-
     if (error.name === "AbortError") {
       console.log(error);
       throw new Error("Connection timed out or failed.");
@@ -101,7 +100,7 @@ export const fetchUserWithTokenCheck =
               serverRoutes.verifyAuthToken,
             );
             return { payload: retryRes.user, status: "SUCCESS" };
-          } catch (err: any) {
+          } catch {
             console.error("Retry failed");
             return {
               payload: null,
@@ -109,6 +108,7 @@ export const fetchUserWithTokenCheck =
             };
           }
         }
+        console.error("");
         return {
           payload: null,
           status: "UNAUTHORIZED",
