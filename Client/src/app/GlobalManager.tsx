@@ -16,7 +16,7 @@ import { useEvent } from "@/hooks/events";
 import { getCookie } from "@/helpers/storage";
 
 export const GlobalManager = ({ children }: { children: React.ReactNode }) => {
-    const { handleBrowserEvents } = useEvent();
+    const { handleBrowserEvents, handlePageLoad } = useEvent();
     const { verifyAuth } = useAuth();
     const modalRef = useRef<ModalRef>(null);
     const { openModal, verifySignal, isUnstableNetwork, isOffline } = useController();
@@ -31,7 +31,8 @@ export const GlobalManager = ({ children }: { children: React.ReactNode }) => {
     //  MOUNT && SERVICE WORKER REGISTRATION
     useEffect(() => {
         setMounted(true);
-        registerSW()
+        registerSW();
+        handlePageLoad()
         //Browser Events
         handleBrowserEvents()
     }, []);
@@ -43,7 +44,7 @@ export const GlobalManager = ({ children }: { children: React.ReactNode }) => {
             await verifyAuth();
         }
         init();
-    }, [networkStatus, loginStatus, authUser]);
+    }, [networkStatus, loginStatus]);
 
     // MODAL OPEN / CLOSE
     useEffect(() => {
@@ -59,11 +60,11 @@ export const GlobalManager = ({ children }: { children: React.ReactNode }) => {
     // PAGE LOAD HANDLER
     useEffect(() => {
         handleCurrentPage()
-        const recentlyAway = getCookie("recently_away");
-        if (recentlyAway && loginStatus === "UNAUTHENTICATED") {
-            router.refresh();
-        }
-    }, [pathname, loginStatus]);
+        // const recentlyAway = getCookie("recently_away");
+        // if (recentlyAway && loginStatus === "UNAUTHENTICATED") {
+        //     router.refresh();
+        // }
+    }, [pathname]);
 
 
     // RENDER UIs

@@ -15,9 +15,9 @@ export const genAccessTokens = (user: any, res: Response) => {
     process.env.JWT_SECRET as string,
     {
       expiresIn: "30m",
-    }
+    },
   );
-  // Set token in cookie
+  // Set access token in private cookie
   res.cookie("access_token", accessToken, {
     httpOnly: true,
     secure: true,
@@ -25,20 +25,28 @@ export const genAccessTokens = (user: any, res: Response) => {
     path: "/",
     maxAge: 30 * 60 * 1000, // 30 minutes
   });
+
+  // The Public Cookie (Visible to JS)
+  res.cookie("logged_in", "true", {
+    httpOnly: false,
+    secure: true,
+    sameSite: "none",
+    maxAge: 30 * 60 * 1000,
+  });
   return accessToken;
 };
 
 export const genRefreshTokens = (user: any, res: Response) => {
   if (!process.env.JWT_SECRET || !process.env.REFRESH_TOKEN_SECRET) {
     throw new Error(
-      "REFRESH_TOKEN_SECRET is not defined in environment variables"
+      "REFRESH_TOKEN_SECRET is not defined in environment variables",
     );
   }
   const userId = user._id?.toString() || user.id?.toString();
   const refreshToken = jwt.sign(
     { id: userId },
     process.env.REFRESH_TOKEN_SECRET as string,
-    { expiresIn: "7d" }
+    { expiresIn: "7d" },
   );
   // Set token in cookie
   res.cookie("refresh_token", refreshToken, {
