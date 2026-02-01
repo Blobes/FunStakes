@@ -21,16 +21,20 @@ export const Welcome = () => {
                     minHeight: "fit-content",
                     padding: theme.boxSpacing(12),
                 }}>
-                <Typography variant="h5" component="h5"> {/* Added variant for MUI consistency */}
+                <Typography variant="h5" component="h5">
                     Join millions of stakers on FunStakes
                 </Typography>
                 <AppButton
                     href={clientRoutes.signup.path}
                     onClick={(e: React.MouseEvent) =>
                         navigateTo(clientRoutes.signup,
-                            { type: "element", savePage: false, loadPage: true, event: e })
-                    }
-                >
+                            {
+                                type: "element",
+                                savePage: false,
+                                loadPage: true,
+                                event: e
+                            })
+                    }>
                     Get started
                 </AppButton>
             </Stack>
