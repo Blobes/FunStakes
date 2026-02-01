@@ -5,6 +5,8 @@ import crypto from "crypto";
 import fetch from "node-fetch";
 import cors from "cors";
 
+const isProduction = process.env.NODE_ENV === "production";
+
 export const genAccessTokens = (user: any, res: Response) => {
   if (!process.env.JWT_SECRET || !process.env.REFRESH_TOKEN_SECRET) {
     throw new Error("JWT_SECRET is not defined in environment variables");
@@ -21,7 +23,7 @@ export const genAccessTokens = (user: any, res: Response) => {
   res.cookie("access_token", accessToken, {
     httpOnly: true,
     secure: true,
-    sameSite: "lax",
+    sameSite: isProduction ? "lax" : "none",
     path: "/",
     maxAge: 30 * 60 * 1000, // 30 minutes
   });
@@ -30,7 +32,7 @@ export const genAccessTokens = (user: any, res: Response) => {
   res.cookie("logged_in", "true", {
     httpOnly: false,
     secure: true,
-    sameSite: "lax",
+    sameSite: isProduction ? "lax" : "none",
     path: "/",
     maxAge: 30 * 60 * 1000,
   });
@@ -54,7 +56,7 @@ export const genRefreshTokens = (user: any, res: Response) => {
   res.cookie("refresh_token", refreshToken, {
     httpOnly: true,
     secure: true,
-    sameSite: "lax",
+    sameSite: isProduction ? "lax" : "none",
     path: "/",
     maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
   });
