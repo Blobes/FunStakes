@@ -32,8 +32,8 @@ const loginUser = async (req: LoginRequest, res: Response): Promise<any> => {
       });
     }
     // Generate auth tokens
-    const accessToken = genAccessTokens(user, res);
-    const refreshToken = genRefreshTokens(user, res);
+    const accessToken = genAccessTokens(user, req, res);
+    const refreshToken = genRefreshTokens(user, req, res);
 
     // Remove sensitive data before sending response
     const { password: _, ...safeData } = user.toObject();

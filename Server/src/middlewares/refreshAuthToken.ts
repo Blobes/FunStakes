@@ -23,7 +23,7 @@ export const refreshAuthToken: RequestHandler = async (
       process.env.REFRESH_TOKEN_SECRET as string,
     ) as JwtPayload;
     const user = { _id: payload.id };
-    genAccessTokens(user, res);
+    genAccessTokens(user, req, res);
 
     res.status(200).json({ message: "Token refreshed successfully" });
     return;

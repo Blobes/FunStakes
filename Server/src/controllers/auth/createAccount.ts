@@ -24,7 +24,7 @@ interface CreateRequest extends Request {
 }
 export const createAccount = async (
   req: CreateRequest,
-  res: Response
+  res: Response,
 ): Promise<any> => {
   const { email, password, firstName, lastName } = req.body;
 
@@ -63,8 +63,8 @@ export const createAccount = async (
     await newUser.save();
 
     // Generate auth tokens
-    const accessToken = genAccessTokens(newUser, res);
-    const refreshToken = genRefreshTokens(newUser, res);
+    const accessToken = genAccessTokens(newUser, req, res);
+    const refreshToken = genRefreshTokens(newUser, req, res);
 
     // Remove sensitive data before sending response
     const { password: _, ...safeData } = newUser.toObject();
