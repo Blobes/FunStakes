@@ -18,7 +18,7 @@ export const genAccessTokens = (user: any, req: AuthRequest, res: Response) => {
     { id: userId },
     process.env.JWT_SECRET as string,
     {
-      expiresIn: "30m",
+      expiresIn: "15m",
     },
   );
   // Set access token in private cookie
@@ -27,16 +27,7 @@ export const genAccessTokens = (user: any, req: AuthRequest, res: Response) => {
     secure: true,
     sameSite: !isLocalDev ? "lax" : "none",
     path: "/",
-    maxAge: 30 * 60 * 1000, // 30 minutes
-  });
-
-  // The Public Cookie (Visible to JS)
-  res.cookie("logged_in", "true", {
-    httpOnly: false,
-    secure: true,
-    sameSite: !isLocalDev ? "lax" : "none",
-    path: "/",
-    maxAge: 30 * 60 * 1000,
+    maxAge: 15 * 60 * 1000, // 15 minutes
   });
 
   return accessToken;
