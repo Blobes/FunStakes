@@ -32,7 +32,7 @@ export const GlobalManager = ({ children }: { children: React.ReactNode }) => {
     useEffect(() => {
         setMounted(true);
         registerSW();
-        handlePageLoad()
+        //  handlePageLoad()
         //Browser Events
         handleBrowserEvents()
     }, []);

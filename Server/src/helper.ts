@@ -21,7 +21,7 @@ export const genAccessTokens = (user: any, res: Response) => {
   res.cookie("access_token", accessToken, {
     httpOnly: true,
     secure: true,
-    sameSite: "none",
+    sameSite: "lax",
     path: "/",
     maxAge: 30 * 60 * 1000, // 30 minutes
   });
@@ -30,7 +30,7 @@ export const genAccessTokens = (user: any, res: Response) => {
   res.cookie("logged_in", "true", {
     httpOnly: false,
     secure: true,
-    sameSite: "none",
+    sameSite: "lax",
     path: "/",
     maxAge: 30 * 60 * 1000,
   });
@@ -54,7 +54,7 @@ export const genRefreshTokens = (user: any, res: Response) => {
   res.cookie("refresh_token", refreshToken, {
     httpOnly: true,
     secure: true,
-    sameSite: "none",
+    sameSite: "lax",
     path: "/",
     maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
   });

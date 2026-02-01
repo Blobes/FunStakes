@@ -115,6 +115,7 @@ export const useLogin = () => {
 
       setAuthUser(payload);
       setLoginStatus("AUTHENTICATED");
+      setCookie("was_logged_in", "true", 60 * 24 * 30);
 
       // const isExcludedRoute = flaggedRoutes.auth.includes(pathname);
       const savedPage = getFromLocalStorage<Page>();

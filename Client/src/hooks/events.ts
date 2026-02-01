@@ -7,6 +7,7 @@ import { useGlobalContext } from "@/app/GlobalContext";
 import { useController } from "./global";
 import { useAuth } from "@/app/(auth)/authHook";
 import { useRef } from "react";
+import { delay } from "@/helpers/global";
 
 export const useEvent = () => {
   const router = useRouter();
@@ -57,13 +58,20 @@ export const useEvent = () => {
     };
   };
 
-  const handlePageLoad = () => {
-    const canary = getCookie("logged_in");
+  const handlePageLoad = async () => {
     const isSyncing = sessionStorage.getItem("auth_syncing");
     const isMobile = window.innerWidth < 900;
+    const wasLoggedIn = getCookie("was_logged_in"); // Our persistent memory
 
+    // If user is a guest (no canary AND no memory), do nothing.
+    if (!wasLoggedIn) {
+      return;
+    }
+
+    //  await delay(300);
+    const canary = getCookie("logged_in");
     // If canary is missing on mobile
-    if (!canary && isMobile) {
+    if (!canary && wasLoggedIn && isMobile) {
       // Check if we already tried reloading once
       if (isSyncing) {
         console.log("Sync attempted, but no session found. Stopping.");
@@ -75,15 +83,16 @@ export const useEvent = () => {
       setGlobalLoading(true);
       sessionStorage.setItem("auth_syncing", "true");
       // Give the browser 100ms to ensure storage is set before reload
+
       setTimeout(() => {
         window.location.reload();
       }, 100);
       return;
     }
     // If canary IS found, clear the syncing flag for next time
-    if (canary && isSyncing) {
-      sessionStorage.removeItem("auth_syncing");
-    }
+    // if (canary && isSyncing) {
+    //   sessionStorage.removeItem("auth_syncing");
+    // }
   };
 
   return {

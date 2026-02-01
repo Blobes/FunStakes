@@ -8,6 +8,7 @@ import { delay } from "@/helpers/global";
 import { usePathname, useRouter } from "next/navigation";
 import { useSnackbar } from "@/hooks/snackbar";
 import { usePage } from "@/hooks/page";
+import { deleteCookie, getCookie, setCookie } from "@/helpers/storage";
 
 export const useAuth = () => {
   const { setAuthUser, setLoginStatus, setSnackBarMsg } = useGlobalContext();
@@ -25,6 +26,7 @@ export const useAuth = () => {
       if (res.status === "SUCCESS" && res.payload) {
         setAuthUser(res.payload);
         setLoginStatus("AUTHENTICATED");
+        setCookie("was_logged_in", "true", 60 * 24 * 30);
         return;
       }
 
@@ -68,6 +70,8 @@ export const useAuth = () => {
       await fetcher(serverRoutes.logout, { method: "POST" });
       setAuthUser(null);
       setLoginStatus("UNAUTHENTICATED");
+      deleteCookie("was_logged_in");
+      sessionStorage.removeItem("auth_syncing");
       if (pathname !== clientRoutes.home.path) {
         setLastPage(clientRoutes.home);
         router.replace(clientRoutes.home.path);
