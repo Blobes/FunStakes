@@ -220,7 +220,7 @@ export const PostCard = ({ post, style = {} }: PostProps) => {
       </Stack>
 
       {/* Content text */}
-      <Typography variant="body2"
+      <Typography variant="body1"
         sx={{ padding: theme.boxSpacing(4, 6) }}>
         {content}
       </Typography>
