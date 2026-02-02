@@ -3,6 +3,7 @@
 import { IUser } from "@/types";
 import { serverRoutes } from "./routes";
 import { delay } from "./global";
+import { error } from "console";
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 const DEFAULT_TIMEOUT = 5000; // Default timeout in milliseconds
@@ -71,28 +72,6 @@ export const fetchUserWithTokenCheck =
     } catch (err: any) {
       // let msg = err.message;
 
-      // Check if it's a network error
-      const isNetworkError =
-        err.name === "AbortError" ||
-        err.name === "TypeError" ||
-        err.message === "Failed to fetch" ||
-        err.status >= 500;
-
-      if (isNetworkError) {
-        // If it's a browser abort (navigation), return silently
-        if (err.name === "AbortError" && err.reason !== "timeout") {
-          console.error("Aborted");
-          return { payload: null, status: "ERROR" };
-        }
-        console.error("Timeout");
-        // Otherwise, it's a legitimate connection failure or timeout
-        return {
-          payload: null,
-          status: "ERROR",
-          message: "Connection failed or timed out",
-        };
-      }
-
       // Catch 401 (Missing/Expired) OR 403 (Invalid)
       if (err.status === 401 || err.status === 403) {
         // Try to refresh once
@@ -118,7 +97,29 @@ export const fetchUserWithTokenCheck =
           status: "UNAUTHORIZED",
         };
       }
-      console.error("Something happened");
+
+      // Check if it's a network error
+      const isNetworkError =
+        err.name === "AbortError" ||
+        err.name === "TypeError" ||
+        err.message === "Failed to fetch" ||
+        err.status >= 500;
+
+      if (isNetworkError || (!isNetworkError && err)) {
+        // If it's a browser abort (navigation), return silently
+        if (err.name === "AbortError" && err.reason !== "timeout") {
+          console.error("Aborted");
+          return { payload: null, status: "ERROR" };
+        }
+        console.error("Timeout");
+        // Otherwise, it's a legitimate connection failure or timeout
+        return {
+          payload: null,
+          status: "ERROR",
+          message: "Connection failed or timed out",
+        };
+      }
+      console.error(err.reason);
       return {
         payload: null,
         message: err.message,

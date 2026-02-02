@@ -46,13 +46,15 @@ export const useAuth = () => {
       }
 
       const isMobile = window.innerWidth < 900;
+      await delay(200);
       if (isOnline && !res.status && !res.payload && isMobile) {
         // await delay(200);
-        window.location.reload();
+
         if (res.message)
           setSBMessage({
             msg: { content: res.message, msgStatus: "ERROR", hasClose: true },
           });
+        window.location.reload();
         return;
       }
     } catch (err: any) {
