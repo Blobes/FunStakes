@@ -8,7 +8,7 @@ import { useController } from "@/hooks/global";
 import { useAuth } from "@/app/(auth)/authHook";
 import { OfflineUI } from "../components/OfflineUI";
 import { SplashUI } from "../components/SplashUI";
-import { registerSW, unregisterSW } from "@/helpers/registerSW";
+import { registerSW, unregisterSW } from "@/helpers/serviceWorker";
 import { usePathname, useRouter } from "next/navigation";
 import { usePage } from "@/hooks/page";
 import { useEvent } from "@/hooks/events";
@@ -30,7 +30,7 @@ export const GlobalManager = ({ children }: { children: React.ReactNode }) => {
     //  MOUNT && SERVICE WORKER REGISTRATION
     useEffect(() => {
         setMounted(true);
-        unregisterSW();
+        //  unregisterSW();
         handleBrowserEvents()
     }, []);
 
@@ -41,7 +41,7 @@ export const GlobalManager = ({ children }: { children: React.ReactNode }) => {
             await verifyAuth();
         }
         init();
-    }, [networkStatus, authStatus, setAuthStatus]);
+    }, [networkStatus]);
 
     // MODAL OPEN / CLOSE
     useEffect(() => {
@@ -60,7 +60,6 @@ export const GlobalManager = ({ children }: { children: React.ReactNode }) => {
     }, [pathname]);
 
 
-    // RENDER UIs
     // Conditionally render the splash UI
     if (!mounted || authStatus === "PENDING" || isGlobalLoading) {
         return <SplashUI />;
@@ -68,10 +67,6 @@ export const GlobalManager = ({ children }: { children: React.ReactNode }) => {
     // Conditionally render the offline UI
     if (isOffline || isUnstableNetwork || authStatus === "ERROR") {
         return <OfflineUI />;
-    }
-
-    if (authStatus === "UNKNOWN") {
-        return <SplashUI reload={true} />;
     }
 
     // Conditionally render the app UIs

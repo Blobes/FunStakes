@@ -45,13 +45,6 @@ export const useAuth = () => {
         setAuthStatus("UNAUTHENTICATED");
         return;
       }
-
-      const isMobile = window.innerWidth < 900;
-      if (isOnline && res.status === "UNKNOWN" && !res.payload && isMobile) {
-        setAuthUser(null);
-        setAuthStatus("UNKNOWN");
-        return;
-      }
     } catch (err: any) {
       // If we reach here, a critical code error occurred
       setAuthUser(null);
