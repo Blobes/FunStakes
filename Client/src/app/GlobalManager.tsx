@@ -21,7 +21,7 @@ export const GlobalManager = ({ children }: { children: React.ReactNode }) => {
     const { openModal, verifySignal, isUnstableNetwork, isOffline } = useController();
     const { handleCurrentPage } = usePage()
     const { snackBarMsg, loginStatus, modalContent,
-        networkStatus, isGlobalLoading } = useGlobalContext();
+        networkStatus, isGlobalLoading, setLoginStatus } = useGlobalContext();
     const [mounted, setMounted] = useState(false);
     const pathname = usePathname()
 
@@ -40,7 +40,7 @@ export const GlobalManager = ({ children }: { children: React.ReactNode }) => {
             await verifyAuth();
         }
         init();
-    }, [networkStatus, loginStatus]);
+    }, [networkStatus, loginStatus, setLoginStatus]);
 
     // MODAL OPEN / CLOSE
     useEffect(() => {
