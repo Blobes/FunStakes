@@ -40,7 +40,7 @@ export const GlobalManager = ({ children }: { children: React.ReactNode }) => {
             await verifyAuth();
         }
         init();
-    }, [networkStatus, loginStatus, setLoginStatus]);
+    }, [mounted, networkStatus, loginStatus, setLoginStatus]);
 
     // MODAL OPEN / CLOSE
     useEffect(() => {
