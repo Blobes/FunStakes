@@ -20,7 +20,6 @@ export const SplashUI = ({ reload = false }: { reload?: boolean }) => {
       )
   }, []);
 
-
   return (
     <RootUIContainer
       style={{

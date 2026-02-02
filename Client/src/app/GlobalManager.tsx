@@ -8,7 +8,7 @@ import { useController } from "@/hooks/global";
 import { useAuth } from "@/app/(auth)/authHook";
 import { OfflineUI } from "../components/OfflineUI";
 import { SplashUI } from "../components/SplashUI";
-import { registerSW } from "@/helpers/registerSW";
+import { registerSW, unregisterSW } from "@/helpers/registerSW";
 import { usePathname, useRouter } from "next/navigation";
 import { usePage } from "@/hooks/page";
 import { useEvent } from "@/hooks/events";
@@ -30,7 +30,7 @@ export const GlobalManager = ({ children }: { children: React.ReactNode }) => {
     //  MOUNT && SERVICE WORKER REGISTRATION
     useEffect(() => {
         setMounted(true);
-        registerSW();
+        unregisterSW();
         handleBrowserEvents()
     }, []);
 
