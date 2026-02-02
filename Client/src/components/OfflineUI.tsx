@@ -35,7 +35,7 @@ export const OfflineUI = () => {
           primaryCta={{
             label: "Refresh",
             variant: "outlined",
-            action: () => router.refresh(),
+            action: () => window.location.reload(),
           }}
         />
         )}
