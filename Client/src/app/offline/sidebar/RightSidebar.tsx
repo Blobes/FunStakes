@@ -3,7 +3,6 @@
 import { Stack, Typography } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import { ProfileCard } from "./RightSidebarCards";
-import { Followers } from "./Followers";
 import { useStyles } from "@/hooks/style";
 
 export const RightSidebar = () => {
@@ -29,7 +28,6 @@ export const RightSidebar = () => {
       <Typography variant="subtitle1" sx={{ width: "100%" }}>
         Those following you
       </Typography>
-      <Followers />
     </Stack>
   );
 };

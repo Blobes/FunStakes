@@ -6,7 +6,7 @@ import { useGlobalContext } from "./GlobalContext";
 import { Modal, ModalRef } from "@/components/Modal";
 import { useController } from "@/hooks/global";
 import { useAuth } from "@/app/(auth)/authHook";
-import { OfflineUI } from "../components/OfflineUI";
+import { NetworkGlitchUI } from "../components/NetworkGlitchUI";
 import { SplashUI } from "../components/SplashUI";
 import { registerSW, unregisterSW } from "@/helpers/serviceWorker";
 import { usePathname, useRouter } from "next/navigation";
@@ -66,7 +66,7 @@ export const GlobalManager = ({ children }: { children: React.ReactNode }) => {
     }
     // Conditionally render the offline UI
     if (isOffline || isUnstableNetwork || authStatus === "ERROR") {
-        return <OfflineUI />;
+        return <NetworkGlitchUI />;
     }
 
     // Conditionally render the app UIs

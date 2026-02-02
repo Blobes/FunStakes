@@ -6,7 +6,7 @@ import { ProgressIcon } from "./ProgressIcon";
 import { useGlobalContext } from "@/app/GlobalContext";
 import { RootUIContainer } from "./Containers";
 
-export const OfflineUI = () => {
+export const NetworkGlitchUI = () => {
   const theme = useTheme();
   const router = useRouter();
   const { checkingSignal } = useGlobalContext();
