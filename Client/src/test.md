@@ -366,3 +366,62 @@ flaggedRoutes.auth.includes(pathname) ||
 flaggedRoutes.web.some((r) => matchPaths(pathname, r)) ||
 flaggedAppRoutes.length > 0;
 const isOnAppRoute = flaggedAppRoutes.length > 0;
+
+// 1. Wait for Service Worker to be fully active and controlling the page
+// if ('serviceWorker' in navigator &&
+// navigator.serviceWorker.controller === null) {
+// await new Promise((resolve) => {
+// navigator
+// .serviceWorker
+// .addEventListener('controllerchange', resolve, { once: true });
+// // Timeout fallback so we don't hang forever
+// setTimeout(resolve, 1000);
+// });
+// }
+
+      // // 2️⃣ SILENT RETRY (Cold Boot Only)
+      // // We only trigger this if the fetcher explicitly returned UNAUTHORIZED
+      // // and it's our first attempt in the hook.
+      // if (res.status === "UNAUTHORIZED" && retryCount === 0 && isOnline) {
+      //   console.warn("Attempt 1 failed. Waiting for browser cookie sync...");
+      //   await delay(500);
+      //   return verifyAuth(1);
+      // }
+
+const handlePageLoad = async () => {
+const isSyncing = sessionStorage.getItem("auth_syncing");
+const isMobile = window.innerWidth < 900;
+const wasLoggedIn = getCookie("was_logged_in"); // Our persistent memory
+
+    // If user is a guest (no canary AND no memory), do nothing.
+    if (!wasLoggedIn) {
+      return;
+    }
+
+    //  await delay(300);
+    const canary = getCookie("logged_in");
+    // If canary is missing on mobile
+    if (!canary && wasLoggedIn && isMobile) {
+      // Check if we already tried reloading once
+      if (isSyncing) {
+        console.log("Sync attempted, but no session found. Stopping.");
+        sessionStorage.removeItem("auth_syncing");
+        setGlobalLoading(false);
+        return; // Break the loop
+      }
+      // First attempt: Set the flag and reload
+      setGlobalLoading(true);
+      sessionStorage.setItem("auth_syncing", "true");
+      // Give the browser 100ms to ensure storage is set before reload
+
+      setTimeout(() => {
+        window.location.reload();
+      }, 100);
+      return;
+    }
+    // If canary IS found, clear the syncing flag for next time
+    // if (canary && isSyncing) {
+    //   sessionStorage.removeItem("auth_syncing");
+    // }
+
+};

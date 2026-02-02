@@ -4,10 +4,13 @@ import Image from "next/image";
 import { pulseAndRotate } from "@/helpers/animations";
 import { AnimatedWrapper } from "./AnimationWrapper";
 import { RootUIContainer } from "./Containers";
+import { useEffect } from "react";
+import { delay } from "@/helpers/global";
 
 
-export const Splash = () => {
+export const SplashUI = () => {
   const theme = useTheme();
+
   return (
     <RootUIContainer
       style={{

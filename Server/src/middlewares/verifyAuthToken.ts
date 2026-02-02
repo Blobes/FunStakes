@@ -1,5 +1,5 @@
 import jwt, { JwtPayload } from "jsonwebtoken";
-import { Request, Response, NextFunction } from "express";
+import { Request, Response, NextFunction, RequestHandler } from "express";
 
 export interface JwtUserPayload {
   id: any;
@@ -15,10 +15,10 @@ export interface AuthRequest extends Request {
   user?: JwtUserPayload;
 }
 
-const verifyAuthToken = (
+const verifyAuthToken: RequestHandler = (
   req: AuthRequest,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) => {
   const token = req.cookies.access_token;
 
@@ -34,17 +34,18 @@ const verifyAuthToken = (
     process.env.JWT_SECRET as string,
     (
       err: jwt.VerifyErrors | null,
-      payload: JwtPayload | string | undefined
+      payload: JwtPayload | string | undefined,
     ) => {
-      if (err || typeof payload !== "object" || !("id" in payload)) {
-        return res
+      if (err) {
+        res
           .status(401)
           .json({ message: "Invalid token", status: "UNAUTHORIZED" });
+        return;
       }
 
       req.user = payload as JwtUserPayload; //attach user data to the request
       next();
-    }
+    },
   );
 };
 

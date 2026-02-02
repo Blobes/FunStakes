@@ -263,7 +263,7 @@ const componentTheme = createTheme({
             },
             "& label": {
               fontSize: "14px",
-              transform: "translate(14px, 12px)",
+              transform: "translate(14px, 14px)",
             },
             "& label.Mui-error": {
               color: "var(--TextField-error)",
@@ -289,9 +289,14 @@ const componentTheme = createTheme({
             borderRadius: theme.radius[3],
             maxWidth: "600px",
             minWidth: "150px",
-            padding: theme.boxSpacing(2, 6, 2, 0),
+            padding: theme.boxSpacing(3, 6, 3, 0),
             [`& .Mui-error .${outlinedInputClasses.notchedOutline}`]: {
               borderColor: "var(--TextField-error)",
+            },
+            "&.Mui-focused": {
+              outline: `2px solid ${theme.fixedColors.mainTrans}`,
+              outlineOffset: "2px",
+              boxShadow: `0 0 0 6px var(--TextField-default)`,
             },
           }),
       },

@@ -4,7 +4,7 @@ import React, { createContext, useContext, useState } from "react";
 import {
   IUser,
   SnackBarMsg,
-  LoginStatus,
+  AuthStatus,
   ModalContent,
   Page,
   NetworkStatus,
@@ -12,8 +12,8 @@ import {
 import { clientRoutes } from "@/helpers/routes";
 
 interface Context {
-  loginStatus: LoginStatus;
-  setLoginStatus: React.Dispatch<React.SetStateAction<LoginStatus>>;
+  authStatus: AuthStatus;
+  setAuthStatus: React.Dispatch<React.SetStateAction<AuthStatus>>;
   authUser: IUser | null;
   setAuthUser: React.Dispatch<React.SetStateAction<IUser | null>>;
   snackBarMsg: SnackBarMsg;
@@ -30,6 +30,8 @@ interface Context {
   setModalContent: React.Dispatch<React.SetStateAction<ModalContent | null>>;
   networkStatus: NetworkStatus;
   setNetworkStatus: React.Dispatch<React.SetStateAction<NetworkStatus>>;
+  checkingSignal: boolean;
+  setSignalCheck: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const context = createContext<Context | null>(null);
@@ -38,7 +40,7 @@ export const ContextProvider = ({
 }: {
   children: React.ReactNode;
 }) => {
-  const [loginStatus, setLoginStatus] = useState<LoginStatus>("PENDING");
+  const [authStatus, setAuthStatus] = useState<AuthStatus>("PENDING");
   const [authUser, setAuthUser] = useState<IUser | null>(null);
   const [snackBarMsg, setSnackBarMsg] = useState<SnackBarMsg>({
     messages: [],
@@ -51,12 +53,13 @@ export const ContextProvider = ({
   const [lastPage, setPage] = useState<Page>(clientRoutes.about);
   const [modalContent, setModalContent] = useState<ModalContent | null>(null);
   const [networkStatus, setNetworkStatus] = useState<NetworkStatus>("UNKNOWN");
+  const [checkingSignal, setSignalCheck] = useState(false);
 
   return (
     <context.Provider
       value={{
-        loginStatus,
-        setLoginStatus,
+        authStatus,
+        setAuthStatus,
         authUser,
         setAuthUser,
         snackBarMsg,
@@ -71,7 +74,10 @@ export const ContextProvider = ({
         setPage,
         modalContent,
         setModalContent,
-        networkStatus, setNetworkStatus
+        networkStatus,
+        setNetworkStatus,
+        checkingSignal,
+        setSignalCheck
       }}>
       {children}
     </context.Provider>

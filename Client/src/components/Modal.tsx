@@ -15,6 +15,7 @@ import { Direction, GenericObject } from "@/types";
 import { Transition, TransitionType } from "./Transition";
 import { useController } from "@/hooks/global";
 import { zIndexes } from "@/helpers/global";
+import { useDragClose } from "@/hooks/drag";
 
 export interface ModalRef {
   openModal: () => void;
@@ -53,11 +54,28 @@ export const Modal = forwardRef<ModalRef, ModalProps>(
     const { scrollBarStyle } = useStyles();
     const { isDesktop, isMobile } = useController();
     const theme = useTheme();
-    // States
     const [isOpen, setOpen] = useState(false);
     const [shouldRemove, setShouldRemove] = useState(true);
-    const [dragY, setDragY] = useState(0);
-    const [startY, setStartY] = useState(0);
+
+    // Transition properties
+    const baseTrans = transition?.base || { type: "slide", direction: "left" }
+    const mobileTrans = transition?.mobile || {
+      type: baseTrans.type,
+      direction: baseTrans.direction ?? "up"
+    }
+    let transOptions = isDesktop ? baseTrans : mobileTrans;
+    const transType = transOptions.type;
+    const transDir = transOptions.direction ?? (isDesktop ? "left" : "up");
+    transOptions.direction = transDir
+
+
+    const { dragOffset, handlers, axis } = useDragClose({
+      axis: transDir === "up" || transDir === "down" ? "y" : "x",
+      direction: transDir === "left" ? "ltr" :
+        transDir === "right" ? "rtl" : undefined,
+      closeAtMiddle: true,
+      onClose: () => setOpen(false),
+    });
 
     useImperativeHandle(ref, () => ({
       openModal: () => {
@@ -69,7 +87,7 @@ export const Modal = forwardRef<ModalRef, ModalProps>(
       },
     }));
 
-    const handleClose = (e: MouseEvent<HTMLDivElement | HTMLButtonElement>) => {
+    const handleClose = (e: React.MouseEvent) => {
       if (
         (containerRef.current && e.target === containerRef.current) ||
         (closeRef.current && closeRef.current.contains(e.target as HTMLElement))
@@ -78,38 +96,6 @@ export const Modal = forwardRef<ModalRef, ModalProps>(
         if (onClose) onClose();
       }
     };
-
-    // Close Drag Event
-    const handleTouchStart = (e: React.TouchEvent) => {
-      setStartY(e.touches[0].clientY);
-    };
-    const handleTouchMove = (e: React.TouchEvent) => {
-      const currentY = e.touches[0].clientY;
-      const diff = currentY - startY;
-      // Only allow dragging downwards (positive Y)
-      if (diff > 0) {
-        setDragY(diff);
-      }
-    };
-    const handleTouchEnd = () => {
-      // If dragged down more than 150px, close it
-      if (dragY > 150) {
-        setOpen(false);
-        if (onClose) onClose();
-      }
-      // Reset position if not closed
-      setDragY(0);
-    };
-
-    const baseTrans = transition?.base || { type: "slide", direction: "left" }
-    const mobileTrans = transition?.mobile || {
-      type: baseTrans.type,
-      direction: baseTrans.direction ?? "up"
-    }
-    let transOptions = isDesktop ? baseTrans : mobileTrans;
-    const transType = transOptions.type;
-    const transDir = transOptions.direction ?? (isDesktop ? "left" : "up");
-    transOptions.direction = transDir
 
     return (
       <Stack //Overlay container
@@ -125,8 +111,8 @@ export const Modal = forwardRef<ModalRef, ModalProps>(
           visibility: !shouldRemove ? "visible" : "hidden",
           transition: "opacity 0.3s ease-in-out, visibility 0.3s",
           opacity: isOpen ? 1 : 0,
-          backgroundColor: theme.palette.gray.trans.overlay(isOpen ? 0.5 - dragY / 400 : 0),
-          backdropFilter: `blur(${isOpen ? Math.max(0, 8 - dragY / 50) : 0}px)`,
+          backgroundColor: theme.palette.gray.trans.overlay(isOpen ? 0.6 - dragOffset / 400 : 0),
+          backdropFilter: `blur(${isOpen ? Math.max(0, 6 - dragOffset / 50) : 0}px)`,
           marginLeft: "0!important",
           padding: theme.boxSpacing(12),
           // Alignment
@@ -151,6 +137,10 @@ export const Modal = forwardRef<ModalRef, ModalProps>(
         <Transition show={isOpen}
           timeout={200} {...transOptions} onExited={() => setShouldRemove(true)}>
           <Stack
+            // Drag event on X axis
+            {...(dragToClose && isMobile && transType === "slide" && axis === "x" && {
+              ...handlers
+            })}
             sx={{
               maxHeight: "100%",
               gap: theme.gap(0),
@@ -159,15 +149,19 @@ export const Modal = forwardRef<ModalRef, ModalProps>(
               overflow: "hidden",
               width: style?.base?.content?.width ?? "40%",
               maxWidth: style?.base?.content?.maxWidth ?? "400px",
+              touchAction: "none",
+              willChange: "transform",
+
               // Drag styling
-              ...(dragY > 0 && {
-                // This allows the Slide to happen, but adds our dragY on top of it
-                transform: `translateY(var(--drag-offset, 0px)) !important`,
+              ...(dragOffset > 0 && {
+                // This allows the Slide to happen, but adds our drag X & Y on top of it
+                transform: `translate${axis === "x" ? "X" : "Y"}(var(--drag-offset, 0px))!important`,
                 // We only want a transition when the user lets go (snapping back)
-                transition: dragY === 0
-                  ? "transform 0.3s cubic-bezier(0, 0, 0.2, 1) !important"
+                transition: dragOffset === 0
+                  ? "transform 0.3s cubic-bezier(0, 0, 0.2, 1)!important"
                   : "none !important",
               }),
+
               ...style?.base?.content,
 
               // Medium screen
@@ -178,20 +172,20 @@ export const Modal = forwardRef<ModalRef, ModalProps>(
               },
               // Small screen
               [theme.breakpoints.down("sm")]: {
-                width: style?.smallScreen?.content?.width ?? "95%",
+                width: style?.smallScreen?.content?.width ?? "89%",
                 maxWidth: style?.smallScreen?.content?.maxWidth ?? "100%",
                 ...style?.smallScreen?.content
               },
-              "--drag-offset": `${dragY}px`,
-            }}>
+              "--drag-offset": `${dragOffset}px`,
+            }}
+          >
             {
               /* Modal with Header*/
               showHeader && (
                 <Stack
-                  {...(dragToClose && {
-                    onTouchStart: handleTouchStart,
-                    onTouchMove: handleTouchMove,
-                    onTouchEnd: handleTouchEnd
+                  // Drag event on Y axis
+                  {...(dragToClose && isMobile && transType === "slide" && axis === "y" && {
+                    ...handlers
                   })}
 
                   sx={{
@@ -201,7 +195,9 @@ export const Modal = forwardRef<ModalRef, ModalProps>(
                     touchAction: 'none',
                     cursor: dragToClose ? "grab" : "default"
                   }}>
-                  {isMobile && dragToClose && (
+
+                  {/* Drag Handle UI */}
+                  {isMobile && dragToClose && axis === "y" && (
                     <Box sx={{
                       width: "50px",
                       height: "6px",
@@ -232,8 +228,8 @@ export const Modal = forwardRef<ModalRef, ModalProps>(
                           onClick={handleClose}>
                           <Close
                             sx={{
-                              width: "20px",
-                              height: "20px",
+                              width: "22px",
+                              height: "22px",
                             }}
                           />
                         </IconButton>

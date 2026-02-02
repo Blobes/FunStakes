@@ -4,72 +4,52 @@ import { fetcher, fetchUserWithTokenCheck } from "@/helpers/fetcher";
 import { clientRoutes, serverRoutes } from "@/helpers/routes";
 import { useGlobalContext } from "../GlobalContext";
 import { useController } from "@/hooks/global";
-import { extractPageTitle } from "@/helpers/global";
-import { Page } from "@/types";
 import { usePathname, useRouter } from "next/navigation";
 import { useSnackbar } from "@/hooks/snackbar";
-import { getFromLocalStorage } from "@/helpers/storage";
+import { usePage } from "@/hooks/page";
+import { delay } from "@/helpers/global";
 
 export const useAuth = () => {
-  const {
-    setAuthUser,
-    lastPage,
-    setLoginStatus,
-    setSnackBarMsg: setSnackBarMsgs,
-  } = useGlobalContext();
-  const { setLastPage, isOnAuth, isOffline, isOnline, isUnstableNetwork } =
-    useController();
+  const { setAuthUser, setAuthStatus, setSnackBarMsg, setGlobalLoading } =
+    useGlobalContext();
+  const { isOffline, isOnline, isUnstableNetwork } = useController();
+  const { setLastPage } = usePage();
   const { setSBMessage } = useSnackbar();
   const router = useRouter();
   const pathname = usePathname();
 
-  // Verify authentication
   const verifyAuth = async () => {
-    const isOnAuthRoute = isOnAuth(pathname);
-    const savedPage = getFromLocalStorage<Page>();
-    const pagePath = !isOnAuthRoute ? pathname : lastPage.path;
-
-    setLastPage(
-      isOnAuthRoute && savedPage
-        ? savedPage
-        : { title: extractPageTitle(pagePath), path: pagePath },
-    );
-
     try {
       const res = await fetchUserWithTokenCheck();
-      // Fully authenticated
+      // Success
       if (res.status === "SUCCESS" && res.payload) {
         setAuthUser(res.payload);
-        setLoginStatus("AUTHENTICATED");
+        setAuthStatus("AUTHENTICATED");
         return;
       }
 
-      // Set login status to unkown when offline
+      // Network Erorr / Offline
       if (res.status === "ERROR" || isOffline || isUnstableNetwork) {
-        setLoginStatus("UNKNOWN");
+        setAuthUser(null);
+        setAuthStatus("ERROR");
         if (res.message)
           setSBMessage({
-            msg: {
-              content: res.message,
-              msgStatus: "ERROR",
-              hasClose: true,
-            },
+            msg: { content: res.message, msgStatus: "ERROR", hasClose: true },
           });
         return;
       }
 
-      // Fully logged out
-      if (isOnline && res.status === "UNAUTHORIZED") {
+      // Unauthorized State
+      if (res.status === "UNAUTHORIZED" && isOnline) {
         setAuthUser(null);
-        setLoginStatus("UNAUTHENTICATED");
+        setAuthStatus("UNAUTHENTICATED");
         return;
       }
     } catch (err: any) {
+      // If we reach here, a critical code error occurred
       setAuthUser(null);
-      setLoginStatus("UNKNOWN");
-      setSBMessage({
-        msg: { content: "Unable to verify session", msgStatus: "ERROR" },
-      });
+      setAuthStatus("UNKNOWN");
+      console.log("Bad really bad");
     }
   };
 
@@ -79,7 +59,7 @@ export const useAuth = () => {
       //  Send logout request to backend
       await fetcher(serverRoutes.logout, { method: "POST" });
       setAuthUser(null);
-      setLoginStatus("UNAUTHENTICATED");
+      setAuthStatus("UNAUTHENTICATED");
       if (pathname !== clientRoutes.home.path) {
         setLastPage(clientRoutes.home);
         router.replace(clientRoutes.home.path);
@@ -93,7 +73,7 @@ export const useAuth = () => {
       console.error("Logout failed:", error);
     }
     //Reset feedback state
-    setSnackBarMsgs((prev) => ({ ...prev, messages: [], inlineMsg: null }));
+    setSnackBarMsg((prev) => ({ ...prev, messages: [], inlineMsg: null }));
   };
 
   return {

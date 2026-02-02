@@ -49,9 +49,11 @@ export const useSnackbar = () => {
     return () => timers.forEach((id) => clearInterval(id));
   };
 
-  const removeSBMessage = async (id: number) => {
+  const removeSBMessage = async (id?: number) => {
     setSnackBarMsg((prev) => {
-      const updatedMsgs = prev.messages?.filter((m) => m.id !== id) || [];
+      const updatedMsgs = id
+        ? prev.messages?.filter((m) => m.id !== id) || []
+        : [];
       return {
         ...prev,
         messages: updatedMsgs,
@@ -59,5 +61,5 @@ export const useSnackbar = () => {
     });
   };
 
-  return { setSBMessage, setSBTimer, removeMessage: removeSBMessage };
+  return { setSBMessage, setSBTimer, removeSBMessage };
 };

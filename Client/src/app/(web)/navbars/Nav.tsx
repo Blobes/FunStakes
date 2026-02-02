@@ -1,6 +1,6 @@
 "use client";
 import React, { useRef } from "react";
-import { Divider, Stack, typographyClasses } from "@mui/material";
+import { Divider, Stack } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import { RenderItemList } from "@/components/RenderItems";
 import { MenuRef } from "@/components/Menus";
@@ -9,6 +9,7 @@ import { useController } from "@/hooks/global";
 import { AppButton } from "@/components/Buttons";
 import { useGlobalContext } from "@/app/GlobalContext";
 import { clientRoutes } from "@/helpers/routes";
+import { usePage } from "@/hooks/page";
 
 interface NavProps {
   style?: any;
@@ -17,7 +18,7 @@ export const DesktopNav: React.FC<NavProps> = ({ style }) => {
   const theme = useTheme();
   const { headerNavList } = useNavLists();
   const menuRef = useRef<MenuRef>(null);
-  const { closeModal } = useController();
+
 
   return (
     <Stack sx={{ ...style }}>
@@ -25,16 +26,13 @@ export const DesktopNav: React.FC<NavProps> = ({ style }) => {
         list={headerNavList}
         itemAction={() => {
           menuRef.current?.closeMenu();
-          closeModal();
         }}
         style={{
-          padding: theme.boxSpacing(1, 5, 1, 4),
+          padding: theme.boxSpacing(2.5, 6, 2.5, 6),
+          fontWeight: "500",
           "& svg": {
-            width: "18px",
-            height: "18px",
-          },
-          [`& .${typographyClasses.root}`]: {
-            padding: theme.boxSpacing(1, 0, 0, 0),
+            width: "16px",
+            height: "16px",
           },
         }}
       />
@@ -46,8 +44,8 @@ export const MobileNav: React.FC<NavProps> = ({ style }) => {
   const theme = useTheme();
   const { headerNavList } = useNavLists();
   const menuRef = useRef<MenuRef>(null);
-  const { closeModal, handleLinkClick } = useController();
-  const { loginStatus } = useGlobalContext();
+  const { navigateTo } = usePage();
+  const { authStatus } = useGlobalContext();
 
   return (
     <Stack sx={{ ...style }}>
@@ -55,40 +53,40 @@ export const MobileNav: React.FC<NavProps> = ({ style }) => {
         list={headerNavList}
         itemAction={() => {
           menuRef.current?.closeMenu();
-          closeModal();
         }}
         style={{
-          padding: theme.boxSpacing(1, 5, 1, 4),
+          padding: theme.boxSpacing(4, 6),
+          textAlign: "left",
+          gap: theme.boxSpacing(6),
+          width: "100%",
           "& svg": {
-            fill: theme.palette.gray[200],
+            stroke: theme.palette.gray[200],
             width: "20px",
             height: "20px",
-          },
-          [`& .${typographyClasses.root}`]: {
-            padding: theme.boxSpacing(1, 0, 0, 0),
           },
         }}
       />
       <Divider />
-      {loginStatus === "AUTHENTICATED" && (
+      {authStatus === "AUTHENTICATED" && (
         <AppButton
           href={clientRoutes.home.path}
           variant="outlined"
           style={{ fontSize: "14px" }}
-          onClick={(e: React.MouseEvent<HTMLButtonElement>) =>
-            handleLinkClick(e, clientRoutes.home)
+          onClick={() =>
+            navigateTo(clientRoutes.home, { type: "element", loadPage: true, })
           }>
           Go to funstakes.com
         </AppButton>
       )}
 
-      {loginStatus === "UNAUTHENTICATED" && (
+      {authStatus === "UNAUTHENTICATED" && (
         <>
           <AppButton
             href={clientRoutes.signup.path}
             style={{ fontSize: "14px" }}
-            onClick={(e: React.MouseEvent<HTMLButtonElement>) =>
-              handleLinkClick(e, clientRoutes.signup, false)
+            onClick={() =>
+              navigateTo(clientRoutes.signup,
+                { type: "element", savePage: false, loadPage: true, })
             }>
             Sign up
           </AppButton>
@@ -96,8 +94,9 @@ export const MobileNav: React.FC<NavProps> = ({ style }) => {
             href={clientRoutes.login.path}
             variant="outlined"
             style={{ fontSize: "14px" }}
-            onClick={(e: React.MouseEvent<HTMLButtonElement>) =>
-              handleLinkClick(e, clientRoutes.login, false)
+            onClick={() =>
+              navigateTo(clientRoutes.login,
+                { type: "element", savePage: false, loadPage: true, })
             }>
             Login
           </AppButton>

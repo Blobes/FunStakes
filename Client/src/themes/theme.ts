@@ -23,7 +23,7 @@ let designSystem = createTheme({
           trans: {
             1: "rgba(1, 20, 35, 0.06)",
             2: "rgba(1, 20, 35, 0.12)",
-            overlay: (trans?: number) => `rgba(1, 13, 23, ${trans ?? 0.5})`,
+            overlay: (trans?: number) => `rgba(1, 6, 19, ${trans ?? 0.5})`,
           },
         },
         info: {
@@ -32,7 +32,7 @@ let designSystem = createTheme({
           dark: "#10142C",
         },
         error: {
-          main: red[400],
+          main: "#ef5350",
         },
         tonalOffset: 0.6,
         contrastThreshold: 4.5,
@@ -54,7 +54,7 @@ let designSystem = createTheme({
           trans: {
             1: "rgba(173, 218, 255, 0.08)",
             2: "rgba(173, 218, 255, 0.20)",
-            overlay: (trans?: number) => `rgba(1, 13, 23, ${trans ?? 0.5})`,
+            overlay: (trans?: number) => `rgba(1, 6, 19, ${trans ?? 0.5})`,
           },
         },
         info: {
@@ -116,7 +116,7 @@ let designSystem = createTheme({
   },
 
   // Spacing Between Elements
-  gap: (value: number) => `${value * 2}px`,
+  gap: (value = 0) => `${value * 2}px`,
 });
 
 designSystem = responsiveFontSizes(designSystem);

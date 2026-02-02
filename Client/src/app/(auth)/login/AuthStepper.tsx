@@ -12,7 +12,7 @@ import { img } from "@/assets/exported";
 
 interface StepperProps {
   style?: {
-    container?: GenericObject<string>;
+    container?: GenericObject<string> | any;
     headline?: GenericObject<string>;
     tagline?: GenericObject<string>;
   };
@@ -52,13 +52,15 @@ export const AuthStepper: React.FC<StepperProps> = ({ style = {} }) => {
   return (
     <Stack
       sx={{
-        backgroundColor: theme.palette.gray[50],
-        borderRadius: "12px",
+        backgroundColor: theme.palette.gray[0],
+        border: `1px solid ${theme.fixedColors.mainTrans}`,
+        borderRadius: theme.radius[3],
         justifyContent: "center",
         alignItems: "center",
         gap: theme.gap(16),
         [theme.breakpoints.down("sm")]: {
           width: "100%",
+          ...style.container.mobile
         },
         ...style.container,
       }}>

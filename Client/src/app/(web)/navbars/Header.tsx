@@ -3,7 +3,6 @@
 import React, { useEffect } from "react";
 import { AppBar, Stack, IconButton } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
-import { usePathname } from "next/navigation";
 import { useGlobalContext } from "@/app/GlobalContext";
 import { useController } from "@/hooks/global";
 import { DesktopNav, MobileNav } from "./Nav";
@@ -13,22 +12,19 @@ import { img } from "@/assets/exported";
 import Image from "next/image";
 import { Menu } from "lucide-react";
 import { zIndexes } from "@/helpers/global";
+import { usePage } from "@/hooks/page";
 
 export const Header: React.FC = () => {
-  const { loginStatus } = useGlobalContext();
-  const {
-    openModal,
-    closeModal,
-    isDesktop,
-    handleWindowResize,
-    handleLinkClick,
-  } = useController();
+  const { authStatus } = useGlobalContext();
+  const { openModal, closeModal, isDesktop, handleWindowResize } = useController()
+  const { navigateTo } = usePage();
   const theme = useTheme();
-  const isLoggedIn = loginStatus === "AUTHENTICATED";
+  const isLoggedIn = authStatus === "AUTHENTICATED";
 
   /* ---------------------------------- effects --------------------------------- */
   useEffect(() => {
     window.addEventListener("resize", handleWindowResize);
+    //  openMobileWebNav()
     return () => window.removeEventListener("resize", handleWindowResize);
   }, []);
 
@@ -46,7 +42,11 @@ export const Header: React.FC = () => {
       source: "navbar",
       onClose: () => closeModal(),
       style: {
-        base: { content: { height: "100%" } },
+        base: { overlay: { padding: theme.boxSpacing(6) } },
+        smallScreen: {
+          overlay: { padding: theme.boxSpacing(0) },
+          content: { height: "100%", width: "80%", borderRadius: "0px" }
+        },
       },
     });
 
@@ -66,81 +66,82 @@ export const Header: React.FC = () => {
         gap: theme.gap(6),
         borderBottom: `1px solid ${theme.palette.gray.trans[1]}`,
       }}>
-
-
-
       {/* Logo */}
       <AnchorLink
-        url={clientRoutes.home.path}
-        onClick={(e: React.MouseEvent<HTMLAnchorElement>) =>
-          handleLinkClick(e, clientRoutes.about)
-        }
-        style={{ display: "inline-flex" }}
-        icon={
-          <Image
-            src={img.logo}
-            alt="logo"
-            style={{
-              width: 38,
-              height: 38,
-              borderRadius: `${theme.radius.full}`,
-            }}
-          />
-        }
-      />
+        url={clientRoutes.about.path}
+        onClick={() =>
+          navigateTo(clientRoutes.about)
+        }>
+        <Image
+          src={img.logo}
+          alt="logo"
+          style={{
+            width: 34,
+            height: 34,
+            borderRadius: `${theme.radius.full}`,
+          }}
+        />
+      </AnchorLink>
 
       {/* Right controls */}
-      {isDesktop && (
-        <Stack direction="row" alignItems="center" spacing={theme.gap(8)}>
-          <DesktopNav
-            style={{
-              display: { xs: "none", md: "flex", flexDirection: "row" },
-              gap: theme.gap(4),
-            }}
-          />
+      {
+        isDesktop && (
+          <Stack direction="row" alignItems="center" spacing={theme.gap(8)}>
+            <DesktopNav
+              style={{
+                display: { xs: "none", md: "flex", flexDirection: "row" },
+                gap: theme.gap(4),
+              }}
+            />
 
-          {isLoggedIn && (
-            <AppButton
-              href={clientRoutes.home.path}
-              variant="outlined"
-              style={{ fontSize: "14px" }}
-              onClick={(e: React.MouseEvent<HTMLButtonElement>) =>
-                handleLinkClick(e, clientRoutes.home)
-              }>
-              Go to funstakes.com
-            </AppButton>
-          )}
-
-          {loginStatus === "UNAUTHENTICATED" && (
-            <Stack direction="row" alignItems="center" spacing={theme.gap(0)}>
+            {isLoggedIn && (
               <AppButton
-                href={clientRoutes.signup.path}
-                style={{ fontSize: "14px" }}
-                onClick={(e: React.MouseEvent<HTMLButtonElement>) =>
-                  handleLinkClick(e, clientRoutes.signup, false)
-                }>
-                Sign up
-              </AppButton>
-              <AppButton
-                href={clientRoutes.login.path}
+                href={clientRoutes.home.path}
                 variant="outlined"
                 style={{ fontSize: "14px" }}
-                onClick={(e: React.MouseEvent<HTMLButtonElement>) =>
-                  handleLinkClick(e, clientRoutes.login, false)
+                onClick={() =>
+                  navigateTo(clientRoutes.home,
+                    { type: "element", loadPage: true, })
                 }>
-                Login
+                Go to funstakes.com
               </AppButton>
-            </Stack>
-          )}
-        </Stack>)}
+            )}
+
+            {authStatus === "UNAUTHENTICATED" && (
+              <Stack direction="row" alignItems="center" spacing={theme.gap(0)}>
+                <AppButton
+                  href={clientRoutes.signup.path}
+                  style={{ fontSize: "14px" }}
+                  onClick={() =>
+                    navigateTo(clientRoutes.signup,
+                      { type: "element", savePage: false, loadPage: true, })
+                  }>
+                  Sign up
+                </AppButton>
+                <AppButton
+                  href={clientRoutes.login.path}
+                  variant="outlined"
+                  style={{ fontSize: "14px" }}
+                  onClick={() =>
+                    navigateTo(clientRoutes.login,
+                      { type: "element", savePage: false, loadPage: true })
+                  }>
+                  Login
+                </AppButton>
+              </Stack>
+            )}
+          </Stack>)
+      }
 
       {/* Mobile hamburger (logged out only) */}
-      {!isDesktop && (
-        <IconButton onClick={openMobileWebNav} aria-label="Open menu">
-          <Menu />
-        </IconButton>
-      )}
+      {
+        !isDesktop && (
+          <IconButton onClick={openMobileWebNav} aria-label="Open menu">
+            <Menu />
+          </IconButton>
+        )
+      }
 
-    </AppBar>
+    </AppBar >
   );
 };

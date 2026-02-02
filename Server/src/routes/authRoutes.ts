@@ -3,9 +3,10 @@ import { createAccount } from "@/controllers/auth/createAccount";
 import loginUser from "@/controllers/auth/login";
 import { refreshAuthToken } from "@/middlewares/refreshAuthToken";
 import { checkUsername, checkEmail } from "@/controllers/auth/check";
-import verifyUser from "@/controllers/auth/verifyUser";
+import { verifyUser } from "@/controllers/auth/verifyUser";
 import logoutUser from "@/controllers/auth/logout";
 import { verifyEmail } from "@/controllers/auth/emailVerification";
+import verifyAuthToken from "@/middlewares/verifyAuthToken";
 
 const router = express.Router();
 
@@ -23,7 +24,7 @@ router.post("/login", loginUser);
 router.post("/logout", logoutUser);
 
 //Verify user route
-router.get("/verify", verifyUser);
+router.get("/verify", verifyAuthToken, verifyUser);
 
 //Refresh token route
 router.post("/refresh", refreshAuthToken);

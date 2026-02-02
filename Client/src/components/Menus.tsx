@@ -9,6 +9,7 @@ export interface MenuRef {
   openMenu: (anchor: HTMLElement) => void;
   closeMenu: () => void;
 }
+
 interface MenuProps {
   contentElement: ReactNode;
 }
@@ -44,11 +45,18 @@ export const MenuPopup = forwardRef<MenuRef, MenuProps>(
           alignItems: "center",
           zIndex: zIndexes.maximum,
           padding: theme.boxSpacing(2, 0),
+
           [`& .${paperClasses.root}`]: {
             borderRadius: theme.radius[2],
-            paddingY: theme.boxSpacing(3),
+            padding: theme.boxSpacing(4),
             border: `1px solid ${theme.palette.gray[50]}`,
-            minWidth: 220,
+            width: "fit-content",
+            minWidth: 200,
+            maxWidth: 250,
+            "& ul": {
+              display: "flex",
+              flexDirection: "column",
+            }
           },
         }}>
         {contentElement}

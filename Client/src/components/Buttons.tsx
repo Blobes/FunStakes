@@ -1,16 +1,14 @@
-import { Button } from "@mui/material";
+import { Button, Link } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import { GenericObject } from "../types";
-import Link from "next/link";
+import NextLink from "next/link";
 
 interface ButtonProps {
   variant?: "text" | "contained" | "outlined";
   children?: React.ReactNode | string;
-  iconLeft?: React.ReactNode | null;
-  iconRight?: React.ReactNode | null;
   style?: GenericObject<string>;
   overrideStyle?: "full" | "partial";
-  onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
+  onClick?: (event: React.MouseEvent) => void;
   href?: string;
   options?: GenericObject<any>;
   submit?: boolean;
@@ -19,8 +17,6 @@ interface ButtonProps {
 export const AppButton = ({
   variant = "contained",
   children = "children",
-  iconLeft = null,
-  iconRight = null,
   style = {},
   overrideStyle = "partial",
   onClick,
@@ -35,7 +31,7 @@ export const AppButton = ({
     height: "unset",
     alignSelf: "unset",
     fontSize: "16px",
-    padding: theme.boxSpacing(2, 8),
+    padding: theme.boxSpacing(1, 8, 2, 8),
     display: "flex",
     gap: theme.gap(2),
     alignItems: "center",
@@ -52,57 +48,48 @@ export const AppButton = ({
       backgroundColor: theme.fixedColors.mainTrans,
     }
   };
+  const mergedStyle = overrideStyle === "full" ? style
+    : {
+      ...(variant === "text" ? textVarDefaultStyle : defaultStyle),
+      ...style,
+    };
 
-  const mergedStyle =
-    overrideStyle === "full"
-      ? style
-      : {
-        ...(variant === "text" ? textVarDefaultStyle : defaultStyle),
-        ...style,
-      };
-  // If it's a link, wrap button inside AnchorLink
+  const buttonProps = {
+    variant,
+    sx: mergedStyle,
+    ...(onClick && { onClick: (e: React.MouseEvent) => onClick(e) }),
+    ...options,
+  };
+
   if (href) {
     return (
-      <AnchorLink url={href}>
-        <Button
-          variant={variant}
-          sx={mergedStyle}
-          onClick={onClick}
-          {...options}>
-          {iconLeft}
-          {children}
-          {iconRight}
-        </Button>
-      </AnchorLink>
+      <Button
+        component={NextLink}
+        href={href}
+        {...buttonProps}>
+        {children}
+      </Button>
     );
   }
-  // Normal button OR form submit button
   return (
     <Button
-      variant={variant}
-      sx={mergedStyle}
       type={submit ? "submit" : "button"}
-      onClick={!submit ? onClick : undefined} // Only attach onClick if NOT submit
-      {...options}>
-      {iconLeft}
+      {...buttonProps}>
       {children}
-      {iconRight}
     </Button>
   );
 };
 
 interface AnchorLinkProps {
-  children?: React.ReactNode | string | null;
+  children: React.ReactNode | string
   url: string;
-  icon?: React.ReactNode | null;
   style?: GenericObject<string | number>;
   overrideStyle?: "full" | "partial";
   [key: string]: any;
 }
 export const AnchorLink = ({
-  children = null,
+  children,
   url,
-  icon = null,
   style = {},
   overrideStyle = "partial",
   ...rest
@@ -110,16 +97,25 @@ export const AnchorLink = ({
   const theme = useTheme();
 
   const defaultStyle: GenericObject<string> = {
+    display: "inline-flex",
     textAlign: "center",
     textDecoration: "none",
     fontSize: "16px",
     color: theme.palette.gray[300],
+    width: "fit-content",
+    transition: "background-color 0.3s linear, color 0.2s linear, stroke 0.2s linear"
   };
   const mergedStyle =
     overrideStyle === "full" ? style : { ...defaultStyle, ...style };
   return (
-    <Link href={url} style={mergedStyle} {...rest}>
-      {icon && icon} {children}
-    </Link>
+    <Link component={NextLink} href={url}
+      sx={{
+        ...mergedStyle,
+      }}
+      prefetch={false}
+      {...rest}
+    >
+      {children}
+    </Link >
   );
 };

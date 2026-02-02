@@ -28,7 +28,7 @@ interface SignupInfo {
 export const useSignup = (drawerRef?: React.RefObject<ModalRef>) => {
   const {
     setAuthUser,
-    setLoginStatus,
+    setAuthStatus: setLoginStatus,
     setPage,
     setSnackBarMsg: setSnackBarMsgs,
     setInlineMsg,

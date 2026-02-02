@@ -1,10 +1,8 @@
 "use client";
 
 import { useGlobalContext } from "@/app/GlobalContext";
-import { useController } from "@/hooks/global";
 import { fetcher } from "@/helpers/fetcher";
 import { IUser, Page, SingleResponse } from "@/types";
-
 import {
   clearLoginLock,
   formatRemainingTime,
@@ -19,6 +17,7 @@ import {
   getFromLocalStorage,
   setCookie,
 } from "@/helpers/storage";
+import { usePage } from "@/hooks/page";
 
 interface LoginCredentials {
   email: string;
@@ -33,9 +32,9 @@ interface CheckEmailResponse {
 }
 
 export const useLogin = () => {
-  const { setAuthUser, setLoginStatus, setInlineMsg, isAuthLoading } =
+  const { setAuthUser, setAuthStatus, setInlineMsg, isAuthLoading } =
     useGlobalContext();
-  const { setLastPage, isOnWeb } = useController();
+  const { setLastPage, isOnWeb } = usePage();
   const { setSBMessage } = useSnackbar();
   const MAX_ATTEMPTS = 3;
   const LOCKOUT_MIN = 2;
@@ -114,7 +113,7 @@ export const useLogin = () => {
       if (!payload || status !== "SUCCESS") return null; // Return early
 
       setAuthUser(payload);
-      setLoginStatus("AUTHENTICATED");
+      setAuthStatus("AUTHENTICATED");
 
       // const isExcludedRoute = flaggedRoutes.auth.includes(pathname);
       const savedPage = getFromLocalStorage<Page>();

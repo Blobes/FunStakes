@@ -8,7 +8,6 @@ import { useTheme } from "@mui/material/styles";
 import { useRouter } from "next/navigation";
 import { delay } from "@/helpers/global";
 import { useEffect, useState } from "react";
-import { useController } from "@/hooks/global";
 import { PasswordInput } from "@/components/InputFields";
 import { InlineMsg } from "@/components/InlineMsg";
 import { BasicTooltip } from "@/components/Tooltips";
@@ -16,6 +15,7 @@ import { GenericObject } from "@/types";
 import { clientRoutes } from "@/helpers/routes";
 import { ProgressIcon } from "@/components/ProgressIcon";
 import { Pencil } from "lucide-react";
+import { usePage } from "@/hooks/page";
 
 interface LoginProps {
   email: string;
@@ -41,9 +41,10 @@ export const Login: React.FC<LoginProps> = ({
     lockTimestamp,
     startLockCountdown,
   } = useLogin();
-  const { inlineMsg, setInlineMsg, isAuthLoading, setAuthLoading, lastPage } =
+  const { inlineMsg, setInlineMsg, isAuthLoading, setAuthLoading,
+    setGlobalLoading, lastPage } =
     useGlobalContext();
-  const { isOnWeb } = useController();
+  const { isOnWeb } = usePage();
   const [msg, setMsg] = useState("");
   const [passwordValidity, setPasswordValidity] = useState<
     "valid" | "invalid"
@@ -76,8 +77,6 @@ export const Login: React.FC<LoginProps> = ({
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setAuthLoading(true);
-    await delay();
-
     const res = await handleLogin({
       email: email,
       password: password,
@@ -85,11 +84,15 @@ export const Login: React.FC<LoginProps> = ({
     if (res) {
       const { payload, status } = res;
       if (payload && status === "SUCCESS") {
+        setGlobalLoading(true);
         setStep?.("email");
         const isLastWeb = isOnWeb(lastPage.path);
         router.push(isLastWeb ? clientRoutes.home.path : lastPage.path);
+        await delay();
+        setGlobalLoading(false);
       }
     }
+    await delay();
     setAuthLoading(false);
   };
 
@@ -165,13 +168,10 @@ export const Login: React.FC<LoginProps> = ({
         />
         <AppButton
           variant="contained"
-          {...(isAuthLoading && {
-            iconLeft: <ProgressIcon otherProps={{ size: 25 }} />,
-          })}
           submit
           style={{
             fontSize: "16px",
-            padding: theme.boxSpacing(4, 8),
+            padding: theme.boxSpacing(5, 9),
             width: "100%",
           }}
           options={{
@@ -181,7 +181,7 @@ export const Login: React.FC<LoginProps> = ({
               loginAttempts >= MAX_ATTEMPTS ||
               isAuthLoading,
           }}>
-          {!isAuthLoading && "Login"}
+          {isAuthLoading ? <ProgressIcon otherProps={{ size: 25 }} /> : "Login"}
         </AppButton>
       </Stack>
     </>

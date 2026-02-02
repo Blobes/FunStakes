@@ -71,9 +71,7 @@ export const CheckEmail: React.FC<CheckProps> = ({
     e.preventDefault();
 
     setAuthLoading(true);
-
     await delay();
-
     const res = await checkEmail(email);
     if (res) {
       if (res.emailNotTaken === false) {
@@ -83,6 +81,7 @@ export const CheckEmail: React.FC<CheckProps> = ({
         router.replace(`/auth/signup?email=${email}`);
       }
     }
+
     setAuthLoading(false);
   };
 
@@ -111,7 +110,7 @@ export const CheckEmail: React.FC<CheckProps> = ({
       {inlineMsg && <InlineMsg msg={inlineMsg} type="ERROR" />}
 
       <Stack
-        sx={{ gap: theme.gap(8) }}
+        sx={{ gap: theme.gap(18) }}
         component="form"
         onSubmit={handleSubmit}>
         <TextInput
@@ -131,19 +130,16 @@ export const CheckEmail: React.FC<CheckProps> = ({
         />
         <AppButton
           variant="contained"
-          {...(isAuthLoading && {
-            iconLeft: <ProgressIcon otherProps={{ size: 25 }} />,
-          })}
           submit
           style={{
             fontSize: "16px",
-            padding: theme.boxSpacing(4, 8),
+            padding: theme.boxSpacing(5, 8),
             width: "100%",
           }}
           options={{
             disabled: validity === "invalid" || email === "" || isAuthLoading,
           }}>
-          {!isAuthLoading && "Continue"}
+          {isAuthLoading ? <ProgressIcon otherProps={{ size: 25 }} /> : "Continue"}
         </AppButton>
       </Stack>
     </>

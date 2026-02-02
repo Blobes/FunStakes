@@ -4,31 +4,15 @@ import { Divider, Stack, } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import { useNavLists } from "./NavLists";
 import { AnchorLink } from "@/components/Buttons";
-import { useController } from "@/hooks/global";
-import { useRouter } from "next/navigation";
 import React from "react";
+import { usePage } from "@/hooks/page";
 
 export const Footer = () => {
   const theme = useTheme();
 
   const { footerNavList } = useNavLists();
-  const { setLastPage } = useController();
-  const router = useRouter();
+  const { navigateTo } = usePage();
 
-  const handleClick = (
-    e: React.MouseEvent<HTMLAnchorElement>,
-    title?: string,
-    url?: string
-  ) => {
-    e.preventDefault();
-    if (title && url) {
-      setLastPage({
-        title: title,
-        path: url,
-      });
-      router.push(url);
-    }
-  };
 
   return (
     <Stack
@@ -44,8 +28,9 @@ export const Footer = () => {
         <React.Fragment key={index}>
           <AnchorLink
             url={item.url ?? "#"}
-            onClick={(e: React.MouseEvent<HTMLAnchorElement>) => {
-              handleClick(e, item.title, item.url);
+            onClick={() => {
+              if (item.title && item.url)
+                navigateTo({ title: item.title, path: item.url, }, { loadPage: true })
             }}
             style={{
               color: theme.palette.gray[200],

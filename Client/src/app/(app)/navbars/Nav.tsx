@@ -5,9 +5,7 @@ import {
   Typography,
   Divider,
   Stack,
-  svgIconClasses,
   IconButton,
-  typographyClasses,
 } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import { useGlobalContext } from "@/app/GlobalContext";
@@ -20,7 +18,7 @@ import { useController } from "@/hooks/global";
 import { CircleCheckBig, WalletMinimal } from "lucide-react";
 import { ThemeMode } from "@/components/ThemeSwitcher";
 
-export const DesktopUserNav = ({
+export const DesktopNav = ({
   menuRef,
 }: {
   menuRef: React.RefObject<MenuRef>;
@@ -37,7 +35,6 @@ export const DesktopUserNav = ({
           md: "flex",
         },
         position: "absolute",
-        flexDirection: "row",
         gap: theme.gap(4),
       }}>
       <MenuPopup
@@ -51,12 +48,14 @@ export const DesktopUserNav = ({
             }}
             style={{
               padding: theme.boxSpacing(4, 8),
-              borderRadius: "unset",
               gap: theme.gap(8),
-              [`& .${svgIconClasses.root}`]: {
-                fill: theme.palette.gray[200],
+              textAlign: "left",
+              width: "100%",
+              "& svg": {
+                stroke: theme.palette.gray[200],
                 width: "20px",
                 height: "20px",
+                flex: "none"
               },
             }}
           />
@@ -126,13 +125,14 @@ const UserInfo = () => {
         ]}
         style={{
           justifyContent: "space-between",
+          fontSize: "13px"
         }}
       />
     </Stack>
   );
 };
 
-export const MobileUserNav = ({ }) => {
+export const MobileNav = ({ }) => {
   const theme = useTheme();
   const { userNavList } = useNavLists();
   const { closeModal } = useController();
@@ -159,16 +159,14 @@ export const MobileUserNav = ({ }) => {
           showCurrentPage={false}
           style={{
             gap: theme.gap(10),
-            padding: "0",
+            padding: 0,
             background: "none",
+            width: "100%",
+            textAlign: "left",
+            fontSize: "18px",
             "&:hover": {
               background: "none",
-            },
-            [`& .${typographyClasses.root}`]: {
-              fontSize: "18px",
-              "&:hover": {
-                color: theme.palette.primary.dark,
-              },
+              color: theme.palette.primary.dark + "!important",
             },
             "& svg": {
               width: "22px",
@@ -176,7 +174,7 @@ export const MobileUserNav = ({ }) => {
             },
           }}
         />
-        <Divider />
+        <Divider sx={{ marginTop: theme.boxSpacing(20) }} />
         <ThemeMode />
       </Stack>
     </Stack>

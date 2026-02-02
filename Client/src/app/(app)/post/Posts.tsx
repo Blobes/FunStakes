@@ -20,7 +20,7 @@ export const Posts = () => {
   const { getAllPost } = usePost();
   const [posts, setPosts] = useState<Post[]>([]);
   const [message, setMessage] = useState<string | null>(null);
-  const { loginStatus } = useGlobalContext();
+  const { authStatus } = useGlobalContext();
   const [isLoading, setLoading] = useState(false);
   const router = useRouter();
   const { autoScroll } = useStyles();
@@ -41,7 +41,7 @@ export const Posts = () => {
 
   useEffect(() => {
     renderPosts();
-  }, [loginStatus]);
+  }, [authStatus]);
 
   return (
     <Stack
@@ -61,7 +61,7 @@ export const Posts = () => {
           ...(!isLoading && autoScroll().mobile),
         },
       }}>
-      {loginStatus === "AUTHENTICATED" && <CreatePost />}
+      {authStatus === "AUTHENTICATED" && <CreatePost />}
       {isLoading ? (
         <Stack
           sx={{

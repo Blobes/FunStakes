@@ -17,7 +17,7 @@ interface SnackbarProps {
 
 export const SnackBars = ({ snackBarMsg }: SnackbarProps) => {
   const theme = useTheme();
-  const { setSBTimer, removeMessage } = useSnackbar();
+  const { setSBTimer, removeSBMessage: removeMessage } = useSnackbar();
   const { setSnackBarMsg } = useGlobalContext();
 
   if (!snackBarMsg.messages || snackBarMsg.messages.length === 0) {

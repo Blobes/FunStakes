@@ -34,7 +34,7 @@ interface PostProps {
 
 export const PostCard = ({ post, style = {} }: PostProps) => {
   const theme = useTheme();
-  const { loginStatus, setModalContent } = useGlobalContext();
+  const { authStatus, setModalContent } = useGlobalContext();
   const { isOffline, isUnstableNetwork, isDesktop } = useController();
   const {
     handlePostLike,
@@ -81,7 +81,7 @@ export const PostCard = ({ post, style = {} }: PostProps) => {
 
   // Handle like/unlike
   const handleLike = async () => {
-    if (loginStatus === "UNAUTHENTICATED") {
+    if (authStatus === "UNAUTHENTICATED") {
       setModalContent({ content: <AuthStepper /> });
       return;
     }
@@ -220,14 +220,18 @@ export const PostCard = ({ post, style = {} }: PostProps) => {
       </Stack>
 
       {/* Content text */}
-      <Typography variant="body2"
+      <Typography variant="body1"
         sx={{ padding: theme.boxSpacing(4, 6) }}>
         {content}
       </Typography>
       {/* Content media */}
       {postImg && (
         <Image src={postImg} alt="Post image"
-          style={{ width: "100%" }} />
+          style={{
+            width: "100%", height: "auto",
+            ...(isDesktop && { maxHeight: "120svh" }),
+            objectFit: "cover"
+          }} />
       )}
 
       {/* Info Strip */}

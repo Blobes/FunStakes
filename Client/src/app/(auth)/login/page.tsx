@@ -4,26 +4,19 @@ import { useTheme } from "@mui/material/styles";
 import { AuthStepper } from "./AuthStepper";
 import { Stack } from "@mui/material";
 import { useGlobalContext } from "@/app/GlobalContext";
-import { useRouter } from "next/navigation";
 import { clientRoutes } from "@/helpers/routes";
 import { Empty } from "@/components/Empty";
 import { ShieldCheck } from "lucide-react";
-import { useController } from "@/hooks/global";
 import { useAuth } from "../authHook";
 import { useStyles } from "@/hooks/style";
+import { usePage } from "@/hooks/page";
 
 export default function LoginPage() {
   const theme = useTheme();
-  const { loginStatus } = useGlobalContext();
-  const router = useRouter();
-  const { setLastPage } = useController();
+  const { authStatus } = useGlobalContext();
   const { handleLogout } = useAuth();
   const { applyBGPattern } = useStyles()
-
-  const handleBack = () => {
-    setLastPage(clientRoutes.home);
-    router.replace(clientRoutes.home.path);
-  };
+  const { navigateTo } = usePage()
 
   return (
     <Stack
@@ -32,16 +25,19 @@ export default function LoginPage() {
         height: "100%",
         alignItems: "center",
         justifyContent: "center",
-        padding: theme.boxSpacing(10),
+        padding: theme.boxSpacing(6),
         //Pattern background with fade effect
         ...applyBGPattern()
       }}>
-      {loginStatus === "UNAUTHENTICATED" ? (
+      {authStatus === "UNAUTHENTICATED" ? (
         <AuthStepper
           style={{
             container: {
               width: "400px",
               padding: theme.boxSpacing(18, 16),
+              mobile: {
+                padding: theme.boxSpacing(16, 10),
+              },
             },
           }}
         />
@@ -52,20 +48,21 @@ export default function LoginPage() {
           style={{
             container: {
               padding: theme.boxSpacing(18),
-              backgroundColor: theme.palette.gray[50]
+              backgroundColor: theme.palette.gray[0],
+              border: `1px solid ${theme.fixedColors.mainTrans}`
             },
             primaryCta: { width: "100%" },
             icon: {
               width: "40px",
               height: "40px",
-              svg: {
-                fill: "none",
-                strokeWidth: "1px",
-              },
             },
           }}
           icon={<ShieldCheck />}
-          primaryCta={{ label: "Go to Funstakes.com", action: handleBack }}
+          primaryCta={{
+            label: "Go to Funstakes.com",
+            action: () => navigateTo(clientRoutes.home),
+            href: clientRoutes.home.path
+          }}
           secondaryCta={{ label: "Logout", action: handleLogout }}
         />
       )}

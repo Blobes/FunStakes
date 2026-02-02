@@ -4,8 +4,12 @@ import { Response, Request } from "express";
 import crypto from "crypto";
 import fetch from "node-fetch";
 import cors from "cors";
+import { AuthRequest } from "./middlewares/verifyAuthToken";
 
-export const genAccessTokens = (user: any, res: Response) => {
+export const genAccessTokens = (user: any, req: AuthRequest, res: Response) => {
+  const origin = req.get("origin") || "";
+  const isLocalDev = origin.includes("localhost:3000");
+
   if (!process.env.JWT_SECRET || !process.env.REFRESH_TOKEN_SECRET) {
     throw new Error("JWT_SECRET is not defined in environment variables");
   }
@@ -14,37 +18,45 @@ export const genAccessTokens = (user: any, res: Response) => {
     { id: userId },
     process.env.JWT_SECRET as string,
     {
-      expiresIn: "30m",
-    }
+      expiresIn: "15m",
+    },
   );
-  // Set token in cookie
+  // Set access token in private cookie
   res.cookie("access_token", accessToken, {
     httpOnly: true,
     secure: true,
-    sameSite: "none",
+    sameSite: !isLocalDev ? "lax" : "none",
     path: "/",
-    maxAge: 30 * 60 * 1000, // 30 minutes
+    maxAge: 15 * 60 * 1000, // 15 minutes
   });
+
   return accessToken;
 };
 
-export const genRefreshTokens = (user: any, res: Response) => {
+export const genRefreshTokens = (
+  user: any,
+  req: AuthRequest,
+  res: Response,
+) => {
+  const origin = req.get("origin") || "";
+  const isLocalDev = origin.includes("localhost:3000");
+
   if (!process.env.JWT_SECRET || !process.env.REFRESH_TOKEN_SECRET) {
     throw new Error(
-      "REFRESH_TOKEN_SECRET is not defined in environment variables"
+      "REFRESH_TOKEN_SECRET is not defined in environment variables",
     );
   }
   const userId = user._id?.toString() || user.id?.toString();
   const refreshToken = jwt.sign(
     { id: userId },
     process.env.REFRESH_TOKEN_SECRET as string,
-    { expiresIn: "7d" }
+    { expiresIn: "7d" },
   );
   // Set token in cookie
   res.cookie("refresh_token", refreshToken, {
     httpOnly: true,
     secure: true,
-    sameSite: "none",
+    sameSite: !isLocalDev ? "lax" : "none",
     path: "/",
     maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
   });

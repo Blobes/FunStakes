@@ -11,17 +11,17 @@ import { usePathname } from "next/navigation";
 import { BottomNav } from "@/app/(app)/navbars/BottomNav";
 import { useRef } from "react";
 
-export const AppWrapper = ({ children }: { children: React.ReactNode }) => {
+export const App = ({ children }: { children: React.ReactNode }) => {
   const { isDesktop } = useController();
   const theme = useTheme();
-  const { loginStatus } = useGlobalContext();
+  const { authStatus } = useGlobalContext();
   const { scrollBarStyle } = useStyles();
   const scrollRef = useRef<HTMLDivElement>(null);
 
   return (
     <>
       {/* Logged in & on desktop */}
-      {loginStatus === "AUTHENTICATED" && isDesktop && (
+      {authStatus === "AUTHENTICATED" && isDesktop && (
         <Stack
           sx={{
             height: "100%",
@@ -53,7 +53,7 @@ export const AppWrapper = ({ children }: { children: React.ReactNode }) => {
       )}
 
       {/* Logged in and NOT on a desktop screen */}
-      {loginStatus === "AUTHENTICATED" && !isDesktop && (
+      {authStatus === "AUTHENTICATED" && !isDesktop && (
         <Stack
           ref={scrollRef}
           sx={{
@@ -73,7 +73,7 @@ export const AppWrapper = ({ children }: { children: React.ReactNode }) => {
       )}
 
       {/* Not logged in on every screen size */}
-      {loginStatus !== "AUTHENTICATED" && (
+      {authStatus !== "AUTHENTICATED" && (
         <Stack
           sx={{
             height: "100%",
