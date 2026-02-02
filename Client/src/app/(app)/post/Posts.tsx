@@ -20,7 +20,7 @@ export const Posts = () => {
   const { getAllPost } = usePost();
   const [posts, setPosts] = useState<Post[]>([]);
   const [message, setMessage] = useState<string | null>(null);
-  const { loginStatus } = useGlobalContext();
+  const { authStatus: loginStatus } = useGlobalContext();
   const [isLoading, setLoading] = useState(false);
   const router = useRouter();
   const { autoScroll } = useStyles();

@@ -20,8 +20,8 @@ export const GlobalManager = ({ children }: { children: React.ReactNode }) => {
     const modalRef = useRef<ModalRef>(null);
     const { openModal, verifySignal, isUnstableNetwork, isOffline } = useController();
     const { handleCurrentPage } = usePage()
-    const { snackBarMsg, loginStatus, modalContent,
-        networkStatus, isGlobalLoading, setLoginStatus } = useGlobalContext();
+    const { snackBarMsg, authStatus, modalContent,
+        networkStatus, isGlobalLoading, setAuthStatus } = useGlobalContext();
     const [mounted, setMounted] = useState(false);
     const pathname = usePathname()
     const router = useRouter();
@@ -41,7 +41,7 @@ export const GlobalManager = ({ children }: { children: React.ReactNode }) => {
             await verifyAuth();
         }
         init();
-    }, [mounted, networkStatus, loginStatus, setLoginStatus]);
+    }, [networkStatus, authStatus, setAuthStatus]);
 
     // MODAL OPEN / CLOSE
     useEffect(() => {
@@ -57,18 +57,21 @@ export const GlobalManager = ({ children }: { children: React.ReactNode }) => {
     // PAGE LOAD HANDLER
     useEffect(() => {
         handleCurrentPage();
-        if (loginStatus === "UNKNOWN") router.refresh()
     }, [pathname]);
 
 
     // RENDER UIs
     // Conditionally render the splash UI
-    if (!mounted || loginStatus === "PENDING" || isGlobalLoading) {
+    if (!mounted || authStatus === "PENDING" || isGlobalLoading) {
         return <SplashUI />;
     }
     // Conditionally render the offline UI
-    if (isOffline || isUnstableNetwork || loginStatus === "UNKNOWN") {
+    if (isOffline || isUnstableNetwork || authStatus === "ERROR") {
         return <OfflineUI />;
+    }
+
+    if (authStatus === "UNKNOWN") {
+        return <SplashUI reload={true} />;
     }
 
     // Conditionally render the app UIs

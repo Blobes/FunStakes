@@ -32,8 +32,12 @@ interface CheckEmailResponse {
 }
 
 export const useLogin = () => {
-  const { setAuthUser, setLoginStatus, setInlineMsg, isAuthLoading } =
-    useGlobalContext();
+  const {
+    setAuthUser,
+    setAuthStatus: setLoginStatus,
+    setInlineMsg,
+    isAuthLoading,
+  } = useGlobalContext();
   const { setLastPage, isOnWeb } = usePage();
   const { setSBMessage } = useSnackbar();
   const MAX_ATTEMPTS = 3;

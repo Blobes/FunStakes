@@ -10,7 +10,7 @@ import { usePage } from "@/hooks/page";
 import { delay } from "@/helpers/global";
 
 export const useAuth = () => {
-  const { setAuthUser, setLoginStatus, setSnackBarMsg, setGlobalLoading } =
+  const { setAuthUser, setAuthStatus, setSnackBarMsg, setGlobalLoading } =
     useGlobalContext();
   const { isOffline, isOnline, isUnstableNetwork } = useController();
   const { setLastPage } = usePage();
@@ -24,13 +24,14 @@ export const useAuth = () => {
       // Success
       if (res.status === "SUCCESS" && res.payload) {
         setAuthUser(res.payload);
-        setLoginStatus("AUTHENTICATED");
+        setAuthStatus("AUTHENTICATED");
         return;
       }
 
       // Network Erorr / Offline
       if (res.status === "ERROR" || isOffline || isUnstableNetwork) {
-        setLoginStatus("UNKNOWN");
+        setAuthUser(null);
+        setAuthStatus("ERROR");
         if (res.message)
           setSBMessage({
             msg: { content: res.message, msgStatus: "ERROR", hasClose: true },
@@ -41,30 +42,20 @@ export const useAuth = () => {
       // Unauthorized State
       if (res.status === "UNAUTHORIZED" && isOnline) {
         setAuthUser(null);
-        setLoginStatus("UNAUTHENTICATED");
+        setAuthStatus("UNAUTHENTICATED");
         return;
       }
 
       const isMobile = window.innerWidth < 900;
       if (isOnline && res.status === "UNKNOWN" && !res.payload && isMobile) {
-        const isSyncing = sessionStorage.getItem("auth_syncing");
-
-        if (isSyncing) {
-          sessionStorage.removeItem("auth_syncing");
-          setGlobalLoading(false);
-          return;
-        }
-        // First attempt: Set the flag and reload
-        setGlobalLoading(true);
-        sessionStorage.setItem("auth_syncing", "true");
-        await delay(200);
-        window.location.reload();
+        setAuthUser(null);
+        setAuthStatus("UNKNOWN");
         return;
       }
     } catch (err: any) {
       // If we reach here, a critical code error occurred
       setAuthUser(null);
-      setLoginStatus("UNKNOWN");
+      setAuthStatus("UNKNOWN");
       console.log("Bad really bad");
     }
   };
@@ -75,8 +66,7 @@ export const useAuth = () => {
       //  Send logout request to backend
       await fetcher(serverRoutes.logout, { method: "POST" });
       setAuthUser(null);
-      setLoginStatus("UNAUTHENTICATED");
-      sessionStorage.removeItem("auth_syncing");
+      setAuthStatus("UNAUTHENTICATED");
       if (pathname !== clientRoutes.home.path) {
         setLastPage(clientRoutes.home);
         router.replace(clientRoutes.home.path);

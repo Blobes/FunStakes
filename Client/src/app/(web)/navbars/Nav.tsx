@@ -45,7 +45,7 @@ export const MobileNav: React.FC<NavProps> = ({ style }) => {
   const { headerNavList } = useNavLists();
   const menuRef = useRef<MenuRef>(null);
   const { navigateTo } = usePage();
-  const { loginStatus } = useGlobalContext();
+  const { authStatus: loginStatus } = useGlobalContext();
 
   return (
     <Stack sx={{ ...style }}>

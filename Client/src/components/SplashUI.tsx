@@ -4,10 +4,23 @@ import Image from "next/image";
 import { pulseAndRotate } from "@/helpers/animations";
 import { AnimatedWrapper } from "./AnimationWrapper";
 import { RootUIContainer } from "./Containers";
+import { useEffect } from "react";
+import { delay } from "@/helpers/global";
 
 
-export const SplashUI = () => {
+export const SplashUI = ({ reload = false }: { reload?: boolean }) => {
   const theme = useTheme();
+
+  useEffect(() => {
+    if (reload === true)
+      (async () => {
+        await delay(200)
+        window.location.reload()
+      }
+      )
+  }, []);
+
+
   return (
     <RootUIContainer
       style={{

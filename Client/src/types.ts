@@ -2,11 +2,12 @@
 
 import { ModalProps } from "./components/Modal";
 
-export type LoginStatus =
+export type AuthStatus =
   | "UNKNOWN"
   | "AUTHENTICATED"
   | "UNAUTHENTICATED"
-  | "PENDING";
+  | "PENDING"
+  | "ERROR";
 
 export type NetworkStatus = "STABLE" | "UNSTABLE" | "OFFLINE" | "UNKNOWN";
 

@@ -23,7 +23,7 @@ interface AppHeaderProps {
   scrollRef?: React.RefObject<HTMLElement | null>;
 }
 export const AppHeader: React.FC<AppHeaderProps> = ({ scrollRef }) => {
-  const { loginStatus } = useGlobalContext();
+  const { authStatus: loginStatus } = useGlobalContext();
   const { openModal, closeModal, isDesktop, handleWindowResize } = useController();
   const { setLastPage, navigateTo } = usePage();
   const { handlePageScroll } = usePageScroll();

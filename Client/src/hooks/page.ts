@@ -14,8 +14,13 @@ import { getFromLocalStorage } from "@/helpers/storage";
 import { useController } from "./global";
 
 export const usePage = () => {
-  const { setPage, lastPage, modalContent, setGlobalLoading, loginStatus } =
-    useGlobalContext();
+  const {
+    setPage,
+    lastPage,
+    modalContent,
+    setGlobalLoading,
+    authStatus: loginStatus,
+  } = useGlobalContext();
   const { closeModal } = useController();
   const router = useRouter();
 

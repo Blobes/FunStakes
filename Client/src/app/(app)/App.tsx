@@ -14,7 +14,7 @@ import { useRef } from "react";
 export const App = ({ children }: { children: React.ReactNode }) => {
   const { isDesktop } = useController();
   const theme = useTheme();
-  const { loginStatus } = useGlobalContext();
+  const { authStatus: loginStatus } = useGlobalContext();
   const { scrollBarStyle } = useStyles();
   const scrollRef = useRef<HTMLDivElement>(null);
 

@@ -13,7 +13,7 @@ import { usePage } from "@/hooks/page";
 
 export default function LoginPage() {
   const theme = useTheme();
-  const { loginStatus } = useGlobalContext();
+  const { authStatus: loginStatus } = useGlobalContext();
   const { handleLogout } = useAuth();
   const { applyBGPattern } = useStyles()
   const { navigateTo } = usePage()

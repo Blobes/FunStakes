@@ -4,7 +4,7 @@ import React, { createContext, useContext, useState } from "react";
 import {
   IUser,
   SnackBarMsg,
-  LoginStatus,
+  AuthStatus,
   ModalContent,
   Page,
   NetworkStatus,
@@ -12,8 +12,8 @@ import {
 import { clientRoutes } from "@/helpers/routes";
 
 interface Context {
-  loginStatus: LoginStatus;
-  setLoginStatus: React.Dispatch<React.SetStateAction<LoginStatus>>;
+  authStatus: AuthStatus;
+  setAuthStatus: React.Dispatch<React.SetStateAction<AuthStatus>>;
   authUser: IUser | null;
   setAuthUser: React.Dispatch<React.SetStateAction<IUser | null>>;
   snackBarMsg: SnackBarMsg;
@@ -40,7 +40,7 @@ export const ContextProvider = ({
 }: {
   children: React.ReactNode;
 }) => {
-  const [loginStatus, setLoginStatus] = useState<LoginStatus>("PENDING");
+  const [authStatus, setAuthStatus] = useState<AuthStatus>("PENDING");
   const [authUser, setAuthUser] = useState<IUser | null>(null);
   const [snackBarMsg, setSnackBarMsg] = useState<SnackBarMsg>({
     messages: [],
@@ -58,8 +58,8 @@ export const ContextProvider = ({
   return (
     <context.Provider
       value={{
-        loginStatus,
-        setLoginStatus,
+        authStatus,
+        setAuthStatus,
         authUser,
         setAuthUser,
         snackBarMsg,
@@ -74,7 +74,8 @@ export const ContextProvider = ({
         setPage,
         modalContent,
         setModalContent,
-        networkStatus, setNetworkStatus,
+        networkStatus,
+        setNetworkStatus,
         checkingSignal,
         setSignalCheck
       }}>

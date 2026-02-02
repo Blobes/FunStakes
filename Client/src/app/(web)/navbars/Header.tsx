@@ -15,7 +15,7 @@ import { zIndexes } from "@/helpers/global";
 import { usePage } from "@/hooks/page";
 
 export const Header: React.FC = () => {
-  const { loginStatus } = useGlobalContext();
+  const { authStatus: loginStatus } = useGlobalContext();
   const { openModal, closeModal, isDesktop, handleWindowResize } = useController()
   const { navigateTo } = usePage();
   const theme = useTheme();

@@ -24,7 +24,7 @@ export default function HomePage() {
   const theme = useTheme();
   const savedPage = getFromLocalStorage<Page>();
   const savedPath = savedPage?.path;
-  const { loginStatus } = useGlobalContext();
+  const { authStatus: loginStatus } = useGlobalContext();
 
   // useEffect(() => {
   //   if (savedPath && savedPath !== pathname) router.push(savedPage.path);

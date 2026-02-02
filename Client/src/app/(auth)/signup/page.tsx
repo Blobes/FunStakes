@@ -9,7 +9,7 @@ import { Stack } from "@mui/material";
 
 export default function SignupPage() {
   const theme = useTheme();
-  const { loginStatus } = useGlobalContext();
+  const { authStatus: loginStatus } = useGlobalContext();
   const router = useRouter();
 
   useEffect(() => {
