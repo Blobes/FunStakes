@@ -8,17 +8,8 @@ import { useEffect } from "react";
 import { delay } from "@/helpers/global";
 
 
-export const SplashUI = ({ reload = false }: { reload?: boolean }) => {
+export const SplashUI = () => {
   const theme = useTheme();
-
-  useEffect(() => {
-    if (reload === true)
-      (async () => {
-        await delay(200)
-        window.location.reload()
-      }
-      )
-  }, []);
 
   return (
     <RootUIContainer
