@@ -20,17 +20,16 @@ export const useAuth = () => {
   const verifyAuth = async () => {
     try {
       const res = await fetchUserWithTokenCheck();
-
+      // Success
       if (res.status === "SUCCESS" && res.payload) {
         setAuthUser(res.payload);
         setLoginStatus("AUTHENTICATED");
         return;
       }
 
-      // 4️⃣ NETWORK ERROR / OFFLINE
+      // Network Erorr / Offline
       if (res.status === "ERROR" || isOffline || isUnstableNetwork) {
         setLoginStatus("UNKNOWN");
-        // Only show error message if it's a real failure, not a simple 401
         if (res.message)
           setSBMessage({
             msg: { content: res.message, msgStatus: "ERROR", hasClose: true },
@@ -38,7 +37,7 @@ export const useAuth = () => {
         return;
       }
 
-      // 3️⃣ FINAL UNAUTHENTICATED STATE
+      // Unauthorized State
       if (res.status === "UNAUTHORIZED" && isOnline) {
         setAuthUser(null);
         setLoginStatus("UNAUTHENTICATED");
@@ -47,14 +46,9 @@ export const useAuth = () => {
 
       const isMobile = window.innerWidth < 900;
       await delay(200);
-      if (isOnline && !res.status && !res.payload && isMobile) {
-        // await delay(200);
-
-        if (res.message)
-          setSBMessage({
-            msg: { content: res.message, msgStatus: "ERROR", hasClose: true },
-          });
-        window.location.reload();
+      if (isOnline && res.status === "UNKNOWN" && !res.payload && isMobile) {
+        setLoginStatus("PENDING");
+        //  window.location.reload();
         return;
       }
     } catch (err: any) {

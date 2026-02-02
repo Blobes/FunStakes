@@ -61,7 +61,7 @@ export const fetcher = async <T>(
 interface TokenCheckResponse {
   payload: IUser | null;
   message?: string;
-  status?: "SUCCESS" | "UNAUTHORIZED" | "ERROR";
+  status?: "SUCCESS" | "UNAUTHORIZED" | "ERROR" | "UNKNOWN";
 }
 export const fetchUserWithTokenCheck =
   async (): Promise<TokenCheckResponse> => {
@@ -105,13 +105,13 @@ export const fetchUserWithTokenCheck =
         err.message === "Failed to fetch" ||
         err.status >= 500;
 
-      if (isNetworkError || (!isNetworkError && err)) {
+      if (isNetworkError) {
         // If it's a browser abort (navigation), return silently
-        if (err.name === "AbortError" && err.reason !== "timeout") {
-          console.error("Aborted");
-          return { payload: null, status: "ERROR" };
-        }
-        console.error("Timeout");
+        // if (err.name === "AbortError" && err.reason !== "timeout") {
+        //   console.error("Aborted");
+        //   return { payload: null, status: "ERROR" };
+        // }
+        console.error(err);
         // Otherwise, it's a legitimate connection failure or timeout
         return {
           payload: null,
@@ -119,10 +119,11 @@ export const fetchUserWithTokenCheck =
           message: "Connection failed or timed out",
         };
       }
-      console.error(err.reason);
+
+      console.error(err);
       return {
         payload: null,
-        message: err.message,
+        status: "UNKNOWN",
       };
     }
   };
