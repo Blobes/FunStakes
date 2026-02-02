@@ -66,10 +66,10 @@ export const fetchUserWithTokenCheck =
   async (): Promise<TokenCheckResponse> => {
     try {
       const res = await fetcher<{ user: IUser }>(serverRoutes.verifyAuthToken);
-      console.log(res);
+      // console.log(res);
       return { payload: res.user, status: "SUCCESS" };
     } catch (err: any) {
-      let msg = err.message;
+      // let msg = err.message;
 
       // Check if it's a network error
       const isNetworkError =
@@ -121,6 +121,7 @@ export const fetchUserWithTokenCheck =
       console.error("Something happened");
       return {
         payload: null,
+        message: err.message,
       };
     }
   };
