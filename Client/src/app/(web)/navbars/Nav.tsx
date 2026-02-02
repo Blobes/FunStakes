@@ -45,7 +45,7 @@ export const MobileNav: React.FC<NavProps> = ({ style }) => {
   const { headerNavList } = useNavLists();
   const menuRef = useRef<MenuRef>(null);
   const { navigateTo } = usePage();
-  const { authStatus: loginStatus } = useGlobalContext();
+  const { authStatus } = useGlobalContext();
 
   return (
     <Stack sx={{ ...style }}>
@@ -67,7 +67,7 @@ export const MobileNav: React.FC<NavProps> = ({ style }) => {
         }}
       />
       <Divider />
-      {loginStatus === "AUTHENTICATED" && (
+      {authStatus === "AUTHENTICATED" && (
         <AppButton
           href={clientRoutes.home.path}
           variant="outlined"
@@ -79,7 +79,7 @@ export const MobileNav: React.FC<NavProps> = ({ style }) => {
         </AppButton>
       )}
 
-      {loginStatus === "UNAUTHENTICATED" && (
+      {authStatus === "UNAUTHENTICATED" && (
         <>
           <AppButton
             href={clientRoutes.signup.path}

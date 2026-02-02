@@ -9,11 +9,11 @@ import { Stack } from "@mui/material";
 
 export default function SignupPage() {
   const theme = useTheme();
-  const { authStatus: loginStatus } = useGlobalContext();
+  const { authStatus } = useGlobalContext();
   const router = useRouter();
 
   useEffect(() => {
-    if (loginStatus === "AUTHENTICATED") {
+    if (authStatus === "AUTHENTICATED") {
       router.replace("/timeline");
     }
   });

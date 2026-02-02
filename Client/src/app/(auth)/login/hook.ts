@@ -32,12 +32,8 @@ interface CheckEmailResponse {
 }
 
 export const useLogin = () => {
-  const {
-    setAuthUser,
-    setAuthStatus: setLoginStatus,
-    setInlineMsg,
-    isAuthLoading,
-  } = useGlobalContext();
+  const { setAuthUser, setAuthStatus, setInlineMsg, isAuthLoading } =
+    useGlobalContext();
   const { setLastPage, isOnWeb } = usePage();
   const { setSBMessage } = useSnackbar();
   const MAX_ATTEMPTS = 3;
@@ -117,7 +113,7 @@ export const useLogin = () => {
       if (!payload || status !== "SUCCESS") return null; // Return early
 
       setAuthUser(payload);
-      setLoginStatus("AUTHENTICATED");
+      setAuthStatus("AUTHENTICATED");
 
       // const isExcludedRoute = flaggedRoutes.auth.includes(pathname);
       const savedPage = getFromLocalStorage<Page>();

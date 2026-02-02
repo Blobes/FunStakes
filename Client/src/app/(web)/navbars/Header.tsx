@@ -15,11 +15,11 @@ import { zIndexes } from "@/helpers/global";
 import { usePage } from "@/hooks/page";
 
 export const Header: React.FC = () => {
-  const { authStatus: loginStatus } = useGlobalContext();
+  const { authStatus } = useGlobalContext();
   const { openModal, closeModal, isDesktop, handleWindowResize } = useController()
   const { navigateTo } = usePage();
   const theme = useTheme();
-  const isLoggedIn = loginStatus === "AUTHENTICATED";
+  const isLoggedIn = authStatus === "AUTHENTICATED";
 
   /* ---------------------------------- effects --------------------------------- */
   useEffect(() => {
@@ -107,7 +107,7 @@ export const Header: React.FC = () => {
               </AppButton>
             )}
 
-            {loginStatus === "UNAUTHENTICATED" && (
+            {authStatus === "UNAUTHENTICATED" && (
               <Stack direction="row" alignItems="center" spacing={theme.gap(0)}>
                 <AppButton
                   href={clientRoutes.signup.path}

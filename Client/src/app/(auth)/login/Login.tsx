@@ -42,7 +42,7 @@ export const Login: React.FC<LoginProps> = ({
     startLockCountdown,
   } = useLogin();
   const { inlineMsg, setInlineMsg, isAuthLoading, setAuthLoading,
-    isGlobalLoading, setGlobalLoading, lastPage } =
+    setGlobalLoading, lastPage } =
     useGlobalContext();
   const { isOnWeb } = usePage();
   const [msg, setMsg] = useState("");

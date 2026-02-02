@@ -24,7 +24,7 @@ export default function HomePage() {
   const theme = useTheme();
   const savedPage = getFromLocalStorage<Page>();
   const savedPath = savedPage?.path;
-  const { authStatus: loginStatus } = useGlobalContext();
+  const { authStatus } = useGlobalContext();
 
   // useEffect(() => {
   //   if (savedPath && savedPath !== pathname) router.push(savedPage.path);
@@ -32,7 +32,7 @@ export default function HomePage() {
 
   return (
     <>
-      {loginStatus === "AUTHENTICATED" && (
+      {authStatus === "AUTHENTICATED" && (
         isDesktop ? (
           <Stack sx={{
             height: "100%",
@@ -47,7 +47,7 @@ export default function HomePage() {
           <Posts />
         )
       )}
-      {loginStatus === "UNAUTHENTICATED" && (
+      {authStatus === "UNAUTHENTICATED" && (
         <Welcome />
       )}
     </>

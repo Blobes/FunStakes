@@ -23,13 +23,13 @@ interface AppHeaderProps {
   scrollRef?: React.RefObject<HTMLElement | null>;
 }
 export const AppHeader: React.FC<AppHeaderProps> = ({ scrollRef }) => {
-  const { authStatus: loginStatus } = useGlobalContext();
+  const { authStatus } = useGlobalContext();
   const { openModal, closeModal, isDesktop, handleWindowResize } = useController();
   const { setLastPage, navigateTo } = usePage();
   const { handlePageScroll } = usePageScroll();
   const theme = useTheme();
   const router = useRouter();
-  const isLoggedIn = loginStatus === "AUTHENTICATED";
+  const isLoggedIn = authStatus === "AUTHENTICATED";
   const menuRef = useRef<MenuRef>(null);
   const scrollDir = handlePageScroll(scrollRef);
 
@@ -147,7 +147,7 @@ export const AppHeader: React.FC<AppHeaderProps> = ({ scrollRef }) => {
         )}
 
         {/* Login Button */}
-        {loginStatus === "UNAUTHENTICATED" && (
+        {authStatus === "UNAUTHENTICATED" && (
           <AppButton
             href={clientRoutes.login.path}
             variant="outlined"

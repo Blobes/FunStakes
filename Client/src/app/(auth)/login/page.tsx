@@ -13,7 +13,7 @@ import { usePage } from "@/hooks/page";
 
 export default function LoginPage() {
   const theme = useTheme();
-  const { authStatus: loginStatus } = useGlobalContext();
+  const { authStatus } = useGlobalContext();
   const { handleLogout } = useAuth();
   const { applyBGPattern } = useStyles()
   const { navigateTo } = usePage()
@@ -29,7 +29,7 @@ export default function LoginPage() {
         //Pattern background with fade effect
         ...applyBGPattern()
       }}>
-      {loginStatus === "UNAUTHENTICATED" ? (
+      {authStatus === "UNAUTHENTICATED" ? (
         <AuthStepper
           style={{
             container: {
