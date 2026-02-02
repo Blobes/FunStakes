@@ -51,13 +51,12 @@ export const useAuth = () => {
 
         if (isSyncing) {
           sessionStorage.removeItem("auth_syncing");
-          // setLoginStatus("PENDING");
+          setGlobalLoading(false);
           return;
         }
         // First attempt: Set the flag and reload
-        setLoginStatus("PENDING");
+        setGlobalLoading(true);
         sessionStorage.setItem("auth_syncing", "true");
-        // Give the browser 200ms to ensure storage is set before reload
         await delay(200);
         window.location.reload();
         return;

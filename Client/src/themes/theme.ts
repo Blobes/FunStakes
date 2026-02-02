@@ -32,7 +32,7 @@ let designSystem = createTheme({
           dark: "#10142C",
         },
         error: {
-          main: red[400],
+          main: "#ef5350",
         },
         tonalOffset: 0.6,
         contrastThreshold: 4.5,
