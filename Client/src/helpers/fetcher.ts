@@ -99,7 +99,6 @@ export const fetchUserWithTokenCheck =
         const refreshed = await refreshAccessToken();
         if (refreshed) {
           // Only one recursive call allowed here
-          await delay(200);
           try {
             const retryRes = await fetcher<{ user: IUser }>(
               serverRoutes.verifyAuthToken,
@@ -122,8 +121,6 @@ export const fetchUserWithTokenCheck =
       console.error("Something happened");
       return {
         payload: null,
-        status: "ERROR",
-        message: msg,
       };
     }
   };

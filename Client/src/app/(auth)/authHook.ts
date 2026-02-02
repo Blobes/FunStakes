@@ -7,6 +7,7 @@ import { useController } from "@/hooks/global";
 import { usePathname, useRouter } from "next/navigation";
 import { useSnackbar } from "@/hooks/snackbar";
 import { usePage } from "@/hooks/page";
+import { delay } from "@/helpers/global";
 
 export const useAuth = () => {
   const { setAuthUser, setLoginStatus, setSnackBarMsg } = useGlobalContext();
@@ -41,6 +42,13 @@ export const useAuth = () => {
       if (res.status === "UNAUTHORIZED" && isOnline) {
         setAuthUser(null);
         setLoginStatus("UNAUTHENTICATED");
+        return;
+      }
+
+      const isMobile = window.innerWidth < 900;
+      if (isOnline && !res.status && !res.payload && isMobile) {
+        // await delay(200);
+        window.location.reload();
         return;
       }
     } catch (err: any) {
