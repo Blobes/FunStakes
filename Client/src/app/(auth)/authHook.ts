@@ -10,7 +10,8 @@ import { usePage } from "@/hooks/page";
 import { delay } from "@/helpers/global";
 
 export const useAuth = () => {
-  const { setAuthUser, setLoginStatus, setSnackBarMsg } = useGlobalContext();
+  const { setAuthUser, setLoginStatus, setSnackBarMsg, setGlobalLoading } =
+    useGlobalContext();
   const { isOffline, isOnline, isUnstableNetwork } = useController();
   const { setLastPage } = usePage();
   const { setSBMessage } = useSnackbar();
@@ -45,10 +46,20 @@ export const useAuth = () => {
       }
 
       const isMobile = window.innerWidth < 900;
-      await delay(200);
       if (isOnline && res.status === "UNKNOWN" && !res.payload && isMobile) {
+        const isSyncing = sessionStorage.getItem("auth_syncing");
+
+        if (isSyncing) {
+          sessionStorage.removeItem("auth_syncing");
+          // setLoginStatus("PENDING");
+          return;
+        }
+        // First attempt: Set the flag and reload
         setLoginStatus("PENDING");
-        //  window.location.reload();
+        sessionStorage.setItem("auth_syncing", "true");
+        // Give the browser 200ms to ensure storage is set before reload
+        await delay(200);
+        window.location.reload();
         return;
       }
     } catch (err: any) {
