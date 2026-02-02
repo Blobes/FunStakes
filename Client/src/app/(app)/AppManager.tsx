@@ -7,19 +7,25 @@ import { LeftNav } from "@/app/(app)/navbars/LeftNav";
 import { useTheme } from "@mui/material/styles";
 import { useStyles } from "@/hooks/style";
 import { AppHeader } from "@/app/(app)/navbars/Header";
-import { usePathname } from "next/navigation";
 import { BottomNav } from "@/app/(app)/navbars/BottomNav";
 import { useRef } from "react";
+import { RootUIContainer } from "@/components/Containers";
+import { NetworkGlitchUI } from "@/components/NetworkGlitchUI";
 
-export const App = ({ children }: { children: React.ReactNode }) => {
-  const { isDesktop } = useController();
+export const AppManager = ({ children }: { children: React.ReactNode }) => {
+  const { isDesktop, isUnstableNetwork, isOffline } = useController();
   const theme = useTheme();
   const { authStatus } = useGlobalContext();
   const { scrollBarStyle } = useStyles();
   const scrollRef = useRef<HTMLDivElement>(null);
 
+  // Conditionally render the offline UI
+  if (isOffline || isUnstableNetwork || authStatus === "ERROR") {
+    return <NetworkGlitchUI />;
+  }
+
   return (
-    <>
+    <RootUIContainer>
       {/* Logged in & on desktop */}
       {authStatus === "AUTHENTICATED" && isDesktop && (
         <Stack
@@ -90,5 +96,5 @@ export const App = ({ children }: { children: React.ReactNode }) => {
           {children}
         </Stack>
       )}
-    </>)
+    </RootUIContainer>)
 }

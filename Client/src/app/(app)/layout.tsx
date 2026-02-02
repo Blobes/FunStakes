@@ -1,16 +1,11 @@
 "use client"
 
-import { App } from "./App";
-import { RootUIContainer } from "@/components/Containers";
+import { AppManager } from "./AppManager";
 
 export default function AppLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  return (
-    <RootUIContainer>
-      <App>{children}</App>
-    </RootUIContainer>
-  )
+  return <AppManager>{children}</AppManager>
 }
