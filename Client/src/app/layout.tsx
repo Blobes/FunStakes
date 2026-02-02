@@ -4,6 +4,7 @@ import CssBaseline from "@mui/material/CssBaseline";
 import { ContextProvider } from "./GlobalContext";
 import { Metadata } from "next";
 import { GlobalManager } from "./GlobalManager";
+import { AppRouterCacheProvider } from '@mui/material-nextjs/v14-appRouter';
 
 export const metadata: Metadata = {
   title: "Funstakes",
@@ -42,12 +43,14 @@ export default function RootLayout({
         />
       </head>
       <body>
-        <ContextProvider>
-          <ThemeProvider theme={theme}>
-            <CssBaseline />
-            <GlobalManager>{children}</GlobalManager>
-          </ThemeProvider>
-        </ContextProvider>
+        <AppRouterCacheProvider>
+          <ContextProvider>
+            <ThemeProvider theme={theme}>
+              <CssBaseline />
+              <GlobalManager>{children}</GlobalManager>
+            </ThemeProvider>
+          </ContextProvider>
+        </AppRouterCacheProvider>
         <noscript>You need to enable JavaScript to run this app!</noscript>
       </body>
     </html>

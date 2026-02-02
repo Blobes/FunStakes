@@ -79,8 +79,10 @@ export const fetchUserWithTokenCheck =
       if (isNetworkError) {
         // If it's a browser abort (navigation), return silently
         if (err.name === "AbortError" && err.reason !== "timeout") {
+          console.error("Aborted");
           return { payload: null, status: "ERROR" };
         }
+        console.error("Timeout");
         // Otherwise, it's a legitimate connection failure or timeout
         return {
           payload: null,
