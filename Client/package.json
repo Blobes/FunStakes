@@ -43,6 +43,7 @@
     "@babel/eslint-parser": "^7.25.9",
     "@next/eslint-plugin-next": "^16.0.10",
     "@svgr/webpack": "^8.1.0",
+    "baseline-browser-mapping": "^2.9.19",
     "eslint": "^9.39.1",
     "eslint-config-next": "^16.0.10",
     "typescript": "^5.9.3"

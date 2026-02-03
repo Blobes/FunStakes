@@ -16,34 +16,25 @@ import { useEvent } from "@/hooks/events";
 
 export const GlobalManager = ({ children }: { children: React.ReactNode }) => {
     const { handleBrowserEvents } = useEvent();
-    const { verifyAuth } = useAuth();
     const modalRef = useRef<ModalRef>(null);
-    const { openModal, verifySignal, isUnstableNetwork, isOffline } = useController();
+    const { openModal, verifySignal } = useController();
     const { handleCurrentPage } = usePage()
-    const { snackBarMsg, authStatus, modalContent,
-        networkStatus, isGlobalLoading, setAuthStatus } = useGlobalContext();
-    const [mounted, setMounted] = useState(false);
-    const pathname = usePathname()
-    const router = useRouter();
+    const { snackBarMsg, modalContent, isGlobalLoading,
+        authStatus, networkStatus } = useGlobalContext();
+    const pathname = usePathname();
+    const { verifyAuth } = useAuth();
 
-
-    //  MOUNT && SERVICE WORKER REGISTRATION
-    useEffect(() => {
-        setMounted(true);
-        //  unregisterSW();
-        handleBrowserEvents()
-    }, []);
-
-    // AUTH CHECK & NETWORK SIGNAL CHECK
+    // Initialize Auth
     useEffect(() => {
         const init = async () => {
+            unregisterSW()
             await verifySignal();
             await verifyAuth();
         }
         init();
-    }, [networkStatus]);
+    }, [networkStatus, authStatus]);
 
-    // MODAL OPEN / CLOSE
+    // Modal Open / Close
     useEffect(() => {
         if (!modalContent) {
             modalRef.current?.closeModal();
@@ -54,22 +45,18 @@ export const GlobalManager = ({ children }: { children: React.ReactNode }) => {
         });
     }, [modalContent, openModal]);
 
-    // PAGE LOAD HANDLER
+    // // Page Load Handler
     useEffect(() => {
         handleCurrentPage();
+        handleBrowserEvents()
     }, [pathname]);
 
-
-    // Conditionally render the splash UI
-    if (!mounted || authStatus === "PENDING" || isGlobalLoading) {
+    // App Splash
+    if (isGlobalLoading || authStatus === "PENDING") {
         return <SplashUI />;
     }
-    // Conditionally render the offline UI
-    if (isOffline || isUnstableNetwork || authStatus === "ERROR") {
-        return <NetworkGlitchUI />;
-    }
 
-    // Conditionally render the app UIs
+    // Render the app UIs
     return (
         <>
             {children}
