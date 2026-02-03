@@ -91,7 +91,6 @@ export const fetchUserWithTokenCheck =
             };
           }
         }
-        console.error("Not found");
         return {
           payload: null,
           status: "UNAUTHORIZED",
@@ -99,6 +98,7 @@ export const fetchUserWithTokenCheck =
       }
 
       // Check if it's a network error
+      console.error(err);
       const isNetworkError =
         err.name === "AbortError" ||
         err.name === "TypeError" ||
@@ -106,8 +106,6 @@ export const fetchUserWithTokenCheck =
         err.status >= 500;
 
       if (isNetworkError) {
-        console.error(err);
-        // Otherwise, it's a legitimate connection failure or timeout
         return {
           payload: null,
           status: "ERROR",
@@ -115,7 +113,6 @@ export const fetchUserWithTokenCheck =
         };
       }
 
-      console.error(err);
       return {
         payload: null,
         status: "ERROR",
