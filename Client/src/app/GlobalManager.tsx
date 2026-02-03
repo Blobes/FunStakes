@@ -21,20 +21,13 @@ export const GlobalManager = ({ children }: { children: React.ReactNode }) => {
     const { handleCurrentPage } = usePage()
     const { snackBarMsg, modalContent, isGlobalLoading,
         authStatus, networkStatus } = useGlobalContext();
-    const [mounted, setMounted] = useState(false);
     const pathname = usePathname();
-    // const router = useRouter();
     const { verifyAuth } = useAuth();
 
-    // Mount 
-    useEffect(() => {
-
-        handleBrowserEvents()
-    }, []);
-
-
+    // Initialize Auth
     useEffect(() => {
         const init = async () => {
+            unregisterSW()
             await verifySignal();
             await verifyAuth();
         }
@@ -55,14 +48,15 @@ export const GlobalManager = ({ children }: { children: React.ReactNode }) => {
     // // Page Load Handler
     useEffect(() => {
         handleCurrentPage();
+        handleBrowserEvents()
     }, [pathname]);
 
-
+    // App Splash
     if (isGlobalLoading || authStatus === "PENDING") {
         return <SplashUI />;
     }
 
-    // Conditionally render the app UIs
+    // Render the app UIs
     return (
         <>
             {children}
