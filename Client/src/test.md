@@ -425,3 +425,29 @@ const wasLoggedIn = getCookie("was_logged_in"); // Our persistent memory
     // }
 
 };
+
+<Box sx={{
+            position: "relative",
+            overflow: "hidden",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            minHeight: "300px",
+            backgroundColor: theme.fixedColors.gray50,
+            width: "100%",
+            "&::before": {
+                content: '""',
+                position: "absolute",
+                top: "-10%", left: "-10%", width: "120%", height: "120%",
+                background: gradient,
+                filter: "blur(60px)",
+                opacity: 0.6,
+                zIndex: 0,
+            }
+        }}>
+
+        // In your JSX
+
+{isPortrait !== null && (
+<Image ... />
+)}

@@ -1,6 +1,6 @@
 import logo from "@/assets/images/logo.png";
 import cover from "@/assets/images/cover.jpg";
-import pic from "@/assets/images/img4.jpg";
+import pic from "@/assets/images/img2.png";
 
 // Images
 export const img = {

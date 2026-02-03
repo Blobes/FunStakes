@@ -20,7 +20,7 @@ export const CreatePost = () => {
       sx={{
         backgroundColor: theme.palette.gray.trans[1],
         borderRadius: theme.radius[2],
-        margin: theme.boxSpacing(6, 6, 0, 6),
+        margin: theme.boxSpacing(6),
         flexDirection: "column",
         padding: theme.boxSpacing(6),
         gap: theme.gap(10),

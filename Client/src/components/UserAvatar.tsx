@@ -2,7 +2,7 @@
 
 import React from "react";
 import { Avatar, IconButton } from "@mui/material";
-import { getInitialsAndColors } from "@/helpers/colorExtractor";
+import { getInitialsAndColors } from "@/helpers/textColorExtractor";
 import { BasicTooltip } from "@/components/Tooltips";
 import { GenericObject } from "@/types";
 import { useTheme } from "@mui/material/styles";

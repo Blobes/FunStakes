@@ -62,5 +62,33 @@ export const useStyles = () => {
     },
   });
 
-  return { scrollBarStyle, autoScroll, applyBGPattern };
+  const applyBGEffect = (effect: string) => ({
+    "&::before": {
+      content: '""',
+      position: "absolute",
+      inset: "-20%", // Expand out to ensure blur fills corners
+      background: effect, // Created from processVibrantColor
+      filter: "blur(80px) saturate(3.5)", // CRITICAL: High saturation and blur
+      opacity: 0.8,
+      zIndex: 0,
+    },
+    "&::after": {
+      content: '""',
+      position: "absolute",
+      inset: 0,
+      // Adds that high-end white glossy tint
+      background: `linear-gradient(135deg, 
+      rgba(255,255,255,0.5) 0%, 
+      rgba(255,255,255,0) 100%)`,
+      border: "1px solid rgba(255, 255, 255, 0.3)", // The "edge" of the glass
+      zIndex: 1,
+    },
+  });
+
+  return {
+    scrollBarStyle,
+    autoScroll,
+    applyBGPattern,
+    applyBGEffect,
+  };
 };

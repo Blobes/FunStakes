@@ -26,6 +26,7 @@ import { img } from "@/assets/exported";
 import Image from "next/image";
 import { Strip } from "@/components/StripBar";
 import { SmartDate } from "@/components/SmartDate";
+import { SingleMedia } from "@/components/Media";
 
 interface PostProps {
   post: Post;
@@ -35,7 +36,7 @@ interface PostProps {
 export const PostCard = ({ post, style = {} }: PostProps) => {
   const theme = useTheme();
   const { authStatus, setModalContent } = useGlobalContext();
-  const { isOffline, isUnstableNetwork, isDesktop } = useController();
+  const { isOffline, isUnstableNetwork, isDesktop, isMobile } = useController();
   const {
     handlePostLike,
     fetchAuthor,
@@ -163,7 +164,7 @@ export const PostCard = ({ post, style = {} }: PostProps) => {
       {/* Post Header */}
       <Stack direction="row"
         sx={{
-          padding: theme.boxSpacing(0, 6, 0, 4),
+          padding: theme.boxSpacing(0, 10, 0, 8),
           alignItems: "flex-start",
           gap: theme.gap(1)
         }}>
@@ -221,17 +222,12 @@ export const PostCard = ({ post, style = {} }: PostProps) => {
 
       {/* Content text */}
       <Typography variant="body1"
-        sx={{ padding: theme.boxSpacing(4, 6) }}>
+        sx={{ padding: theme.boxSpacing(4, 10) }}>
         {content}
       </Typography>
       {/* Content media */}
       {postImg && (
-        <Image src={postImg} alt="Post image"
-          style={{
-            width: "100%", height: "auto",
-            ...(isDesktop && { maxHeight: "120svh" }),
-            objectFit: "cover"
-          }} />
+        <SingleMedia mediaSrc={postImg} />
       )}
 
       {/* Info Strip */}

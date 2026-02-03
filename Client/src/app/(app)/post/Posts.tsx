@@ -1,6 +1,6 @@
 "use client";
 
-import { Stack } from "@mui/material";
+import { Divider, Stack } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import { PostCard } from "./PostCard";
 import { CreatePost } from "./CreatePost";
@@ -62,6 +62,7 @@ export const Posts = () => {
         },
       }}>
       {authStatus === "AUTHENTICATED" && <CreatePost />}
+      <Divider sx={{ borderColor: theme.palette.gray.trans[1], margin: 0 }} />
       {isLoading ? (
         <Stack
           sx={{
