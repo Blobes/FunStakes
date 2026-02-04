@@ -72,7 +72,11 @@ export const fetchUserWithTokenCheck = async (
 ): Promise<TokenCheckResponse> => {
   const MAX_RETRIES = 2;
   try {
-    const res = await fetcher<{ user: IUser }>(serverRoutes.verifyAuthToken);
+    const res = await fetcher<{ user: IUser }>(
+      serverRoutes.verifyAuthToken,
+      { method: "GET" },
+      12_000,
+    );
     // console.log(res);
     return { payload: res.user, status: "SUCCESS" };
   } catch (err: any) {
@@ -147,11 +151,9 @@ const REFRESH_TIMEOUT_MS = 12_000; // Longer than default; refresh can be slow o
 
 const refreshAccessToken = async () => {
   try {
-    const res = await fetcher(
-      serverRoutes.refreshToken,
-      { method: "POST" },
-      REFRESH_TIMEOUT_MS,
-    );
+    const res = await fetcher(serverRoutes.refreshToken, {
+      method: "POST",
+    });
     return true;
   } catch (err) {
     console.error(err);

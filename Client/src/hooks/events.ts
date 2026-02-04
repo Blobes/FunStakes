@@ -38,7 +38,7 @@ export const useEvent = () => {
     const handleVisibility = async () => {
       if (document.visibilityState === "visible") {
         console.log("Visible");
-        await verifyAuth();
+        // await verifyAuth();
       }
     };
 
