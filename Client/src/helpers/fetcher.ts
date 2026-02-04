@@ -75,6 +75,7 @@ export const fetchUserWithTokenCheck = async (
     // let msg = err.message;
 
     if (err === "timeout" || err.message?.includes("timeout")) {
+      console.log("Just woke up");
       if (retryCount < MAX_RETRIES) {
         // Add a small delay (200ms) to let the browser's network stack "warm up"
         await new Promise((resolve) => setTimeout(resolve, 200));

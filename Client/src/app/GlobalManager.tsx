@@ -52,7 +52,7 @@ export const GlobalManager = ({ children }: { children: React.ReactNode }) => {
     }, [pathname]);
 
     // App Splash
-    if (isGlobalLoading || (authStatus === "PENDING" && networkStatus === "UNKNOWN")) {
+    if (isGlobalLoading || authStatus === "PENDING" || networkStatus === "UNKNOWN") {
         return <SplashUI />;
     }
 
