@@ -40,7 +40,7 @@ export const useAuth = () => {
       }
 
       // Unauthorized State
-      if (res.status === "UNAUTHORIZED" && isOnline) {
+      if (res.status === "UNAUTHORIZED") {
         setAuthUser(null);
         setAuthStatus("UNAUTHENTICATED");
         return;
