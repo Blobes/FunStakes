@@ -14,7 +14,7 @@ export const useEvent = () => {
   const handleBrowserEvents = () => {
     const online = async () => {
       removeSBMessage();
-      await verifySignal();
+      // await verifySignal();
       await verifyAuth();
     };
 

@@ -42,7 +42,6 @@ export const SingleMedia = ({ mediaSrc, type = "image" }: SingleMediaProps) => {
                         maxHeight: "80vh",
                         maxWidth: "100%",
                         objectFit: "contain",
-
                         zIndex: 4,
                         boxShadow: "0 10px 80px rgba(0,0,0,0.2)",
                         ...(!isDesktop && {

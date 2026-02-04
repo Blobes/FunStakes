@@ -29,7 +29,7 @@ export const useAuth = () => {
       }
 
       // Network Erorr / Offline
-      if (res.status === "ERROR" || isOffline || isUnstableNetwork) {
+      if (res.status === "ERROR") {
         setAuthUser(null);
         setAuthStatus("ERROR");
         if (res.message)
