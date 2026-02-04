@@ -63,66 +63,78 @@ interface TokenCheckResponse {
   message?: string;
   status?: "SUCCESS" | "UNAUTHORIZED" | "ERROR" | "UNKNOWN";
 }
-export const fetchUserWithTokenCheck =
-  async (): Promise<TokenCheckResponse> => {
-    try {
-      const res = await fetcher<{ user: IUser }>(serverRoutes.verifyAuthToken);
-      // console.log(res);
-      return { payload: res.user, status: "SUCCESS" };
-    } catch (err: any) {
-      // let msg = err.message;
+export const fetchUserWithTokenCheck = async (
+  retryCount = 0,
+): Promise<TokenCheckResponse> => {
+  const MAX_RETRIES = 2;
+  try {
+    const res = await fetcher<{ user: IUser }>(serverRoutes.verifyAuthToken);
+    // console.log(res);
+    return { payload: res.user, status: "SUCCESS" };
+  } catch (err: any) {
+    // let msg = err.message;
 
-      if (err === "timeout") {
-        return await fetchUserWithTokenCheck();
-      }
-
-      // Catch 401 (Missing/Expired) OR 403 (Invalid)
-      if (err.status === 401 || err.status === 403) {
-        // Try to refresh once
-        const refreshed = await refreshAccessToken();
-        if (refreshed) {
-          // Only one recursive call allowed here
-          try {
-            const retryRes = await fetcher<{ user: IUser }>(
-              serverRoutes.verifyAuthToken,
-            );
-            return { payload: retryRes.user, status: "SUCCESS" };
-          } catch {
-            console.error("Retry failed");
-            return {
-              payload: null,
-              status: "ERROR",
-            };
-          }
-        }
-        return {
-          payload: null,
-          status: "UNAUTHORIZED",
-        };
-      }
-
-      // Check if it's a network error
-      console.error(err);
-      const isNetworkError =
-        err.name === "AbortError" ||
-        err.name === "TypeError" ||
-        err.message === "Failed to fetch" ||
-        err.status >= 500;
-
-      if (isNetworkError) {
-        return {
-          payload: null,
-          status: "ERROR",
-          message: "Connection failed or timed out",
-        };
+    if (err === "timeout" || err.message?.includes("timeout")) {
+      if (retryCount < MAX_RETRIES) {
+        // Add a small delay (200ms) to let the browser's network stack "warm up"
+        await new Promise((resolve) => setTimeout(resolve, 200));
+        return await fetchUserWithTokenCheck(retryCount + 1);
       }
 
       return {
         payload: null,
         status: "ERROR",
+        message: "Request timed out after multiple attempts",
       };
     }
-  };
+
+    // Catch 401 (Missing/Expired) OR 403 (Invalid)
+    if (err.status === 401 || err.status === 403) {
+      // Try to refresh once
+      const refreshed = await refreshAccessToken();
+      if (refreshed) {
+        // Only one recursive call allowed here
+        try {
+          const retryRes = await fetcher<{ user: IUser }>(
+            serverRoutes.verifyAuthToken,
+          );
+          return { payload: retryRes.user, status: "SUCCESS" };
+        } catch {
+          console.error("Retry failed");
+          return {
+            payload: null,
+            status: "ERROR",
+          };
+        }
+      }
+      return {
+        payload: null,
+        status: "UNAUTHORIZED",
+      };
+    }
+
+    // Check if it's a network error
+    console.error(err);
+    const isNetworkError =
+      err.name === "AbortError" ||
+      err.name === "TypeError" ||
+      err.message === "Failed to fetch" ||
+      err.status >= 500;
+
+    if (isNetworkError) {
+      return {
+        payload: null,
+        status: "ERROR",
+        message: "Connection failed or timed out",
+      };
+    }
+
+    return {
+      payload: null,
+      status: "ERROR",
+    };
+  }
+};
 
 const refreshAccessToken = async () => {
   try {
