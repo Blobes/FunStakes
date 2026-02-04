@@ -27,7 +27,7 @@ export const GlobalManager = ({ children }: { children: React.ReactNode }) => {
     // Initialize Auth
     useEffect(() => {
         const init = async () => {
-            unregisterSW()
+            // unregisterSW()
             // await verifySignal();
             await verifyAuth();
         }

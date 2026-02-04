@@ -48,7 +48,7 @@ export const useAuth = () => {
     } catch (err: any) {
       // If we reach here, a critical code error occurred
       setAuthUser(null);
-      setAuthStatus("UNKNOWN");
+      setAuthStatus("ERROR");
       console.log("Bad really bad");
     }
   };
