@@ -72,6 +72,10 @@ export const fetchUserWithTokenCheck =
     } catch (err: any) {
       // let msg = err.message;
 
+      if (err === "timeout") {
+        return await fetchUserWithTokenCheck();
+      }
+
       // Catch 401 (Missing/Expired) OR 403 (Invalid)
       if (err.status === 401 || err.status === 403) {
         // Try to refresh once

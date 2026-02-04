@@ -20,7 +20,7 @@ export const AppManager = ({ children }: { children: React.ReactNode }) => {
   const scrollRef = useRef<HTMLDivElement>(null);
 
   // Conditionally render the offline UI
-  if (authStatus === "ERROR") {
+  if (isOffline || isUnstableNetwork || authStatus === "ERROR") {
     return <NetworkGlitchUI />;
   }
 

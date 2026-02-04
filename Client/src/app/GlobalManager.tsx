@@ -17,10 +17,10 @@ import { useEvent } from "@/hooks/events";
 export const GlobalManager = ({ children }: { children: React.ReactNode }) => {
     const { handleBrowserEvents } = useEvent();
     const modalRef = useRef<ModalRef>(null);
-    const { openModal, verifySignal } = useController();
+    const { openModal, verifySignal, isOnline } = useController();
     const { handleCurrentPage } = usePage()
     const { snackBarMsg, modalContent, isGlobalLoading,
-        authStatus, networkStatus, setAuthStatus } = useGlobalContext();
+        authStatus, networkStatus } = useGlobalContext();
     const pathname = usePathname();
     const { verifyAuth } = useAuth();
 
@@ -28,11 +28,11 @@ export const GlobalManager = ({ children }: { children: React.ReactNode }) => {
     useEffect(() => {
         const init = async () => {
             // unregisterSW()
-            // await verifySignal();
+            await verifySignal();
             await verifyAuth();
         }
         init();
-    }, [networkStatus, authStatus, setAuthStatus]);
+    }, [networkStatus, authStatus]);
 
     // Modal Open / Close
     useEffect(() => {
@@ -52,7 +52,7 @@ export const GlobalManager = ({ children }: { children: React.ReactNode }) => {
     }, [pathname]);
 
     // App Splash
-    if (isGlobalLoading || authStatus === "PENDING") {
+    if (isGlobalLoading || (authStatus === "PENDING" && networkStatus === "UNKNOWN")) {
         return <SplashUI />;
     }
 
