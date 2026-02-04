@@ -3,7 +3,6 @@
 import { IUser } from "@/types";
 import { serverRoutes } from "./routes";
 import { delay } from "./global";
-import { error } from "console";
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 const DEFAULT_TIMEOUT = 5000; // Default timeout in milliseconds
@@ -45,15 +44,20 @@ export const fetcher = async <T>(
     return await response.json();
   } catch (error: any) {
     clearTimeout(timeoutId);
-    if (error.name === "AbortError") {
-      console.log(error);
-      throw new Error("Connection timed out or failed.");
+    // AbortError name is standard; when abort("timeout") is used, some envs set message to "timeout" but not name
+    const isAbortOrTimeout =
+      error?.name === "AbortError" || error?.message === "timeout";
+    if (isAbortOrTimeout) {
+      const timeoutErr = new Error("Connection timed out or failed.");
+      (timeoutErr as any).status = 0;
+      throw timeoutErr;
     }
 
     if (error.message === "Failed to fetch" || error instanceof TypeError) {
       error.status = 0;
       throw error;
     }
+
     throw error;
   }
 };
@@ -114,12 +118,14 @@ export const fetchUserWithTokenCheck = async (
       };
     }
 
-    // Check if it's a network error
+    // Check if it's a network error (incl. timeout, which we throw with status 0)
     console.error(err);
     const isNetworkError =
       err.name === "AbortError" ||
       err.name === "TypeError" ||
       err.message === "Failed to fetch" ||
+      err.message === "Connection timed out or failed." ||
+      err.status === 0 ||
       err.status >= 500;
 
     if (isNetworkError) {
@@ -137,11 +143,15 @@ export const fetchUserWithTokenCheck = async (
   }
 };
 
+const REFRESH_TIMEOUT_MS = 12_000; // Longer than default; refresh can be slow on cold start / under load
+
 const refreshAccessToken = async () => {
   try {
-    const res = await fetcher(serverRoutes.refreshToken, {
-      method: "POST",
-    });
+    const res = await fetcher(
+      serverRoutes.refreshToken,
+      { method: "POST" },
+      REFRESH_TIMEOUT_MS,
+    );
     return true;
   } catch (err) {
     console.error(err);
