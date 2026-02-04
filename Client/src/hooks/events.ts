@@ -37,12 +37,14 @@ export const useEvent = () => {
 
     const handleVisibility = async () => {
       if (document.visibilityState === "visible") {
+        console.log("Visible");
         await verifyAuth();
       }
     };
 
     window.addEventListener("online", online);
     window.addEventListener("offline", offline);
+    document.addEventListener("visibilitychange", handleVisibility);
     return () => {
       window.removeEventListener("online", online);
       window.removeEventListener("offline", offline);
