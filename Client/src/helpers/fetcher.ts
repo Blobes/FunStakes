@@ -74,20 +74,20 @@ export const fetchUserWithTokenCheck = async (
   } catch (err: any) {
     // let msg = err.message;
 
-    if (err === "timeout" || err.message?.includes("timeout")) {
-      console.log("Just woke up");
-      if (retryCount < MAX_RETRIES) {
-        // Add a small delay (200ms) to let the browser's network stack "warm up"
-        await new Promise((resolve) => setTimeout(resolve, 200));
-        return await fetchUserWithTokenCheck(retryCount + 1);
-      }
+    // if (err === "timeout" || err.message?.includes("timeout")) {
+    //   console.log("Just woke up");
+    //   if (retryCount < MAX_RETRIES) {
+    //     // Add a small delay (200ms) to let the browser's network stack "warm up"
+    //     await new Promise((resolve) => setTimeout(resolve, 200));
+    //     return await fetchUserWithTokenCheck(retryCount + 1);
+    //   }
 
-      return {
-        payload: null,
-        status: "ERROR",
-        message: "Request timed out after multiple attempts",
-      };
-    }
+    //   return {
+    //     payload: null,
+    //     status: "ERROR",
+    //     message: "Request timed out after multiple attempts",
+    //   };
+    // }
 
     // Catch 401 (Missing/Expired) OR 403 (Invalid)
     if (err.status === 401 || err.status === 403) {

@@ -35,11 +35,18 @@ export const useEvent = () => {
       });
     };
 
+    const handleVisibility = async () => {
+      if (document.visibilityState === "visible") {
+        await verifyAuth();
+      }
+    };
+
     window.addEventListener("online", online);
     window.addEventListener("offline", offline);
     return () => {
       window.removeEventListener("online", online);
       window.removeEventListener("offline", offline);
+      document.removeEventListener("visibilitychange", handleVisibility);
     };
   };
 
