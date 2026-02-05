@@ -27,6 +27,7 @@ import Image from "next/image";
 import { Strip } from "@/components/StripBar";
 import { SmartDate } from "@/components/SmartDate";
 import { SingleMedia } from "@/components/Media";
+import { vibrate } from "@/helpers/global";
 
 interface PostProps {
   post: Post;
@@ -70,12 +71,12 @@ export const PostCard = ({ post, style = {} }: PostProps) => {
   useEffect(() => {
     handleAuthor();
 
-    const pending = getPendingLike(_id);
-    if (pending !== null && pending !== likedByMe) {
+    const pendingLike = getPendingLike(_id);
+    if (pendingLike !== null && pendingLike !== likedByMe) {
       setPostData((prev) => ({
         ...prev,
-        likedByMe: pending,
-        likeCount: prev.likeCount + (pending ? 1 : -1),
+        likedByMe: pendingLike,
+        likeCount: prev.likeCount + (pendingLike ? 1 : -1),
       }));
     }
   }, [_id, handleAuthor]);
@@ -100,6 +101,8 @@ export const PostCard = ({ post, style = {} }: PostProps) => {
 
     setIsLiking(true);
 
+
+    if (!likedByMe) vibrate() // Vibrate on like
     // Optimistic update
     setPostData((prev) => {
       const nextLiked = !prev.likedByMe;
