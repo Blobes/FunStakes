@@ -5,7 +5,7 @@ import { serverRoutes } from "./routes";
 import { delay } from "./global";
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
-const DEFAULT_TIMEOUT = 20000; // Default timeout in milliseconds
+const DEFAULT_TIMEOUT = 60000; // Default timeout in milliseconds
 
 export const fetcher = async <T>(
   endpoint: string,
