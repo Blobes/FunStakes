@@ -451,3 +451,20 @@ const wasLoggedIn = getCookie("was_logged_in"); // Our persistent memory
 {isPortrait !== null && (
 <Image ... />
 )}
+
+// let msg = err.message;
+
+    // if (err === "timeout" || err.message?.includes("timeout")) {
+    //   console.log("Just woke up");
+    //   if (retryCount < MAX_RETRIES) {
+    //     // Add a small delay (200ms) to let the browser's network stack "warm up"
+    //     await new Promise((resolve) => setTimeout(resolve, 200));
+    //     return await fetchUserWithTokenCheck(retryCount + 1);
+    //   }
+
+    //   return {
+    //     payload: null,
+    //     status: "ERROR",
+    //     message: "Request timed out after multiple attempts",
+    //   };
+    // }

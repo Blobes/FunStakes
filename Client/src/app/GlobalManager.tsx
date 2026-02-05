@@ -23,13 +23,17 @@ export const GlobalManager = ({ children }: { children: React.ReactNode }) => {
         authStatus, networkStatus } = useGlobalContext();
     const pathname = usePathname();
     const { verifyAuth } = useAuth();
+    const hasInitializedAuth = useRef(false);
 
     // Initialize Auth
     useEffect(() => {
         const init = async () => {
             // unregisterSW()
             await verifySignal();
-            await verifyAuth();
+            if (!hasInitializedAuth.current) {
+                hasInitializedAuth.current = true;
+                await verifyAuth();  // runs only once
+            }
         }
         init();
     }, [networkStatus, authStatus]);

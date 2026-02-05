@@ -34,10 +34,14 @@ export const fetcher = async <T>(
     clearTimeout(timeoutId);
 
     if (!response.ok) {
-      const errorData = await response.json();
-      const error = new Error(
-        errorData.message || "Something went wrong",
-      ) as any;
+      let message = "Something went wrong";
+      try {
+        const errorData = await response.json();
+        message = errorData?.message ?? message;
+      } catch {
+        message = response.statusText || `Request failed with ${response.status}`;
+      }
+      const error = new Error(message) as any;
       error.status = response.status;
       throw error;
     }
@@ -58,6 +62,10 @@ export const fetcher = async <T>(
       throw error;
     }
 
+    // Ensure every thrown error has a status so callers can branch (e.g. 401 vs network)
+    if (typeof (error as any).status !== "number") {
+      (error as any).status = 0;
+    }
     throw error;
   }
 };
@@ -76,25 +84,10 @@ export const fetchUserWithTokenCheck = async (
     // console.log(res);
     return { payload: res.user, status: "SUCCESS" };
   } catch (err: any) {
-    // let msg = err.message;
-
-    // if (err === "timeout" || err.message?.includes("timeout")) {
-    //   console.log("Just woke up");
-    //   if (retryCount < MAX_RETRIES) {
-    //     // Add a small delay (200ms) to let the browser's network stack "warm up"
-    //     await new Promise((resolve) => setTimeout(resolve, 200));
-    //     return await fetchUserWithTokenCheck(retryCount + 1);
-    //   }
-
-    //   return {
-    //     payload: null,
-    //     status: "ERROR",
-    //     message: "Request timed out after multiple attempts",
-    //   };
-    // }
+    const status = typeof err?.status === "number" ? err.status : undefined;
 
     // Catch 401 (Missing/Expired) OR 403 (Invalid)
-    if (err.status === 401 || err.status === 403) {
+    if (status === 401 || status === 403) {
       // Try to refresh once
       const refreshed = await refreshAccessToken();
       if (refreshed) {
@@ -118,15 +111,16 @@ export const fetchUserWithTokenCheck = async (
       };
     }
 
-    // Check if it's a network error (incl. timeout, which we throw with status 0)
+    // Check if it's a network error (incl. timeout, unknown; fetcher sets status 0 for these)
     console.error(err);
     const isNetworkError =
+      status === undefined ||
+      status === 0 ||
+      status >= 500 ||
       err.name === "AbortError" ||
       err.name === "TypeError" ||
       err.message === "Failed to fetch" ||
-      err.message === "Connection timed out or failed." ||
-      err.status === 0 ||
-      err.status >= 500;
+      err.message === "Connection timed out or failed.";
 
     if (isNetworkError) {
       return {
