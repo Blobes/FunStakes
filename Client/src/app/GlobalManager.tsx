@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef } from "react";
 import { SnackBars } from "@/components/SnackBars";
 import { useGlobalContext } from "./GlobalContext";
 import { Modal, ModalRef } from "@/components/Modal";
@@ -17,21 +17,21 @@ import { useEvent } from "@/hooks/events";
 export const GlobalManager = ({ children }: { children: React.ReactNode }) => {
     const { handleBrowserEvents } = useEvent();
     const modalRef = useRef<ModalRef>(null);
-    const { openModal, verifySignal, isOnline } = useController();
+    const { openModal, verifySignal } = useController();
     const { handleCurrentPage } = usePage()
     const { snackBarMsg, modalContent, isGlobalLoading,
         authStatus, networkStatus } = useGlobalContext();
     const pathname = usePathname();
     const { verifyAuth } = useAuth();
-    const hasInitializedAuth = useRef(false);
+    const hasAuthInit = useRef(false);
 
     // Initialize Auth
     useEffect(() => {
         const init = async () => {
             // unregisterSW()
             verifySignal();
-            if (!hasInitializedAuth.current) {
-                hasInitializedAuth.current = true;
+            if (!hasAuthInit.current) {
+                hasAuthInit.current = true;
                 await verifyAuth();
             }
         }

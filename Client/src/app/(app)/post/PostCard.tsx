@@ -100,9 +100,6 @@ export const PostCard = ({ post, style = {} }: PostProps) => {
     }
 
     setIsLiking(true);
-
-
-    if (!likedByMe) vibrate() // Vibrate on like
     // Optimistic update
     setPostData((prev) => {
       const nextLiked = !prev.likedByMe;
@@ -111,6 +108,7 @@ export const PostCard = ({ post, style = {} }: PostProps) => {
       setPendingLike(_id, nextLiked);
       return { ...prev, likedByMe: nextLiked, likeCount: nextCount };
     });
+    if (!likedByMe) vibrate() // Vibrate on like
 
     try {
       const payload = await handlePostLike(_id); // pass state to backend
@@ -272,9 +270,6 @@ export const PostCard = ({ post, style = {} }: PostProps) => {
       {/* Actions */}
       <Stack direction="row" sx={{
         padding: theme.boxSpacing(4, 6),
-        "& svg": {
-          stroke: theme.palette.gray[200],
-        }
       }}>
         <Stack sx={{
           flexDirection: "row",

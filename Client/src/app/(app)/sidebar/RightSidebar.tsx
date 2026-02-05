@@ -2,7 +2,7 @@
 
 import { Stack, Typography } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
-import { ProfileCard } from "./RightSidebarCards";
+import { ProfileCard } from "./ProfileCard";
 import { Followers } from "./Followers";
 import { useStyles } from "@/hooks/style";
 

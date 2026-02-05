@@ -1,10 +1,10 @@
 "use client";
 
 import { IUser } from "@/types";
-import { serverRoutes } from "./routes";
+import { serverApi } from "./routes";
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
-const DEFAULT_TIMEOUT = 60000; // Default timeout in milliseconds
+const DEFAULT_TIMEOUT = 60000; // Default timeout in milliseconds (1 minute)
 
 export const fetcher = async <T>(
   endpoint: string,
@@ -57,12 +57,10 @@ export const fetcher = async <T>(
       (timeoutErr as any).status = 0;
       throw timeoutErr;
     }
-
     if (error.message === "Failed to fetch" || error instanceof TypeError) {
       error.status = 0;
       throw error;
     }
-
     // Ensure every thrown error has a status so callers can branch (e.g. 401 vs network)
     if (typeof (error as any).status !== "number") {
       (error as any).status = 0;
@@ -74,12 +72,12 @@ export const fetcher = async <T>(
 interface TokenCheckResponse {
   payload: IUser | null;
   message?: string;
-  status?: "SUCCESS" | "UNAUTHORIZED" | "ERROR" | "UNKNOWN";
+  status?: "SUCCESS" | "UNAUTHORIZED" | "ERROR";
 }
 export const fetchUserWithTokenCheck =
   async (): Promise<TokenCheckResponse> => {
     try {
-      const res = await fetcher<{ user: IUser }>(serverRoutes.verifyAuthToken);
+      const res = await fetcher<{ user: IUser }>(serverApi.verifyAuthToken);
       return { payload: res.user, status: "SUCCESS" };
     } catch (err: any) {
       const status = typeof err?.status === "number" ? err.status : undefined;
@@ -91,11 +89,10 @@ export const fetchUserWithTokenCheck =
         if (refreshed) {
           try {
             const retryRes = await fetcher<{ user: IUser }>(
-              serverRoutes.verifyAuthToken,
+              serverApi.verifyAuthToken,
             );
             return { payload: retryRes.user, status: "SUCCESS" };
           } catch {
-            console.error("Retry failed");
             return {
               payload: null,
               status: "ERROR",
@@ -127,7 +124,6 @@ export const fetchUserWithTokenCheck =
           message: "Connection failed or timed out",
         };
       }
-
       return {
         payload: null,
         status: "ERROR",
@@ -137,7 +133,7 @@ export const fetchUserWithTokenCheck =
 
 const refreshAccessToken = async () => {
   try {
-    const res = await fetcher(serverRoutes.refreshToken, {
+    const res = await fetcher(serverApi.refreshToken, {
       method: "POST",
     });
     return true;

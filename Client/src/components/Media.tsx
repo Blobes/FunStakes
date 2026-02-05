@@ -6,7 +6,6 @@ import { useTheme } from "@mui/material/styles";
 import { Box, Typography } from "@mui/material";
 import { useController } from "@/hooks/global";
 import { useStyles } from "@/hooks/style";
-import { ReactEventHandler, useState } from "react";
 
 interface SingleMediaProps {
     mediaSrc: string | StaticImageData,
@@ -14,9 +13,8 @@ interface SingleMediaProps {
 }
 export const SingleMedia = ({ mediaSrc, type = "image" }: SingleMediaProps) => {
     const src = typeof mediaSrc === "string" ? mediaSrc : mediaSrc.src;
-    const colors = useImageColors(src);
     const theme = useTheme();
-    const { isMobile, isDesktop } = useController();
+    const { isDesktop } = useController();
     const { applyBGEffect } = useStyles()
     const { gradient, isPortrait } = useImageColors(src);
 
@@ -30,7 +28,6 @@ export const SingleMedia = ({ mediaSrc, type = "image" }: SingleMediaProps) => {
             alignItems: "center",
             minHeight: "300px",
             width: "100%",
-            backgroundColor: "#fff",
             ...applyBGEffect(gradient)
         }}>
             {type === "image" ?

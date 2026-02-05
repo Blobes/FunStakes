@@ -1,11 +1,9 @@
-import { Stack, useTheme } from "@mui/material";
+import { useTheme } from "@mui/material";
 import { img } from "@/assets/exported";
 import Image from "next/image";
-import { pulseAndRotate, rotate } from "@/helpers/animations";
+import { rotate } from "@/helpers/animations";
 import { AnimatedWrapper } from "./AnimationWrapper";
 import { RootUIContainer } from "./Containers";
-import { useEffect } from "react";
-import { delay } from "@/helpers/global";
 
 
 export const SplashUI = () => {

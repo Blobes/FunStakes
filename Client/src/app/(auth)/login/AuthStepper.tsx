@@ -67,7 +67,10 @@ export const AuthStepper: React.FC<StepperProps> = ({ style = {} }) => {
       <Image
         alt="logo"
         src={img.logo}
-        style={{ borderRadius: "500px", width: "70px", height: "70px" }}
+        style={{
+          borderRadius: `${theme.radius.full}`,
+          width: "60px", height: "60px"
+        }}
       />
       <Stepper steps={steps} currStep={currStep} setCurrStep={setCurrStep} />
     </Stack>

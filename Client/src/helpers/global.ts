@@ -39,7 +39,7 @@ export const zIndexes = {
   maximum: 1000,
 };
 
-export const vibrate = (ms: number = 50) => {
+export const vibrate = (ms: number = 100) => {
   const isTouchDevice = window.matchMedia("(pointer: coarse)").matches;
   if (isTouchDevice && "vibrate" in navigator) {
     navigator.vibrate(ms);

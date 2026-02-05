@@ -9,7 +9,7 @@ import {
   getLockRemaining,
 } from "@/helpers/auth";
 import { useRef } from "react";
-import { clientRoutes, serverRoutes } from "@/helpers/routes";
+import { clientRoutes, serverApi } from "@/helpers/routes";
 import { useSnackbar } from "@/hooks/snackbar";
 import {
   deleteCookie,
@@ -46,7 +46,7 @@ export const useLogin = () => {
     email: string,
   ): Promise<CheckEmailResponse | null> => {
     try {
-      const res = await fetcher<CheckEmailResponse>(serverRoutes.checkEmail, {
+      const res = await fetcher<CheckEmailResponse>(serverApi.checkEmail, {
         method: "POST",
         body: JSON.stringify({ email }),
       });
@@ -103,7 +103,7 @@ export const useLogin = () => {
 
     try {
       // Login request
-      const res = await fetcher<LoginResponse>(serverRoutes.login, {
+      const res = await fetcher<LoginResponse>(serverApi.login, {
         method: "POST",
         body: JSON.stringify(credentials),
       });
@@ -152,10 +152,8 @@ export const useLogin = () => {
         startLockCountdown(lockTime);
         return null;
       }
-
       // Error feedback
       setInlineMsg(fixedMessage ?? null);
-
       return {
         payload: null,
         message: error.message,

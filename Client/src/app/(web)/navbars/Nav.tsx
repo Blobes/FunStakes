@@ -60,7 +60,6 @@ export const MobileNav: React.FC<NavProps> = ({ style }) => {
           gap: theme.boxSpacing(6),
           width: "100%",
           "& svg": {
-            stroke: theme.palette.gray[200],
             width: "20px",
             height: "20px",
           },

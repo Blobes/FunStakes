@@ -47,9 +47,9 @@ export const registeredRoutes = {
 
 export const disallowedRoutes: string[] = [];
 
-export const serverRoutes = {
+export const serverApi = {
   // Auth
-  authRoot: "/api/auth",
+  auth: "/api/auth",
   login: "/api/auth/login",
   logout: "/api/auth/logout",
   signup: "/api/auth/signup",
@@ -58,11 +58,11 @@ export const serverRoutes = {
   refreshToken: "/api/auth/refresh",
 
   // Posts
-  postsRoot: "/api/posts",
+  posts: "/api/posts",
   likePost: (id: string) => `/api/posts/${id}/like`,
 
   // Users
-  usersRoot: "/api/users",
+  users: "/api/users",
   user: (id: string) => `/api/users/${id}`,
   followers: (id: string) => `/api/users/${id}/followers`,
   follow: (id: string) => `/api/users/${id}/follow`,

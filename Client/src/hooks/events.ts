@@ -37,14 +37,15 @@ export const useEvent = () => {
     };
 
     const handleVisibility = async () => {
-      const isRecentlyAway = getCookie("recently_away");
+      const recentlyAway = getCookie("recently_away");
 
       if (document.visibilityState === "visible") {
-        if (!isRecentlyAway) await verifyAuth();
+        if (!recentlyAway) await verifyAuth();
         console.log("Visible");
       }
       if (document.visibilityState === "hidden") {
-        setCookie("recently_away", "true", 10);
+        setCookie("recently_away", "true", 12);
+        console.log("Hidden");
       }
     };
 

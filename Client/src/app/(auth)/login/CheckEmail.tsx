@@ -53,7 +53,7 @@ export const CheckEmail: React.FC<CheckProps> = ({
     }
   }, [step]);
 
-  const onEmailChange = (
+  const handleChange = (
     e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
   ) => {
     setEmail(e.target.value);
@@ -117,7 +117,7 @@ export const CheckEmail: React.FC<CheckProps> = ({
           defaultValue={existingEmail}
           label="Email"
           placeholder="Enter your email address"
-          onChange={onEmailChange}
+          onChange={handleChange}
           helperText={msg}
           error={email !== "" && validity === "invalid"}
           affix={
@@ -133,7 +133,7 @@ export const CheckEmail: React.FC<CheckProps> = ({
           submit
           style={{
             fontSize: "16px",
-            padding: theme.boxSpacing(5, 8),
+            padding: theme.boxSpacing(5.5, 9),
             width: "100%",
           }}
           options={{

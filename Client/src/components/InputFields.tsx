@@ -128,9 +128,7 @@ export const PasswordInput = ({
                 }
                 onClick={toggleShowPassword}
                 onMouseDown={handleMouseDown}
-                onMouseUp={handleMouseUp}
-                sx={{ "& > svg": { stroke: theme.palette.gray[200] } }}
-              >
+                onMouseUp={handleMouseUp}>
                 {showPassword ? (
                   <Eye size={22} />
                 ) : (<EyeClosed size={22} />

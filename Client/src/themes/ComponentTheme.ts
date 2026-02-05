@@ -23,6 +23,9 @@ const componentTheme = createTheme({
         "div, svg": {
           transition: "var(--theme-transition)",
         },
+        svg: {
+          stroke: theme.palette.gray[200],
+        },
       }),
     },
 

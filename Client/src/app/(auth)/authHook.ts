@@ -1,18 +1,14 @@
 "use client";
 
 import { fetcher, fetchUserWithTokenCheck } from "@/helpers/fetcher";
-import { clientRoutes, serverRoutes } from "@/helpers/routes";
+import { clientRoutes, serverApi } from "@/helpers/routes";
 import { useGlobalContext } from "../GlobalContext";
-import { useController } from "@/hooks/global";
 import { usePathname, useRouter } from "next/navigation";
 import { useSnackbar } from "@/hooks/snackbar";
 import { usePage } from "@/hooks/page";
-import { delay } from "@/helpers/global";
 
 export const useAuth = () => {
-  const { setAuthUser, setAuthStatus, setSnackBarMsg, setGlobalLoading } =
-    useGlobalContext();
-  const { isOffline, isOnline, isUnstableNetwork } = useController();
+  const { setAuthUser, setAuthStatus, setSnackBarMsg } = useGlobalContext();
   const { setLastPage } = usePage();
   const { setSBMessage } = useSnackbar();
   const router = useRouter();
@@ -57,7 +53,7 @@ export const useAuth = () => {
   const handleLogout = async () => {
     try {
       //  Send logout request to backend
-      await fetcher(serverRoutes.logout, { method: "POST" });
+      await fetcher(serverApi.logout, { method: "POST" });
       setAuthUser(null);
       setAuthStatus("UNAUTHENTICATED");
       if (pathname !== clientRoutes.home.path) {

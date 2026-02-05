@@ -52,7 +52,6 @@ export const DesktopNav = ({
               textAlign: "left",
               width: "100%",
               "& svg": {
-                stroke: theme.palette.gray[200],
                 width: "20px",
                 height: "20px",
                 flex: "none"

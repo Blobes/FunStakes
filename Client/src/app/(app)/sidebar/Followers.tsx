@@ -4,7 +4,7 @@ import { useGlobalContext } from "../../GlobalContext";
 import { useUser } from "../user/userHooks";
 import { useEffect, useState } from "react";
 import { PersonOffSharp } from "@mui/icons-material";
-import { FollowerCard } from "./RightSidebarCards";
+import { FollowerCard } from "./FollowerCard";
 import { delay } from "@/helpers/global";
 import { ProgressIcon } from "@/components/ProgressIcon";
 import { Empty } from "@/components/Empty";
