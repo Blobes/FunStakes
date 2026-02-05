@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { useSnackbar } from "./snackbar";
 import { useController } from "./global";
 import { useAuth } from "@/app/(auth)/authHook";
+import { getCookie, setCookie } from "@/helpers/storage";
 
 export const useEvent = () => {
   const router = useRouter();
@@ -36,9 +37,14 @@ export const useEvent = () => {
     };
 
     const handleVisibility = async () => {
+      const isRecentlyAway = getCookie("recently_away");
+
       if (document.visibilityState === "visible") {
+        if (!isRecentlyAway) await verifyAuth();
         console.log("Visible");
-        // await verifyAuth();
+      }
+      if (document.visibilityState === "hidden") {
+        setCookie("recently_away", "true", 10);
       }
     };
 

@@ -32,7 +32,7 @@ export const GlobalManager = ({ children }: { children: React.ReactNode }) => {
             await verifySignal();
             if (!hasInitializedAuth.current) {
                 hasInitializedAuth.current = true;
-                await verifyAuth();  // runs only once
+                await verifyAuth();
             }
         }
         init();
