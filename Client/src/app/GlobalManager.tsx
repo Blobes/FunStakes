@@ -29,7 +29,7 @@ export const GlobalManager = ({ children }: { children: React.ReactNode }) => {
     useEffect(() => {
         const init = async () => {
             // unregisterSW()
-            await verifySignal();
+            verifySignal();
             if (!hasInitializedAuth.current) {
                 hasInitializedAuth.current = true;
                 await verifyAuth();
