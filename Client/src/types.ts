@@ -1,6 +1,6 @@
 "use client";
 
-import { ModalProps } from "./components/Modal";
+import { DrawerProps } from "./components/Drawer";
 
 export type AuthStatus =
   | "UNKNOWN"
@@ -77,7 +77,7 @@ export interface ListItemType {
   action?: () => void | null;
 }
 
-export interface ModalContent extends ModalProps {
+export interface DrawerContent extends DrawerProps {
   source?: string;
 }
 

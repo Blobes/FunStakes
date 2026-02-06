@@ -468,3 +468,9 @@ const wasLoggedIn = getCookie("was_logged_in"); // Our persistent memory
     //     message: "Request timed out after multiple attempts",
     //   };
     // }
+
+// Drag event on Y axis
+{...(dragToClose && isMobile && axis === "y" && {
+...handlers
+})}
+cursor: dragToClose ? "grab" : "default"

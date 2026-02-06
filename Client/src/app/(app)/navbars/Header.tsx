@@ -24,7 +24,8 @@ interface AppHeaderProps {
 }
 export const AppHeader: React.FC<AppHeaderProps> = ({ scrollRef }) => {
   const { authStatus } = useGlobalContext();
-  const { openModal, closeModal, isDesktop, handleWindowResize } = useController();
+  const { openDrawer, closeDrawer, isDesktop,
+    handleWindowResize } = useController();
   const { setLastPage, navigateTo } = usePage();
   const { handlePageScroll } = usePageScroll();
   const theme = useTheme();
@@ -50,15 +51,12 @@ export const AppHeader: React.FC<AppHeaderProps> = ({ scrollRef }) => {
   };
 
   const openMobileNav = () =>
-    openModal({
+    openDrawer({
       header: <UserAvatar style={{ width: "35px", height: "35px" }} />,
       content: <MobileNav />,
       source: "navbar",
       dragToClose: true,
-      transition: {
-        mobile: { type: "slide", direction: "left" },
-      },
-      onClose: closeModal,
+      onClose: closeDrawer,
       style: {
         base: { overlay: { padding: theme.boxSpacing(6) } },
         smallScreen: {

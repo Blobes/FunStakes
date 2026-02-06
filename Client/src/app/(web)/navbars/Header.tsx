@@ -16,7 +16,7 @@ import { usePage } from "@/hooks/page";
 
 export const Header: React.FC = () => {
   const { authStatus } = useGlobalContext();
-  const { openModal, closeModal, isDesktop, handleWindowResize } = useController()
+  const { openDrawer, closeDrawer, isDesktop, handleWindowResize } = useController()
   const { navigateTo } = usePage();
   const theme = useTheme();
   const isLoggedIn = authStatus === "AUTHENTICATED";
@@ -31,7 +31,7 @@ export const Header: React.FC = () => {
   /* -------------------------------- handlers --------------------------------- */
 
   const openMobileWebNav = () =>
-    openModal({
+    openDrawer({
       content: (
         <MobileNav
           style={{
@@ -40,7 +40,7 @@ export const Header: React.FC = () => {
         />
       ),
       source: "navbar",
-      onClose: () => closeModal(),
+      onClose: () => closeDrawer(),
       style: {
         base: { overlay: { padding: theme.boxSpacing(6) } },
         smallScreen: {

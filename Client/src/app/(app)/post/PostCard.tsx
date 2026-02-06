@@ -36,7 +36,7 @@ interface PostProps {
 
 export const PostCard = ({ post, style = {} }: PostProps) => {
   const theme = useTheme();
-  const { authStatus, setModalContent } = useGlobalContext();
+  const { authStatus, setDrawerContent: setModalContent } = useGlobalContext();
   const { isOffline, isUnstableNetwork, isDesktop, isMobile } = useController();
   const {
     handlePostLike,

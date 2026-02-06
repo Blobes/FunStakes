@@ -14,9 +14,13 @@ import { getFromLocalStorage } from "@/helpers/storage";
 import { useController } from "./global";
 
 export const usePage = () => {
-  const { setPage, lastPage, modalContent, setGlobalLoading } =
-    useGlobalContext();
-  const { closeModal } = useController();
+  const {
+    setPage,
+    lastPage,
+    drawerContent: modalContent,
+    setGlobalLoading,
+  } = useGlobalContext();
+  const { closeDrawer: closeModal } = useController();
   const router = useRouter();
 
   const isOnWeb = (path: string) => registeredRoutes.web.includes(path);

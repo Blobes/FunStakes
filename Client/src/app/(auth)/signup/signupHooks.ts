@@ -5,7 +5,7 @@ import { useController } from "@/hooks/global";
 import { fetcher } from "@/helpers/fetcher";
 import { IUser, SingleResponse } from "@/types";
 import { useRouter } from "next/navigation";
-import { ModalRef } from "@/components/Modal";
+import { DrawerRef } from "@/components/Drawer";
 import { useRef } from "react";
 import { useSnackbar } from "@/hooks/snackbar";
 import { deleteCookie } from "@/helpers/storage";
@@ -25,7 +25,7 @@ interface SignupInfo {
   lastName: string;
 }
 
-export const useSignup = (drawerRef?: React.RefObject<ModalRef>) => {
+export const useSignup = (drawerRef?: React.RefObject<DrawerRef>) => {
   const {
     setAuthUser,
     setAuthStatus: setLoginStatus,

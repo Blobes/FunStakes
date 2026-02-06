@@ -1,6 +1,6 @@
 "use client";
 
-import { fetcher } from "@/helpers/fetcher";
+import { fetcher, checkNetworkError } from "@/helpers/fetcher";
 import { serverApi } from "@/helpers/routes";
 import { useSnackbar } from "@/hooks/snackbar";
 import { IUser, ListResponse, SingleResponse } from "@/types";
@@ -20,6 +20,8 @@ export const useUser = () => {
       });
       return { payload: res.payload ?? null, message: res.message };
     } catch (error: any) {
+      const networkError = checkNetworkError(error);
+      if (networkError) return networkError;
       return {
         payload: null,
         message: error.message ?? "Something went wrong",
@@ -67,13 +69,18 @@ export const useUser = () => {
       });
       return { payload: res.payload ?? null, message: res.message };
     } catch (error: any) {
-      setSBMessage({
-        msg: {
-          content: error.message,
-          duration: 2,
-          msgStatus: "ERROR",
-        },
-      });
+      const networkError = checkNetworkError(error);
+      if (networkError) {
+        setSBMessage({
+          msg: {
+            content: networkError.message,
+            duration: 2,
+            msgStatus: "ERROR",
+          },
+        });
+        return networkError;
+      }
+
       return {
         payload: null,
         message: error.message ?? "Something went wrong",

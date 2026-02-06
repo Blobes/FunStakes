@@ -24,7 +24,7 @@ interface AppHeaderProps {
 }
 export const AppHeader: React.FC<AppHeaderProps> = ({ scrollRef }) => {
   const { authStatus } = useGlobalContext();
-  const { openModal, closeModal, isDesktop, handleWindowResize } = useController();
+  const { openDrawer: openModal, closeDrawer: closeModal, isDesktop, handleWindowResize } = useController();
   const { setLastPage, navigateTo } = usePage();
   const { handlePageScroll } = usePageScroll();
   const theme = useTheme();
@@ -55,7 +55,7 @@ export const AppHeader: React.FC<AppHeaderProps> = ({ scrollRef }) => {
       content: <MobileNav />,
       source: "navbar",
       dragToClose: true,
-      transition: {
+      transDirection: {
         mobile: { type: "slide", direction: "left" },
       },
       onClose: closeModal,

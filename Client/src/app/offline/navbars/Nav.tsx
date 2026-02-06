@@ -25,7 +25,7 @@ export const DesktopNav = ({
 }) => {
   const theme = useTheme();
   const { userNavList } = useNavLists();
-  const { setModalContent } = useGlobalContext();
+  const { setDrawerContent: setModalContent } = useGlobalContext();
 
   return (
     <Stack
@@ -134,7 +134,7 @@ const UserInfo = () => {
 export const MobileNav = ({ }) => {
   const theme = useTheme();
   const { userNavList } = useNavLists();
-  const { closeModal } = useController();
+  const { closeDrawer: closeModal } = useController();
   const menuRef = useRef<MenuRef>(null);
 
   return (

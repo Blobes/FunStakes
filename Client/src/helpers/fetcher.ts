@@ -107,23 +107,9 @@ export const fetchUserWithTokenCheck =
 
       // Check if it's a network error (incl. timeout, unknown;
       //  fetcher sets status 0 for these)
-      console.error(err);
-      const isNetworkError =
-        status === undefined ||
-        status === 0 ||
-        status >= 500 ||
-        err.name === "AbortError" ||
-        err.name === "TypeError" ||
-        err.message === "Failed to fetch" ||
-        err.message === "Connection timed out or failed.";
+      const networkError = checkNetworkError(err);
+      if (networkError) return networkError as TokenCheckResponse;
 
-      if (isNetworkError) {
-        return {
-          payload: null,
-          status: "ERROR",
-          message: "Connection failed or timed out",
-        };
-      }
       return {
         payload: null,
         status: "ERROR",
@@ -141,4 +127,25 @@ const refreshAccessToken = async () => {
     console.error(err);
     return false;
   }
+};
+
+export const checkNetworkError = (err: any) => {
+  const status = typeof err?.status === "number" ? err.status : undefined;
+  const isNetworkError =
+    status === undefined ||
+    status === 0 ||
+    status >= 500 ||
+    err.name === "AbortError" ||
+    err.name === "TypeError" ||
+    err.message === "Failed to fetch" ||
+    err.message === "Connection timed out or failed.";
+
+  if (isNetworkError) {
+    return {
+      payload: null,
+      status: "ERROR",
+      message: "Network connection failed",
+    };
+  }
+  return null;
 };

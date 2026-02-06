@@ -1,37 +1,48 @@
 "use client";
 
-import React, { useImperativeHandle, forwardRef, useRef, useState, } from "react";
-import { IconButton, Stack } from "@mui/material";
+import React, {
+  useImperativeHandle,
+  forwardRef,
+  useRef,
+  useState,
+} from "react";
+import { Box, IconButton, Stack } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import { Close } from "@mui/icons-material";
 import { useStyles } from "@/hooks/style";
 import { Direction, GenericObject } from "@/types";
-import { Transition, TransitionType } from "./Transition";
+import { Transition } from "./Transition";
 import { useController } from "@/hooks/global";
 import { zIndexes } from "@/helpers/global";
+import { useDragClose } from "@/hooks/drag";
 
-export interface ModalRef {
-  openModal: () => void;
-  closeModal: () => void;
+export interface DrawerRef {
+  openDrawer: () => void;
+  closeDrawer: () => void;
 }
 
-export interface ModalProps {
+export interface DrawerProps {
   content: React.ReactNode;
   showHeader?: boolean;
   header?: React.ReactNode;
-  canBeClosed?: boolean;
+  clickToClose?: boolean;
+  dragToClose?: boolean;
   onClose?: () => void;
-  transition?: { type: TransitionType, direction?: Direction },
+  transDirection?: {
+    base?: Direction,
+    mobile?: Direction
+  }
   style?: {
     base?: { overlay?: GenericObject<string>, content?: GenericObject<string> };
     smallScreen?: { overlay?: GenericObject<string>, content?: GenericObject<string> };
+    mediumScreen?: { overlay?: GenericObject<string>, content?: GenericObject<string> };
     header?: GenericObject<string>;
   };
 }
 
-export const Modal = forwardRef<ModalRef, ModalProps>(
+export const Drawer = forwardRef<DrawerRef, DrawerProps>(
   (
-    { header, content, transition, canBeClosed = true,
+    { header, content, transDirection, clickToClose = true, dragToClose = false,
       showHeader = true, onClose, style,
     },
     ref
@@ -40,23 +51,30 @@ export const Modal = forwardRef<ModalRef, ModalProps>(
     const containerRef = useRef<HTMLDivElement>(null);
     const closeRef = useRef<HTMLButtonElement>(null);
     const { scrollBarStyle } = useStyles();
-    const { isDesktop } = useController();
+    const { isDesktop, isMobile } = useController();
     const theme = useTheme();
     const [isOpen, setOpen] = useState(false);
     const [shouldRemove, setShouldRemove] = useState(true);
 
     // Transition properties
-    const trans = transition || { type: "zoom" }
-    const transType = trans.type;
-    const transDir = trans.direction ?? "left";
-    trans.direction = transDir
+    const baseDir = transDirection?.base || "left"
+    const mobileDir = transDirection?.mobile ?? transDirection?.base;
+    const transDir = isDesktop ? baseDir : mobileDir
+
+    const { dragOffset, handlers, axis } = useDragClose({
+      axis: baseDir === "up" || baseDir === "down" ? "y" : "x",
+      direction: baseDir === "left" ? "ltr" :
+        baseDir === "right" ? "rtl" : undefined,
+      closeAtMiddle: true,
+      onClose: () => setOpen(false),
+    });
 
     useImperativeHandle(ref, () => ({
-      openModal: () => {
+      openDrawer: () => {
         setShouldRemove(false);
         setOpen(true);
       },
-      closeModal: () => {
+      closeDrawer: () => {
         setOpen(false);
       },
     }));
@@ -74,7 +92,7 @@ export const Modal = forwardRef<ModalRef, ModalProps>(
     return (
       <Stack //Overlay container
         ref={containerRef}
-        {...(canBeClosed ? { onClick: handleClose } : {})}
+        {...(clickToClose ? { onClick: handleClose } : {})}
         sx={{
           position: "fixed",
           top: 0,
@@ -85,32 +103,32 @@ export const Modal = forwardRef<ModalRef, ModalProps>(
           visibility: !shouldRemove ? "visible" : "hidden",
           transition: "opacity 0.3s ease-in-out, visibility 0.3s",
           opacity: isOpen ? 1 : 0,
-          backgroundColor: theme.palette.gray.trans.overlay(0.6),
-          backdropFilter: `blur(12px)`,
+          backgroundColor: theme.palette.gray.trans.overlay(isOpen ? 0.6 - dragOffset / 400 : 0),
+          backdropFilter: `blur(${isOpen ? Math.max(0, 6 - dragOffset / 50) : 0}px)`,
           marginLeft: "0!important",
           padding: theme.boxSpacing(12),
           // Alignment
-          alignItems: transType === "slide"
-            ? (transDir === "right" ? "flex-start"
-              : transDir === "left" ? "flex-end" : "center")
-            : "center",
-          justifyContent: transType === "slide"
-            ? (transDir === "down" ? "flex-start"
-              : transDir === "up" ? "flex-end" : "center")
-            : "center",
+          alignItems: transDir === "right" ? "flex-start"
+            : baseDir === "left" ? "flex-end" : "center",
+
+          justifyContent: baseDir === "down" ? "flex-start"
+            : baseDir === "up" ? "flex-end" : "center",
           ...style?.base?.overlay,
 
-          // Small screen styling
+          // Mobile styling
           [theme.breakpoints.down("md")]: {
             padding: theme.boxSpacing(4, 2),
             ...style?.smallScreen?.overlay
-          }
+          },
         }}>
 
         {/* Drawer Content Container */}
-        <Transition show={isOpen}
-          timeout={200} {...trans} onExited={() => setShouldRemove(true)}>
+        < Transition show={isOpen}
+          timeout={200} type="slide" direction={transDir}
+          onExited={() => setShouldRemove(true)}>
           <Stack
+            // Drag event on X axis
+            {...(dragToClose && isMobile && { ...handlers })}
             sx={{
               maxHeight: "100%",
               gap: theme.gap(0),
@@ -121,12 +139,24 @@ export const Modal = forwardRef<ModalRef, ModalProps>(
               maxWidth: style?.base?.content?.maxWidth ?? "400px",
               touchAction: "none",
               willChange: "transform",
+
+              // Drag styling
+              ...(dragOffset > 0 && {
+                // This allows the Slide to happen, but adds our drag X & Y on top of it
+                transform: `translate${axis === "x" ? "X" : "Y"}(var(--drag-offset, 0px))!important`,
+                // We only want a transition when the user lets go (snapping back)
+                transition: dragOffset === 0
+                  ? "transform 0.3s cubic-bezier(0, 0, 0.2, 1)!important"
+                  : "none !important",
+              }),
+
               ...style?.base?.content,
 
               // Medium screen
               [theme.breakpoints.down("md")]: {
-                width: "60%",
-                maxWidth: "350px"
+                width: style?.mediumScreen?.content?.width ?? "80%",
+                maxWidth: style?.mediumScreen?.content?.maxWidth ?? "350px",
+                ...style?.mediumScreen?.content
               },
               // Small screen
               [theme.breakpoints.down("sm")]: {
@@ -134,6 +164,7 @@ export const Modal = forwardRef<ModalRef, ModalProps>(
                 maxWidth: style?.smallScreen?.content?.maxWidth ?? "100%",
                 ...style?.smallScreen?.content
               },
+              "--drag-offset": `${dragOffset}px`,
             }}
           >
             {
@@ -144,9 +175,19 @@ export const Modal = forwardRef<ModalRef, ModalProps>(
                     position: "sticky",
                     alignItems: "center",
                     gap: theme.gap(0),
-                    touchAction: 'none',
                   }}>
-                  {(header || canBeClosed) && (
+
+                  {/* Drag Handle UI */}
+                  {isMobile && dragToClose && axis === "y" && (
+                    <Box sx={{
+                      width: "50px",
+                      height: "6px",
+                      borderRadius: theme.radius.full,
+                      marginTop: theme.boxSpacing(8),
+                      backgroundColor: theme.palette.gray.trans[2]
+                    }} />
+                  )}
+                  {(header || clickToClose) && (
                     <Stack
                       direction={"row"}
                       sx={{
@@ -159,7 +200,7 @@ export const Modal = forwardRef<ModalRef, ModalProps>(
                         borderBottom: `1px solid ${theme.palette.gray.trans[1]}`
                       }}>
                       {header && header}
-                      {canBeClosed && (
+                      {clickToClose && (
                         <IconButton
                           aria-label="Drawer closer"
                           aria-controls="close-drawer"
@@ -179,7 +220,6 @@ export const Modal = forwardRef<ModalRef, ModalProps>(
                 </Stack>
               )
             }
-
             {/* Modal Body */}
             <Stack
               sx={{
@@ -201,4 +241,4 @@ export const Modal = forwardRef<ModalRef, ModalProps>(
     );
   }
 );
-Modal.displayName = "Drawer";
+Drawer.displayName = "Drawer";

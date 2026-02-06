@@ -6,7 +6,7 @@ import { useGlobalContext } from "@/app/GlobalContext";
 import { AppButton } from "@/components/Buttons";
 import { useTheme } from "@mui/material/styles";
 import { useRouter } from "next/navigation";
-import { ModalRef } from "@/components/Modal";
+import { DrawerRef } from "@/components/Drawer";
 import { validateEmail } from "@/helpers/inputValidation";
 import { useEffect, useState } from "react";
 import { TextInput } from "@/components/InputFields";

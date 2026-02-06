@@ -12,7 +12,7 @@ export const useEvent = () => {
   const { verifySignal } = useController();
   const { verifyAuth } = useAuth();
 
-  const handleBrowserEvents = () => {
+  const handleBrowserEvents = (authInit?: React.MutableRefObject<boolean>) => {
     const online = async () => {
       removeSBMessage();
       await verifySignal();
@@ -40,7 +40,10 @@ export const useEvent = () => {
       const recentlyAway = getCookie("recently_away");
 
       if (document.visibilityState === "visible") {
-        if (!recentlyAway) await verifyAuth();
+        if (!recentlyAway && authInit) {
+          authInit.current = true;
+          await verifyAuth();
+        }
         console.log("Visible");
       }
       if (document.visibilityState === "hidden") {

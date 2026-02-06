@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import { Signup } from "./Signup";
 import { useTheme } from "@mui/material/styles";
-import { ModalRef } from "@/components/Modal";
+import { DrawerRef } from "@/components/Drawer";
 import { Login } from "../login/Login";
 import { GenericObject, Step } from "@/types";
 import { Stepper } from "@/components/Stepper";
@@ -12,7 +12,7 @@ import Image from "next/image";
 import { img } from "@/assets/exported";
 
 interface StepperProps {
-  modalRef?: React.RefObject<ModalRef>;
+  modalRef?: React.RefObject<DrawerRef>;
   redirectTo?: string;
   style?: {
     container?: GenericObject<string>;

@@ -3,7 +3,7 @@
 import React, { useEffect, useRef } from "react";
 import { SnackBars } from "@/components/SnackBars";
 import { useGlobalContext } from "./GlobalContext";
-import { Modal, ModalRef } from "@/components/Modal";
+import { Drawer, DrawerRef } from "@/components/Drawer";
 import { useController } from "@/hooks/global";
 import { useAuth } from "@/app/(auth)/authHook";
 import { NetworkGlitchUI } from "../components/NetworkGlitchUI";
@@ -12,14 +12,16 @@ import { registerSW, unregisterSW } from "@/helpers/serviceWorker";
 import { usePathname, useRouter } from "next/navigation";
 import { usePage } from "@/hooks/page";
 import { useEvent } from "@/hooks/events";
+import { Modal, ModalRef } from "@/components/Modal";
 
 
 export const GlobalManager = ({ children }: { children: React.ReactNode }) => {
     const { handleBrowserEvents } = useEvent();
+    const drawerRef = useRef<DrawerRef>(null);
     const modalRef = useRef<ModalRef>(null);
-    const { openModal, verifySignal } = useController();
+    const { openDrawer, openModal, verifySignal } = useController();
     const { handleCurrentPage } = usePage()
-    const { snackBarMsg, modalContent, isGlobalLoading,
+    const { snackBarMsg, drawerContent, modalContent, isGlobalLoading,
         authStatus, networkStatus } = useGlobalContext();
     const pathname = usePathname();
     const { verifyAuth } = useAuth();
@@ -38,21 +40,21 @@ export const GlobalManager = ({ children }: { children: React.ReactNode }) => {
         init();
     }, [networkStatus, authStatus]);
 
-    // Modal Open / Close
+    // Drawer & Modal Open / Close
     useEffect(() => {
-        if (!modalContent) {
-            modalRef.current?.closeModal();
-            return;
-        }
+        if (!drawerContent) drawerRef.current?.closeDrawer();
+        if (!modalContent) modalRef.current?.closeModal()
+
         requestAnimationFrame(() => {
-            modalRef.current?.openModal();
+            if (drawerContent) drawerRef.current?.openDrawer();
+            if (modalContent) modalRef.current?.openModal()
         });
-    }, [modalContent, openModal]);
+    }, [drawerContent, openDrawer, modalContent, openModal]);
 
     // // Page Load Handler
     useEffect(() => {
         handleCurrentPage();
-        handleBrowserEvents()
+        handleBrowserEvents(hasAuthInit)
     }, [pathname]);
 
     // App Splash
@@ -65,6 +67,7 @@ export const GlobalManager = ({ children }: { children: React.ReactNode }) => {
         <>
             {children}
             {snackBarMsg.messages && <SnackBars snackBarMsg={snackBarMsg} />}
+            {drawerContent && <Drawer ref={drawerRef} {...drawerContent} />}
             {modalContent && <Modal ref={modalRef} {...modalContent} />}
         </>
     );
