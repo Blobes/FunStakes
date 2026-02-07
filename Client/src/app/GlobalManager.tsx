@@ -41,7 +41,7 @@ export const GlobalManager = ({ children }: { children: React.ReactNode }) => {
             setMounted(false);
 
             // Switch to offline mode if offline
-            // if (isOffline) switchToOfflineMode()
+            if (isOffline) switchToOfflineMode()
             // Initialize Auth
             verifySignal();
             if (!hasAuthInit.current) {
