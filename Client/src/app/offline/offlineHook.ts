@@ -11,8 +11,8 @@ export const useOffline = () => {
 
   const switchToOfflineMode = async () => {
     setGlobalLoading(true);
-    const offlinePage = clientRoutes.offline;
-    navigateTo(offlinePage, { type: "element", savePage: false });
+    // const offlinePage = clientRoutes.offline;
+    // navigateTo(offlinePage, { type: "element", savePage: false });
     await delay(500);
     setGlobalLoading(false);
   };
