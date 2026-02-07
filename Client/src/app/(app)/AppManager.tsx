@@ -13,14 +13,14 @@ import { RootUIContainer } from "@/components/Containers";
 import { NetworkGlitchUI } from "@/components/NetworkGlitchUI";
 
 export const AppManager = ({ children }: { children: React.ReactNode }) => {
-  const { isDesktop, isUnstableNetwork } = useController();
+  const { isDesktop, isUnstableNetwork, isOffline } = useController();
   const theme = useTheme();
   const { authStatus } = useGlobalContext();
   const { scrollBarStyle } = useStyles();
   const scrollRef = useRef<HTMLDivElement>(null);
 
   // Conditionally render the offline UI
-  if (isUnstableNetwork || authStatus === "ERROR") {
+  if ((isUnstableNetwork || authStatus === "ERROR") && !isOffline) {
     return <NetworkGlitchUI />;
   }
 
