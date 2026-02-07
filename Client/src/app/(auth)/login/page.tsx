@@ -7,14 +7,15 @@ import { useGlobalContext } from "@/app/GlobalContext";
 import { clientRoutes } from "@/helpers/routes";
 import { Empty } from "@/components/Empty";
 import { ShieldCheck } from "lucide-react";
-import { useAuth } from "../authHook";
 import { useStyles } from "@/hooks/style";
 import { usePage } from "@/hooks/page";
+import { useController } from "@/hooks/global";
+import { ComfirmLogout } from "../logout/Logout";
 
 export default function LoginPage() {
   const theme = useTheme();
   const { authStatus } = useGlobalContext();
-  const { handleLogout } = useAuth();
+  const { openModal } = useController();
   const { applyBGPattern } = useStyles()
   const { navigateTo } = usePage()
 
@@ -63,7 +64,10 @@ export default function LoginPage() {
             action: () => navigateTo(clientRoutes.home),
             href: clientRoutes.home.path
           }}
-          secondaryCta={{ label: "Logout", action: handleLogout }}
+          secondaryCta={{
+            label: "Logout",
+            action: () => openModal({ content: <ComfirmLogout /> })
+          }}
         />
       )}
     </Stack>
