@@ -7,7 +7,6 @@ import { Close } from "@mui/icons-material";
 import { useStyles } from "@/hooks/style";
 import { Direction, GenericObject } from "@/types";
 import { Transition, TransitionType } from "./Transition";
-import { useController } from "@/hooks/global";
 import { zIndexes } from "@/helpers/global";
 
 export interface ModalRef {
@@ -40,16 +39,18 @@ export const Modal = forwardRef<ModalRef, ModalProps>(
     const containerRef = useRef<HTMLDivElement>(null);
     const closeRef = useRef<HTMLButtonElement>(null);
     const { scrollBarStyle } = useStyles();
-    const { isDesktop } = useController();
     const theme = useTheme();
     const [isOpen, setOpen] = useState(false);
     const [shouldRemove, setShouldRemove] = useState(true);
 
     // Transition properties
-    const trans = transition || { type: "zoom" }
+    const trans = {
+      type: transition?.type || "zoom",
+      direction: transition?.direction || "left"
+    }
     const transType = trans.type;
-    const transDir = trans.direction ?? "left";
-    trans.direction = transDir
+    const transDir = trans.direction;
+
 
     useImperativeHandle(ref, () => ({
       openModal: () => {
@@ -120,7 +121,6 @@ export const Modal = forwardRef<ModalRef, ModalProps>(
               width: style?.base?.content?.width ?? "40%",
               maxWidth: style?.base?.content?.maxWidth ?? "400px",
               touchAction: "none",
-              willChange: "transform",
               ...style?.base?.content,
 
               // Medium screen

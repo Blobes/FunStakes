@@ -38,7 +38,7 @@ export const AppHeader: React.FC<AppHeaderProps> = ({ scrollRef }) => {
   /* ---------------------------------- effects --------------------------------- */
   useEffect(() => {
     window.addEventListener("resize", handleWindowResize);
-    //  openMobileNav()
+    // openMobileNav()
     return () => window.removeEventListener("resize", handleWindowResize);
   }, []);
 
@@ -107,16 +107,16 @@ export const AppHeader: React.FC<AppHeaderProps> = ({ scrollRef }) => {
           onClick={() => {
             navigateTo(clientRoutes.home);
           }}
-          style={{ display: "inline-flex" }}
-        ><Image
+          style={{ display: "inline-flex" }}>
+          <Image
             src={img.logo}
             alt="logo"
             style={{
               width: 34,
               height: 34,
               borderRadius: `${theme.radius.full}`,
-            }}
-          /></AnchorLink>
+            }} />
+        </AnchorLink>
       )}
 
       {/* Search */}

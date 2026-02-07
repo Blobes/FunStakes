@@ -58,7 +58,7 @@ export const Drawer = forwardRef<DrawerRef, DrawerProps>(
 
     // Transition properties
     const baseDir = transDirection?.base || "left"
-    const mobileDir = transDirection?.mobile ?? transDirection?.base;
+    const mobileDir = transDirection?.mobile ?? baseDir;
     const transDir = isDesktop ? baseDir : mobileDir
 
     const { dragOffset, handlers, axis } = useDragClose({
@@ -138,7 +138,7 @@ export const Drawer = forwardRef<DrawerRef, DrawerProps>(
               width: style?.base?.content?.width ?? "40%",
               maxWidth: style?.base?.content?.maxWidth ?? "400px",
               touchAction: "none",
-              willChange: "transform",
+              // willChange: "transform",
 
               // Drag styling
               ...(dragOffset > 0 && {

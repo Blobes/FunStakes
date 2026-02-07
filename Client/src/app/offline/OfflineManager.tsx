@@ -3,25 +3,35 @@
 import { useController } from "@/hooks/global";
 import { Stack } from "@mui/material";
 import { useGlobalContext } from "../GlobalContext";
-import { LeftNav } from "@/app/(app)/navbars/LeftNav";
 import { useTheme } from "@mui/material/styles";
 import { useStyles } from "@/hooks/style";
-import { AppHeader } from "@/app/(app)/navbars/Header";
-import { usePathname } from "next/navigation";
-import { BottomNav } from "@/app/(app)/navbars/BottomNav";
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
+import { Header } from "./navbars/Header";
+import { LeftNav } from "./navbars/LeftNav";
+import { BottomNav } from "./navbars/BottomNav";
+import { RightSidebar } from "./sidebar/RightSidebar";
+import { usePage } from "@/hooks/page";
+import { getFromLocalStorage } from "@/helpers/storage";
+import { Page } from "@/types";
+import { clientRoutes } from "@/helpers/routes";
+import { useOffline } from "./offlineHook";
 
-export const App = ({ children }: { children: React.ReactNode }) => {
-  const { isDesktop } = useController();
+export const OfflineManager = ({ children }: { children: React.ReactNode }) => {
+  const { isDesktop, isOnline } = useController();
   const theme = useTheme();
-  const { authStatus } = useGlobalContext();
+  const { offlineMode, networkStatus } = useGlobalContext();
   const { scrollBarStyle } = useStyles();
   const scrollRef = useRef<HTMLDivElement>(null);
+  const { switchToOnlineMode } = useOffline()
+
+  useEffect(() => {
+    if (isOnline) switchToOnlineMode();
+  }, [networkStatus]);
 
   return (
     <>
-      {/* Logged in & on desktop */}
-      {authStatus === "AUTHENTICATED" && isDesktop && (
+      {/* On desktop */}
+      {offlineMode && isDesktop && (
         <Stack
           sx={{
             height: "100%",
@@ -46,14 +56,22 @@ export const App = ({ children }: { children: React.ReactNode }) => {
               },
               ...scrollBarStyle(),
             }}>
-            <AppHeader />
-            {children}
+            <Header />
+            <Stack sx={{
+              height: "100%",
+              flexDirection: "row",
+              overflow: "hidden",
+              borderTop: `1px solid ${theme.palette.gray.trans[1]}`,
+            }}>
+              {children}
+              <RightSidebar />
+            </Stack>
           </Stack>
         </Stack>
       )}
 
       {/* Logged in and NOT on a desktop screen */}
-      {authStatus === "AUTHENTICATED" && !isDesktop && (
+      {offlineMode && !isDesktop && (
         <Stack
           ref={scrollRef}
           sx={{
@@ -66,14 +84,13 @@ export const App = ({ children }: { children: React.ReactNode }) => {
             paddingBottom: theme.boxSpacing(23),
             ...scrollBarStyle(),
           }}>
-          <AppHeader scrollRef={scrollRef} />
+          <Header scrollRef={scrollRef} />
           {children}
           <BottomNav scrollRef={scrollRef} />
         </Stack>
       )}
 
-      {/* Not logged in on every screen size */}
-      {authStatus !== "AUTHENTICATED" && (
+      {!offlineMode && (
         <Stack
           sx={{
             height: "100%",
@@ -86,9 +103,9 @@ export const App = ({ children }: { children: React.ReactNode }) => {
             },
             ...scrollBarStyle(),
           }}>
-          <AppHeader />
           {children}
         </Stack>
       )}
-    </>)
+    </>
+  )
 }

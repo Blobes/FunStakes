@@ -5,6 +5,5 @@ export const AnimatedWrapper = styled(Box)(({ theme }) => ({
     display: 'inline-flex', // Fits the size of the child
     alignItems: 'center',
     justifyContent: 'center',
-    willChange: 'transform',
     overflow: "hidden"
 }));

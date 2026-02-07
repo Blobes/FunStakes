@@ -17,6 +17,7 @@ import { useNavLists } from "./NavLists";
 import { useController } from "@/hooks/global";
 import { CircleCheckBig, WalletMinimal } from "lucide-react";
 import { ThemeMode } from "@/components/ThemeSwitcher";
+import { Logout } from "@/app/(auth)/logout/Logout";
 
 export const DesktopNav = ({
   menuRef,
@@ -25,7 +26,7 @@ export const DesktopNav = ({
 }) => {
   const theme = useTheme();
   const { userNavList } = useNavLists();
-  const { setDrawerContent: setModalContent } = useGlobalContext();
+  const { closeDrawer } = useController();
 
   return (
     <Stack
@@ -44,7 +45,7 @@ export const DesktopNav = ({
             list={userNavList}
             itemAction={() => {
               menuRef.current?.closeMenu();
-              setModalContent(null);
+              closeDrawer();
             }}
             style={{
               padding: theme.boxSpacing(4, 8),
@@ -68,7 +69,7 @@ export const DesktopNav = ({
 // User info
 const UserInfo = () => {
   const theme = useTheme();
-  const authUser = useGlobalContext().authUser;
+  const { authUser } = useGlobalContext();
   if (!authUser) return null;
 
   const { firstName, lastName, profileImage, username, followers, following } =
@@ -134,7 +135,7 @@ const UserInfo = () => {
 export const MobileNav = ({ }) => {
   const theme = useTheme();
   const { userNavList } = useNavLists();
-  const { closeDrawer: closeModal } = useController();
+  const { closeDrawer } = useController();
   const menuRef = useRef<MenuRef>(null);
 
   return (
@@ -153,7 +154,7 @@ export const MobileNav = ({ }) => {
           list={userNavList}
           itemAction={() => {
             menuRef.current?.closeMenu();
-            closeModal();
+            closeDrawer();
           }}
           showCurrentPage={false}
           style={{
@@ -173,7 +174,8 @@ export const MobileNav = ({ }) => {
             },
           }}
         />
-        <Divider sx={{ marginTop: theme.boxSpacing(20) }} />
+        <Logout />
+        <Divider sx={{ marginTop: theme.boxSpacing(20) }} /> <Divider />
         <ThemeMode />
       </Stack>
     </Stack>

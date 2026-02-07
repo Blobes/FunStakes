@@ -32,7 +32,7 @@ export const BottomNav: React.FC<NavProps> = ({ scrollRef }) => {
         transform: scrollDir === "down" ? "translateY(100%)" : "translateY(0)",
 
       }}>
-      <Typography>Bottom navigation</Typography>
+      <Typography>Offline Bottom navigation</Typography>
     </AppBar>
   );
 };

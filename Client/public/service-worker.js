@@ -1,5 +1,5 @@
-const STATIC_CACHE = "funstakes-static-v3";
-const API_CACHE = "funstakes-api-v3";
+const STATIC_CACHE = "funstakes-static-v1";
+const API_CACHE = "funstakes-api-v1";
 
 // Install
 self.addEventListener("install", (event) => {
@@ -26,28 +26,28 @@ self.addEventListener("fetch", (event) => {
   const { request } = event;
   const url = new URL(request.url);
 
+  // 1. STRICT GUARD: Only intercept GET requests
   if (request.method !== "GET") return;
 
-  /* NEVER CACHE SERVER APIs */
-  if (url.pathname.startsWith("/api/")) return;
+  // 2. STRICT GUARD: Completely ignore anything starting with /api
+  if (url.pathname.startsWith("/api")) return;
 
-  /* NEXT STATIC ASSETS */
-  if (url.pathname.startsWith("/_next/static")) {
-    event.respondWith(cacheFirst(request, STATIC_CACHE));
-    return;
-  }
-
-  /* MANIFEST + ICONS */
-  if (
+  // 3. ALLOW-LIST: Static Assets (Next.js internals, manifest, images)
+  const isStaticAsset =
+    url.pathname.startsWith("/_next/static") ||
+    url.pathname.startsWith("/images") || // Add your images folder if applicable
     url.pathname === "/manifest.json" ||
     url.pathname.endsWith(".png") ||
-    url.pathname.endsWith(".ico")
-  ) {
+    url.pathname.endsWith(".jpg") ||
+    url.pathname.endsWith(".ico") ||
+    url.pathname.endsWith(".svg");
+
+  if (isStaticAsset) {
     event.respondWith(cacheFirst(request, STATIC_CACHE));
     return;
   }
 
-  /* STATIC WEB PAGES */
+  // 4. ALLOW-LIST: Static Pages & Offline Shell
   const staticPages = [
     "/about",
     "/support",
@@ -56,27 +56,18 @@ self.addEventListener("fetch", (event) => {
     "/terms",
     "/blogs",
     "/news",
+    "/offline",
   ];
-  const isWeb = staticPages.some((page) => url.pathname.startsWith(page));
-  if (isWeb) {
+
+  const isStaticPage = staticPages.some(
+    (page) => url.pathname === page || url.pathname.startsWith(page + "/"),
+  );
+
+  if (isStaticPage) {
     event.respondWith(cacheFirst(request, STATIC_CACHE));
     return;
   }
-
-  /* POST PAGES */
-  if (url.pathname === "/" || url.pathname.startsWith("/post")) {
-    event.respondWith(networkFirst(request, STATIC_CACHE));
-    return;
-  }
-
-  /* API DATA */
-  // if (
-  //   url.pathname.startsWith("/api/posts") ||
-  //   url.pathname.startsWith("/api/users")
-  // ) {
-  //   event.respondWith(networkFirst(request, API_CACHE));
-  //   return;
-  // }
+  return;
 });
 
 /* ---------- STRATEGIES ---------- */

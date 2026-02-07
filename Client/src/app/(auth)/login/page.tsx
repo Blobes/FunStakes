@@ -1,7 +1,7 @@
 "use client";
 
 import { useTheme } from "@mui/material/styles";
-import { AuthStepper } from "./AuthStepper";
+import { LoginStepper } from "./LoginStepper";
 import { Stack } from "@mui/material";
 import { useGlobalContext } from "@/app/GlobalContext";
 import { clientRoutes } from "@/helpers/routes";
@@ -30,7 +30,7 @@ export default function LoginPage() {
         ...applyBGPattern()
       }}>
       {authStatus === "UNAUTHENTICATED" ? (
-        <AuthStepper
+        <LoginStepper
           style={{
             container: {
               width: "400px",

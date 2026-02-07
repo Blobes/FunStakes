@@ -29,6 +29,9 @@ export const clientRoutes: Record<string, Page> = {
   wallet: { title: "Wallet", path: "/wallet" },
   vibes: { title: "Vibes", path: "/vibes" },
   voices: { title: "Voices", path: "/voices" },
+
+  // Offline
+  offline: { title: "Home", path: "/offline" },
 } as const;
 
 export const registeredRoutes = {
@@ -43,6 +46,7 @@ export const registeredRoutes = {
     clientRoutes.news.path,
   ],
   app: [clientRoutes.home.path, clientRoutes.post.path],
+  offline: [clientRoutes.offline.path],
 };
 
 export const disallowedRoutes: string[] = [];

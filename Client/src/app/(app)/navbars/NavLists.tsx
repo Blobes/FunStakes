@@ -1,6 +1,8 @@
 "use client";
 import { useAuth } from "@/app/(auth)/authHook";
+import { ComfirmLogout } from "@/app/(auth)/logout/Logout";
 import { clientRoutes } from "@/helpers/routes";
+import { useController } from "@/hooks/global";
 import { NavItem } from "@/types";
 import {
   AudioLines,
@@ -20,7 +22,8 @@ import {
 } from "lucide-react";
 
 export const useNavLists = () => {
-  const { handleLogout } = useAuth();
+  const { openModal } = useController();
+
 
   // User profile navigation list visible to only logged-in users
   const userNavList: NavItem[] = [
@@ -48,12 +51,6 @@ export const useNavLists = () => {
       title: clientRoutes.settings.title,
       element: <Settings />,
       url: clientRoutes.settings.path,
-    },
-
-    {
-      title: "Logout",
-      element: <LogOut />,
-      action: async () => await handleLogout(),
     },
   ];
 

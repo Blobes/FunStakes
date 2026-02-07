@@ -1,20 +1,15 @@
 "use client";
 
-import React, { useEffect, useRef, MouseEvent } from "react";
-import { AppBar, Stack, IconButton, } from "@mui/material";
+import { AppBar, Stack } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
-import { useRouter } from "next/navigation";
 import { useGlobalContext } from "@/app/GlobalContext";
 import { useController } from "@/hooks/global";
-import { DesktopNav, MobileNav } from "./Nav";
 import { SearchContainer } from "@/components/Search";
-import { UserAvatar } from "@/components/UserAvatar";
+import OfflineAvatar from "@/assets/svgs/offline-avatar.svg"
 import { AnchorLink, AppButton } from "@/components/Buttons";
-import { MenuRef } from "@/components/Menus";
 import { clientRoutes } from "@/helpers/routes";
 import { img } from "@/assets/exported";
 import Image from "next/image";
-import { Bell } from "lucide-react";
 import { zIndexes } from "@/helpers/global";
 import { usePage } from "@/hooks/page";
 import { usePageScroll } from "@/hooks/pageScroll";
@@ -22,55 +17,14 @@ import { usePageScroll } from "@/hooks/pageScroll";
 interface AppHeaderProps {
   scrollRef?: React.RefObject<HTMLElement | null>;
 }
-export const AppHeader: React.FC<AppHeaderProps> = ({ scrollRef }) => {
+export const Header: React.FC<AppHeaderProps> = ({ scrollRef }) => {
   const { authStatus } = useGlobalContext();
-  const { openDrawer: openModal, closeDrawer: closeModal, isDesktop, handleWindowResize } = useController();
-  const { setLastPage, navigateTo } = usePage();
+  const { isDesktop } = useController();
+  const { navigateTo } = usePage();
   const { handlePageScroll } = usePageScroll();
   const theme = useTheme();
-  const router = useRouter();
   const isLoggedIn = authStatus === "AUTHENTICATED";
-  const menuRef = useRef<MenuRef>(null);
   const scrollDir = handlePageScroll(scrollRef);
-
-
-  /* ---------------------------------- effects --------------------------------- */
-  useEffect(() => {
-    window.addEventListener("resize", handleWindowResize);
-    //  openMobileNav()
-    return () => window.removeEventListener("resize", handleWindowResize);
-  }, []);
-
-  /* -------------------------------- handlers --------------------------------- */
-
-  const handleNotification = (e: MouseEvent<HTMLAnchorElement>) => {
-    e.preventDefault();
-    setLastPage(clientRoutes.notifications);
-    router.push(clientRoutes.notifications.path);
-  };
-
-  const openMobileNav = () =>
-    openModal({
-      header: <UserAvatar style={{ width: "35px", height: "35px" }} />,
-      content: <MobileNav />,
-      source: "navbar",
-      dragToClose: true,
-      transDirection: {
-        mobile: { type: "slide", direction: "left" },
-      },
-      onClose: closeModal,
-      style: {
-        base: { overlay: { padding: theme.boxSpacing(6) } },
-        smallScreen: {
-          overlay: { padding: theme.boxSpacing(0) },
-          content: { height: "100%", borderRadius: "0px" }
-        },
-        header: {
-          justifyContent: "space-between",
-          padding: theme.boxSpacing(5, 8),
-        },
-      },
-    });
 
   /* ---------------------------------- render ---------------------------------- */
   return (
@@ -93,17 +47,8 @@ export const AppHeader: React.FC<AppHeaderProps> = ({ scrollRef }) => {
         }),
       }}>
 
-      {/* Notification */}
-      {isLoggedIn && !isDesktop && (
-        <IconButton
-          onClick={handleNotification}
-          href={clientRoutes.notifications.path}>
-          <Bell />
-        </IconButton>
-      )}
-
       {/* Logo */}
-      {(!isLoggedIn || isLoggedIn && !isDesktop) && (
+      {(!isDesktop) && (
         <AnchorLink
           url={clientRoutes.home.path}
           onClick={() => {
@@ -122,29 +67,19 @@ export const AppHeader: React.FC<AppHeaderProps> = ({ scrollRef }) => {
       )}
 
       {/* Search */}
-      {(isDesktop && isLoggedIn) && <SearchContainer />}
+      {isDesktop && <SearchContainer />}
 
-      {/* Right controls */}
+      {/* Right side elements */}
       <Stack direction="row" alignItems="center" spacing={theme.gap(8)}>
-        {isLoggedIn && (
-          <>
-            {isDesktop && <DesktopNav menuRef={menuRef} />}
-            <UserAvatar
-              toolTipValue="Open menu"
-              style={{
-                width: "34px", height: "34px",
-                [theme.breakpoints.down("md")]: {
-                  width: "28px", height: "28px"
-                },
-              }}
-              action={(e) => {
-                isDesktop
-                  ? menuRef.current?.openMenu(e.currentTarget)
-                  : openMobileNav();
-              }}
-            />
-          </>
-        )}
+        <OfflineAvatar
+          style={{
+            width: "34px", height: "34px",
+            [theme.breakpoints.down("md")]: {
+              width: "28px", height: "28px"
+            },
+          }} />
+
+
 
         {/* Login Button */}
         {authStatus === "UNAUTHENTICATED" && (

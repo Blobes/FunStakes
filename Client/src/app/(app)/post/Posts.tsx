@@ -14,16 +14,17 @@ import { Empty } from "@/components/Empty";
 import { useRouter } from "next/navigation";
 import { RadioTower } from "lucide-react";
 import { useStyles } from "@/hooks/style";
+import { useOfflinePost } from "@/app/offline/(post)/hook";
 
 export const Posts = () => {
   const theme = useTheme();
   const { getAllPost } = usePost();
   const [posts, setPosts] = useState<Post[]>([]);
   const [message, setMessage] = useState<string | null>(null);
-  const { authStatus } = useGlobalContext();
   const [isLoading, setLoading] = useState(false);
   const router = useRouter();
   const { autoScroll } = useStyles();
+  const { cachePosts } = useOfflinePost()
 
   const renderPosts = async () => {
     try {
@@ -33,6 +34,7 @@ export const Posts = () => {
       if (res?.payload) {
         setPosts(res.payload);
         setMessage(res.message);
+        cachePosts(res.payload)
       }
     } finally {
       setLoading(false);
@@ -41,7 +43,7 @@ export const Posts = () => {
 
   useEffect(() => {
     renderPosts();
-  }, [authStatus]);
+  }, []);
 
   return (
     <Stack
@@ -61,7 +63,7 @@ export const Posts = () => {
           ...(!isLoading && autoScroll().mobile),
         },
       }}>
-      {authStatus === "AUTHENTICATED" && <CreatePost />}
+      <CreatePost />
       <Divider sx={{ borderColor: theme.palette.gray.trans[1], margin: 0 }} />
       {isLoading ? (
         <Stack

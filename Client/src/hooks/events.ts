@@ -5,18 +5,28 @@ import { useSnackbar } from "./snackbar";
 import { useController } from "./global";
 import { useAuth } from "@/app/(auth)/authHook";
 import { getCookie, setCookie } from "@/helpers/storage";
+import { useGlobalContext } from "@/app/GlobalContext";
+import { useOffline } from "@/app/offline/offlineHook";
 
 export const useEvent = () => {
   const router = useRouter();
   const { setSBMessage, removeSBMessage } = useSnackbar();
   const { verifySignal } = useController();
   const { verifyAuth } = useAuth();
+  const { setGlobalLoading } = useGlobalContext();
+  const { switchToOnlineMode } = useOffline();
 
   const handleBrowserEvents = (authInit?: React.MutableRefObject<boolean>) => {
     const online = async () => {
       removeSBMessage();
+      setGlobalLoading(true);
+      // Switch back to online mode
+      switchToOnlineMode();
+
+      // Reverify auth & network signal
       await verifySignal();
       await verifyAuth();
+      setGlobalLoading(false);
     };
 
     const offline = () => {
@@ -44,11 +54,9 @@ export const useEvent = () => {
           authInit.current = true;
           await verifyAuth();
         }
-        console.log("Visible");
       }
       if (document.visibilityState === "hidden") {
         setCookie("recently_away", "true", 12);
-        console.log("Hidden");
       }
     };
 

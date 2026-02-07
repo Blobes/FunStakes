@@ -18,7 +18,7 @@ interface StepperProps {
   };
 }
 
-export const AuthStepper: React.FC<StepperProps> = ({ style = {} }) => {
+export const LoginStepper: React.FC<StepperProps> = ({ style = {} }) => {
   const theme = useTheme();
   const [email, setEmail] = useState("");
   const [currStep, setCurrStep] = useState("email");

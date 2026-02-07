@@ -14,17 +14,14 @@ import { getFromLocalStorage } from "@/helpers/storage";
 import { useController } from "./global";
 
 export const usePage = () => {
-  const {
-    setPage,
-    lastPage,
-    drawerContent: modalContent,
-    setGlobalLoading,
-  } = useGlobalContext();
-  const { closeDrawer: closeModal } = useController();
+  const { setPage, lastPage, drawerContent, modalContent, setGlobalLoading } =
+    useGlobalContext();
+  const { closeDrawer, closeModal } = useController();
   const router = useRouter();
 
   const isOnWeb = (path: string) => registeredRoutes.web.includes(path);
   const isOnAuth = (path: string) => registeredRoutes.auth.includes(path);
+  const isOnOffline = (path: string) => registeredRoutes.offline.includes(path);
   const isOnDisallowedRoutes = (path: string) =>
     disallowedRoutes.includes(path);
   const pathname = usePathname();
@@ -46,6 +43,7 @@ export const usePage = () => {
     const savePage = options.savePage ?? true;
     const loadPage = options.loadPage ?? false;
 
+    if (drawerContent) closeDrawer();
     if (modalContent) closeModal();
 
     if (loadPage) {
@@ -64,8 +62,10 @@ export const usePage = () => {
 
   const handleCurrentPage = () => {
     const isOnAuthRoute = isOnAuth(pathname);
+    const isOnOfflineRoute = isOnOffline(pathname);
     const savedPage = getFromLocalStorage<Page>();
-    const pagePath = !isOnAuthRoute ? pathname : lastPage.path;
+    const pagePath =
+      !isOnAuthRoute && !isOnOfflineRoute ? pathname : lastPage.path;
 
     setLastPage(
       isOnAuthRoute && savedPage
@@ -86,5 +86,6 @@ export const usePage = () => {
     navigateTo,
     handleCurrentPage,
     isOnDisallowedRoutes,
+    isOnOffline,
   };
 };

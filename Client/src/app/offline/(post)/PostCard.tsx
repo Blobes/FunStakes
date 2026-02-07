@@ -7,28 +7,22 @@ import {
   IconButton,
 } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
-import { useGlobalContext } from "@/app/GlobalContext";
 import { UserAvatar } from "@/components/UserAvatar";
 import { GenericObject, IUser } from "@/types";
 import { useCallback, useEffect, useState } from "react";
 import { pulse } from "@/helpers/animations";
-import { usePost } from "./hook";
+import { useOfflinePost } from "./hook";
 import { Post } from "@/types";
 import { red } from "@mui/material/colors";
 import { summarizeNum } from "@/helpers/numberSum";
-import { LoginStepper } from "@/app/(auth)/login/LoginStepper";
 import { Empty } from "@/components/Empty";
 import { EllipsisVertical, Heart, Send, UserPlus, Bookmark, MessageCircle } from "lucide-react";
 import { useSnackbar } from "@/hooks/snackbar";
-import { useController } from "@/hooks/global";
 import { AnimatedWrapper } from "@/components/AnimationWrapper";
 import { img } from "@/assets/exported";
-import Image from "next/image";
 import { Strip } from "@/components/StripBar";
 import { SmartDate } from "@/components/SmartDate";
 import { SingleMedia } from "@/components/Media";
-import { vibrate } from "@/helpers/global";
-import { useOfflinePost } from "@/app/offline/(post)/hook";
 
 interface PostProps {
   post: Post;
@@ -37,102 +31,48 @@ interface PostProps {
 
 export const PostCard = ({ post, style = {} }: PostProps) => {
   const theme = useTheme();
-  const { authStatus, setDrawerContent: setModalContent } = useGlobalContext();
-  const { isOffline, isUnstableNetwork } = useController();
-  const {
-    handlePostLike,
-    fetchAuthor,
-    getPendingLike,
-    setPendingLike,
-    clearPendingLike,
-  } = usePost();
-  const [postData, setPostData] = useState<Post>(post);
   const [author, setAuthor] = useState<IUser | null>(null);
   const [message, setMessage] = useState<string | null>(null);
-  const [isLiking, setIsLiking] = useState(false);
+  const [isLiking] = useState(false);
   const { setSBMessage } = useSnackbar();
-  const { cacheAuthor } = useOfflinePost()
+  const { getCachedAuthor } = useOfflinePost()
 
-  const { _id, authorId, content, postImage, createdAt,
+  const { authorId, content, postImage, createdAt,
     status, likeCount, likedByMe,
-  } = postData;
+  } = post;
 
   // Fetch author once
   const handleAuthor = useCallback(async () => {
     if (!authorId) return;
     try {
-      const res = await fetchAuthor(authorId);
-      if (res) {
-        setAuthor(res);
-        cacheAuthor(res);
+      const cachedAuthor = await getCachedAuthor(authorId);
+      if (cachedAuthor) {
+        setAuthor(cachedAuthor);
       } else {
         setMessage("Failed to load author")
       };
     } catch {
       setMessage("Failed to load author");
     }
-  }, [authorId, fetchAuthor]);
+  }, [authorId]);
 
-  // Hydrate pending like from localStorage once
+
   useEffect(() => {
     handleAuthor();
-
-    const pendingLike = getPendingLike(_id);
-    if (pendingLike !== null && pendingLike !== likedByMe) {
-      setPostData((prev) => ({
-        ...prev,
-        likedByMe: pendingLike,
-        likeCount: prev.likeCount + (pendingLike ? 1 : -1),
-      }));
-    }
-  }, [_id, handleAuthor]);
+  }, [handleAuthor]);
 
   // Handle like/unlike
-  const handleLike = async () => {
-    if (authStatus === "UNAUTHENTICATED") {
-      setModalContent({ content: <LoginStepper /> });
-      return;
-    }
-    if (isOffline || isUnstableNetwork) {
-      setSBMessage({
-        msg: {
-          content: "Something went wrong.",
-          msgStatus: "ERROR",
-          behavior: "FIXED",
-        },
-        override: true,
-      });
-      return;
-    }
-
-    setIsLiking(true);
-    // Optimistic update
-    setPostData((prev) => {
-      const nextLiked = !prev.likedByMe;
-      const nextCount = prev.likeCount + (nextLiked ? 1 : -1);
-      // persist pending like
-      setPendingLike(_id, nextLiked);
-      return { ...prev, likedByMe: nextLiked, likeCount: nextCount };
+  const handleInteraction = async () => {
+    setSBMessage({
+      msg: {
+        content: "You can't engage with an offline post .",
+        msgStatus: "ERROR",
+        behavior: "FIXED",
+      },
+      override: true,
     });
-    if (!likedByMe) vibrate() // Vibrate on like
-
-    try {
-      const payload = await handlePostLike(_id); // pass state to backend
-      if (payload) {
-        // sync with server
-        setPostData((prev) => ({
-          ...prev,
-          likedByMe: payload.likedByMe,
-          likeCount: payload.likeCount,
-        }));
-        clearPendingLike(_id);
-      }
-    } catch {
-      clearPendingLike(_id);
-    } finally {
-      setIsLiking(false);
-    }
-  };
+    return;
+  }
 
   if (!author)
     return (
@@ -206,7 +146,7 @@ export const PostCard = ({ post, style = {} }: PostProps) => {
           }} />
 
         {/* Follow user icon */}
-        <IconButton sx={{
+        <IconButton onClick={handleInteraction} sx={{
           padding: theme.boxSpacing(1),
           borderRadius: theme.radius[1],
         }}>
@@ -287,7 +227,6 @@ export const PostCard = ({ post, style = {} }: PostProps) => {
             transition: "transform 0.3s ease-in-out",
             background: "none",
           }
-
         }} >
           {/* Like */}
           <IconButton
@@ -295,7 +234,7 @@ export const PostCard = ({ post, style = {} }: PostProps) => {
               padding: theme.boxSpacing(0),
               borderRadius: theme.radius[0],
             }}
-            onClick={handleLike}>
+            onClick={handleInteraction}>
             <AnimatedWrapper sx={{
               ...(isLiking && { animation: `${pulse()} 0.3s linear ` }),
             }}>
@@ -303,7 +242,7 @@ export const PostCard = ({ post, style = {} }: PostProps) => {
                 size={26}
                 style={{
                   fill: likedByMe ? red[500] : "none",
-                  stroke: postData.likedByMe
+                  stroke: post.likedByMe
                     ? (red[500] as string)
                     : (theme.palette.gray[200] as string),
                 }}
@@ -312,18 +251,21 @@ export const PostCard = ({ post, style = {} }: PostProps) => {
           </IconButton>
 
           {/* Comments */}
-          <IconButton sx={{ padding: theme.boxSpacing(0), borderRadius: theme.radius[0] }}>
+          <IconButton onClick={handleInteraction}
+            sx={{ padding: theme.boxSpacing(0), borderRadius: theme.radius[0] }}>
             <MessageCircle size={24} />
           </IconButton>
 
           {/* Share */}
-          <IconButton sx={{ padding: theme.boxSpacing(0), borderRadius: theme.radius[0] }}>
+          <IconButton onClick={handleInteraction}
+            sx={{ padding: theme.boxSpacing(0), borderRadius: theme.radius[0] }}>
             <Send size={24} />
           </IconButton>
         </Stack>
 
         {/* Bookmark */}
         <IconButton
+          onClick={handleInteraction}
           sx={{
             padding: theme.boxSpacing(0),
             borderRadius: theme.radius[0],

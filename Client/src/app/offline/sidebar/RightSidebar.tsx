@@ -24,9 +24,8 @@ export const RightSidebar = () => {
           ...autoScroll().mobile,
         },
       }}>
-      <ProfileCard />
       <Typography variant="subtitle1" sx={{ width: "100%" }}>
-        Those following you
+        Recently Viewed Images & Videos
       </Typography>
     </Stack>
   );

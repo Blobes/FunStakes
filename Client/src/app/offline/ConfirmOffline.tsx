@@ -1,0 +1,54 @@
+import { AppButton } from "@/components/Buttons";
+import { clientRoutes } from "@/helpers/routes";
+import { Stack, Typography } from "@mui/material"
+import { useTheme } from "@mui/material/styles";
+import { Footer } from "../(web)/navbars/Footer";
+import { useGlobalContext } from "../GlobalContext";
+import { ScreenShareOff } from "lucide-react";
+
+export const ConfirmOffline = () => {
+    const { setOfflineMode } = useGlobalContext();
+    const theme = useTheme();
+
+    return (
+        <>
+            <Stack
+                sx={{
+                    alignItems: "center",
+                    textAlign: "center",
+                    justifyContent: "center",
+                    height: "100%",
+                    width: "100%",
+                    minHeight: "fit-content",
+                    padding: theme.boxSpacing(12),
+                    gap: theme.gap(6)
+                }}>
+                <ScreenShareOff size={70}
+                    style={{
+                        marginBottom: theme.boxSpacing(8),
+                        strokeWidth: "1.5px"
+                    }} />
+                <Typography variant="h4" component="h4">
+                    You seem to be offline
+                </Typography>
+                <Typography variant="body3" component="p">
+                    Switch to offline mode to view saved contents.
+                </Typography>
+                <AppButton
+                    variant="outlined"
+                    href={clientRoutes.signup.path}
+                    onClick={() => setOfflineMode(true)}
+                    style={{
+                        fontSize: "15px",
+                        marginTop: theme.boxSpacing(8),
+                        padding: theme.boxSpacing(2, 8, 3, 8),
+                    }}>
+                    Use offline mode
+                </AppButton>
+            </Stack>
+            <Footer />
+        </>
+    )
+}
+
+

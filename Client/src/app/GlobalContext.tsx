@@ -35,6 +35,8 @@ interface Context {
   setNetworkStatus: React.Dispatch<React.SetStateAction<NetworkStatus>>;
   checkingSignal: boolean;
   setSignalCheck: React.Dispatch<React.SetStateAction<boolean>>;
+  offlineMode: boolean;
+  setOfflineMode: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const context = createContext<Context | null>(null);
@@ -53,11 +55,12 @@ export const ContextProvider = ({
   const [inlineMsg, setInlineMsg] = useState<string | null>(null);
   const [isGlobalLoading, setGlobalLoading] = useState(false);
   const [isAuthLoading, setAuthLoading] = useState(false);
-  const [lastPage, setPage] = useState<Page>(clientRoutes.about);
+  const [lastPage, setPage] = useState<Page>(clientRoutes.home);
   const [drawerContent, setDrawerContent] = useState<DrawerContent | null>(null);
   const [modalContent, setModalContent] = useState<ModalProps | null>(null);
   const [networkStatus, setNetworkStatus] = useState<NetworkStatus>("UNKNOWN");
   const [checkingSignal, setSignalCheck] = useState(false);
+  const [offlineMode, setOfflineMode] = useState(false);
 
   return (
     <context.Provider
@@ -83,7 +86,9 @@ export const ContextProvider = ({
         networkStatus,
         setNetworkStatus,
         checkingSignal,
-        setSignalCheck
+        setSignalCheck,
+        offlineMode,
+        setOfflineMode
       }}>
       {children}
     </context.Provider>

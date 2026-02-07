@@ -24,9 +24,6 @@ export const DesktopNav: React.FC<NavProps> = ({ style }) => {
     <Stack sx={{ ...style }}>
       <RenderItemList
         list={headerNavList}
-        itemAction={() => {
-          menuRef.current?.closeMenu();
-        }}
         style={{
           padding: theme.boxSpacing(2.5, 6, 2.5, 6),
           fontWeight: "500",
@@ -46,6 +43,7 @@ export const MobileNav: React.FC<NavProps> = ({ style }) => {
   const menuRef = useRef<MenuRef>(null);
   const { navigateTo } = usePage();
   const { authStatus } = useGlobalContext();
+  const { closeDrawer } = useController();
 
   return (
     <Stack sx={{ ...style }}>
@@ -53,6 +51,7 @@ export const MobileNav: React.FC<NavProps> = ({ style }) => {
         list={headerNavList}
         itemAction={() => {
           menuRef.current?.closeMenu();
+          closeDrawer()
         }}
         style={{
           padding: theme.boxSpacing(4, 6),

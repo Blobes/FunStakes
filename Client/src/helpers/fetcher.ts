@@ -74,48 +74,47 @@ interface TokenCheckResponse {
   message?: string;
   status?: "SUCCESS" | "UNAUTHORIZED" | "ERROR";
 }
-export const fetchUserWithTokenCheck =
-  async (): Promise<TokenCheckResponse> => {
-    try {
-      const res = await fetcher<{ user: IUser }>(serverApi.verifyAuthToken);
-      return { payload: res.user, status: "SUCCESS" };
-    } catch (err: any) {
-      const status = typeof err?.status === "number" ? err.status : undefined;
+export const verifyAndFetchUser = async (): Promise<TokenCheckResponse> => {
+  try {
+    const res = await fetcher<{ user: IUser }>(serverApi.verifyAuthToken);
+    return { payload: res.user, status: "SUCCESS" };
+  } catch (err: any) {
+    const status = typeof err?.status === "number" ? err.status : undefined;
 
-      // Catch 401 (Missing/Expired) OR 403 (Invalid)
-      if (status === 401 || status === 403) {
-        // Try to refresh once
-        const refreshed = await refreshAccessToken();
-        if (refreshed) {
-          try {
-            const retryRes = await fetcher<{ user: IUser }>(
-              serverApi.verifyAuthToken,
-            );
-            return { payload: retryRes.user, status: "SUCCESS" };
-          } catch {
-            return {
-              payload: null,
-              status: "ERROR",
-            };
-          }
+    // Catch 401 (Missing/Expired) OR 403 (Invalid)
+    if (status === 401 || status === 403) {
+      // Try to refresh once
+      const refreshed = await refreshAccessToken();
+      if (refreshed) {
+        try {
+          const retryRes = await fetcher<{ user: IUser }>(
+            serverApi.verifyAuthToken,
+          );
+          return { payload: retryRes.user, status: "SUCCESS" };
+        } catch {
+          return {
+            payload: null,
+            status: "ERROR",
+          };
         }
-        return {
-          payload: null,
-          status: "UNAUTHORIZED",
-        };
       }
-
-      // Check if it's a network error (incl. timeout, unknown;
-      //  fetcher sets status 0 for these)
-      const networkError = checkNetworkError(err);
-      if (networkError) return networkError as TokenCheckResponse;
-
       return {
         payload: null,
-        status: "ERROR",
+        status: "UNAUTHORIZED",
       };
     }
-  };
+
+    // Check if it's a network error (incl. timeout, unknown;
+    //  fetcher sets status 0 for these)
+    const networkError = checkNetworkError(err);
+    if (networkError) return networkError as TokenCheckResponse;
+
+    return {
+      payload: null,
+      status: "ERROR",
+    };
+  }
+};
 
 const refreshAccessToken = async () => {
   try {

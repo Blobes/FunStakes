@@ -1,15 +1,15 @@
 import { useTheme } from "@mui/material";
-import { useRouter } from "next/navigation";
 import { Empty } from "@/components/Empty";
 import { Unplug } from "lucide-react";
 import { ProgressIcon } from "./ProgressIcon";
 import { useGlobalContext } from "@/app/GlobalContext";
 import { RootUIContainer } from "./Containers";
+import { useController } from "@/hooks/global";
 
 export const NetworkGlitchUI = () => {
   const theme = useTheme();
-  const router = useRouter();
   const { checkingSignal } = useGlobalContext();
+  const { isUnstableNetwork } = useController();
 
   return (
     <RootUIContainer
@@ -18,7 +18,7 @@ export const NetworkGlitchUI = () => {
         justifyContent: "center",
         gap: theme.gap(30)
       }}>
-      {checkingSignal ? (
+      {isUnstableNetwork && checkingSignal ? (
         <ProgressIcon otherProps={{ size: "30px" }} info="Retrieving connection..." />
       ) :
         (<Empty

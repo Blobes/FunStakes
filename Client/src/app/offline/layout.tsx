@@ -1,6 +1,6 @@
 "use client"
 
-import { App } from "./App";
+import { OfflineManager } from "./OfflineManager";
 import { RootUIContainer } from "@/components/Containers";
 
 export default function AppLayout({
@@ -10,7 +10,7 @@ export default function AppLayout({
 }>) {
   return (
     <RootUIContainer>
-      <App>{children}</App>
+      <OfflineManager>{children}</OfflineManager>
     </RootUIContainer>
   )
 }

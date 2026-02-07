@@ -474,3 +474,10 @@ const wasLoggedIn = getCookie("was_logged_in"); // Our persistent memory
 ...handlers
 })}
 cursor: dragToClose ? "grab" : "default"
+
+// Try to load from IndexedDB first for instant UI
+const cachedPosts = await getCachedPosts();
+if (cachedPosts) {
+setPosts(cachedPosts);
+console.log("Hello")
+}

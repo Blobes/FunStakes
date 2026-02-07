@@ -21,7 +21,7 @@ export const LeftNav = () => {
           ...autoScroll().mobile,
         },
       }}>
-      <Typography>Left hand navigation</Typography>
+      <Typography>Offline Left hand navigation</Typography>
     </Stack>
   );
 };

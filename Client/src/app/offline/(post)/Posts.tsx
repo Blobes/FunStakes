@@ -4,7 +4,6 @@ import { Stack } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import { useEffect, useState } from "react";
 import { Post } from "@/types";
-import { usePost } from "./hook";
 import { useGlobalContext } from "@/app/GlobalContext";
 import { delay } from "@/helpers/global";
 import { ProgressIcon } from "@/components/ProgressIcon";
@@ -12,13 +11,13 @@ import { Empty } from "@/components/Empty";
 import { useRouter } from "next/navigation";
 import { RadioTower } from "lucide-react";
 import { useStyles } from "@/hooks/style";
-import { PostCard } from "@/app/(app)/post/PostCard";
+import { PostCard } from "./PostCard";
+import { useOfflinePost } from "./hook";
 
 export const Posts = () => {
   const theme = useTheme();
-  const { getAllPost } = usePost();
+  const { getCachedPosts } = useOfflinePost();
   const [posts, setPosts] = useState<Post[]>([]);
-  const [message, setMessage] = useState<string | null>(null);
   const { authStatus } = useGlobalContext();
   const [isLoading, setLoading] = useState(false);
   const router = useRouter();
@@ -28,11 +27,9 @@ export const Posts = () => {
     try {
       setLoading(true);
       await delay();
-      const res = await getAllPost();
-      if (res?.payload) {
-        setPosts(res.payload);
-        setMessage(res.message);
-      }
+      const cachedPosts = await getCachedPosts();
+      if (cachedPosts) setPosts(cachedPosts);
+
     } finally {
       setLoading(false);
     }
@@ -71,7 +68,7 @@ export const Posts = () => {
         </Stack>
       ) : posts.length < 1 ? (
         <Empty
-          tagline={message || "Something went wrong, check your network"}
+          tagline="Can't load offline posts"
           icon={<RadioTower />}
           primaryCta={{
             type: "ICON",
