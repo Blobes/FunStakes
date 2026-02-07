@@ -10,8 +10,8 @@ self.addEventListener("install", (event) => {
         "/offline",
         "/manifest.json",
         "/favicon.ico",
-        "/assets/images",
-        "/assets/svgs",
+        // "/assets/images",
+        // "/assets/svgs",
       ]);
     }),
   );
