@@ -3,6 +3,18 @@ const API_CACHE = "funstakes-api-v1";
 
 // Install
 self.addEventListener("install", (event) => {
+  event.waitUntil(
+    caches.open(STATIC_CACHE).then((cache) => {
+      // Add the /offline route and essential assets here
+      return cache.addAll([
+        "/offline",
+        "/manifest.json",
+        "/favicon.ico",
+        "/assets/images",
+        "/assets/svgs",
+      ]);
+    }),
+  );
   self.skipWaiting();
 });
 
@@ -67,7 +79,17 @@ self.addEventListener("fetch", (event) => {
     event.respondWith(cacheFirst(request, STATIC_CACHE));
     return;
   }
-  return;
+
+  if (request.mode === "navigate") {
+    event.respondWith(
+      fetch(request).catch(async () => {
+        const cache = await caches.open(STATIC_CACHE);
+        // Serve the pre-cached /offline page instead of the browser error
+        return (await cache.match("/offline")) || Response.error();
+      }),
+    );
+    return;
+  }
 });
 
 /* ---------- STRATEGIES ---------- */
@@ -75,11 +97,30 @@ self.addEventListener("fetch", (event) => {
 async function cacheFirst(request, cacheName) {
   const cache = await caches.open(cacheName);
   const cached = await cache.match(request);
+
+  // If found in cache, return it immediately
   if (cached) return cached;
 
-  const fresh = await fetch(request);
-  cache.put(request, fresh.clone());
-  return fresh;
+  try {
+    // Attempt to get it from network
+    const fresh = await fetch(request);
+    // Only cache if the response is valid
+    if (fresh && fresh.status === 200) {
+      cache.put(request, fresh.clone());
+    }
+    return fresh;
+  } catch (error) {
+    // This block catches the "Failed to fetch" error when offline
+    console.warn("CacheFirst: Network failed and no cache available", error);
+
+    // If it's a page navigation, return the offline shell
+    if (request.mode === "navigate") {
+      return await cache.match("/offline");
+    }
+
+    // Otherwise, return a generic error response
+    return new Response("Offline and resource not cached", { status: 503 });
+  }
 }
 
 async function networkFirst(request, cacheName) {
