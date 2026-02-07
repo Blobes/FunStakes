@@ -48,7 +48,6 @@ export const GlobalManager = ({ children }: { children: React.ReactNode }) => {
                 hasAuthInit.current = true;
                 await verifyAuth();
             }
-
         }
         init();
     }, [networkStatus, authStatus, offlineMode]);
