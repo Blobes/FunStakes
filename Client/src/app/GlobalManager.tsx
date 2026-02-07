@@ -33,6 +33,9 @@ export const GlobalManager = ({ children }: { children: React.ReactNode }) => {
 
     useEffect(() => {
         const init = async () => {
+            // Register service worker
+            registerSW()
+
             // Delay a little for splash
             await delay();
             setMounted(false);
@@ -45,8 +48,7 @@ export const GlobalManager = ({ children }: { children: React.ReactNode }) => {
                 hasAuthInit.current = true;
                 await verifyAuth();
             }
-            // Register service worker
-            registerSW()
+
         }
         init();
     }, [networkStatus, authStatus, offlineMode]);
