@@ -96,30 +96,37 @@ self.addEventListener("fetch", (event) => {
 
 async function cacheFirst(request, cacheName) {
   const cache = await caches.open(cacheName);
-  const cached = await cache.match(request);
-
-  // If found in cache, return it immediately
-  if (cached) return cached;
 
   try {
-    // Attempt to get it from network
+    const cached = await cache.match(request);
+    if (cached) return cached;
+
+    // Not in cache, try network
     const fresh = await fetch(request);
-    // Only cache if the response is valid
-    if (fresh && fresh.status === 200) {
+
+    // Optimization: Only cache successful standard responses
+    if (fresh && fresh.status === 200 && fresh.type === "basic") {
       cache.put(request, fresh.clone());
     }
     return fresh;
   } catch (error) {
-    // This block catches the "Failed to fetch" error when offline
-    console.warn("CacheFirst: Network failed and no cache available", error);
+    // This is where the "Failed to fetch" is caught
+    console.warn(
+      "Offline: Asset not in cache ->",
+      new URL(request.url).pathname,
+    );
 
-    // If it's a page navigation, return the offline shell
     if (request.mode === "navigate") {
-      return await cache.match("/offline");
+      const offlinePage = await cache.match("/offline");
+      if (offlinePage) return offlinePage;
     }
 
-    // Otherwise, return a generic error response
-    return new Response("Offline and resource not cached", { status: 503 });
+    // For JS/CSS chunks, returning a 503 is technically correct but
+    // you could return a empty script to prevent console crashes
+    return new Response("Offline", {
+      status: 503,
+      statusText: "Service Unavailable",
+    });
   }
 }
 

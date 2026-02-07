@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { SnackBars } from "@/components/SnackBars";
 import { useGlobalContext } from "./GlobalContext";
 import { Drawer, DrawerRef } from "@/components/Drawer";
@@ -13,6 +13,8 @@ import { useEvent } from "@/hooks/events";
 import { Modal, ModalRef } from "@/components/Modal";
 import { useOffline } from "./offline/offlineHook";
 import { registerSW } from "@/helpers/serviceWorker";
+import { delay } from "@/helpers/global";
+import { PageLoaderUI } from "@/components/LoadingUIs";
 
 
 export const GlobalManager = ({ children }: { children: React.ReactNode }) => {
@@ -27,9 +29,14 @@ export const GlobalManager = ({ children }: { children: React.ReactNode }) => {
     const { verifyAuth } = useAuth();
     const hasAuthInit = useRef(false);
     const { switchToOfflineMode } = useOffline();
+    const [mounted, setMounted] = useState(true)
 
     useEffect(() => {
         const init = async () => {
+            // Delay a little for splash
+            await delay();
+            setMounted(false);
+
             // Switch to offline mode if offline
             // if (isOffline) switchToOfflineMode()
             // Initialize Auth
@@ -62,8 +69,12 @@ export const GlobalManager = ({ children }: { children: React.ReactNode }) => {
     }, [pathname]);
 
     // App Splash
-    if (isGlobalLoading || authStatus === "PENDING" || networkStatus === "UNKNOWN") {
-        return <SplashUI />;
+    if (mounted) return <SplashUI />;
+
+    // Page loader
+    if ((isGlobalLoading || authStatus === "PENDING" ||
+        networkStatus === "UNKNOWN") && !mounted) {
+        return <PageLoaderUI />;
     }
 
     // Render the app UIs

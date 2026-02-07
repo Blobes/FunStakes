@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 import { Post } from "@/types";
 import { useGlobalContext } from "@/app/GlobalContext";
 import { delay } from "@/helpers/global";
-import { ProgressIcon } from "@/components/ProgressIcon";
+import { ProgressIcon } from "@/components/LoadingUIs";
 import { Empty } from "@/components/Empty";
 import { useRouter } from "next/navigation";
 import { RadioTower } from "lucide-react";

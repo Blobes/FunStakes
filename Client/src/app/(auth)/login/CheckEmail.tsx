@@ -13,7 +13,7 @@ import { TextInput } from "@/components/InputFields";
 import { GenericObject } from "@/types";
 import { delay } from "@/helpers/global";
 import { InlineMsg } from "@/components/InlineMsg";
-import { ProgressIcon } from "@/components/ProgressIcon";
+import { ProgressIcon } from "@/components/LoadingUIs";
 import { Mail } from "lucide-react";
 
 interface CheckProps {

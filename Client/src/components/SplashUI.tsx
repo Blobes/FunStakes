@@ -15,16 +15,12 @@ export const SplashUI = () => {
         alignItems: "center",
         justifyContent: "center",
       }}>
-      <AnimatedWrapper sx={{
-        borderRadius: theme.radius.full,
-        animation: `${rotate} 1s linear infinite forwards`
-      }}>
-        <Image
-          src={img.logo}
-          alt="Splash icon"
-          width={54}
-          height={54} />
-      </AnimatedWrapper>
+      <Image
+        src={img.logo}
+        alt="Splash icon"
+        width={56}
+        height={56}
+        style={{ borderRadius: `${theme.radius.full}` }} />
     </RootUIContainer>
   );
 };

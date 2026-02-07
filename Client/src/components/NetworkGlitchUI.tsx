@@ -1,7 +1,7 @@
 import { useTheme } from "@mui/material";
 import { Empty } from "@/components/Empty";
 import { Unplug } from "lucide-react";
-import { ProgressIcon } from "./ProgressIcon";
+import { ProgressIcon } from "./LoadingUIs";
 import { useGlobalContext } from "@/app/GlobalContext";
 import { RootUIContainer } from "./Containers";
 import { useController } from "@/hooks/global";

@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 import { PersonOffSharp } from "@mui/icons-material";
 import { FollowerCard } from "./FollowerCard";
 import { delay } from "@/helpers/global";
-import { ProgressIcon } from "@/components/ProgressIcon";
+import { ProgressIcon } from "@/components/LoadingUIs";
 import { Empty } from "@/components/Empty";
 
 export const Followers = () => {

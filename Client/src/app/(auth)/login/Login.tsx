@@ -13,7 +13,7 @@ import { InlineMsg } from "@/components/InlineMsg";
 import { BasicTooltip } from "@/components/Tooltips";
 import { GenericObject } from "@/types";
 import { clientRoutes } from "@/helpers/routes";
-import { ProgressIcon } from "@/components/ProgressIcon";
+import { ProgressIcon } from "@/components/LoadingUIs";
 import { Pencil } from "lucide-react";
 import { usePage } from "@/hooks/page";
 
