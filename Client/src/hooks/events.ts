@@ -19,14 +19,15 @@ export const useEvent = () => {
   const handleBrowserEvents = (authInit?: React.MutableRefObject<boolean>) => {
     const online = async () => {
       removeSBMessage();
-      setGlobalLoading(true);
+      // setGlobalLoading(true);
       // Switch back to online mode
       switchToOnlineMode();
 
       // Reverify auth & network signal
-      await verifySignal();
+      verifySignal();
       await verifyAuth();
-      setGlobalLoading(false);
+      if (authInit) authInit.current = true;
+      // setGlobalLoading(false);
     };
 
     const offline = () => {

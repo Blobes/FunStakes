@@ -22,7 +22,7 @@ export const useOffline = () => {
   const switchToOnlineMode = () => {
     setOfflineMode(false);
     const savedPage = getFromLocalStorage<Page>() || clientRoutes.home;
-    navigateTo(savedPage, { type: "element" });
+    navigateTo(savedPage, { type: "element", loadPage: true });
   };
 
   return {

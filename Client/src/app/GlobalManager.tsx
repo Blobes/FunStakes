@@ -40,7 +40,7 @@ export const GlobalManager = ({ children }: { children: React.ReactNode }) => {
                 setGlobalLoading(true);
 
                 // 1. Splash Phase
-                await delay(1000);
+                await delay();
                 setShowSplash(false);
 
                 // 2. Verification Phase
@@ -57,9 +57,8 @@ export const GlobalManager = ({ children }: { children: React.ReactNode }) => {
                 setIsAppReady(true); // ONLY now do we allow the app to show
             }
         };
-
         init();
-    }, [networkStatus]);
+    }, [networkStatus, offlineMode]);
 
     // Drawer & Modal Open / Close
     useEffect(() => {
