@@ -481,3 +481,43 @@ if (cachedPosts) {
 setPosts(cachedPosts);
 console.log("Hello")
 }
+
+if (!window.location.pathname.includes("/offline")) {
+setIsFirstVisit(true);
+}
+
+}, [networkStatus]);
+
+return isFirstVisit ? (
+<Empty
+headline="You are offline"
+tagline="On you first visit to this page you need to be online."
+icon={<FileXCorner />}
+primaryCta={{
+        type: "BUTTON",
+        variant: "outlined",
+        label: "Back home",
+        action: () => navigateTo(clientRoutes.home,
+          { type: "element", loadPage: true }),
+      }}
+style={{
+        container: {
+          height: "100%",
+          backgroundColor: "none",
+        },
+        tagline: { fontSize: "15px" },
+        icon: {
+          width: "50px",
+          height: "50px",
+          [theme.breakpoints.down("md")]: {
+            width: "40px",
+            height: "40px",
+          },
+          svg: {
+            fill: "none",
+            stroke: theme.palette.gray[200],
+            strokeWidth: "1.5px",
+          },
+        },
+      }}
+/>

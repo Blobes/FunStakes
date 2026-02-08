@@ -108,7 +108,7 @@ async function cacheFirst(request, cacheName) {
     // Fail-safe for Next.js JS chunks to prevent ChunkLoadError
     if (request.url.endsWith(".js")) {
       return new Response(
-        "console.warn('Chunk missing. Redirecting to offline...'); window.location.reload();",
+        "console.warn('Chunk missing. Redirecting to offline...')",
         { headers: { "Content-Type": "application/javascript" } },
       );
     }
