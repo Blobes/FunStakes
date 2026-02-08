@@ -1,5 +1,5 @@
 // const API_CACHE = "funstakes-api-v2";
-const STATIC_CACHE = "funstakes-static-v2";
+const STATIC_CACHE = "funstakes-static-v3";
 
 const ESSENTIAL_ASSETS = [
   "/",
