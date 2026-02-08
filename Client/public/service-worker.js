@@ -1,5 +1,5 @@
 // const API_CACHE = "funstakes-api-v2";
-const STATIC_CACHE = "funstakes-static-v6";
+const STATIC_CACHE = "funstakes-static-v7";
 
 const ESSENTIAL_ASSETS = [
   "/", // THE SHELL: Loads your main JS/React
@@ -41,6 +41,15 @@ self.addEventListener("fetch", (event) => {
   if (request.method !== "GET") return;
   if (url.pathname.startsWith("/api")) return;
 
+  if (url.pathname.startsWith("/_next/static/")) {
+    event.respondWith(
+      caches.match(request).then((response) => {
+        return response || fetch(request); // Fallback to network if not in cache
+      }),
+    );
+    return;
+  }
+
   // STRATEGY: Navigation Fallback to Root
   if (request.mode === "navigate") {
     event.respondWith(
@@ -61,12 +70,7 @@ self.addEventListener("fetch", (event) => {
   const isStatic =
     url.pathname.startsWith("/_next/static") ||
     url.pathname.startsWith("/images") ||
-    url.pathname.endsWith(".png") ||
-    url.pathname.endsWith(".jpg") ||
-    url.pathname.endsWith(".svg") ||
-    url.pathname.endsWith(".ico") ||
-    url.pathname.endsWith(".js") || // Ensure JS chunks are caught
-    url.pathname.endsWith(".css");
+    /\.(png|jpg|jpeg|svg|gif|ico|js|css|woff2)$/i.test(url.pathname);
 
   if (isStatic) {
     event.respondWith(cacheFirst(request, STATIC_CACHE));
