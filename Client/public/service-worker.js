@@ -1,5 +1,5 @@
 // const API_CACHE = "funstakes-api-v2";
-const STATIC_CACHE = "funstakes-static-v2";
+const STATIC_CACHE = "funstakes-static-v3";
 
 const ESSENTIAL_ASSETS = [
   "/",
@@ -113,25 +113,6 @@ async function cacheFirst(request, cacheName) {
 }
 
 /* ---------- STRATEGIES ---------- */
-
-async function cacheFirst(request, cacheName) {
-  const cache = await caches.open(cacheName);
-
-  try {
-    const cached = await cache.match(request);
-    if (cached) return cached;
-
-    const fresh = await fetch(request);
-    // Cache the asset for next time if it's a successful standard response
-    if (fresh && fresh.status === 200) {
-      cache.put(request, fresh.clone());
-    }
-    return fresh;
-  } catch (error) {
-    // If we're offline and the asset isn't cached, return a silent 503
-    return new Response(null, { status: 503 });
-  }
-}
 
 async function networkFirst(request, cacheName) {
   const cache = await caches.open(cacheName);
