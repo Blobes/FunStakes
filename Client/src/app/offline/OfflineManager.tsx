@@ -28,69 +28,82 @@ export const OfflineManager = ({ children }: { children: React.ReactNode }) => {
     if (isOnline) switchToOnlineMode();
   }, [networkStatus]);
 
-  return (
-    <>
-      {/* On desktop */}
-      {offlineMode && isDesktop && (
-        <Stack
-          sx={{
-            height: "100%",
-            gap: theme.gap(0),
-            overflowY: "hidden",
-            flexDirection: "row",
-          }}>
-          <LeftNav />
-          <Stack
-            sx={{
-              height: "100%",
-              gap: theme.gap(0),
-              overflowY: "hidden",
-              overflowX: "auto",
-              flexDirection: "column",
-              width: "100%",
-              [theme.breakpoints.down("md")]: {
-                overflowY: "auto",
-                justifyContent: "flex-start",
-                alignItems: "center",
-                flexDirection: "column",
-              },
-              ...scrollBarStyle(),
-            }}>
-            <Header />
-            <Stack sx={{
-              height: "100%",
-              flexDirection: "row",
-              overflow: "hidden",
-              borderTop: `1px solid ${theme.palette.gray.trans[1]}`,
-            }}>
-              {children}
-              <RightSidebar />
-            </Stack>
-          </Stack>
-        </Stack>
-      )}
-
-      {/* Logged in and NOT on a desktop screen */}
-      {offlineMode && !isDesktop && (
-        <Stack
-          ref={scrollRef}
-          sx={{
-            height: "100%",
-            gap: theme.gap(0),
+  return isDesktop ? (
+    <Stack
+      sx={{
+        height: "100%",
+        gap: theme.gap(0),
+        overflowY: "hidden",
+        flexDirection: "row",
+      }}>
+      <LeftNav />
+      <Stack
+        sx={{
+          height: "100%",
+          gap: theme.gap(0),
+          overflowY: "hidden",
+          overflowX: "auto",
+          flexDirection: "column",
+          width: "100%",
+          [theme.breakpoints.down("md")]: {
             overflowY: "auto",
             justifyContent: "flex-start",
             alignItems: "center",
             flexDirection: "column",
-            paddingBottom: theme.boxSpacing(23),
-            ...scrollBarStyle(),
-          }}>
-          <Header scrollRef={scrollRef} />
+          },
+          ...scrollBarStyle(),
+        }}>
+        <Header />
+        <Stack sx={{
+          height: "100%",
+          flexDirection: "row",
+          overflow: "hidden",
+          borderTop: `1px solid ${theme.palette.gray.trans[1]}`,
+        }}>
           {children}
-          <BottomNav scrollRef={scrollRef} />
+          <RightSidebar />
         </Stack>
-      )}
+      </Stack>
+    </Stack>
+  ) : (<Stack
+    ref={scrollRef}
+    sx={{
+      height: "100%",
+      gap: theme.gap(0),
+      overflowY: "auto",
+      justifyContent: "flex-start",
+      alignItems: "center",
+      flexDirection: "column",
+      paddingBottom: theme.boxSpacing(23),
+      ...scrollBarStyle(),
+    }}>
+    <Header scrollRef={scrollRef} />
+    {children}
+    <BottomNav scrollRef={scrollRef} />
+  </Stack>)
 
-      {!offlineMode && (
+
+  // {/* Logged in and NOT on a desktop screen */}
+  // {!isDesktop && (
+  //   <Stack
+  //     ref={scrollRef}
+  //     sx={{
+  //       height: "100%",
+  //       gap: theme.gap(0),
+  //       overflowY: "auto",
+  //       justifyContent: "flex-start",
+  //       alignItems: "center",
+  //       flexDirection: "column",
+  //       paddingBottom: theme.boxSpacing(23),
+  //       ...scrollBarStyle(),
+  //     }}>
+  //     <Header scrollRef={scrollRef} />
+  //     {children}
+  //     <BottomNav scrollRef={scrollRef} />
+  //   </Stack>
+  // )}
+
+  {/* {!offlineMode && (
         <Stack
           sx={{
             height: "100%",
@@ -105,7 +118,7 @@ export const OfflineManager = ({ children }: { children: React.ReactNode }) => {
           }}>
           {children}
         </Stack>
-      )}
-    </>
-  )
+      )} */}
+
+
 }
