@@ -1,34 +1,18 @@
 "use client";
 
-import { useEffect } from "react";
-import { getFromLocalStorage } from "@/helpers/storage";
 import { useController } from "@/hooks/global";
-import { Page } from "@/types";
 import { useTheme } from "@mui/material/styles";
 import { Posts } from "./post/Posts";
-import { usePathname, useRouter } from "next/navigation";
-import { Stack, Typography } from "@mui/material";
+import { Stack } from "@mui/material";
 import { RightSidebar } from "./sidebar/RightSidebar";
 import { useGlobalContext } from "../GlobalContext";
-import { AppButton } from "@/components/Buttons";
-import { Footer } from "../(web)/navbars/Footer";
-import { clientRoutes } from "@/helpers/routes";
-import { usePage } from "@/hooks/page";
 import { Welcome } from "./Welcome";
 
 export default function HomePage() {
-  const router = useRouter();
-  const pathname = usePathname();
   const { isDesktop } = useController();
-  const { navigateTo } = usePage();
   const theme = useTheme();
-  const savedPage = getFromLocalStorage<Page>();
-  const savedPath = savedPage?.path;
   const { authStatus } = useGlobalContext();
 
-  // useEffect(() => {
-  //   if (savedPath && savedPath !== pathname) router.push(savedPage.path);
-  // }, [pathname]);
 
   return (
     <>

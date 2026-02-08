@@ -12,6 +12,7 @@ import { useRef } from "react";
 import { RootUIContainer } from "@/components/Containers";
 import { NetworkGlitchUI } from "@/components/NetworkGlitchUI";
 import { OfflinePromptUI } from "../offline/OfflinePromptUI";
+import { usePathname } from "next/navigation";
 
 export const AppManager = ({ children }: { children: React.ReactNode }) => {
   const { isDesktop, isUnstableNetwork, isOffline, isOnline } = useController();
@@ -19,6 +20,9 @@ export const AppManager = ({ children }: { children: React.ReactNode }) => {
   const { authStatus, offlineMode } = useGlobalContext();
   const { scrollBarStyle } = useStyles();
   const scrollRef = useRef<HTMLDivElement>(null);
+  const pathname = usePathname();
+
+  console.log("AppManager is rendering at:", pathname);
 
   // Offline Prompt UI on App
   if (isOffline && !offlineMode) return <OfflinePromptUI />
