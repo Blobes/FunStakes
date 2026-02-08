@@ -3,8 +3,13 @@ import theme from "@/themes/theme";
 import CssBaseline from "@mui/material/CssBaseline";
 import { ContextProvider } from "./GlobalContext";
 import { Metadata } from "next";
-import { GlobalManager } from "./GlobalManager";
 import { AppRouterCacheProvider } from '@mui/material-nextjs/v14-appRouter';
+import dynamic from 'next/dynamic';
+
+const GlobalManager = dynamic(
+  () => import("./GlobalManager").then((mod) => mod.GlobalManager),
+  { ssr: false }
+);
 
 export const metadata: Metadata = {
   title: "Funstakes",
@@ -22,6 +27,7 @@ export const metadata: Metadata = {
     },
   },
 };
+
 
 export default function RootLayout({
   children,

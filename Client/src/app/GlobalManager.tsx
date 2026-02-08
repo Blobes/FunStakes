@@ -42,7 +42,7 @@ export const GlobalManager = ({ children }: { children: React.ReactNode }) => {
                 setShowSplash(false);
 
                 // Initial check only
-                // verifySignal();
+                verifySignal();
                 await verifyAuth();
 
             } finally {
