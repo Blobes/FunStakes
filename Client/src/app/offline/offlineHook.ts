@@ -11,12 +11,13 @@ export const useOffline = () => {
 
   const switchToOfflineMode = () => {
     setOfflineMode(true);
-    const offlinePage = clientRoutes.offline;
-    navigateTo(offlinePage, {
-      type: "element",
-      savePage: false,
-      loadPage: true,
-    });
+    setTimeout(() => {
+      navigateTo(clientRoutes.offline, {
+        type: "element",
+        savePage: false,
+        loadPage: true,
+      });
+    }, 10);
   };
 
   const switchToOnlineMode = () => {

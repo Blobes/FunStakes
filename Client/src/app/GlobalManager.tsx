@@ -89,7 +89,7 @@ export const GlobalManager = ({ children }: { children: React.ReactNode }) => {
 
     // Offline Prompt UI
     const isOnOfflineRoute = isOnOffline(pathname);
-    if (isOffline && !offlineMode && !isOnOfflineRoute) return <OfflinePromptUI />
+    if (isOffline && !offlineMode) return <OfflinePromptUI />
 
 
     // Render the app UIs
