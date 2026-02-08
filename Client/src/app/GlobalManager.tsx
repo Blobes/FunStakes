@@ -32,8 +32,10 @@ export const GlobalManager = ({ children }: { children: React.ReactNode }) => {
     const { switchToOfflineMode } = useOffline();
     const [isAppReady, setIsAppReady] = useState(false); // New local gate
     const [showSplash, setShowSplash] = useState(true);
+    const [mounted, setMounted] = useState(false);
 
     useEffect(() => {
+        setMounted(true)
         const init = async () => {
             try {
                 registerSW();
@@ -71,7 +73,7 @@ export const GlobalManager = ({ children }: { children: React.ReactNode }) => {
     }, [pathname]);
 
     // App Splash UI
-    if (showSplash) return <SplashUI />;
+    if (!mounted && showSplash) return <SplashUI />;
 
     // Page loader UI
     const isInitializing = !isAppReady ||
