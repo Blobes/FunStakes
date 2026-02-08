@@ -1,9 +1,9 @@
 const API_CACHE = "funstakes-api-v1";
-const STATIC_CACHE = "funstakes-static-v4"; // Incremented version
+const STATIC_CACHE = "funstakes-static-v5";
 
 const ESSENTIAL_ASSETS = [
   "/", // THE SHELL: Loads your main JS/React
-  "/offline", // THE DATA PAGE: Where you show IndexedDB content
+  "/offline", // THE DATA PAGE: Where we show IndexedDB content
   "/manifest.json",
   "/favicon.ico",
 ];
