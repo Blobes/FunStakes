@@ -65,7 +65,7 @@ export const GlobalManager = ({ children }: { children: React.ReactNode }) => {
     useEffect(() => {
         handleCurrentPage();
         handleBrowserEvents();
-    }, [pathname, networkStatus]);
+    }, [pathname]);
 
     // App Splash UI
     if (showSplash) return <SplashUI />;
@@ -77,9 +77,9 @@ export const GlobalManager = ({ children }: { children: React.ReactNode }) => {
         networkStatus === "UNKNOWN";
     if (isInitializing) return <PageLoaderUI />;
 
-    // Offline Prompt UI
-    const isOnOfflineRoute = isOnOffline(pathname);
-    if (isOffline && !offlineMode) return <OfflinePromptUI />
+    // // Offline Prompt UI
+    // const isOnOfflineRoute = isOnOffline(pathname);
+    // // if (isOffline && !offlineMode) return <OfflinePromptUI />
 
 
     // Render the app UIs

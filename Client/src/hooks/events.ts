@@ -11,7 +11,6 @@ import { useOffline } from "@/app/offline/offlineHook";
 export const useEvent = () => {
   const router = useRouter();
   const { setSBMessage, removeSBMessage } = useSnackbar();
-  const { verifySignal } = useController();
   const { verifyAuth } = useAuth();
   const { setGlobalLoading, setNetworkStatus } = useGlobalContext();
   const { switchToOnlineMode } = useOffline();
@@ -27,7 +26,7 @@ export const useEvent = () => {
     };
 
     const offline = () => {
-      setNetworkStatus("OFFLINE");
+      //  setNetworkStatus("OFFLINE");
       setSBMessage({
         msg: {
           id: 1,

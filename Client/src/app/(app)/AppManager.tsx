@@ -11,16 +11,20 @@ import { BottomNav } from "@/app/(app)/navbars/BottomNav";
 import { useRef } from "react";
 import { RootUIContainer } from "@/components/Containers";
 import { NetworkGlitchUI } from "@/components/NetworkGlitchUI";
+import { OfflinePromptUI } from "../offline/OfflinePromptUI";
 
 export const AppManager = ({ children }: { children: React.ReactNode }) => {
-  const { isDesktop, isUnstableNetwork, isOffline } = useController();
+  const { isDesktop, isUnstableNetwork, isOffline, isOnline } = useController();
   const theme = useTheme();
-  const { authStatus } = useGlobalContext();
+  const { authStatus, offlineMode } = useGlobalContext();
   const { scrollBarStyle } = useStyles();
   const scrollRef = useRef<HTMLDivElement>(null);
 
+  // Offline Prompt UI on App
+  if (isOffline && !offlineMode) return <OfflinePromptUI />
+
   // Conditionally render the offline UI
-  if ((isUnstableNetwork || authStatus === "ERROR") && !isOffline) {
+  if ((isUnstableNetwork || authStatus === "ERROR") && isOnline) {
     return <NetworkGlitchUI />;
   }
 
