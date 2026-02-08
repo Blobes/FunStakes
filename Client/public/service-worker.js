@@ -1,5 +1,5 @@
 // const API_CACHE = "funstakes-api-v2";
-const STATIC_CACHE = "funstakes-static-v10";
+const STATIC_CACHE = "funstakes-static-v11";
 
 const ESSENTIAL_ASSETS = [
   "/", // THE SHELL: Loads your main JS/React
@@ -49,23 +49,20 @@ self.addEventListener("fetch", (event) => {
 
         return fetch(request)
           .then((networkResponse) => {
-            if (!networkResponse || networkResponse.status !== 200)
-              return networkResponse;
-
-            return caches.open(STATIC_CACHE).then((cache) => {
-              cache.put(request, networkResponse.clone());
-              return networkResponse;
-            });
+            // Cache anything that comes back successfully
+            if (networkResponse && networkResponse.status === 200) {
+              const cacheCopy = networkResponse.clone();
+              caches
+                .open(STATIC_CACHE)
+                .then((cache) => cache.put(request, cacheCopy));
+            }
+            return networkResponse;
           })
           .catch(() => {
-            // FAILSAFE: If offline and chunk is missing, return a special JS response
-            // This prevents the "Uncaught ChunkLoadError" from breaking the page shell
-            return new Response(
-              "console.warn('Chunk loading failed offline');",
-              {
-                headers: { "Content-Type": "application/javascript" },
-              },
-            );
+            // Fallback to prevent the ChunkLoadError crash
+            return new Response("console.warn('Offline: Chunk missing');", {
+              headers: { "Content-Type": "application/javascript" },
+            });
           });
       }),
     );
@@ -92,7 +89,8 @@ self.addEventListener("fetch", (event) => {
   const isStatic =
     url.pathname.startsWith("/_next/static") ||
     url.pathname.startsWith("/images") ||
-    /\.(png|jpg|jpeg|svg|gif|ico|js|css|woff2)$/i.test(url.pathname);
+    url.pathname.includes("turbopack") || // Added for Turbopack support
+    /\.(js|css|png|jpg|svg|ico)$/i.test(url.pathname);
 
   if (isStatic) {
     event.respondWith(cacheFirst(request, STATIC_CACHE));

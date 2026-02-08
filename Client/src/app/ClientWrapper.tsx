@@ -3,6 +3,7 @@
 import { SplashUI } from '@/components/SplashUI';
 import dynamic from 'next/dynamic';
 import React from 'react';
+import { OfflinePrefetcher } from './offline/OfflinePrefetcher';
 
 // 1. Move the dynamic import here
 const GlobalManager = dynamic(
@@ -14,5 +15,10 @@ const GlobalManager = dynamic(
 );
 
 export default function ClientWrapper({ children }: { children: React.ReactNode }) {
-    return <GlobalManager>{children}</GlobalManager>;
+    return (
+        <>
+            <OfflinePrefetcher />
+            <GlobalManager>{children}</GlobalManager>
+        </>
+    )
 }
