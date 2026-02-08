@@ -5,7 +5,7 @@ import { Stack } from "@mui/material";
 import { useGlobalContext } from "../GlobalContext";
 import { useTheme } from "@mui/material/styles";
 import { useStyles } from "@/hooks/style";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Header } from "./navbars/Header";
 import { LeftNav } from "./navbars/LeftNav";
 import { BottomNav } from "./navbars/BottomNav";
@@ -27,12 +27,18 @@ export const OfflineManager = ({ children }: { children: React.ReactNode }) => {
   const { navigateTo } = usePage();
   const searchParams = useSearchParams();
   const reason = searchParams.get("reason");
+  const [isFirstVisit, setIsFirstVisit] = useState(false);
 
   useEffect(() => {
     if (isOnline) switchToOnlineMode();
+
+    if (!window.location.pathname.includes("/offline")) {
+      setIsFirstVisit(true);
+    }
+
   }, [networkStatus]);
 
-  return reason === "first-visit" ? (
+  return isFirstVisit ? (
     <Empty
       headline="You are offline"
       tagline="On you first visit to this page you need to be online."

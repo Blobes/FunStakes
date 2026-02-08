@@ -65,18 +65,26 @@ self.addEventListener("fetch", (event) => {
         .catch(async () => {
           const cache = await caches.open(STATIC_CACHE);
 
-          const matchedResponse =
-            (await cache.match(request)) ||
-            (await cache.match("/offline")) ||
-            (await cache.match("/"));
-          // Match the specific marketing page, fallback to /offline, then /
+          // 1. Check for the specific page
+          const exactMatch = await cache.match(request);
+          if (exactMatch) return exactMatch;
 
-          // If we have the page cached from a PREVIOUS successful visit, show it
-          if (matchedResponse) return matchedResponse;
+          // 2. Fallback to /offline but add a "reason" header
+          const offlineShell = await cache.match("/offline");
+          if (offlineShell) {
+            // Headers are immutable in a cached response, so we create a new Headers object
+            const newHeaders = new Headers(offlineShell.headers);
+            newHeaders.set("X-Offline-Reason", "first-visit");
 
-          // If we DON'T have it (first time visit while offline)
-          // Redirect to /offline but append a message parameter
-          return Response.redirect("/offline?reason=first-visit", 302);
+            // Return a new response with the same body but updated headers
+            return new Response(offlineShell.body, {
+              status: offlineShell.status,
+              statusText: offlineShell.statusText,
+              headers: newHeaders,
+            });
+          }
+
+          return await cache.match("/");
         }),
     );
     return;
@@ -95,7 +103,7 @@ self.addEventListener("fetch", (event) => {
   }
 });
 
-/* ---------- CONSOLIDATED STRATEGY ---------- */
+/* ---------- STRATEGIES ---------- */
 
 async function cacheFirst(request, cacheName) {
   const cache = await caches.open(cacheName);
@@ -119,8 +127,6 @@ async function cacheFirst(request, cacheName) {
     return new Response(null, { status: 503 });
   }
 }
-
-/* ---------- STRATEGIES ---------- */
 
 async function networkFirst(request, cacheName) {
   const cache = await caches.open(cacheName);
