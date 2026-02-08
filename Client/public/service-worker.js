@@ -1,12 +1,11 @@
 // const API_CACHE = "funstakes-api-v2";
-const STATIC_CACHE = "funstakes-static-v12";
+const STATIC_CACHE = "funstakes-static-v1";
 
 const ESSENTIAL_ASSETS = [
   "/",
   "/offline",
   "/manifest.json",
   "/favicon.ico",
-
   "/about",
   "/pricing",
   "/blogs",
