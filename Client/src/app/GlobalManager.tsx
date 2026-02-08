@@ -19,6 +19,25 @@ import { OfflinePromptUI } from "./offline/OfflinePromptUI";
 
 
 export const GlobalManager = ({ children }: { children: React.ReactNode }) => {
+    const [mounted, setMounted] = useState(false);
+
+    useEffect(() => {
+        setMounted(true);
+    }, []);
+    // 1. On the server, we ONLY return children. 
+    // This bypasses all the logic below during 'npm run build'
+    if (typeof window === 'undefined' || !mounted) {
+        return <>{children}</>;
+    }
+
+    // 2. We only call the "dangerous" hooks AFTER the check above.
+    // NOTE: This requires moving the logic into a Sub-Component 
+    // within the same file to follow the Rules of Hooks.
+    return <Manager>{children}</Manager>;
+};
+
+
+const Manager = ({ children }: { children: React.ReactNode }) => {
     const { handleBrowserEvents } = useEvent();
     const drawerRef = useRef<DrawerRef>(null);
     const modalRef = useRef<ModalRef>(null);
@@ -29,13 +48,10 @@ export const GlobalManager = ({ children }: { children: React.ReactNode }) => {
     const pathname = usePathname();
     const { verifyAuth } = useAuth();
     const hasAuthInit = useRef(false);
-    const { switchToOfflineMode } = useOffline();
     const [isAppReady, setIsAppReady] = useState(false); // New local gate
     const [showSplash, setShowSplash] = useState(true);
-    const [mounted, setMounted] = useState(false);
 
     useEffect(() => {
-        setMounted(true)
         const init = async () => {
             try {
                 registerSW();
@@ -72,8 +88,6 @@ export const GlobalManager = ({ children }: { children: React.ReactNode }) => {
         handleBrowserEvents();
     }, [pathname]);
 
-    if (!mounted) return null;
-
     // App Splash UI
     if (showSplash) return <SplashUI />;
 
@@ -87,7 +101,6 @@ export const GlobalManager = ({ children }: { children: React.ReactNode }) => {
     // Offline Prompt UI
     const isOnOfflineRoute = isOnOffline(pathname);
     if (isOffline && !offlineMode) return <OfflinePromptUI />
-
 
     // Render the app UIs
     return (
