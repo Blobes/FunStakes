@@ -11,7 +11,6 @@ import { UserAvatar } from "@/components/UserAvatar";
 import { GenericObject, IUser } from "@/types";
 import { useCallback, useEffect, useState } from "react";
 import { pulse } from "@/helpers/animations";
-import { useOfflinePost } from "./hook";
 import { Post } from "@/types";
 import { red } from "@mui/material/colors";
 import { summarizeNum } from "@/helpers/numberSum";
@@ -23,6 +22,7 @@ import { img } from "@/assets/exported";
 import { Strip } from "@/components/StripBar";
 import { SmartDate } from "@/components/SmartDate";
 import { SingleMedia } from "@/components/Media";
+import { getCachedAuthor } from "@/helpers/post";
 
 interface PostProps {
   post: Post;
@@ -35,7 +35,6 @@ export const PostCard = ({ post, style = {} }: PostProps) => {
   const [message, setMessage] = useState<string | null>(null);
   const [isLiking] = useState(false);
   const { setSBMessage } = useSnackbar();
-  const { getCachedAuthor } = useOfflinePost()
 
   const { authorId, content, postImage, createdAt,
     status, likeCount, likedByMe,

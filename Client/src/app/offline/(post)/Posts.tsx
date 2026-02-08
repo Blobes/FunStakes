@@ -12,11 +12,10 @@ import { useRouter } from "next/navigation";
 import { RadioTower } from "lucide-react";
 import { useStyles } from "@/hooks/style";
 import { PostCard } from "./PostCard";
-import { useOfflinePost } from "./hook";
+import { getCachedPosts } from "@/helpers/post";
 
 export const Posts = () => {
   const theme = useTheme();
-  const { getCachedPosts } = useOfflinePost();
   const [posts, setPosts] = useState<Post[]>([]);
   const { authStatus } = useGlobalContext();
   const [isLoading, setLoading] = useState(false);

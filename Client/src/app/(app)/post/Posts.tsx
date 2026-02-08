@@ -13,7 +13,7 @@ import { Empty } from "@/components/Empty";
 import { useRouter } from "next/navigation";
 import { RadioTower } from "lucide-react";
 import { useStyles } from "@/hooks/style";
-import { useOfflinePost } from "@/app/offline/(post)/hook";
+import { cachePosts } from "@/helpers/post";
 
 export const Posts = () => {
   const theme = useTheme();
@@ -23,7 +23,6 @@ export const Posts = () => {
   const [isLoading, setLoading] = useState(false);
   const router = useRouter();
   const { autoScroll } = useStyles();
-  const { cachePosts } = useOfflinePost()
 
   const renderPosts = async () => {
     try {

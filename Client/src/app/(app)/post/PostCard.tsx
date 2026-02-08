@@ -28,7 +28,7 @@ import { Strip } from "@/components/StripBar";
 import { SmartDate } from "@/components/SmartDate";
 import { SingleMedia } from "@/components/Media";
 import { vibrate } from "@/helpers/global";
-import { useOfflinePost } from "@/app/offline/(post)/hook";
+import { cacheAuthor } from "@/helpers/post";
 
 interface PostProps {
   post: Post;
@@ -51,7 +51,6 @@ export const PostCard = ({ post, style = {} }: PostProps) => {
   const [message, setMessage] = useState<string | null>(null);
   const [isLiking, setIsLiking] = useState(false);
   const { setSBMessage } = useSnackbar();
-  const { cacheAuthor } = useOfflinePost()
 
   const { _id, authorId, content, postImage, createdAt,
     status, likeCount, likedByMe,
