@@ -48,8 +48,13 @@ export const usePage = () => {
 
     if (loadPage) {
       setGlobalLoading(true);
-      await delay(2000);
+      if (type === "element") {
+        options.event?.preventDefault();
+        router.push(page.path); // Move to the new route now
+      }
+      await delay(2000); // Keep the loader up while the route initializes
       setGlobalLoading(false);
+      return; // Exit early since we already pushed
     }
 
     if (savePage) setLastPage(page);

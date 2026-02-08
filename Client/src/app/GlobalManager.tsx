@@ -23,7 +23,7 @@ export const GlobalManager = ({ children }: { children: React.ReactNode }) => {
     const drawerRef = useRef<DrawerRef>(null);
     const modalRef = useRef<ModalRef>(null);
     const { openDrawer, openModal, verifySignal, isOffline } = useController();
-    const { handleCurrentPage } = usePage()
+    const { handleCurrentPage, isOnOffline } = usePage()
     const { snackBarMsg, drawerContent, modalContent, isGlobalLoading,
         authStatus, networkStatus, offlineMode, setGlobalLoading } = useGlobalContext();
     const pathname = usePathname();
@@ -58,7 +58,7 @@ export const GlobalManager = ({ children }: { children: React.ReactNode }) => {
             }
         };
         init();
-    }, [networkStatus, offlineMode]);
+    }, [networkStatus]);
 
     // Drawer & Modal Open / Close
     useEffect(() => {
@@ -88,7 +88,8 @@ export const GlobalManager = ({ children }: { children: React.ReactNode }) => {
     if (isInitializing) return <PageLoaderUI />;
 
     // Offline Prompt UI
-    if (isOffline && !offlineMode) return <OfflinePromptUI />
+    const isOnOfflineRoute = isOnOffline(pathname);
+    if (isOffline && !offlineMode && !isOnOfflineRoute) return <OfflinePromptUI />
 
 
     // Render the app UIs

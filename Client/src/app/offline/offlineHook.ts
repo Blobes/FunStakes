@@ -9,7 +9,7 @@ export const useOffline = () => {
   const { setOfflineMode } = useGlobalContext();
   const { navigateTo } = usePage();
 
-  const switchToOfflineMode = async () => {
+  const switchToOfflineMode = () => {
     setOfflineMode(true);
     const offlinePage = clientRoutes.offline;
     navigateTo(offlinePage, {
