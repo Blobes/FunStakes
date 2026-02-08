@@ -1,5 +1,4 @@
 import "@mui/material/styles";
-import { GenericObject } from "../types";
 
 declare module "@mui/material/styles" {
   interface Palette {

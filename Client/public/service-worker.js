@@ -61,7 +61,7 @@ self.addEventListener("fetch", (event) => {
     url.pathname.endsWith(".jpg") ||
     url.pathname.endsWith(".svg") ||
     url.pathname.endsWith(".ico") ||
-    // url.pathname.endsWith(".js") || // Ensure JS chunks are caught
+    url.pathname.endsWith(".js") || // Ensure JS chunks are caught
     url.pathname.endsWith(".css");
 
   if (isStatic) {

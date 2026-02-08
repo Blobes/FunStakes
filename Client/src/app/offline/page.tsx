@@ -6,7 +6,5 @@ import { OfflinePromptUI } from "./OfflinePromptUI";
 
 export default function HomePage() {
 
-  const { offlineMode } = useGlobalContext();
-
   return <Posts />
 }

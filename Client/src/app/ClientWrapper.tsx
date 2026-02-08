@@ -1,5 +1,6 @@
 'use client';
 
+import { SplashUI } from '@/components/SplashUI';
 import dynamic from 'next/dynamic';
 import React from 'react';
 
@@ -8,7 +9,7 @@ const GlobalManager = dynamic(
     () => import('./GlobalManager').then((mod) => mod.GlobalManager),
     {
         ssr: false,
-        loading: () => null, // Optional: Render nothing while loading
+        loading: () => <SplashUI />, // Optional: Render nothing while loading
     }
 );
 
