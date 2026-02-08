@@ -1,5 +1,5 @@
 // const API_CACHE = "funstakes-api-v2";
-const STATIC_CACHE = "funstakes-static-v8";
+const STATIC_CACHE = "funstakes-static-v9";
 
 const ESSENTIAL_ASSETS = [
   "/", // THE SHELL: Loads your main JS/React
@@ -41,7 +41,10 @@ self.addEventListener("fetch", (event) => {
   if (request.method !== "GET") return;
   if (url.pathname.startsWith("/api")) return;
 
-  if (url.pathname.startsWith("/_next/static/")) {
+  if (
+    url.pathname.startsWith("/_next/static/") ||
+    url.pathname.includes("turbopack")
+  ) {
     event.respondWith(
       caches.match(request).then((cachedResponse) => {
         // If we have it, return it immediately
@@ -90,6 +93,12 @@ self.addEventListener("fetch", (event) => {
   if (isStatic) {
     event.respondWith(cacheFirst(request, STATIC_CACHE));
     return;
+  }
+});
+
+self.addEventListener("message", (event) => {
+  if (event.data && event.data.type === "SKIP_WAITING") {
+    self.skipWaiting();
   }
 });
 
