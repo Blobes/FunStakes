@@ -14,9 +14,8 @@ export const useOffline = () => {
     setGlobalLoading(true);
     const offlinePage = clientRoutes.offline;
     navigateTo(offlinePage, { type: "element", savePage: false });
-    // setNetworkStatus("OFFLINE");
+    setNetworkStatus("OFFLINE");
     await delay(500);
-
     setGlobalLoading(false);
   };
 
