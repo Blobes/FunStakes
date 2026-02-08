@@ -1,5 +1,5 @@
 // const API_CACHE = "funstakes-api-v2";
-const STATIC_CACHE = "funstakes-static-v9";
+const STATIC_CACHE = "funstakes-static-v10";
 
 const ESSENTIAL_ASSETS = [
   "/", // THE SHELL: Loads your main JS/React
@@ -41,27 +41,31 @@ self.addEventListener("fetch", (event) => {
   if (request.method !== "GET") return;
   if (url.pathname.startsWith("/api")) return;
 
-  if (
-    url.pathname.startsWith("/_next/static/") ||
-    url.pathname.includes("turbopack")
-  ) {
+  // Inside your Fetch listener
+  if (url.pathname.startsWith("/_next/static/")) {
     event.respondWith(
       caches.match(request).then((cachedResponse) => {
-        // If we have it, return it immediately
         if (cachedResponse) return cachedResponse;
 
-        // If not, go get it from the network and SAVE it for later
         return fetch(request)
           .then((networkResponse) => {
+            if (!networkResponse || networkResponse.status !== 200)
+              return networkResponse;
+
             return caches.open(STATIC_CACHE).then((cache) => {
-              // Put a clone in the cache so we don't lose it
               cache.put(request, networkResponse.clone());
               return networkResponse;
             });
           })
           .catch(() => {
-            // If network fails and it's not in cache, return a 404 or empty
-            return new Response("Chunk not found offline", { status: 404 });
+            // FAILSAFE: If offline and chunk is missing, return a special JS response
+            // This prevents the "Uncaught ChunkLoadError" from breaking the page shell
+            return new Response(
+              "console.warn('Chunk loading failed offline');",
+              {
+                headers: { "Content-Type": "application/javascript" },
+              },
+            );
           });
       }),
     );
