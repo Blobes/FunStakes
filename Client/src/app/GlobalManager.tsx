@@ -27,7 +27,7 @@ export const GlobalManager = ({ children }: { children: React.ReactNode }) => {
     // 1. On the server, we ONLY return children. 
     // This bypasses all the logic below during 'npm run build'
     if (typeof window === 'undefined' || !mounted) {
-        return <>{children}</>;
+        return null;
     }
 
     // 2. We only call the "dangerous" hooks AFTER the check above.
