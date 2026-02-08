@@ -32,7 +32,7 @@ export const OfflinePromptUI = () => {
                         marginBottom: theme.boxSpacing(8),
                         strokeWidth: "1.5px"
                     }} />
-                <Typography variant="h4" component="h4">
+                <Typography variant="h5" component="h5">
                     You seem to be offline
                 </Typography>
                 <Typography variant="body3" component="p">

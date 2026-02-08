@@ -9,17 +9,19 @@ import { delay } from "@/helpers/global";
 import { ProgressIcon } from "@/components/LoadingUIs";
 import { Empty } from "@/components/Empty";
 import { useRouter } from "next/navigation";
-import { RadioTower } from "lucide-react";
+import { CircleSlash2, RadioTower } from "lucide-react";
 import { useStyles } from "@/hooks/style";
 import { PostCard } from "./PostCard";
 import { getCachedPosts } from "@/helpers/post";
+import { usePage } from "@/hooks/page";
+import { clientRoutes } from "@/helpers/routes";
 
 export const Posts = () => {
   const theme = useTheme();
   const [posts, setPosts] = useState<Post[]>([]);
   const { authStatus } = useGlobalContext();
   const [isLoading, setLoading] = useState(false);
-  const router = useRouter();
+  const { navigateTo } = usePage();
   const { autoScroll } = useStyles();
 
   const renderPosts = async () => {
@@ -67,12 +69,14 @@ export const Posts = () => {
         </Stack>
       ) : posts.length < 1 ? (
         <Empty
-          tagline="Can't load offline posts"
-          icon={<RadioTower />}
+          headline="No offline posts"
+          tagline="Can't find any post at this time. In the meantime you can learn more Funstakes"
+          icon={<CircleSlash2 />}
           primaryCta={{
-            type: "ICON",
-            toolTip: "Refresh",
-            action: () => router.refresh(),
+            type: "BUTTON",
+            toolTip: "Explore Funstakes",
+            action: () => navigateTo(clientRoutes.about,
+              { type: "element", savePage: false, loadPage: true }),
           }}
           style={{
             container: {
@@ -81,15 +85,15 @@ export const Posts = () => {
             },
             tagline: { fontSize: { sx: "15px", sm: "18px" } },
             icon: {
-              width: "60px",
-              height: "60px",
+              width: "50px",
+              height: "50px",
               [theme.breakpoints.down("md")]: {
                 width: "40px",
                 height: "40px",
               },
               svg: {
                 fill: "none",
-                stroke: theme.palette.gray[300],
+                stroke: theme.palette.gray[200],
                 strokeWidth: "1.5px",
               },
             },
