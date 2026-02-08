@@ -64,12 +64,19 @@ self.addEventListener("fetch", (event) => {
         })
         .catch(async () => {
           const cache = await caches.open(STATIC_CACHE);
-          // Match the specific marketing page, fallback to /offline, then /
-          return (
+
+          const matchedResponse =
             (await cache.match(request)) ||
             (await cache.match("/offline")) ||
-            (await cache.match("/"))
-          );
+            (await cache.match("/"));
+          // Match the specific marketing page, fallback to /offline, then /
+
+          // If we have the page cached from a PREVIOUS successful visit, show it
+          if (matchedResponse) return matchedResponse;
+
+          // If we DON'T have it (first time visit while offline)
+          // Redirect to /offline but append a message parameter
+          return Response.redirect("/offline?reason=first-visit", 302);
         }),
     );
     return;
