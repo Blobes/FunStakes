@@ -1,10 +1,6 @@
 import "@mui/material/styles";
 import { GenericObject } from "../types";
 
-// type ExtendedGenericObject<T> = GenericObject<T> & {
-//   trans: GenericObject<T>;
-// };
-
 declare module "@mui/material/styles" {
   interface Palette {
     gray: {
@@ -25,15 +21,9 @@ declare module "@mui/material/styles" {
     gray?: Partial<Palette["gray"]>;
   }
 
-  // interface Palette {
-  //   gray: ExtendedGenericObject<string | (() => any)>;
-  // }
-  // interface PaletteOptions {
-  //   gray?: ExtendedGenericObject<string | (() => any)>;
-  // }
   interface Theme {
-    fixedColors: GenericObject<string>;
-    radius: GenericObject<string>;
+    fixedColors: Record<string, string>;
+    radius: Record<string | number, string>;
     boxSpacing: (
       top: number,
       right?: number,
@@ -43,8 +33,8 @@ declare module "@mui/material/styles" {
     gap: (value: number) => string;
   }
   interface ThemeOptions {
-    fixedColors?: GenericObject<string>;
-    radius?: GenericObject<string>;
+    fixedColors?: Record<string, string>;
+    radius?: Record<string | number, string>;
     boxSpacing?: (
       top: number,
       right?: number,

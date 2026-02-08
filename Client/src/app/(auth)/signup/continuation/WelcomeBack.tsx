@@ -1,3 +1,7 @@
 "use client";
 
-export const WelcomeBack = () => {};
+import { Typography } from "@mui/material";
+
+export const WelcomeBack = () => {
+    return <Typography>Welcome Back</Typography>;
+};
