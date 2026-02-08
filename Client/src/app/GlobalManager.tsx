@@ -11,7 +11,6 @@ import { usePathname } from "next/navigation";
 import { usePage } from "@/hooks/page";
 import { useEvent } from "@/hooks/events";
 import { Modal, ModalRef } from "@/components/Modal";
-import { useOffline } from "./offline/offlineHook";
 import { registerSW } from "@/helpers/serviceWorker";
 import { delay } from "@/helpers/global";
 import { PageLoaderUI } from "@/components/LoadingUIs";
@@ -28,8 +27,6 @@ export const GlobalManager = ({ children }: { children: React.ReactNode }) => {
         authStatus, networkStatus, offlineMode, setGlobalLoading } = useGlobalContext();
     const pathname = usePathname();
     const { verifyAuth } = useAuth();
-    const hasAuthInit = useRef(false);
-    const { switchToOfflineMode } = useOffline();
     const [isAppReady, setIsAppReady] = useState(false); // New local gate
     const [showSplash, setShowSplash] = useState(true);
 
@@ -38,13 +35,13 @@ export const GlobalManager = ({ children }: { children: React.ReactNode }) => {
             try {
                 registerSW();
                 setGlobalLoading(true);
+
                 await delay();
                 setShowSplash(false);
 
                 // Initial check only
                 verifySignal();
                 await verifyAuth();
-
             } finally {
                 setGlobalLoading(false);
                 setIsAppReady(true);
@@ -68,7 +65,7 @@ export const GlobalManager = ({ children }: { children: React.ReactNode }) => {
     useEffect(() => {
         handleCurrentPage();
         handleBrowserEvents();
-    }, [pathname]);
+    }, [pathname, networkStatus]);
 
     // App Splash UI
     if (showSplash) return <SplashUI />;

@@ -19,15 +19,11 @@ export const useEvent = () => {
   const handleBrowserEvents = () => {
     const online = () => {
       removeSBMessage();
-      // setGlobalLoading(true);
       // Switch back to online mode
       switchToOnlineMode();
-
-      // Reverify auth & network signal
-      // verifySignal();
       setNetworkStatus("STABLE");
+
       verifyAuth();
-      // setGlobalLoading(false);
     };
 
     const offline = () => {

@@ -19,7 +19,7 @@ import { useOffline } from "./offlineHook";
 export const OfflineManager = ({ children }: { children: React.ReactNode }) => {
   const { isDesktop, isOnline } = useController();
   const theme = useTheme();
-  const { offlineMode, networkStatus } = useGlobalContext();
+  const { networkStatus } = useGlobalContext();
   const { scrollBarStyle } = useStyles();
   const scrollRef = useRef<HTMLDivElement>(null);
   const { switchToOnlineMode } = useOffline()
@@ -65,22 +65,24 @@ export const OfflineManager = ({ children }: { children: React.ReactNode }) => {
         </Stack>
       </Stack>
     </Stack>
-  ) : (<Stack
-    ref={scrollRef}
-    sx={{
-      height: "100%",
-      gap: theme.gap(0),
-      overflowY: "auto",
-      justifyContent: "flex-start",
-      alignItems: "center",
-      flexDirection: "column",
-      paddingBottom: theme.boxSpacing(23),
-      ...scrollBarStyle(),
-    }}>
-    <Header scrollRef={scrollRef} />
-    {children}
-    <BottomNav scrollRef={scrollRef} />
-  </Stack>)
+  ) :
+    // Mobile view
+    (<Stack
+      ref={scrollRef}
+      sx={{
+        height: "100%",
+        gap: theme.gap(0),
+        overflowY: "auto",
+        justifyContent: "flex-start",
+        alignItems: "center",
+        flexDirection: "column",
+        paddingBottom: theme.boxSpacing(23),
+        ...scrollBarStyle(),
+      }}>
+      <Header scrollRef={scrollRef} />
+      {children}
+      <BottomNav scrollRef={scrollRef} />
+    </Stack>)
 
 
   // {/* Logged in and NOT on a desktop screen */}
