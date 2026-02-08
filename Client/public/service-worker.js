@@ -1,5 +1,5 @@
 // const API_CACHE = "funstakes-api-v2";
-const STATIC_CACHE = "funstakes-static-v3";
+const STATIC_CACHE = "funstakes-static-v4";
 
 const ESSENTIAL_ASSETS = [
   "/",
@@ -69,22 +69,9 @@ self.addEventListener("fetch", (event) => {
           const exactMatch = await cache.match(request);
           if (exactMatch) return exactMatch;
 
-          // 2. Fallback to /offline but add a "reason" header
+          // 2. Fallback to /offline
           const offlineShell = await cache.match("/offline");
-          if (offlineShell) {
-            // Headers are immutable in a cached response, so we create a new Headers object
-            const newHeaders = new Headers(offlineShell.headers);
-            newHeaders.set("X-Offline-Reason", "first-visit");
-
-            // Return a new response with the same body but updated headers
-            return new Response(offlineShell.body, {
-              status: offlineShell.status,
-              statusText: offlineShell.statusText,
-              headers: newHeaders,
-            });
-          }
-
-          return await cache.match("/");
+          return offlineShell || cache.match("/");
         }),
     );
     return;
@@ -120,9 +107,10 @@ async function cacheFirst(request, cacheName) {
   } catch (error) {
     // Fail-safe for Next.js JS chunks to prevent ChunkLoadError
     if (request.url.endsWith(".js")) {
-      return new Response("console.warn('Offline: Chunk missing');", {
-        headers: { "Content-Type": "application/javascript" },
-      });
+      return new Response(
+        "console.warn('Chunk missing. Redirecting to offline...'); window.location.reload();",
+        { headers: { "Content-Type": "application/javascript" } },
+      );
     }
     return new Response(null, { status: 503 });
   }
