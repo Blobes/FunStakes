@@ -1,5 +1,5 @@
 // const API_CACHE = "funstakes-api-v2";
-const STATIC_CACHE = "funstakes-static-v1";
+const STATIC_CACHE = "funstakes-static-v2";
 
 const ESSENTIAL_ASSETS = [
   "/",
@@ -8,11 +8,11 @@ const ESSENTIAL_ASSETS = [
   "/favicon.ico",
   "/about",
   "/pricing",
-  "/blogs",
+  // "/blogs",
   "/support",
-  "/privacy",
-  "/terms",
-  "/news",
+  //"/privacy",
+  // "/terms",
+  // "/news",
 ];
 
 // 1. Install: Pre-cache the shell so navigation fallback works
