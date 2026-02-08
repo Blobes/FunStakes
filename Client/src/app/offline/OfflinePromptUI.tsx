@@ -9,14 +9,8 @@ import { useOffline } from "./offlineHook";
 import { RootUIContainer } from "@/components/Containers";
 
 export const OfflinePromptUI = () => {
-    const { setOfflineMode } = useGlobalContext();
     const theme = useTheme();
     const { switchToOfflineMode } = useOffline();
-
-    const handleOffline = () => {
-        setOfflineMode(true)
-        switchToOfflineMode()
-    }
 
     return (
         <RootUIContainer
@@ -48,8 +42,7 @@ export const OfflinePromptUI = () => {
                 </Typography>
                 <AppButton
                     variant="outlined"
-
-                    onClick={handleOffline}
+                    onClick={switchToOfflineMode}
                     style={{
                         fontSize: "15px",
                         marginTop: theme.boxSpacing(8),

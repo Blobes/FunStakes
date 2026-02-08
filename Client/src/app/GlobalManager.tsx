@@ -30,31 +30,36 @@ export const GlobalManager = ({ children }: { children: React.ReactNode }) => {
     const { verifyAuth } = useAuth();
     const hasAuthInit = useRef(false);
     const { switchToOfflineMode } = useOffline();
-    const [showSplash, setShowSplash] = useState(true)
+    const [isAppReady, setIsAppReady] = useState(false); // New local gate
+    const [showSplash, setShowSplash] = useState(true);
 
     useEffect(() => {
-
         const init = async () => {
-            // Register service worker
-            registerSW()
+            try {
+                registerSW();
+                setGlobalLoading(true);
 
-            // Set loading TRUE before hiding the Splash
-            setGlobalLoading(true);
+                // 1. Splash Phase
+                await delay(1000);
+                setShowSplash(false);
 
-            // Delay a little for splash
-            await delay();
-            setShowSplash(false);
-
-            // Initialize Auth
-            verifySignal();
-            if (!hasAuthInit.current) {
-                hasAuthInit.current = true;
-                await verifyAuth();
+                // 2. Verification Phase
+                verifySignal();
+                if (!hasAuthInit.current) {
+                    hasAuthInit.current = true;
+                    await verifyAuth(); // Wait for the actual auth check
+                }
+            } catch (error) {
+                console.error("Initialization failed", error);
+            } finally {
+                // 3. Finalization Phase
+                setGlobalLoading(false);
+                setIsAppReady(true); // ONLY now do we allow the app to show
             }
-            setGlobalLoading(false);
-        }
+        };
+
         init();
-    }, [networkStatus, authStatus, offlineMode]);
+    }, [networkStatus]);
 
     // Drawer & Modal Open / Close
     useEffect(() => {
@@ -77,12 +82,11 @@ export const GlobalManager = ({ children }: { children: React.ReactNode }) => {
     if (showSplash) return <SplashUI />;
 
     // Page loader UI
-    const isInitializing = isGlobalLoading ||
+    const isInitializing = !isAppReady ||
+        isGlobalLoading ||
         authStatus === "PENDING" ||
         networkStatus === "UNKNOWN";
-    if (isInitializing) {
-        return <PageLoaderUI />;
-    }
+    if (isInitializing) return <PageLoaderUI />;
 
     // Offline Prompt UI
     if (isOffline && !offlineMode) return <OfflinePromptUI />

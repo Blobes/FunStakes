@@ -6,18 +6,17 @@ import { Page } from "@/types";
 import { getFromLocalStorage } from "@/helpers/storage";
 
 export const useOffline = () => {
-  const { setOfflineMode, setGlobalLoading, setNetworkStatus } =
-    useGlobalContext();
+  const { setOfflineMode } = useGlobalContext();
   const { navigateTo } = usePage();
 
   const switchToOfflineMode = async () => {
-    setGlobalLoading(true);
-    await delay(500);
-
+    setOfflineMode(true);
     const offlinePage = clientRoutes.offline;
-    navigateTo(offlinePage, { type: "element", savePage: false });
-    // setNetworkStatus("OFFLINE");
-    setGlobalLoading(false);
+    navigateTo(offlinePage, {
+      type: "element",
+      savePage: false,
+      loadPage: true,
+    });
   };
 
   const switchToOnlineMode = () => {
