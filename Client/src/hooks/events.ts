@@ -2,7 +2,6 @@
 
 import { useRouter } from "next/navigation";
 import { useSnackbar } from "./snackbar";
-import { useController } from "./global";
 import { useAuth } from "@/app/(auth)/authHook";
 import { getCookie, setCookie } from "@/helpers/storage";
 import { useGlobalContext } from "@/app/GlobalContext";
@@ -12,7 +11,7 @@ export const useEvent = () => {
   const router = useRouter();
   const { setSBMessage, removeSBMessage } = useSnackbar();
   const { verifyAuth } = useAuth();
-  const { setGlobalLoading, setNetworkStatus } = useGlobalContext();
+  const { setNetworkStatus } = useGlobalContext();
   const { switchToOnlineMode } = useOffline();
 
   const handleBrowserEvents = () => {
@@ -26,7 +25,6 @@ export const useEvent = () => {
     };
 
     const offline = () => {
-      //  setNetworkStatus("OFFLINE");
       setSBMessage({
         msg: {
           id: 1,

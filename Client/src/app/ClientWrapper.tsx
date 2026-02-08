@@ -5,7 +5,6 @@ import dynamic from 'next/dynamic';
 import React from 'react';
 import { OfflinePrefetcher } from './offline/OfflinePrefetcher';
 
-// 1. Move the dynamic import here
 const GlobalManager = dynamic(
     () => import('./GlobalManager').then((mod) => mod.GlobalManager),
     {

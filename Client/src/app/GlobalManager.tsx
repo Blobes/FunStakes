@@ -22,9 +22,9 @@ export const GlobalManager = ({ children }: { children: React.ReactNode }) => {
     const drawerRef = useRef<DrawerRef>(null);
     const modalRef = useRef<ModalRef>(null);
     const { openDrawer, openModal, verifySignal, isOffline } = useController();
-    const { handleCurrentPage, isOnOffline } = usePage()
+    const { handleCurrentPage } = usePage()
     const { snackBarMsg, drawerContent, modalContent, isGlobalLoading,
-        authStatus, networkStatus, offlineMode, setGlobalLoading } = useGlobalContext();
+        authStatus, networkStatus, setGlobalLoading } = useGlobalContext();
     const pathname = usePathname();
     const { verifyAuth } = useAuth();
     const [isAppReady, setIsAppReady] = useState(false); // New local gate

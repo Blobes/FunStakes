@@ -74,6 +74,7 @@ export const Posts = () => {
           icon={<CircleSlash2 />}
           primaryCta={{
             type: "BUTTON",
+            variant: "outlined",
             label: "Explore Funstakes",
             action: () => navigateTo(clientRoutes.about,
               { type: "element", savePage: false, loadPage: true }),
