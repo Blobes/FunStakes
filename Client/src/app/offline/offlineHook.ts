@@ -12,10 +12,11 @@ export const useOffline = () => {
 
   const switchToOfflineMode = async () => {
     setGlobalLoading(true);
+    await delay(500);
+
     const offlinePage = clientRoutes.offline;
     navigateTo(offlinePage, { type: "element", savePage: false });
-    setNetworkStatus("OFFLINE");
-    await delay(500);
+    // setNetworkStatus("OFFLINE");
     setGlobalLoading(false);
   };
 

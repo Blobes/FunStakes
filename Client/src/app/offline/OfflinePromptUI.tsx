@@ -5,13 +5,25 @@ import { useTheme } from "@mui/material/styles";
 import { Footer } from "../(web)/navbars/Footer";
 import { useGlobalContext } from "../GlobalContext";
 import { ScreenShareOff } from "lucide-react";
+import { useOffline } from "./offlineHook";
+import { RootUIContainer } from "@/components/Containers";
 
-export const ConfirmOffline = () => {
+export const OfflinePromptUI = () => {
     const { setOfflineMode } = useGlobalContext();
     const theme = useTheme();
+    const { switchToOfflineMode } = useOffline();
+
+    const handleOffline = () => {
+        setOfflineMode(true)
+        switchToOfflineMode()
+    }
 
     return (
-        <>
+        <RootUIContainer
+            style={{
+                alignItems: "center",
+                justifyContent: "center",
+            }}>
             <Stack
                 sx={{
                     alignItems: "center",
@@ -37,7 +49,7 @@ export const ConfirmOffline = () => {
                 <AppButton
                     variant="outlined"
                     href={clientRoutes.signup.path}
-                    onClick={() => setOfflineMode(true)}
+                    onClick={handleOffline}
                     style={{
                         fontSize: "15px",
                         marginTop: theme.boxSpacing(8),
@@ -47,7 +59,7 @@ export const ConfirmOffline = () => {
                 </AppButton>
             </Stack>
             <Footer />
-        </>
+        </RootUIContainer>
     )
 }
 

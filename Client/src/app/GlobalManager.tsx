@@ -15,6 +15,7 @@ import { useOffline } from "./offline/offlineHook";
 import { registerSW } from "@/helpers/serviceWorker";
 import { delay } from "@/helpers/global";
 import { PageLoaderUI } from "@/components/LoadingUIs";
+import { OfflinePromptUI } from "./offline/OfflinePromptUI";
 
 
 export const GlobalManager = ({ children }: { children: React.ReactNode }) => {
@@ -24,30 +25,33 @@ export const GlobalManager = ({ children }: { children: React.ReactNode }) => {
     const { openDrawer, openModal, verifySignal, isOffline } = useController();
     const { handleCurrentPage } = usePage()
     const { snackBarMsg, drawerContent, modalContent, isGlobalLoading,
-        authStatus, networkStatus, offlineMode } = useGlobalContext();
+        authStatus, networkStatus, offlineMode, setGlobalLoading } = useGlobalContext();
     const pathname = usePathname();
     const { verifyAuth } = useAuth();
     const hasAuthInit = useRef(false);
     const { switchToOfflineMode } = useOffline();
-    const [mounted, setMounted] = useState(true)
+    const [showSplash, setShowSplash] = useState(true)
 
     useEffect(() => {
+
         const init = async () => {
             // Register service worker
             registerSW()
 
+            // Set loading TRUE before hiding the Splash
+            setGlobalLoading(true);
+
             // Delay a little for splash
             await delay();
-            setMounted(false);
+            setShowSplash(false);
 
-            // Switch to offline mode if offline
-            if (isOffline && !isGlobalLoading) switchToOfflineMode()
             // Initialize Auth
             verifySignal();
             if (!hasAuthInit.current) {
                 hasAuthInit.current = true;
                 await verifyAuth();
             }
+            setGlobalLoading(false);
         }
         init();
     }, [networkStatus, authStatus, offlineMode]);
@@ -69,14 +73,20 @@ export const GlobalManager = ({ children }: { children: React.ReactNode }) => {
         handleBrowserEvents(hasAuthInit);
     }, [pathname]);
 
-    // App Splash
-    if (mounted) return <SplashUI />;
+    // App Splash UI
+    if (showSplash) return <SplashUI />;
 
-    // Page loader
-    if ((isGlobalLoading || authStatus === "PENDING" ||
-        networkStatus === "UNKNOWN") && !mounted) {
+    // Page loader UI
+    const isInitializing = isGlobalLoading ||
+        authStatus === "PENDING" ||
+        networkStatus === "UNKNOWN";
+    if (isInitializing) {
         return <PageLoaderUI />;
     }
+
+    // Offline Prompt UI
+    if (isOffline && !offlineMode) return <OfflinePromptUI />
+
 
     // Render the app UIs
     return (
