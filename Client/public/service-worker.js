@@ -1,5 +1,5 @@
 // const API_CACHE = "funstakes-api-v2";
-const STATIC_CACHE = "funstakes-static-v3";
+const STATIC_CACHE = "funstakes-static-v2";
 
 const ESSENTIAL_ASSETS = [
   "/",
@@ -8,19 +8,21 @@ const ESSENTIAL_ASSETS = [
   "/favicon.ico",
   "/about",
   "/pricing",
-  // "/blogs",
   "/support",
-  //"/privacy",
-  // "/terms",
-  // "/news",
 ];
 
-// 1. Install: Pre-cache the shell so navigation fallback works
+// 1. Install: Pre-cache with error resilience
 self.addEventListener("install", (event) => {
   event.waitUntil(
     caches.open(STATIC_CACHE).then((cache) => {
-      // Use addAll for essential files; if one fails, install fails
-      return cache.addAll(ESSENTIAL_ASSETS);
+      // We use map + add to ensure one missing page doesn't break everything
+      return Promise.allSettled(
+        ESSENTIAL_ASSETS.map((url) =>
+          cache
+            .add(url)
+            .catch((err) => console.warn(`Failed to pre-cache: ${url}`)),
+        ),
+      );
     }),
   );
   self.skipWaiting();
@@ -51,10 +53,9 @@ self.addEventListener("fetch", (event) => {
   // 2. STRATEGY: Network-First for Navigations (Pages)
   // This ensures marketing pages stay fresh but work offline.
   if (request.mode === "navigate") {
-    event.withRespond(
+    event.respondWith(
       fetch(request)
         .then((response) => {
-          // Update cache with the fresh page HTML
           if (response.status === 200) {
             const copy = response.clone();
             caches.open(STATIC_CACHE).then((cache) => cache.put(request, copy));
@@ -63,7 +64,7 @@ self.addEventListener("fetch", (event) => {
         })
         .catch(async () => {
           const cache = await caches.open(STATIC_CACHE);
-          // Try specific page -> then /offline -> then root /
+          // Match the specific marketing page, fallback to /offline, then /
           return (
             (await cache.match(request)) ||
             (await cache.match("/offline")) ||
