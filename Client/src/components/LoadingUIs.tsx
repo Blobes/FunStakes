@@ -16,7 +16,7 @@ export const ProgressIcon = ({ style, otherProps, info }: ProgressProps) => {
   const theme = useTheme();
   return (
     <>
-      <CircularProgress
+      <CircularProgress enableTrackSlot
         sx={{ color: theme.palette.primary.dark, ...style }}
         {...otherProps} thickness={2.5}
       />

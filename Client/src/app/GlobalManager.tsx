@@ -38,27 +38,20 @@ export const GlobalManager = ({ children }: { children: React.ReactNode }) => {
             try {
                 registerSW();
                 setGlobalLoading(true);
-
-                // 1. Splash Phase
                 await delay();
                 setShowSplash(false);
 
-                // 2. Verification Phase
+                // Initial check only
                 verifySignal();
-                if (!hasAuthInit.current) {
-                    hasAuthInit.current = true;
-                    await verifyAuth(); // Wait for the actual auth check
-                }
-            } catch (error) {
-                console.error("Initialization failed", error);
+                await verifyAuth();
+
             } finally {
-                // 3. Finalization Phase
                 setGlobalLoading(false);
-                setIsAppReady(true); // ONLY now do we allow the app to show
+                setIsAppReady(true);
             }
         };
         init();
-    }, [networkStatus]);
+    }, []);
 
     // Drawer & Modal Open / Close
     useEffect(() => {
@@ -74,7 +67,7 @@ export const GlobalManager = ({ children }: { children: React.ReactNode }) => {
     // // Page Load Handler
     useEffect(() => {
         handleCurrentPage();
-        handleBrowserEvents(hasAuthInit);
+        handleBrowserEvents();
     }, [pathname]);
 
     // App Splash UI

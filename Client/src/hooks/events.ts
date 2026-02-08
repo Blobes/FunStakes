@@ -13,24 +13,25 @@ export const useEvent = () => {
   const { setSBMessage, removeSBMessage } = useSnackbar();
   const { verifySignal } = useController();
   const { verifyAuth } = useAuth();
-  const { setGlobalLoading } = useGlobalContext();
+  const { setGlobalLoading, setNetworkStatus } = useGlobalContext();
   const { switchToOnlineMode } = useOffline();
 
-  const handleBrowserEvents = (authInit?: React.MutableRefObject<boolean>) => {
-    const online = async () => {
+  const handleBrowserEvents = () => {
+    const online = () => {
       removeSBMessage();
       // setGlobalLoading(true);
       // Switch back to online mode
       switchToOnlineMode();
 
       // Reverify auth & network signal
-      verifySignal();
-      await verifyAuth();
-      if (authInit) authInit.current = true;
+      // verifySignal();
+      setNetworkStatus("STABLE");
+      verifyAuth();
       // setGlobalLoading(false);
     };
 
     const offline = () => {
+      setNetworkStatus("OFFLINE");
       setSBMessage({
         msg: {
           id: 1,
@@ -51,8 +52,7 @@ export const useEvent = () => {
       const recentlyAway = getCookie("recently_away");
 
       if (document.visibilityState === "visible") {
-        if (!recentlyAway && authInit) {
-          authInit.current = true;
+        if (!recentlyAway) {
           await verifyAuth();
         }
       }
