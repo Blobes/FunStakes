@@ -83,44 +83,4 @@ export const OfflineManager = ({ children }: { children: React.ReactNode }) => {
       {children}
       <BottomNav scrollRef={scrollRef} />
     </Stack>)
-
-
-  // {/* Logged in and NOT on a desktop screen */}
-  // {!isDesktop && (
-  //   <Stack
-  //     ref={scrollRef}
-  //     sx={{
-  //       height: "100%",
-  //       gap: theme.gap(0),
-  //       overflowY: "auto",
-  //       justifyContent: "flex-start",
-  //       alignItems: "center",
-  //       flexDirection: "column",
-  //       paddingBottom: theme.boxSpacing(23),
-  //       ...scrollBarStyle(),
-  //     }}>
-  //     <Header scrollRef={scrollRef} />
-  //     {children}
-  //     <BottomNav scrollRef={scrollRef} />
-  //   </Stack>
-  // )}
-
-  {/* {!offlineMode && (
-        <Stack
-          sx={{
-            height: "100%",
-            gap: theme.gap(0),
-            overflowY: "auto",
-            flexDirection: "column",
-            [theme.breakpoints.down("md")]: {
-              justifyContent: "flex-start",
-              alignItems: "center",
-            },
-            ...scrollBarStyle(),
-          }}>
-          {children}
-        </Stack>
-      )} */}
-
-
 }

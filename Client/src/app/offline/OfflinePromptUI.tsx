@@ -1,9 +1,7 @@
 import { AppButton } from "@/components/Buttons";
-import { clientRoutes } from "@/helpers/routes";
 import { Stack, Typography } from "@mui/material"
 import { useTheme } from "@mui/material/styles";
 import { Footer } from "../(web)/navbars/Footer";
-import { useGlobalContext } from "../GlobalContext";
 import { ScreenShareOff } from "lucide-react";
 import { useOffline } from "./offlineHook";
 import { RootUIContainer } from "@/components/Containers";
