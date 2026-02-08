@@ -3,7 +3,7 @@ import theme from "@/themes/theme";
 import CssBaseline from "@mui/material/CssBaseline";
 import { ContextProvider } from "./GlobalContext";
 import { Metadata } from "next";
-import { GlobalManager } from "./GlobalManager";
+import ClientWrapper from "./ClientWrapper";
 import { AppRouterCacheProvider } from '@mui/material-nextjs/v14-appRouter';
 
 
@@ -48,7 +48,7 @@ export default function RootLayout({
           <ContextProvider>
             <ThemeProvider theme={theme}>
               <CssBaseline />
-              <GlobalManager>{children}</GlobalManager>
+              <ClientWrapper>{children}</ClientWrapper>
             </ThemeProvider>
           </ContextProvider>
         </AppRouterCacheProvider>
