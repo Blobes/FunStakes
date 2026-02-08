@@ -1,5 +1,5 @@
-const API_CACHE = "funstakes-api-v1";
-const STATIC_CACHE = "funstakes-static-v5";
+// const API_CACHE = "funstakes-api-v2";
+const STATIC_CACHE = "funstakes-static-v6";
 
 const ESSENTIAL_ASSETS = [
   "/", // THE SHELL: Loads your main JS/React
@@ -46,7 +46,11 @@ self.addEventListener("fetch", (event) => {
     event.respondWith(
       fetch(request).catch(async () => {
         const cache = await caches.open(STATIC_CACHE);
-        // Serve "/" so the React app boots and handles the offline prompt
+        // If the user is specifically heading to /offline, don't serve the root!
+        if (url.pathname.includes("/offline")) {
+          return await cache.match("/offline");
+        }
+        // Otherwise, serve the main app shell
         return (await cache.match("/")) || (await cache.match("/offline"));
       }),
     );
