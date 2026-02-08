@@ -143,7 +143,7 @@ const componentTheme = createTheme({
     },
 
     // Grid
-    MuiGrid2: {
+    MuiGrid: {
       styleOverrides: {
         root: ({ theme }) => ({}),
       },
