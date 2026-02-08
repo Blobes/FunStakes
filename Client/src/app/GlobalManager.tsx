@@ -72,8 +72,10 @@ export const GlobalManager = ({ children }: { children: React.ReactNode }) => {
         handleBrowserEvents();
     }, [pathname]);
 
+    if (!mounted) return null;
+
     // App Splash UI
-    if (!mounted && showSplash) return <SplashUI />;
+    if (showSplash) return <SplashUI />;
 
     // Page loader UI
     const isInitializing = !isAppReady ||
