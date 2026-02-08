@@ -1,5 +1,5 @@
 // const API_CACHE = "funstakes-api-v2";
-const STATIC_CACHE = "funstakes-static-v7";
+const STATIC_CACHE = "funstakes-static-v8";
 
 const ESSENTIAL_ASSETS = [
   "/", // THE SHELL: Loads your main JS/React
@@ -43,8 +43,23 @@ self.addEventListener("fetch", (event) => {
 
   if (url.pathname.startsWith("/_next/static/")) {
     event.respondWith(
-      caches.match(request).then((response) => {
-        return response || fetch(request); // Fallback to network if not in cache
+      caches.match(request).then((cachedResponse) => {
+        // If we have it, return it immediately
+        if (cachedResponse) return cachedResponse;
+
+        // If not, go get it from the network and SAVE it for later
+        return fetch(request)
+          .then((networkResponse) => {
+            return caches.open(STATIC_CACHE).then((cache) => {
+              // Put a clone in the cache so we don't lose it
+              cache.put(request, networkResponse.clone());
+              return networkResponse;
+            });
+          })
+          .catch(() => {
+            // If network fails and it's not in cache, return a 404 or empty
+            return new Response("Chunk not found offline", { status: 404 });
+          });
       }),
     );
     return;

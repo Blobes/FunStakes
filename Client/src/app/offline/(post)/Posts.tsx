@@ -70,7 +70,7 @@ export const Posts = () => {
       ) : posts.length < 1 ? (
         <Empty
           headline="No offline posts"
-          tagline="Can't find any post at this time. In the meantime you can explore Funstakes"
+          tagline="Can't find any post at this time."
           icon={<CircleSlash2 />}
           primaryCta={{
             type: "BUTTON",
