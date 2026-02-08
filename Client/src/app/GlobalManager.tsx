@@ -77,10 +77,6 @@ export const GlobalManager = ({ children }: { children: React.ReactNode }) => {
         networkStatus === "UNKNOWN";
     if (isInitializing) return <PageLoaderUI />;
 
-    // // Offline Prompt UI
-    // const isOnOfflineRoute = isOnOffline(pathname);
-    // // if (isOffline && !offlineMode) return <OfflinePromptUI />
-
 
     // Render the app UIs
     return (

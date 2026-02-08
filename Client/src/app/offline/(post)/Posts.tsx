@@ -70,11 +70,11 @@ export const Posts = () => {
       ) : posts.length < 1 ? (
         <Empty
           headline="No offline posts"
-          tagline="Can't find any post at this time. In the meantime you can learn more Funstakes"
+          tagline="Can't find any post at this time. In the meantime you can explore Funstakes"
           icon={<CircleSlash2 />}
           primaryCta={{
             type: "BUTTON",
-            toolTip: "Explore Funstakes",
+            label: "Explore Funstakes",
             action: () => navigateTo(clientRoutes.about,
               { type: "element", savePage: false, loadPage: true }),
           }}
@@ -83,7 +83,7 @@ export const Posts = () => {
               height: "100%",
               backgroundColor: "none",
             },
-            tagline: { fontSize: { sx: "15px", sm: "18px" } },
+            tagline: { fontSize: "15px" },
             icon: {
               width: "50px",
               height: "50px",

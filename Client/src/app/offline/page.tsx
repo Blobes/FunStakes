@@ -2,7 +2,7 @@
 
 import { Posts } from "./(post)/Posts";
 
-export default function HomePage() {
+export default function OfflinePage() {
 
   return <Posts />
 }
