@@ -7,8 +7,11 @@ import { AppRouterCacheProvider } from '@mui/material-nextjs/v14-appRouter';
 import dynamic from 'next/dynamic';
 
 const GlobalManager = dynamic(
-  () => import("./GlobalManager").then((mod) => mod.GlobalManager),
-  { ssr: false }
+  () => import('./GlobalManager').then((mod) => mod.GlobalManager),
+  {
+    ssr: false,
+    loading: () => <div /> // Optional: avoids layout shift during hydration
+  }
 );
 
 export const metadata: Metadata = {
