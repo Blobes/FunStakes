@@ -48,7 +48,7 @@ export const OfflinePromptUI = () => {
                 </Typography>
                 <AppButton
                     variant="outlined"
-                    href={clientRoutes.signup.path}
+
                     onClick={handleOffline}
                     style={{
                         fontSize: "15px",
