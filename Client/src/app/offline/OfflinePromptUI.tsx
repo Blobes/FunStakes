@@ -1,10 +1,8 @@
-import { AppButton } from "@/components/Buttons";
-import { Stack, Typography } from "@mui/material"
 import { useTheme } from "@mui/material/styles";
-import { Footer } from "../(web)/navbars/Footer";
 import { ScreenShareOff } from "lucide-react";
 import { useOffline } from "./offlineHook";
 import { RootUIContainer } from "@/components/Containers";
+import { Empty } from "@/components/Empty";
 
 export const OfflinePromptUI = () => {
     const theme = useTheme();
@@ -15,41 +13,42 @@ export const OfflinePromptUI = () => {
             style={{
                 alignItems: "center",
                 justifyContent: "center",
+                textAlign: "center",
+                height: "100%",
+                width: "100%",
+                minHeight: "fit-content",
+                padding: theme.boxSpacing(12),
+                gap: theme.gap(6)
             }}>
-            <Stack
-                sx={{
-                    alignItems: "center",
-                    textAlign: "center",
-                    justifyContent: "center",
-                    height: "100%",
-                    width: "100%",
-                    minHeight: "fit-content",
-                    padding: theme.boxSpacing(12),
-                    gap: theme.gap(6)
-                }}>
-                <ScreenShareOff size={70}
-                    style={{
+            <Empty
+                headline="You seem to be offline"
+                tagline="  Switch to offline mode to view offline contents."
+                icon={<ScreenShareOff />}
+                primaryCta={{
+                    type: "BUTTON",
+                    variant: "outlined",
+                    label: "Switch mode",
+                    action: () => switchToOfflineMode()
+                }}
+                style={{
+                    container: {
+                        height: "100%",
+                        backgroundColor: "none",
+                    },
+                    headline: { fontSize: "24px!important" },
+                    tagline: { fontSize: "15px" },
+                    icon: {
+                        width: "60px",
+                        height: "60px",
                         marginBottom: theme.boxSpacing(8),
-                        strokeWidth: "1.5px"
-                    }} />
-                <Typography variant="h5" component="h5">
-                    You seem to be offline
-                </Typography>
-                <Typography variant="body3" component="p">
-                    Switch to offline mode to view saved contents.
-                </Typography>
-                <AppButton
-                    variant="outlined"
-                    onClick={switchToOfflineMode}
-                    style={{
-                        fontSize: "15px",
-                        marginTop: theme.boxSpacing(8),
-                        padding: theme.boxSpacing(2, 8, 3, 8),
-                    }}>
-                    Use offline mode
-                </AppButton>
-            </Stack>
-            <Footer />
+                        svg: {
+                            fill: "none",
+                            stroke: theme.palette.gray[200],
+                            strokeWidth: "1.5px",
+                        },
+                    },
+                }}
+            />
         </RootUIContainer>
     )
 }

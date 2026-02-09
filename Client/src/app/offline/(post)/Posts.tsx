@@ -8,8 +8,7 @@ import { useGlobalContext } from "@/app/GlobalContext";
 import { delay } from "@/helpers/global";
 import { ProgressIcon } from "@/components/LoadingUIs";
 import { Empty } from "@/components/Empty";
-import { useRouter } from "next/navigation";
-import { CircleSlash2, RadioTower } from "lucide-react";
+import { CircleSlash2 } from "lucide-react";
 import { useStyles } from "@/hooks/style";
 import { PostCard } from "./PostCard";
 import { getCachedPosts } from "@/helpers/post";
@@ -50,7 +49,6 @@ export const Posts = () => {
         gap: "unset",
         padding: theme.boxSpacing(0),
         ...(posts.length > 1 && autoScroll().base),
-
         [theme.breakpoints.down("md")]: {
           border: "none",
           maxWidth: "unset",
@@ -88,6 +86,7 @@ export const Posts = () => {
             icon: {
               width: "50px",
               height: "50px",
+              marginBottom: theme.boxSpacing(4),
               [theme.breakpoints.down("md")]: {
                 width: "40px",
                 height: "40px",

@@ -110,7 +110,7 @@ export const Empty: React.FC<EmptyProps> = ({
             {...primHref}
             style={{
               fontSize: "14px",
-              padding: theme.boxSpacing(2, 6),
+              padding: theme.boxSpacing(2, 7),
               margin: theme.boxSpacing(10, 0, 2, 0),
               ...style?.primaryCta,
             }}
