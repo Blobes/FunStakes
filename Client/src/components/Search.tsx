@@ -74,7 +74,7 @@ export const SearchContainer = () => {
       borderRadius: theme.radius.full,
       border: `1px solid ${theme.fixedColors.mainTrans}`,
       backgroundColor: theme.palette.gray[50],
-      width: "40%",
+      width: "30%",
       alignItems: "center",
       zIndex: zIndexes[5],
       transition: "all 0.2s ease-in",

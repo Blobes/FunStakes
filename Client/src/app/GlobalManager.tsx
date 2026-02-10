@@ -21,30 +21,26 @@ export const GlobalManager = ({ children }: { children: React.ReactNode }) => {
     const { handleBrowserEvents } = useEvent();
     const drawerRef = useRef<DrawerRef>(null);
     const modalRef = useRef<ModalRef>(null);
-    const { openDrawer, openModal, verifySignal, isOffline } = useController();
+    const { openDrawer, openModal, verifySignal } = useController();
     const { handleCurrentPage } = usePage()
     const { snackBarMsg, drawerContent, modalContent, isGlobalLoading,
         authStatus, networkStatus, setGlobalLoading } = useGlobalContext();
     const pathname = usePathname();
     const { verifyAuth } = useAuth();
-    const [isAppReady, setIsAppReady] = useState(false); // New local gate
-    const [showSplash, setShowSplash] = useState(true);
 
     useEffect(() => {
         const init = async () => {
             try {
                 registerSW();
                 setGlobalLoading(true);
-
                 await delay();
-                setShowSplash(false);
 
                 // Initial check only
                 verifySignal();
                 await verifyAuth();
             } finally {
                 setGlobalLoading(false);
-                setIsAppReady(true);
+
             }
         };
         init();
@@ -67,11 +63,9 @@ export const GlobalManager = ({ children }: { children: React.ReactNode }) => {
         handleBrowserEvents();
     }, [pathname]);
 
-    // App Splash UI
-    if (showSplash) return <SplashUI />;
 
     // Page loader UI
-    const isInitializing = !isAppReady ||
+    const isInitializing =
         isGlobalLoading ||
         authStatus === "PENDING" ||
         networkStatus === "UNKNOWN";

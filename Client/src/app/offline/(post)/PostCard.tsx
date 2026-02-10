@@ -21,7 +21,7 @@ import { AnimatedWrapper } from "@/components/AnimationWrapper";
 import { img } from "@/assets/exported";
 import { Strip } from "@/components/StripBar";
 import { SmartDate } from "@/components/SmartDate";
-import { SingleMedia } from "@/components/Media";
+import { SingleMedia } from "@/components/media/SingleMedia";
 import { getCachedAuthor } from "@/helpers/post";
 
 interface PostProps {

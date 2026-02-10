@@ -56,7 +56,6 @@ export const AppHeader: React.FC<AppHeaderProps> = ({ scrollRef }) => {
       content: <MobileNav />,
       source: "navbar",
       dragToClose: true,
-      onClose: closeDrawer,
       style: {
         base: { overlay: { padding: theme.boxSpacing(6) } },
         smallScreen: {
@@ -83,7 +82,7 @@ export const AppHeader: React.FC<AppHeaderProps> = ({ scrollRef }) => {
         flexDirection: "row",
         justifyContent: "space-between",
         alignItems: "center",
-        gap: theme.gap(6),
+        gap: theme.gap(4),
         backdropFilter: "blur(24px)",
         ...(!isDesktop && {
           transform: scrollDir === "down" ? "translateY(-100%)" : "translateY(0)",
@@ -91,46 +90,53 @@ export const AppHeader: React.FC<AppHeaderProps> = ({ scrollRef }) => {
         }),
       }}>
 
-      {/* Notification */}
-      {isLoggedIn && !isDesktop && (
-        <IconButton
-          onClick={handleNotification}
-          href={clientRoutes.notifications.path}>
-          <Bell />
-        </IconButton>
-      )}
-
       {/* Logo */}
-      {(!isLoggedIn || isLoggedIn && !isDesktop) && (
-        <AnchorLink
-          url={clientRoutes.home.path}
-          onClick={() => {
-            navigateTo(clientRoutes.home);
-          }}
-          style={{ display: "inline-flex" }}>
-          <Image
-            src={img.logo}
-            alt="logo"
-            style={{
-              width: 34,
-              height: 34,
-              borderRadius: `${theme.radius.full}`,
-            }} />
-        </AnchorLink>
-      )}
+      <AnchorLink
+        url={clientRoutes.home.path}
+        onClick={() => {
+          navigateTo(clientRoutes.home);
+        }}
+        style={{ display: "inline-flex" }}>
+        <Image
+          src={img.logo}
+          alt="logo"
+          style={{
+            width: 34,
+            height: 34,
+            borderRadius: `${theme.radius.full}`,
+          }} />
+      </AnchorLink>
+
 
       {/* Search */}
       {(isDesktop && isLoggedIn) && <SearchContainer />}
 
       {/* Right controls */}
-      <Stack direction="row" alignItems="center" spacing={theme.gap(8)}>
+      <Stack direction="row" alignItems="center" spacing={theme.gap(6)}>
         {isLoggedIn && (
           <>
+            {/* Notification */}
+            <IconButton
+              onClick={handleNotification}
+              href={clientRoutes.notifications.path}
+              style={{
+                width: 36,
+                height: 36,
+                padding: theme.boxSpacing(4),
+                border: `1px solid ${theme.palette.gray.trans[1]}`
+              }}>
+              <Bell style={{
+                width: "100%", stroke: theme.palette.primary.dark
+              }} />
+            </IconButton>
+
+            {/* User Avatar  */}
             {isDesktop && <DesktopNav menuRef={menuRef} />}
             <UserAvatar
               toolTipValue="Open menu"
               style={{
                 width: "34px", height: "34px",
+                marginLeft: "unset!important",
                 [theme.breakpoints.down("md")]: {
                   width: "28px", height: "28px"
                 },

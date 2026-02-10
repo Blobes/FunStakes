@@ -33,7 +33,7 @@ export const UserAvatar = ({
   const { firstName, lastName, profileImage } = info;
 
   const initials = getInitialsAndColors(`${firstName} ${lastName}`);
-  const { marginTop, ...others } = style;
+  const { marginTop, marginLeft, ...others } = style;
 
   return (
     <BasicTooltip title={toolTipValue} sx={{ borderRadius: theme.radius[3] }}>
@@ -43,7 +43,8 @@ export const UserAvatar = ({
         sx={{
           borderRadius: theme.radius.full,
           padding: theme.boxSpacing(2),
-          ...(marginTop !== undefined ? { marginTop } : {}),
+          ...(marginLeft && { marginLeft }),
+          ...(marginTop && { marginTop }),
         }}
         aria-label="User profile">
         <Avatar

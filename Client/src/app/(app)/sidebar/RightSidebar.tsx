@@ -13,12 +13,12 @@ export const RightSidebar = () => {
   return (
     <Stack
       sx={{
-        width: "32%",
+        width: "34%",
         minWidth: "300px",
         maxWidth: "500px",
         gap: theme.gap(8),
         flex: "none",
-        padding: theme.boxSpacing(8, 16),
+        padding: theme.boxSpacing(8, 20),
         ...autoScroll().base,
         [theme.breakpoints.down("md")]: {
           display: "none",

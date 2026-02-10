@@ -66,7 +66,7 @@ export const useStyles = () => {
     "&::before": {
       content: '""',
       position: "absolute",
-      inset: "-20%", // Expand out to ensure blur fills corners
+      inset: "-20%",
       background: effect, // Created from processVibrantColor
       filter: "blur(80px) saturate(3.5)", // CRITICAL: High saturation and blur
       opacity: 0.8,
@@ -85,10 +85,32 @@ export const useStyles = () => {
     },
   });
 
+  const applyBGOverlay = () => ({
+    // Fade in the overlay
+    "&::before": {
+      content: '""',
+      position: "absolute",
+      inset: 0,
+      bgcolor: theme.fixedColors.gray800,
+      opacity: 0,
+      zIndex: 2,
+      transition: "opacity 0.4s ease",
+    },
+    // Target the internal Box (Image/Video)
+    "& .MuiBox-root": {
+      transition: "transform 0.6s ease",
+    },
+    "&:hover": {
+      "&::before": { opacity: 0.4 },
+      "& .MuiBox-root": { transform: "scale(1.05)" }, // Subtle zoom
+    },
+  });
+
   return {
     scrollBarStyle,
     autoScroll,
     applyBGPattern,
     applyBGEffect,
+    applyBGOverlay,
   };
 };

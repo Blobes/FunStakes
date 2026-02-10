@@ -51,7 +51,7 @@ export const Drawer = forwardRef<DrawerRef, DrawerProps>(
     const containerRef = useRef<HTMLDivElement>(null);
     const closeRef = useRef<HTMLButtonElement>(null);
     const { scrollBarStyle } = useStyles();
-    const { isDesktop, isMobile } = useController();
+    const { isDesktop, isMobile, closeDrawer } = useController();
     const theme = useTheme();
     const [isOpen, setOpen] = useState(false);
     const [shouldRemove, setShouldRemove] = useState(true);
@@ -85,6 +85,7 @@ export const Drawer = forwardRef<DrawerRef, DrawerProps>(
         (closeRef.current && closeRef.current.contains(e.target as HTMLElement))
       ) {
         setOpen(false);
+        closeDrawer()
         if (onClose) onClose();
       }
     };

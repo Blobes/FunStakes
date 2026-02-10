@@ -26,24 +26,33 @@ export const clearPendingLike = (postId: string) => {
   localStorage.setItem(pendingLikesKey, JSON.stringify(pending));
 };
 // --- Offline queue ---
-export const enqueueLike = (postId: string) => {
-  const queue = JSON.parse(localStorage.getItem(likeQueueKey) || "[]");
-  queue.push({ postId, timestamp: Date.now() });
+export const enqueueLike = (postId: string, finalState: boolean) => {
+  const queue = JSON.parse(localStorage.getItem(likeQueueKey) || "{}");
+  // Overwrites any previous pending action for this specific post
+  queue[postId] = { liked: finalState, timestamp: Date.now() };
   localStorage.setItem(likeQueueKey, JSON.stringify(queue));
 };
 
 export const processQueue = async () => {
-  const queue = JSON.parse(localStorage.getItem(likeQueueKey) || "[]");
-  if (!queue.length) return;
-  const remaining: any[] = [];
-  for (const { postId } of queue) {
+  const queue = JSON.parse(localStorage.getItem(likeQueueKey) || "{}");
+  const postIds = Object.keys(queue);
+
+  if (!postIds.length) return;
+
+  for (const postId of postIds) {
     try {
       await fetcher(serverApi.likePost(postId), { method: "PUT" });
-    } catch {
-      remaining.push({ postId, timestamp: Date.now() });
+      // Remove from queue and pending only after success
+      const currentQueue = JSON.parse(
+        localStorage.getItem(likeQueueKey) || "{}",
+      );
+      delete currentQueue[postId];
+      localStorage.setItem(likeQueueKey, JSON.stringify(currentQueue));
+      clearPendingLike(postId);
+    } catch (err) {
+      console.error("Failed to sync offline like for:", postId);
     }
   }
-  localStorage.setItem(likeQueueKey, JSON.stringify(remaining));
 };
 
 // CACHING POSTS

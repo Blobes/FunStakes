@@ -181,7 +181,7 @@ const componentTheme = createTheme({
           borderRadius: theme.radius[0],
           boxShadow: "none",
           minHeight: "44px",
-          padding: theme.boxSpacing(6),
+          padding: theme.boxSpacing(4, 18),
           [theme.breakpoints.down("md")]: {
             minHeight: "32px",
             padding: theme.boxSpacing(5),

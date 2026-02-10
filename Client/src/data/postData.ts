@@ -1,5 +1,8 @@
 "use client";
 
+import { SingleMediaProps } from "@/components/media/SingleMedia";
+import { img } from "@/assets/exported";
+
 //import { Post } from "@/types";
 const postPic1 = "/assets/images/postpic1.jpg";
 const postPic2 = "/assets/images/postpic2.jpg";
@@ -30,4 +33,19 @@ export const postData = [
     likes: [],
     createdOn: Date.now(),
   },
+];
+
+export const singleMediaData: SingleMediaProps[] = [
+  { media: { src: img.pic6 } },
+  { media: { src: img.video, type: "video" } },
+];
+
+export const multiMediaData: SingleMediaProps[] = [
+  { media: { src: img.pic1 } },
+  { media: { src: img.pic2 } },
+  { media: { src: img.pic3 } },
+  { media: { src: img.pic4 } },
+  { media: { src: img.pic4 } },
+  { media: { src: img.pic3 } },
+  { media: { src: img.video, type: "video" } },
 ];

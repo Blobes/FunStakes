@@ -74,12 +74,11 @@ export const Header: React.FC<AppHeaderProps> = ({ scrollRef }) => {
         <OfflineAvatar
           style={{
             width: "34px", height: "34px",
+            stroke: "none",
             [theme.breakpoints.down("md")]: {
               width: "28px", height: "28px"
             },
           }} />
-
-
 
         {/* Login Button */}
         {authStatus === "UNAUTHENTICATED" && (

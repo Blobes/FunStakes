@@ -15,7 +15,7 @@ import { OfflinePromptUI } from "../offline/OfflinePromptUI";
 import { usePathname } from "next/navigation";
 
 export const AppManager = ({ children }: { children: React.ReactNode }) => {
-  const { isDesktop, isUnstableNetwork, isOffline, isOnline } = useController();
+  const { isDesktop, isUnstableNetwork, isOffline } = useController();
   const theme = useTheme();
   const { authStatus, offlineMode } = useGlobalContext();
   const { scrollBarStyle } = useStyles();
@@ -25,7 +25,7 @@ export const AppManager = ({ children }: { children: React.ReactNode }) => {
   if (isOffline && !offlineMode) return <OfflinePromptUI />
 
   // Conditionally render the offline UI
-  if ((isUnstableNetwork || authStatus === "ERROR") && isOnline) {
+  if ((isUnstableNetwork || authStatus === "ERROR") && !isOffline) {
     return <NetworkGlitchUI />;
   }
 
@@ -38,26 +38,20 @@ export const AppManager = ({ children }: { children: React.ReactNode }) => {
             height: "100%",
             gap: theme.gap(0),
             overflowY: "hidden",
-            flexDirection: "row",
+            flexDirection: "column",
           }}>
-          <LeftNav />
+          <AppHeader />
           <Stack
             sx={{
               height: "100%",
               gap: theme.gap(0),
               overflowY: "hidden",
               overflowX: "auto",
-              flexDirection: "column",
+              flexDirection: "row",
               width: "100%",
-              [theme.breakpoints.down("md")]: {
-                overflowY: "auto",
-                justifyContent: "flex-start",
-                alignItems: "center",
-                flexDirection: "column",
-              },
               ...scrollBarStyle(),
             }}>
-            <AppHeader />
+            <LeftNav />
             {children}
           </Stack>
         </Stack>

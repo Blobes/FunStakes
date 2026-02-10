@@ -7,6 +7,7 @@ import { Stack } from "@mui/material";
 import { RightSidebar } from "./sidebar/RightSidebar";
 import { useGlobalContext } from "../GlobalContext";
 import { Welcome } from "./Welcome";
+import { PostList } from "./post/PostList";
 
 export default function HomePage() {
   const { isDesktop } = useController();
@@ -21,14 +22,15 @@ export default function HomePage() {
           <Stack sx={{
             height: "100%",
             flexDirection: "row",
+            gap: 0,
             overflow: "hidden",
-            borderTop: `1px solid ${theme.palette.gray.trans[1]}`,
+            width: "100%",
           }}>
             <Posts />
             <RightSidebar />
           </Stack>
         ) : (
-          <Posts />
+          <PostList />
         )
       )}
       {authStatus === "UNAUTHENTICATED" && (

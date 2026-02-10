@@ -8,6 +8,7 @@ import { useStyles } from "@/hooks/style";
 import { Direction, GenericObject } from "@/types";
 import { Transition, TransitionType } from "./Transition";
 import { zIndexes } from "@/helpers/global";
+import { useController } from "@/hooks/global";
 
 export interface ModalRef {
   openModal: () => void;
@@ -42,6 +43,7 @@ export const Modal = forwardRef<ModalRef, ModalProps>(
     const theme = useTheme();
     const [isOpen, setOpen] = useState(false);
     const [shouldRemove, setShouldRemove] = useState(true);
+    const { closeModal } = useController();
 
     // Transition properties
     const trans = {
@@ -68,6 +70,7 @@ export const Modal = forwardRef<ModalRef, ModalProps>(
         (closeRef.current && closeRef.current.contains(e.target as HTMLElement))
       ) {
         setOpen(false);
+        closeModal();
         if (onClose) onClose();
       }
     };
