@@ -10,7 +10,7 @@ import { ProgressIcon } from "@/components/LoadingUIs";
 import { Empty } from "@/components/Empty";
 import { CircleSlash2 } from "lucide-react";
 import { useStyles } from "@/hooks/style";
-import { PostCard } from "./PostCard";
+import { PostCard } from "@/app/(app)/post/post-card/Card";
 import { getCachedPosts } from "@/helpers/post";
 import { usePage } from "@/hooks/page";
 import { clientRoutes } from "@/helpers/routes";
@@ -100,7 +100,7 @@ export const Posts = () => {
           }}
         />
       ) : (
-        posts.map((post) => <PostCard key={post._id} post={post} />)
+        posts.map((post) => <PostCard key={post._id} post={post} mode="offline" />)
       )}
     </Stack>
   );

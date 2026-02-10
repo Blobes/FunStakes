@@ -11,7 +11,7 @@ interface PostEngagementProps {
     handleLike: () => void;
 }
 
-export const PostEngagement = ({ likedByMe, isLiking, handleLike }: PostEngagementProps) => {
+export const PostEngagement = ({ likedByMe, isLiking, handleLike, }: PostEngagementProps) => {
     const theme = useTheme();
 
     return (

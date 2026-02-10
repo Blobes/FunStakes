@@ -14,6 +14,7 @@ export const usePostLike = (post: Post, context: any) => {
     isOffline,
     isUnstableNetwork,
     setSBMessage,
+    mode,
     LoginStepper,
   } = context;
   const [postData, setPostData] = useState<Post>(post);
@@ -40,13 +41,14 @@ export const usePostLike = (post: Post, context: any) => {
       setModalContent({ content: LoginStepper });
       return;
     }
-    if (isOffline || isUnstableNetwork) {
-      console.log("Hello");
+    if (isOffline || isUnstableNetwork || mode === "offline") {
       setSBMessage({
         msg: {
-          content: "Something went wrong.",
+          content:
+            mode === "offline"
+              ? "You can't like an offline post."
+              : "Something went wrong.",
           msgStatus: "ERROR",
-          behavior: "FIXED",
         },
         override: true,
       });

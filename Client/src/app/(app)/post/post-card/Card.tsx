@@ -22,9 +22,10 @@ import { PostEngagement } from "./PostEngagement";
 interface PostProps {
     post: Post;
     style?: GenericObject<string>;
+    mode?: "online" | "offline"
 }
 
-export const PostCard = ({ post, style = {} }: PostProps) => {
+export const PostCard = ({ post, style = {}, mode = "online" }: PostProps) => {
     const theme = useTheme();
     const postService = usePostService(); // Hook containing fetchAuthor, handlePostLike, etc.
     const globalContext = useGlobalContext();
@@ -33,16 +34,16 @@ export const PostCard = ({ post, style = {} }: PostProps) => {
 
     // 1. Splitted Logic Hooks
     const { author, error } = usePostAuthor(post.authorId, postService.fetchAuthor);
+
     const { postData, isLiking, handleLike } = usePostLike(post, {
-        ...postService, ...globalContext, ...controller, setSBMessage, LoginStepper: <LoginStepper />
+        ...postService, ...globalContext, ...controller, setSBMessage,
+        mode, LoginStepper: <LoginStepper />
     });
     const { likeCount, likedByMe, content } = postData;
     const postMedia = singleMediaData
 
     if (!author) return <Empty tagline={error || "Loading author..."} />;
     if (postData.status === "DELETED") return <Empty tagline="Deleted by author." />;
-
-
 
     return (
         <Stack
