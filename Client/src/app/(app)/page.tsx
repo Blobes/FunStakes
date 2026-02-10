@@ -2,12 +2,12 @@
 
 import { useController } from "@/hooks/global";
 import { useTheme } from "@mui/material/styles";
-import { Posts } from "./post/Posts";
+import { PostList } from "./post/PostList";
 import { Stack } from "@mui/material";
 import { RightSidebar } from "./sidebar/RightSidebar";
 import { useGlobalContext } from "../GlobalContext";
 import { Welcome } from "./Welcome";
-import { PostList } from "./post/PostList";
+
 
 export default function HomePage() {
   const { isDesktop } = useController();
@@ -26,7 +26,7 @@ export default function HomePage() {
             overflow: "hidden",
             width: "100%",
           }}>
-            <Posts />
+            <PostList />
             <RightSidebar />
           </Stack>
         ) : (
