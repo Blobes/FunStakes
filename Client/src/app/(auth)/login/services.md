@@ -31,7 +31,7 @@ interface CheckEmailResponse {
   message: string;
 }
 
-export const useLogin = () => {
+export const useLoginOld = () => {
   const { setAuthUser, setAuthStatus, setInlineMsg, isAuthLoading } =
     useGlobalContext();
   const { setLastPage, isOnWeb } = usePage();

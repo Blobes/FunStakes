@@ -2,19 +2,20 @@
 
 import { DrawerProps } from "./components/Drawer";
 
+// Types
 export type AuthStatus =
   | "UNKNOWN"
   | "AUTHENTICATED"
   | "UNAUTHENTICATED"
   | "PENDING"
   | "ERROR";
-
 export type NetworkStatus = "STABLE" | "UNSTABLE" | "OFFLINE" | "UNKNOWN";
-
 export type Direction = "left" | "right" | "up" | "down";
-
+export type UIMode = "online" | "offline";
 export type DateType = "shortened" | "complete" | "date-only";
+export type SnackbarStatus = "SUCCESS" | "ERROR" | "INFO" | "WARNING" | null;
 
+// Interfaces
 export type GenericObject<T> = {
   [key: string]: T | GenericObject<T>;
 };
@@ -49,30 +50,38 @@ export interface IUser {
   updatedAt?: string;
 }
 
-export interface Post {
+export interface IGist {
   _id: string;
   authorId: string;
   content: string;
-  postImage: string | null;
+  media: string[] | null;
   likeCount: number;
   likedByMe: boolean;
   createdAt: number;
   status: "ACTIVE" | "DELETED";
 }
 
-export interface NavItem {
+export interface IStake {
+  _id: string;
+  authorId: string;
+  content: string;
+  media: string | null;
+  createdAt: string | number;
+}
+
+export interface INavItem {
   title?: string;
   element?: React.ReactNode;
   url?: string;
   action?: () => void;
 }
 
-export interface NavBarProps {
-  setLastPage: (page: Page) => void;
-  list: NavItem[];
+export interface INavBar {
+  setLastPage: (page: IPage) => void;
+  list: INavItem[];
 }
 
-export interface ListItemType {
+export interface IListItem {
   item: React.ReactNode | string;
   action?: () => void | null;
 }
@@ -81,9 +90,7 @@ export interface DrawerContent extends DrawerProps {
   source?: string;
 }
 
-export type SnackbarStatus = "SUCCESS" | "ERROR" | "INFO" | "WARNING" | null;
-
-export interface MsgType {
+export interface IMessage {
   id?: number;
   title?: string | null;
   content?: string | null;
@@ -97,19 +104,19 @@ export interface MsgType {
   };
 }
 
-export interface SnackBarMsg {
-  messages?: MsgType[];
+export interface ISnackBarMsg {
+  messages?: IMessage[];
   defaultDur: number;
   dir?: Direction;
 }
 
-export interface SingleResponse<T> {
+export interface ISingleResponse<T> {
   message: string;
   payload: T | null;
   status: SnackbarStatus;
 }
 
-export interface ListResponse<T> {
+export interface IListResponse<T> {
   message: string;
   payload?: T[] | null;
   status: SnackbarStatus;
@@ -120,14 +127,23 @@ export interface InputValidation {
   message: string;
 }
 
-export interface Step {
+export interface IStep {
   name: string;
   element: React.ReactNode;
   action?: () => void;
   allowPrevious?: boolean;
 }
 
-export interface Page {
+export interface IPage {
   title: string;
   path: string;
+}
+
+export interface IMedia {
+  id?: string;
+  src: string;
+  title?: string;
+  type?: "image" | "video";
+  onClick?: (id?: string) => void;
+  usage?: "list" | "item";
 }

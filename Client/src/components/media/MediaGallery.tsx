@@ -1,16 +1,16 @@
 import { useMemo } from 'react';
 import { Box, ImageList, ImageListItem, Typography } from '@mui/material';
-import { MediaStyle, SingleMediaProps } from './SingleMedia';
+import { MediaStyle, MediaProps } from './SingleMedia';
 import { useTheme } from "@mui/material/styles";
 import { useStyles } from '@/hooks/style';
 
 
-interface MediaGalleryProps {
-    mediaList: SingleMediaProps[];
+export interface GalleryProps {
+    mediaList: MediaProps[];
     style?: MediaStyle
 }
 
-export const MediaGallery = ({ mediaList, style }: MediaGalleryProps) => {
+export const MediaGallery = ({ mediaList, style }: GalleryProps) => {
     const theme = useTheme();
     const { applyBGOverlay: applyOverlay } = useStyles();
 
@@ -27,12 +27,12 @@ export const MediaGallery = ({ mediaList, style }: MediaGalleryProps) => {
         { cols: 1, rows: 1 }, { cols: 1, rows: 1 }, { cols: 2, rows: 1 }],
     };
 
-    const displayData = useMemo(() => {
-        const stableItems = [...mediaList].sort((a, b) =>
-            (a.id || a.media.src).localeCompare(b.id || b.media.src)
+    const displayMedia = useMemo(() => {
+        const mediaItems = [...mediaList].sort((a, b) =>
+            (a.id || a.src).localeCompare(b.id || b.src)
         );
-        const count = Math.min(stableItems.length, 6);
-        const sliced = stableItems.slice(0, count);
+        const count = Math.min(mediaItems.length, 6);
+        const sliced = mediaItems.slice(0, count);
         const pattern = LAYOUT_PATTERNS[count];
 
         return sliced.map((item, index) => ({
@@ -64,10 +64,10 @@ export const MediaGallery = ({ mediaList, style }: MediaGalleryProps) => {
             cols={4}
             rowHeight={150}>
 
-            {displayData.map((item, index) => {
+            {displayMedia.map((media, index) => {
                 const isLastItem = index === 5 && remainingCount > 0;
-                const { id, media, onClick, cols, rows } = item;
-                const mediaType = media.type ?? "image";
+                const { id, src, type, title, onClick, cols, rows } = media;
+                const mediaType = type ?? "image";
 
                 return (
                     <ImageListItem
@@ -84,7 +84,7 @@ export const MediaGallery = ({ mediaList, style }: MediaGalleryProps) => {
 
                         {mediaType === "video" ? (
                             <Box component="video"
-                                src={media.src}
+                                src={src}
                                 autoPlay loop muted playsInline
                                 sx={{
                                     display: 'block',
@@ -94,8 +94,8 @@ export const MediaGallery = ({ mediaList, style }: MediaGalleryProps) => {
                         ) : (
                             <Box component="img"
                                 // Note: We use the pattern cols/rows for the URL optimization
-                                src={`${media.src}?w=${cols * 150}&h=${rows * 150}&fit=crop&auto=format`}
-                                alt={media.title}
+                                src={`${src}?w=${cols * 150}&h=${rows * 150}&fit=crop&auto=format`}
+                                alt={title}
                                 loading="lazy"
                                 sx={{
                                     display: 'block',

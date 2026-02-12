@@ -2,7 +2,7 @@
 
 import { Stack, Typography } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
-import { ProfileCard } from "./RightSidebarCards";
+import { RecentMedia } from "./RecentMedia";
 import { useStyles } from "@/hooks/style";
 
 export const RightSidebar = () => {
@@ -17,7 +17,7 @@ export const RightSidebar = () => {
         maxWidth: "500px",
         gap: theme.gap(8),
         flex: "none",
-        padding: theme.boxSpacing(8, 16),
+        padding: theme.boxSpacing(8, 20),
         ...autoScroll().base,
         [theme.breakpoints.down("md")]: {
           display: "none",
@@ -27,6 +27,7 @@ export const RightSidebar = () => {
       <Typography variant="subtitle1" sx={{ width: "100%" }}>
         Recently Viewed Images & Videos
       </Typography>
+      <RecentMedia />
     </Stack>
   );
 };

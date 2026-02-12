@@ -3,10 +3,10 @@
 import React, { createContext, useContext, useState } from "react";
 import {
   IUser,
-  SnackBarMsg,
+  ISnackBarMsg,
   AuthStatus,
   DrawerContent,
-  Page,
+  IPage,
   NetworkStatus,
 } from "@/types";
 import { clientRoutes } from "@/helpers/routes";
@@ -17,16 +17,16 @@ interface Context {
   setAuthStatus: React.Dispatch<React.SetStateAction<AuthStatus>>;
   authUser: IUser | null;
   setAuthUser: React.Dispatch<React.SetStateAction<IUser | null>>;
-  snackBarMsg: SnackBarMsg;
-  setSnackBarMsg: React.Dispatch<React.SetStateAction<SnackBarMsg>>;
+  snackBarMsg: ISnackBarMsg;
+  setSnackBarMsg: React.Dispatch<React.SetStateAction<ISnackBarMsg>>;
   inlineMsg: string | null;
   setInlineMsg: React.Dispatch<React.SetStateAction<string | null>>;
   isGlobalLoading: boolean;
   setGlobalLoading: React.Dispatch<React.SetStateAction<boolean>>;
   isAuthLoading: boolean;
   setAuthLoading: React.Dispatch<React.SetStateAction<boolean>>;
-  lastPage: Page;
-  setPage: React.Dispatch<React.SetStateAction<Page>>;
+  lastPage: IPage;
+  setPage: React.Dispatch<React.SetStateAction<IPage>>;
   drawerContent: DrawerContent | null;
   setDrawerContent: React.Dispatch<React.SetStateAction<DrawerContent | null>>;
   modalContent: DrawerContent | null;
@@ -47,7 +47,7 @@ export const ContextProvider = ({
 }) => {
   const [authStatus, setAuthStatus] = useState<AuthStatus>("PENDING");
   const [authUser, setAuthUser] = useState<IUser | null>(null);
-  const [snackBarMsg, setSnackBarMsg] = useState<SnackBarMsg>({
+  const [snackBarMsg, setSnackBarMsg] = useState<ISnackBarMsg>({
     messages: [],
     defaultDur: 5,
     dir: "up"
@@ -55,7 +55,7 @@ export const ContextProvider = ({
   const [inlineMsg, setInlineMsg] = useState<string | null>(null);
   const [isGlobalLoading, setGlobalLoading] = useState(false);
   const [isAuthLoading, setAuthLoading] = useState(false);
-  const [lastPage, setPage] = useState<Page>(clientRoutes.home);
+  const [lastPage, setPage] = useState<IPage>(clientRoutes.home);
   const [drawerContent, setDrawerContent] = useState<DrawerContent | null>(null);
   const [modalContent, setModalContent] = useState<ModalProps | null>(null);
   const [networkStatus, setNetworkStatus] = useState<NetworkStatus>("UNKNOWN");

@@ -3,7 +3,7 @@
 import { fetcher, checkNetworkError } from "@/helpers/fetcher";
 import { serverApi } from "@/helpers/routes";
 import { useSnackbar } from "@/hooks/snackbar";
-import { IUser, ListResponse, SingleResponse } from "@/types";
+import { IUser, IListResponse, ISingleResponse } from "@/types";
 
 export const useUser = () => {
   const { setSBMessage } = useSnackbar();
@@ -15,9 +15,12 @@ export const useUser = () => {
     message: string;
   }> => {
     try {
-      const res = await fetcher<SingleResponse<IUser>>(serverApi.user(userId), {
-        method: "GET",
-      });
+      const res = await fetcher<ISingleResponse<IUser>>(
+        serverApi.user(userId),
+        {
+          method: "GET",
+        },
+      );
       return { payload: res.payload ?? null, message: res.message };
     } catch (error: any) {
       const networkError = checkNetworkError(error);
@@ -35,7 +38,7 @@ export const useUser = () => {
   }
   const getFollowers = async (userId: string): Promise<Followers> => {
     try {
-      const res = await fetcher<ListResponse<any>>(
+      const res = await fetcher<IListResponse<any>>(
         serverApi.followers(userId),
         {
           method: "GET",

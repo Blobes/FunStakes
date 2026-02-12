@@ -40,7 +40,6 @@ export const GlobalManager = ({ children }: { children: React.ReactNode }) => {
                 await verifyAuth();
             } finally {
                 setGlobalLoading(false);
-
             }
         };
         init();

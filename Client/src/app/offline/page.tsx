@@ -1,8 +1,7 @@
 "use client";
 
-import { Posts } from "./(post)/Posts";
+import { Feed } from "./Feed";
 
 export default function OfflinePage() {
-
-  return <Posts />
+  return <Feed />
 }

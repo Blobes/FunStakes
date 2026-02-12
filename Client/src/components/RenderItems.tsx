@@ -3,7 +3,7 @@
 import React from "react";
 import { Typography } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
-import { NavItem, Page } from "@/types";
+import { INavItem, IPage } from "@/types";
 import { matchPaths } from "@/helpers/global";
 import { usePathname } from "next/navigation";
 import { AnchorLink } from "@/components/Buttons";
@@ -13,7 +13,7 @@ import { usePage } from "@/hooks/page";
 
 // Props for the reusable nav renderer
 export interface RenderListProps {
-  list: NavItem[];
+  list: INavItem[];
   itemAction?: () => void;
   style?: any;
   showCurrentPage?: boolean
@@ -66,7 +66,7 @@ export const RenderItemList: React.FC<RenderListProps> = ({
                 title: item.title,
                 path: item.url ?? "#",
               };
-              navigateTo(page as Page);
+              navigateTo(page as IPage);
               if (item.action) item.action();
               if (itemAction) itemAction();
             }}

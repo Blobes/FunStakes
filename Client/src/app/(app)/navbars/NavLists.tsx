@@ -3,7 +3,7 @@ import { useAuth } from "@/app/(auth)/authHook";
 import { ComfirmLogout } from "@/app/(auth)/logout/Logout";
 import { clientRoutes } from "@/helpers/routes";
 import { useController } from "@/hooks/global";
-import { NavItem } from "@/types";
+import { INavItem } from "@/types";
 import {
   AudioLines,
   BadgeQuestionMark,
@@ -26,7 +26,7 @@ export const useNavLists = () => {
 
 
   // User profile navigation list visible to only logged-in users
-  const userNavList: NavItem[] = [
+  const userNavList: INavItem[] = [
     {
       title: clientRoutes.profile.title,
       element: <User />,
@@ -55,7 +55,7 @@ export const useNavLists = () => {
   ];
 
   // Left Sidebar navigation list visible to only logged-in users
-  const sidebarNavList: NavItem[] = [
+  const sidebarNavList: INavItem[] = [
     {
       title: clientRoutes.home.title,
       element: <House />,

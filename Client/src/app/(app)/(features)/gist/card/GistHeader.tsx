@@ -5,12 +5,12 @@ import { UserPlus, EllipsisVertical } from "lucide-react";
 import { IUser } from "@/types";
 import { useTheme } from "@mui/material/styles";
 
-interface PostHeaderProps {
+interface HeaderProps {
     author: IUser;
     createdAt: string | number;
 }
 
-export const PostHeader = ({ author, createdAt }: PostHeaderProps) => {
+export const GistHeader = ({ author, createdAt }: HeaderProps) => {
     const theme = useTheme();
     const authorFullName = `${author.firstName} ${author.lastName}`;
 

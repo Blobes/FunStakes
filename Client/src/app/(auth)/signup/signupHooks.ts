@@ -3,7 +3,7 @@
 import { useGlobalContext } from "@/app/GlobalContext";
 import { useController } from "@/hooks/global";
 import { fetcher } from "@/helpers/fetcher";
-import { IUser, SingleResponse } from "@/types";
+import { IUser, ISingleResponse } from "@/types";
 import { useRouter } from "next/navigation";
 import { DrawerRef } from "@/components/Drawer";
 import { useRef } from "react";
@@ -14,7 +14,7 @@ interface LoginCredentials {
   email: string;
   password: string;
 }
-interface LoginResponse extends SingleResponse<IUser> {
+interface LoginResponse extends ISingleResponse<IUser> {
   fixedMsg?: string;
 }
 interface SignupInfo {
@@ -75,7 +75,7 @@ export const useSignup = (drawerRef?: React.RefObject<DrawerRef>) => {
 
   const handleSignup = async (
     info: SignupInfo,
-  ): Promise<SingleResponse<IUser> | null> => {
+  ): Promise<ISingleResponse<IUser> | null> => {
     return null;
   };
 

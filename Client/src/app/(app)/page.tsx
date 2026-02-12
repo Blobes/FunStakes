@@ -2,12 +2,11 @@
 
 import { useController } from "@/hooks/global";
 import { useTheme } from "@mui/material/styles";
-import { PostList } from "./post/PostList";
 import { Stack } from "@mui/material";
-import { RightSidebar } from "./sidebar/RightSidebar";
+import { RightSidebar } from "./(home)/sidebar/RightSidebar";
 import { useGlobalContext } from "../GlobalContext";
 import { Welcome } from "./Welcome";
-
+import { Feed } from "./(home)/Feed";
 
 export default function HomePage() {
   const { isDesktop } = useController();
@@ -26,11 +25,11 @@ export default function HomePage() {
             overflow: "hidden",
             width: "100%",
           }}>
-            <PostList />
+            <Feed />
             <RightSidebar />
           </Stack>
         ) : (
-          <PostList />
+          <Feed />
         )
       )}
       {authStatus === "UNAUTHENTICATED" && (

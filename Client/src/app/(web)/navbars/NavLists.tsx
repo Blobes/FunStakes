@@ -1,12 +1,12 @@
 "use client";
 
 import { clientRoutes } from "@/helpers/routes";
-import { NavItem } from "@/types";
+import { INavItem } from "@/types";
 import { BadgeQuestionMark, Gem, } from "lucide-react";
 
 export const useNavLists = () => {
 
-  const headerNavList: NavItem[] = [
+  const headerNavList: INavItem[] = [
     {
       title: clientRoutes.support.title,
       element: <BadgeQuestionMark />,
@@ -19,7 +19,7 @@ export const useNavLists = () => {
     },
   ];
 
-  const footerNavList: NavItem[] = [
+  const footerNavList: INavItem[] = [
     {
       title: clientRoutes.about.title,
       url: clientRoutes.about.path,

@@ -6,32 +6,24 @@ import { Box } from "@mui/material";
 import { useStyles } from "@/hooks/style";
 import Image from "next/image";
 import { useController } from "@/hooks/global";
+import { IMedia } from "@/types";
 
-export interface Media {
-    src: string;
-    title?: string;
-    type?: "image" | "video";
-}
 
 export interface MediaStyle {
-    container?: { base?: any, smallScreen?: any },
-    content?: any
-};
-
-export interface SingleMediaProps {
-    id?: string;
-    media: Media;
-    onClick?: (id?: string) => void;
-    usage?: "list" | "item"
+    container?: { base?: any; smallScreen?: any };
+    content?: any;
+}
+export interface MediaProps extends IMedia {
     style?: MediaStyle;
 }
 
-export const SingleMedia = ({ id, media, onClick, style, usage = "item" }: SingleMediaProps) => {
+
+export const SingleMedia = ({ id, src, type, title, onClick, style, usage = "item" }: MediaProps) => {
     const theme = useTheme();
     const { applyBGEffect } = useStyles()
-    const { isPortrait } = useImageColors(media.src);
+    const { isPortrait } = useImageColors(src);
     const mediaId = id || (Math.random() * 100).toString();
-    const mediaType = media.type ?? "image"
+    const mediaType = type ?? "image"
     const { isDesktop } = useController();
 
     const contentStyle = {
@@ -63,7 +55,7 @@ export const SingleMedia = ({ id, media, onClick, style, usage = "item" }: Singl
                 // minHeight: "300px",
                 bgcolor: theme.palette.gray.trans[1],
                 cursor: "pointer",
-                // ...applyBGEffect(media.src),
+                // ...applyBGEffect(src),
                 ...style?.container?.base,
                 [theme.breakpoints.down("md")]: {
                     ...style?.container?.smallScreen
@@ -71,7 +63,7 @@ export const SingleMedia = ({ id, media, onClick, style, usage = "item" }: Singl
             }}>
             {/* Blurred backround */}
             <Image
-                src={media.src}
+                src={src}
                 alt=""
                 fill
                 style={{
@@ -83,16 +75,16 @@ export const SingleMedia = ({ id, media, onClick, style, usage = "item" }: Singl
             />
             {mediaType === "image" ? (
                 < Image
-                    src={media.src}
+                    src={src}
                     width={0}
                     height={0}
                     sizes="100vw"
                     loading="lazy"
-                    alt={media.title || "Post image"}
+                    alt={title || "Post image"}
                     style={{ ...contentStyle }} />
             ) : (
                 <Box
-                    component="video" src={media.src}
+                    component="video" src={src}
                     autoPlay loop muted playsInline
                     controls
                     sx={{ ...contentStyle }} />

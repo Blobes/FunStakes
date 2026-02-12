@@ -1,14 +1,14 @@
 "use client";
 
 import React, { useState } from "react";
-import { CheckEmail } from "./CheckEmail";
 import { useTheme } from "@mui/material/styles";
-import { Login } from "./Login";
-import { GenericObject, Step } from "@/types";
+import { GenericObject, IStep } from "@/types";
 import { Stepper } from "@/components/Stepper";
 import { Stack } from "@mui/material";
 import Image from "next/image";
 import { img } from "@/assets/exported";
+import { Login } from "./Login";
+import { CheckEmail } from "./CheckEmail";
 
 interface StepperProps {
   style?: {
@@ -23,7 +23,7 @@ export const LoginStepper: React.FC<StepperProps> = ({ style = {} }) => {
   const [email, setEmail] = useState("");
   const [currStep, setCurrStep] = useState("email");
 
-  const steps: Step[] = [
+  const steps: IStep[] = [
     {
       name: "email",
       element: (

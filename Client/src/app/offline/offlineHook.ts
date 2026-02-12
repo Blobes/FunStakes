@@ -2,7 +2,7 @@ import { usePage } from "@/hooks/page";
 import { useGlobalContext } from "../GlobalContext";
 import { clientRoutes } from "@/helpers/routes";
 import { delay } from "@/helpers/global";
-import { Page } from "@/types";
+import { IPage } from "@/types";
 import { getFromLocalStorage } from "@/helpers/storage";
 
 export const useOffline = () => {
@@ -22,7 +22,7 @@ export const useOffline = () => {
 
   const switchToOnlineMode = () => {
     setOfflineMode(false);
-    const savedPage = getFromLocalStorage<Page>() || clientRoutes.home;
+    const savedPage = getFromLocalStorage<IPage>() || clientRoutes.home;
     navigateTo(savedPage, { type: "element", loadPage: true });
   };
 

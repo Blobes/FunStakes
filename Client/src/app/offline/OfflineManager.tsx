@@ -9,7 +9,7 @@ import { useEffect, useRef } from "react";
 import { Header } from "./navbars/Header";
 import { LeftNav } from "./navbars/LeftNav";
 import { BottomNav } from "./navbars/BottomNav";
-import { RightSidebar } from "./sidebar/RightSidebar";
+import { RightSidebar } from "./navbars/right-sidebar/Sidebar";
 import { useOffline } from "./offlineHook";
 
 export const OfflineManager = ({ children }: { children: React.ReactNode }) => {
@@ -30,35 +30,22 @@ export const OfflineManager = ({ children }: { children: React.ReactNode }) => {
         height: "100%",
         gap: theme.gap(0),
         overflowY: "hidden",
-        flexDirection: "row",
+        flexDirection: "column",
       }}>
-      <LeftNav />
+      <Header />
       <Stack
         sx={{
           height: "100%",
           gap: theme.gap(0),
           overflowY: "hidden",
           overflowX: "auto",
-          flexDirection: "column",
+          flexDirection: "row",
           width: "100%",
-          [theme.breakpoints.down("md")]: {
-            overflowY: "auto",
-            justifyContent: "flex-start",
-            alignItems: "center",
-            flexDirection: "column",
-          },
           ...scrollBarStyle(),
         }}>
-        <Header />
-        <Stack sx={{
-          height: "100%",
-          flexDirection: "row",
-          overflow: "hidden",
-          borderTop: `1px solid ${theme.palette.gray.trans[1]}`,
-        }}>
-          {children}
-          <RightSidebar />
-        </Stack>
+        <LeftNav />
+        {children}
+        <RightSidebar />
       </Stack>
     </Stack>
   ) :

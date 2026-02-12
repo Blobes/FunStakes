@@ -2,7 +2,7 @@
 
 import { IconButton, Paper, Stack, Typography } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
-import { SnackBarMsg } from "@/types";
+import { ISnackBarMsg } from "@/types";
 import { AppButton } from "./Buttons";
 import { Info, CircleCheck, CircleAlert, X } from "lucide-react";
 import { useEffect } from "react";
@@ -12,7 +12,7 @@ import { GroupTransition, Transition } from "./Transition";
 import { zIndexes } from "@/helpers/global";
 
 interface SnackbarProps {
-  snackBarMsg: SnackBarMsg;
+  snackBarMsg: ISnackBarMsg;
 }
 
 export const SnackBars = ({ snackBarMsg }: SnackbarProps) => {

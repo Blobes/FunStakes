@@ -1,7 +1,7 @@
 "use client";
 
 import { useGlobalContext } from "@/app/GlobalContext";
-import { Page } from "@/types";
+import { IPage } from "@/types";
 
 import {
   clientRoutes,
@@ -26,7 +26,7 @@ export const usePage = () => {
     disallowedRoutes.includes(path);
   const pathname = usePathname();
 
-  const setLastPage = ({ title, path }: Page) => {
+  const setLastPage = ({ title, path }: IPage) => {
     const pageInfo = { title: title, path: path };
     setPage(pageInfo);
     localStorage.setItem("saved_page", JSON.stringify(pageInfo));
@@ -38,7 +38,7 @@ export const usePage = () => {
     loadPage?: boolean;
     event?: React.MouseEvent;
   }
-  const navigateTo = async (page: Page, options: NavigateOptions = {}) => {
+  const navigateTo = async (page: IPage, options: NavigateOptions = {}) => {
     const type = options.type ?? "link";
     const savePage = options.savePage ?? true;
     const loadPage = options.loadPage ?? false;
@@ -68,7 +68,7 @@ export const usePage = () => {
   const handleCurrentPage = () => {
     const isOnAuthRoute = isOnAuth(pathname);
     const isOnOfflineRoute = isOnOffline(pathname);
-    const savedPage = getFromLocalStorage<Page>();
+    const savedPage = getFromLocalStorage<IPage>();
     const pagePath =
       !isOnAuthRoute && !isOnOfflineRoute ? pathname : lastPage.path;
 

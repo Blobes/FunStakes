@@ -1,6 +1,6 @@
 "use client";
 
-import { GenericObject, Step } from "@/types";
+import { GenericObject, IStep } from "@/types";
 import { Stack } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import { AppButton } from "./Buttons";
@@ -8,7 +8,7 @@ import { BasicTooltip } from "./Tooltips";
 import { ChevronLeft } from "@mui/icons-material";
 
 interface StepperProps {
-  steps: Step[];
+  steps: IStep[];
   currStep: string;
   setCurrStep: (val: string) => void;
   style?: GenericObject<any>;

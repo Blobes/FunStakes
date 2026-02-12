@@ -13,8 +13,8 @@ export const LeftNav = () => {
         width: "20%",
         maxWidth: "400px",
         minWidth: "200px",
-        padding: theme.boxSpacing(8, 16),
-        borderRight: `1px solid ${theme.palette.gray.trans[1]}`,
+        padding: theme.boxSpacing(8, 20),
+        // borderRight: `1px solid ${theme.palette.gray.trans[1]}`,
         ...autoScroll().base,
         [theme.breakpoints.down("md")]: {
           display: "none",

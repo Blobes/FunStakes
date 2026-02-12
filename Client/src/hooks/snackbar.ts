@@ -1,13 +1,13 @@
 "use client";
 
 import { useGlobalContext } from "@/app/GlobalContext";
-import { MsgType } from "@/types";
+import { IMessage } from "@/types";
 
 export const useSnackbar = () => {
   const { snackBarMsg, setSnackBarMsg } = useGlobalContext();
 
   interface SBMessage {
-    msg?: MsgType;
+    msg?: IMessage;
     delay?: number;
     override?: boolean;
   }

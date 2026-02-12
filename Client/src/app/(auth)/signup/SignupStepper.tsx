@@ -5,7 +5,7 @@ import { Signup } from "./Signup";
 import { useTheme } from "@mui/material/styles";
 import { DrawerRef } from "@/components/Drawer";
 import { Login } from "../login/Login";
-import { GenericObject, Step } from "@/types";
+import { GenericObject, IStep } from "@/types";
 import { Stepper } from "@/components/Stepper";
 import { Stack } from "@mui/material";
 import Image from "next/image";
@@ -30,7 +30,7 @@ export const SignUpStepper: React.FC<StepperProps> = ({
   const [email, setEmail] = useState("");
   const [currStep, setCurrStep] = useState("email");
 
-  const steps: Step[] = [
+  const steps: IStep[] = [
     {
       name: "email",
       element: (

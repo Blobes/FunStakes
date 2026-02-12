@@ -4,14 +4,16 @@ import { AnimatedWrapper } from "@/components/AnimationWrapper";
 import { pulse } from "@/helpers/animations";
 import { red } from "@mui/material/colors";
 import { useTheme } from "@mui/material/styles";
+import { UIMode } from "@/types";
 
-interface PostEngagementProps {
+interface EngagementProps {
     likedByMe: boolean;
     isLiking: boolean;
     handleLike: () => void;
+    mode?: UIMode;
 }
 
-export const PostEngagement = ({ likedByMe, isLiking, handleLike, }: PostEngagementProps) => {
+export const GistEngagement = ({ likedByMe, isLiking, handleLike, mode }: EngagementProps) => {
     const theme = useTheme();
 
     return (
@@ -41,8 +43,11 @@ export const PostEngagement = ({ likedByMe, isLiking, handleLike, }: PostEngagem
                     <AnimatedWrapper
                         sx={{ ...(isLiking && { animation: `${pulse()} 0.3s linear ` }) }}>
                         <Heart size={26} style={{
-                            fill: likedByMe ? red[500] : "none",
-                            stroke: likedByMe ? red[500] : theme.palette.gray[200]
+                            fill: likedByMe ? (mode === "online" ? red[500] :
+                                theme.palette.gray[200]) : "none",
+                            stroke: likedByMe ?
+                                (mode === "online" ? red[500] : theme.palette.gray[200])
+                                : theme.palette.gray[200]
                         }} />
                     </AnimatedWrapper>
                 </IconButton>

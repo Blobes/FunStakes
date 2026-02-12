@@ -48,26 +48,26 @@ export const Header: React.FC<AppHeaderProps> = ({ scrollRef }) => {
       }}>
 
       {/* Logo */}
-      {(!isDesktop) && (
-        <AnchorLink
-          url={clientRoutes.home.path}
-          onClick={() => {
-            navigateTo(clientRoutes.home);
+
+      <AnchorLink
+        url={clientRoutes.home.path}
+        onClick={() => {
+          navigateTo(clientRoutes.home);
+        }}
+        style={{ display: "inline-flex" }}
+      ><Image
+          src={img.logo}
+          alt="logo"
+          style={{
+            width: 34,
+            height: 34,
+            borderRadius: `${theme.radius.full}`,
           }}
-          style={{ display: "inline-flex" }}
-        ><Image
-            src={img.logo}
-            alt="logo"
-            style={{
-              width: 34,
-              height: 34,
-              borderRadius: `${theme.radius.full}`,
-            }}
-          /></AnchorLink>
-      )}
+        /></AnchorLink>
+
 
       {/* Search */}
-      {isDesktop && <SearchContainer />}
+      {/* {isDesktop && <SearchContainer />} */}
 
       {/* Right side elements */}
       <Stack direction="row" alignItems="center" spacing={theme.gap(8)}>

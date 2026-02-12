@@ -1,11 +1,11 @@
 import { useState, useCallback, useEffect } from "react";
-import { Post } from "@/types";
+import { IGist } from "@/types";
 import { vibrate } from "@/helpers/global";
 
-export const usePostLike = (post: Post, context: any) => {
+export const useGistLike = (gist: IGist, context: any) => {
   // 1. Destructure everything internally for clarity
   const {
-    handlePostLike,
+    handleGistLike,
     getPendingLike,
     setPendingLike,
     clearPendingLike,
@@ -17,16 +17,16 @@ export const usePostLike = (post: Post, context: any) => {
     mode,
     LoginStepper,
   } = context;
-  const [postData, setPostData] = useState<Post>(post);
+  const [gistData, setGistData] = useState<IGist>(gist);
   const [isLiking, setIsLiking] = useState(false);
 
-  const { _id, likedByMe } = postData;
+  const { _id, likedByMe } = gistData;
 
-  // Sync with localStorage on mount
+  // Sync like with localStorage on mount
   useEffect(() => {
     const pendingLike = getPendingLike(_id);
     if (pendingLike !== null && pendingLike !== likedByMe) {
-      setPostData((prev) => ({
+      setGistData((prev) => ({
         ...prev,
         likedByMe: pendingLike,
         likeCount: prev.likeCount + (pendingLike ? 1 : -1),
@@ -46,9 +46,10 @@ export const usePostLike = (post: Post, context: any) => {
         msg: {
           content:
             mode === "offline"
-              ? "You can't like an offline post."
+              ? "You can't engage an offline post."
               : "Something went wrong.",
           msgStatus: "ERROR",
+          hasClose: true,
         },
         override: true,
       });
@@ -58,7 +59,7 @@ export const usePostLike = (post: Post, context: any) => {
     setIsLiking(true);
 
     // Optimistic update
-    setPostData((prev) => {
+    setGistData((prev) => {
       const nextLiked = !prev.likedByMe;
       const nextCount = prev.likeCount + (nextLiked ? 1 : -1);
       // persist pending like
@@ -69,9 +70,9 @@ export const usePostLike = (post: Post, context: any) => {
     if (!likedByMe) vibrate(); // Vibrate on like
 
     try {
-      const payload = await handlePostLike(_id, !likedByMe);
+      const payload = await handleGistLike(_id, !likedByMe);
       if (payload) {
-        setPostData((prev) => ({
+        setGistData((prev) => ({
           ...prev,
           likedByMe: payload.likedByMe,
           likeCount: payload.likeCount,
@@ -90,7 +91,7 @@ export const usePostLike = (post: Post, context: any) => {
     authStatus,
     isOffline,
     isUnstableNetwork,
-    handlePostLike,
+    handleGistLike,
     setPendingLike,
     clearPendingLike,
     setSBMessage,
@@ -98,5 +99,5 @@ export const usePostLike = (post: Post, context: any) => {
     LoginStepper,
   ]);
 
-  return { postData, isLiking, handleLike };
+  return { gistData, isLiking, handleLike };
 };

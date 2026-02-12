@@ -3,16 +3,12 @@
 import { useTheme } from "@mui/material/styles";
 import { Typography } from "@mui/material";
 import { useController } from "@/hooks/global";
-import { MediaStyle, SingleMedia, SingleMediaProps } from "@/components/media/SingleMedia";
-import { MediaGallery } from "@/components/media/MediaGallery";
+import { MediaStyle, SingleMedia, MediaProps } from "@/components/media/SingleMedia";
+import { GalleryProps, MediaGallery } from "@/components/media/MediaGallery";
 import { useCallback, useMemo } from "react";
 
 
-interface PostMediaProps {
-    mediaList: SingleMediaProps[];
-    style?: MediaStyle
-}
-export const PostMedia = ({ mediaList, style }: PostMediaProps) => {
+export const GistMedia = ({ mediaList, style }: GalleryProps) => {
     const theme = useTheme();
     const { openModal } = useController()
 
@@ -36,10 +32,10 @@ export const PostMedia = ({ mediaList, style }: PostMediaProps) => {
     }, [openModal]);
 
     const mappedList = useMemo(() => {
-        return mediaList.map((item, index) => (
+        return mediaList.map((media, index) => (
             {
-                ...item,
-                id: item.id || `${index}-${item.media.src}`,
+                ...media,
+                id: media.id || `${index}-${media.src}`,
                 onClick: handleMedia
             }
         ))

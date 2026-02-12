@@ -1,8 +1,8 @@
 "use client";
 
-import { Page } from "@/types";
+import { IPage } from "@/types";
 
-export const clientRoutes: Record<string, Page> = {
+export const clientRoutes: Record<string, IPage> = {
   // Web
   about: { title: "About", path: "/about" },
   pricing: { title: "Pricing", path: "/pricing" },

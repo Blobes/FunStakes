@@ -3,77 +3,75 @@
 import { Stack, Typography } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import { useGlobalContext } from "@/app/GlobalContext";
-import { GenericObject } from "@/types";
-import { usePostService } from "../services";
-import { Post } from "@/types";
+import { GenericObject, UIMode } from "@/types";
+import { useGistService } from "../service";
+import { IGist } from "@/types";
 import { summarizeNum } from "@/helpers/numberSum";
 import { LoginStepper } from "@/app/(auth)/login/LoginStepper";
 import { Empty } from "@/components/Empty";
 import { useSnackbar } from "@/hooks/snackbar";
 import { useController } from "@/hooks/global";
 import { Strip } from "@/components/StripBar";
-import { multiMediaData, singleMediaData } from "@/data/postData";
-import { PostMedia } from "./PostMedia";
-import { usePostAuthor } from "../hooks/usePostAuthor";
-import { usePostLike } from "../hooks/usePostLike";
-import { PostHeader } from "./PostHeader";
-import { PostEngagement } from "./PostEngagement";
+import { multiMediaData, singleMediaData } from "@/test-data/postData";
+import { GistMedia } from "./GistMedia";
+import { useGistAuthor } from "../hooks/useGistAuthor";
+import { useGistLike } from "../hooks/useGistLike";
+import { GistHeader } from "./GistHeader";
+import { GistEngagement } from "./GistEngagement";
+import { DoubleTapLike } from "@/components/DoubleTapLike";
 
-interface PostProps {
-    post: Post;
+interface GistProps {
+    gist: IGist;
     style?: GenericObject<string>;
-    mode?: "online" | "offline"
+    mode?: UIMode
 }
 
-export const PostCard = ({ post, style = {}, mode = "online" }: PostProps) => {
+export const GistCard = ({ gist, style = {}, mode = "online" }: GistProps) => {
     const theme = useTheme();
-    const postService = usePostService(); // Hook containing fetchAuthor, handlePostLike, etc.
+    const postService = useGistService();
     const globalContext = useGlobalContext();
     const controller = useController();
     const { setSBMessage } = useSnackbar();
 
-    // 1. Splitted Logic Hooks
-    const { author, error } = usePostAuthor(post.authorId, postService.fetchAuthor);
+    // Author hooks & properties
+    const { author, error } = useGistAuthor(gist.authorId, postService.fetchAuthor, mode);
 
-    const { postData, isLiking, handleLike } = usePostLike(post, {
+    // Like hooks & properties
+    const { gistData, isLiking, handleLike } = useGistLike(gist, {
         ...postService, ...globalContext, ...controller, setSBMessage,
         mode, LoginStepper: <LoginStepper />
     });
-    const { likeCount, likedByMe, content } = postData;
+    const { likeCount, likedByMe, content } = gistData;
     const postMedia = singleMediaData
 
     if (!author) return <Empty tagline={error || "Loading author..."} />;
-    if (postData.status === "DELETED") return <Empty tagline="Deleted by author." />;
+    if (gistData.status === "DELETED") return <Empty tagline="Deleted by author." />;
 
     return (
         <Stack
             sx={{
-                backgroundColor: "unset",
-                backgroundImage: "unset",
-                borderRadius: "unset",
-                display: "flex",
-                flexDirection: "column",
                 gap: theme.gap(0),
                 flexGrow: "0",
                 flexShrink: "0",
                 borderBottom: `1px solid ${theme.palette.gray.trans[1]}`,
                 ...style,
             }}>
-            <PostHeader author={author} createdAt={postData.createdAt} />
+            <GistHeader author={author} createdAt={gistData.createdAt} />
 
-            {/* Post content */}
+            {/* Gist content */}
             <Typography variant="body2" sx={{
                 padding: theme.boxSpacing(6, 0),
                 [theme.breakpoints.down("md")]: {
                     padding: theme.boxSpacing(6),
                 }
-            }}>
-                {content}
-            </Typography>
+            }}>{content}</Typography>
 
-            {postMedia && <PostMedia mediaList={postMedia} />}
+            {/* Gist media */}
+            <DoubleTapLike isLiked={gistData.likedByMe} handleLike={handleLike}>
+                {postMedia && <GistMedia mediaList={postMedia} />}
+            </DoubleTapLike>
 
-            {/* Info Strip */}
+            {/* Gist info strip */}
             <Strip
                 items={[
                     {
@@ -111,10 +109,12 @@ export const PostCard = ({ post, style = {}, mode = "online" }: PostProps) => {
                 }}
             />
 
-            <PostEngagement
+            {/* Gist engagement  */}
+            <GistEngagement
                 likedByMe={likedByMe}
                 isLiking={isLiking}
                 handleLike={handleLike}
+                mode={mode}
             />
         </Stack>
     );

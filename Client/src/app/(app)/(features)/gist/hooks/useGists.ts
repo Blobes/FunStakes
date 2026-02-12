@@ -1,43 +1,42 @@
 import { useState, useCallback, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { Post } from "@/types";
-import { usePostService } from "../services";
-import { cachePosts } from "@/helpers/post";
+import { IGist } from "@/types";
+import { useGistService } from "../service";
 import { delay } from "@/helpers/global";
 
-export const usePostList = () => {
+export const useGists = () => {
   const router = useRouter();
-  const { getAllPost } = usePostService();
-
-  const [posts, setPosts] = useState<Post[]>([]);
+  const { getAllGist } = useGistService();
+  const [gists, setGists] = useState<IGist[]>([]);
   const [message, setMessage] = useState<string | null>(null);
   const [isLoading, setLoading] = useState(false);
 
-  const renderPosts = useCallback(async () => {
+  const handleGists = useCallback(async () => {
     try {
       setLoading(true);
-      await delay();
-      const res = await getAllPost();
+      const res = await getAllGist();
       if (res?.payload) {
-        setPosts(res.payload);
+        setGists(res.payload);
         setMessage(res.message);
-        cachePosts(res.payload);
       }
+    } catch (err: any) {
+      setMessage(err.message);
     } finally {
+      await delay();
       setLoading(false);
     }
-  }, [getAllPost]);
+  }, [getAllGist]);
 
   useEffect(() => {
-    renderPosts();
-  }, [renderPosts]);
+    handleGists();
+  }, [handleGists]);
 
   const handleRefresh = useCallback(() => {
     router.refresh();
   }, [router]);
 
   return {
-    posts,
+    gists,
     message,
     isLoading,
     handleRefresh,

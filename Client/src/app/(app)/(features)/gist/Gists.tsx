@@ -1,20 +1,20 @@
 "use client";
 
 import { Stack } from "@mui/material";
-import { PostCard } from "./post-card/Card";
-import { CreatePost } from "./CreatePost";
+import { GistCard } from "./card/GistCard";
+import { CreatePost } from "./CreateGist";
 import { ProgressIcon } from "@/components/LoadingUIs";
 import { Empty } from "@/components/Empty";
 import { Milestone } from "lucide-react";
-import { usePostList } from "./hooks/usePostList";
+import { useGists } from "./hooks/useGists";
 import { useMemo } from "react";
 import { useStyles } from "@/hooks/style";
 import { useTheme } from "@mui/material/styles";
 
 
-export const PostList = () => {
+export const Gists = () => {
     const theme = useTheme();
-    const { posts, message, isLoading, handleRefresh } = usePostList();
+    const { gists, message, isLoading, handleRefresh } = useGists();
     const { autoScroll } = useStyles();
 
     const containerStyle = useMemo(
@@ -24,7 +24,7 @@ export const PostList = () => {
             minWidth: "400px",
             gap: theme.gap(8),
             padding: theme.boxSpacing(8, 24),
-            ...(posts.length > 1 && autoScroll().base),
+            ...(gists.length > 1 && autoScroll().base),
             [theme.breakpoints.down("md")]: {
                 border: "none",
                 maxWidth: "unset",
@@ -33,7 +33,7 @@ export const PostList = () => {
                 ...(!isLoading && autoScroll().mobile),
             },
         }),
-        [theme, posts.length, isLoading, autoScroll],
+        [theme, gists.length, isLoading, autoScroll],
     );
 
     return (
@@ -48,7 +48,7 @@ export const PostList = () => {
                 }}>
                     <ProgressIcon otherProps={{ size: 24 }} />
                 </Stack>
-            ) : posts.length < 1 ? (
+            ) : gists.length < 1 ? (
                 <Empty
                     tagline={message || "Something went wrong, check your network"}
                     icon={<Milestone />}
@@ -79,7 +79,7 @@ export const PostList = () => {
                     }}
                 />
             ) : (
-                posts.map((post) => <PostCard key={post._id} post={post} />)
+                gists.map((post) => <GistCard key={post._id} gist={post} />)
             )}
         </Stack>
     );

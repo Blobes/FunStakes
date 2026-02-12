@@ -1,7 +1,7 @@
 "use client";
 
 import { fetcher } from "@/helpers/fetcher";
-import { Post, SingleResponse, ListResponse, IUser } from "@/types";
+import { IGist, ISingleResponse, IListResponse, IUser } from "@/types";
 import { useCallback } from "react";
 import {
   setPendingLike,
@@ -12,13 +12,13 @@ import {
 } from "@/helpers/post";
 import { serverApi } from "@/helpers/routes";
 
-export const usePostService = () => {
-  const getAllPost = useCallback(async (): Promise<{
-    payload: Post[] | null;
+export const useGistService = () => {
+  const getAllGist = useCallback(async (): Promise<{
+    payload: IGist[] | null;
     message: string;
   }> => {
     try {
-      const res = await fetcher<ListResponse<Post & { likedByMe: boolean }>>(
+      const res = await fetcher<IListResponse<IGist & { likedByMe: boolean }>>(
         serverApi.posts,
         { method: "GET" },
       );
@@ -34,7 +34,7 @@ export const usePostService = () => {
   // Fetch Author
   const fetchAuthor = useCallback(async (authorId: string) => {
     try {
-      const res = await fetcher<SingleResponse<IUser>>(
+      const res = await fetcher<ISingleResponse<IUser>>(
         serverApi.user(authorId),
       );
       return res.payload;
@@ -47,39 +47,37 @@ export const usePostService = () => {
     likedByMe: boolean;
     likeCount: number;
   }
-
   // Handle like
-  const handlePostLike = useCallback(
+  const handleGistLike = useCallback(
     async (
-      postId: string,
+      gistId: string,
       intendedState: boolean,
     ): Promise<LikeResponse | null> => {
       try {
-        const res = await fetcher<SingleResponse<LikeResponse>>(
-          serverApi.likePost(postId),
+        const res = await fetcher<ISingleResponse<LikeResponse>>(
+          serverApi.likePost(gistId),
           { method: "PUT" },
         );
         return res.payload;
       } catch {
-        // Pass the intended state here!
-        enqueueLike(postId, intendedState);
+        enqueueLike(gistId, intendedState);
         return null;
       }
     },
     [],
   );
-  // run sync like when online + app boot
+  // Run sync like when online + app boot
   if (typeof window !== "undefined") {
     window.addEventListener("online", processQueue);
     processQueue();
   }
 
   return {
-    handlePostLike,
+    handleGistLike,
     getPendingLike,
     setPendingLike,
     clearPendingLike,
-    getAllPost,
+    getAllGist,
     fetchAuthor,
   };
 };

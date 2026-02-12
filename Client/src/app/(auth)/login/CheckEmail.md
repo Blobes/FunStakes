@@ -1,6 +1,7 @@
 "use client";
 
-import { CircularProgress, Stack, Typography } from "@mui/material";
+import { useLoginOld } from "@/app/(auth)/login/services";
+import { Stack, Typography } from "@mui/material";
 import { useGlobalContext } from "@/app/GlobalContext";
 import { AppButton } from "@/components/Buttons";
 import { useTheme } from "@mui/material/styles";
@@ -11,9 +12,12 @@ import { useEffect, useState } from "react";
 import { TextInput } from "@/components/InputFields";
 import { GenericObject } from "@/types";
 import { delay } from "@/helpers/global";
-import { useEmail } from "../login/hooks/useEmail";
+import { InlineMsg } from "@/components/InlineMsg";
+import { ProgressIcon } from "@/components/LoadingUIs";
+import { Mail } from "lucide-react";
 
-interface InfoProps {
+interface CheckProps {
+  modalRef?: React.RefObject<DrawerRef>;
   step?: string;
   setStep?: (step: string) => void;
   existingEmail?: string;
@@ -24,15 +28,15 @@ interface InfoProps {
   };
 }
 
-export const Signup: React.FC<InfoProps> = ({
+export const CheckEmail: React.FC<CheckProps> = ({
   step,
   setStep,
   existingEmail,
   setEmailProp,
   style = {},
 }) => {
-  const { handleSubmit, } = useEmail({ existingEmail, setStep, setEmailProp });
-  const { isAuthLoading, setAuthLoading } = useGlobalContext();
+  const { checkEmail } = useLoginOld();
+  const { isAuthLoading, setAuthLoading, inlineMsg } = useGlobalContext();
   const [validity, setValidity] = useState<"valid" | "invalid">();
   const [msg, setMsg] = useState("");
   const [email, setEmail] = useState(existingEmail ?? "");
@@ -49,7 +53,7 @@ export const Signup: React.FC<InfoProps> = ({
     }
   }, [step]);
 
-  const onEmailChange = (
+  const handleChange = (
     e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
   ) => {
     setEmail(e.target.value);
@@ -63,7 +67,23 @@ export const Signup: React.FC<InfoProps> = ({
     }
   };
 
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
 
+    setAuthLoading(true);
+    await delay();
+    const res = await checkEmail(email);
+    if (res) {
+      if (res.emailNotTaken === false) {
+        setEmailProp?.(email);
+        setStep?.("login");
+      } else {
+        router.replace(`/auth/signup?email=${email}`);
+      }
+    }
+
+    setAuthLoading(false);
+  };
 
   return (
     <>
@@ -72,7 +92,7 @@ export const Signup: React.FC<InfoProps> = ({
           component="h3"
           variant="h5"
           sx={{ textAlign: "center", ...style.headline }}>
-          Sign up to FunStakes, and stake higher.
+          Blobes Socials, A Place For Nigerians
         </Typography>
         <Typography
           component="p"
@@ -87,31 +107,39 @@ export const Signup: React.FC<InfoProps> = ({
         </Typography>
       </Stack>
 
+      {inlineMsg && <InlineMsg msg={inlineMsg} type="ERROR" />}
+
       <Stack
-        sx={{ gap: theme.gap(8) }}
+        sx={{ gap: theme.gap(18) }}
         component="form"
         onSubmit={handleSubmit}>
         <TextInput
           defaultValue={existingEmail}
           label="Email"
           placeholder="Enter your email address"
-          onChange={onEmailChange}
+          onChange={handleChange}
           helperText={msg}
           error={email !== "" && validity === "invalid"}
+          affix={
+            <Mail
+              size={19}
+              style={{ stroke: theme.palette.gray[200] as string }}
+            />
+          }
+          affixPosition="end"
         />
         <AppButton
           variant="contained"
-          {...(isAuthLoading && { iconLeft: <CircularProgress size={25} /> })}
           submit
           style={{
             fontSize: "16px",
-            padding: theme.boxSpacing(3, 8),
+            padding: theme.boxSpacing(5.5, 9),
             width: "100%",
           }}
           options={{
-            disabled: validity === "invalid" || email === "",
+            disabled: validity === "invalid" || email === "" || isAuthLoading,
           }}>
-          {!isAuthLoading && "Continue"}
+          {isAuthLoading ? <ProgressIcon otherProps={{ size: 25 }} /> : "Continue"}
         </AppButton>
       </Stack>
     </>

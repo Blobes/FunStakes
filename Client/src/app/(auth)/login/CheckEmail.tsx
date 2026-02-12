@@ -1,147 +1,82 @@
-"use client";
+"use client"
 
-import { useLogin } from "@/app/(auth)/login/hook";
 import { Stack, Typography } from "@mui/material";
 import { useGlobalContext } from "@/app/GlobalContext";
 import { AppButton } from "@/components/Buttons";
 import { useTheme } from "@mui/material/styles";
-import { useRouter } from "next/navigation";
 import { DrawerRef } from "@/components/Drawer";
-import { validateEmail } from "@/helpers/inputValidation";
-import { useEffect, useState } from "react";
 import { TextInput } from "@/components/InputFields";
 import { GenericObject } from "@/types";
-import { delay } from "@/helpers/global";
 import { InlineMsg } from "@/components/InlineMsg";
 import { ProgressIcon } from "@/components/LoadingUIs";
 import { Mail } from "lucide-react";
+import { useEmail } from "./hooks/useEmail";
 
 interface CheckProps {
-  modalRef?: React.RefObject<DrawerRef>;
-  step?: string;
-  setStep?: (step: string) => void;
-  existingEmail?: string;
-  setEmailProp?: (email: string) => void;
-  style?: {
-    headline?: GenericObject<string>;
-    tagline?: GenericObject<string>;
-  };
+    modalRef?: React.RefObject<DrawerRef>;
+    step?: string;
+    setStep?: (step: string) => void;
+    existingEmail?: string;
+    setEmailProp?: (email: string) => void;
+    style?: {
+        headline?: GenericObject<string>;
+        tagline?: GenericObject<string>;
+    };
 }
 
 export const CheckEmail: React.FC<CheckProps> = ({
-  step,
-  setStep,
-  existingEmail,
-  setEmailProp,
-  style = {},
+    setStep,
+    existingEmail,
+    setEmailProp,
+    style = {},
 }) => {
-  const { checkEmail } = useLogin();
-  const { isAuthLoading, setAuthLoading, inlineMsg } = useGlobalContext();
-  const [validity, setValidity] = useState<"valid" | "invalid">();
-  const [msg, setMsg] = useState("");
-  const [email, setEmail] = useState(existingEmail ?? "");
-  const theme = useTheme();
-  const router = useRouter();
+    const theme = useTheme();
+    const { inlineMsg } = useGlobalContext();
 
-  useEffect(() => {
-    if (existingEmail && existingEmail !== "") {
-      const validation = validateEmail(existingEmail);
-      if (validation.status === "valid") {
-        setValidity("valid");
-        setMsg("");
-      }
-    }
-  }, [step]);
+    // Use the controller
+    const { email, validity, validationMsg, isAuthLoading, handleChange,
+        handleSubmit, isSubmitDisabled } = useEmail({ existingEmail, setStep, setEmailProp });
 
-  const handleChange = (
-    e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
-  ) => {
-    setEmail(e.target.value);
-    const validation = validateEmail(e.target.value);
-    if (validation.status === "valid") {
-      setValidity("valid");
-      setMsg("");
-    } else {
-      setValidity("invalid");
-      setMsg(validation.message);
-    }
-  };
+    return (
+        <>
+            <Stack>
+                <Typography component="h3" variant="h5"
+                    sx={{ textAlign: "center", ...style.headline }}>
+                    Blobes Socials, A Place For Nigerians
+                </Typography>
+                <Typography component="p" variant="body2" sx={{
+                    color: theme.palette.gray[200],
+                    paddingBottom: theme.boxSpacing(8),
+                    textAlign: "center",
+                    ...style.tagline,
+                }}>
+                    Enter your email address to continue.
+                </Typography>
+            </Stack>
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+            {inlineMsg && <InlineMsg msg={inlineMsg} type="ERROR" />}
 
-    setAuthLoading(true);
-    await delay();
-    const res = await checkEmail(email);
-    if (res) {
-      if (res.emailNotTaken === false) {
-        setEmailProp?.(email);
-        setStep?.("login");
-      } else {
-        router.replace(`/auth/signup?email=${email}`);
-      }
-    }
+            <Stack sx={{ gap: theme.gap(18) }} component="form" onSubmit={handleSubmit}>
+                <TextInput
+                    defaultValue={email}
+                    label="Email"
+                    placeholder="Enter your email address"
+                    onChange={handleChange}
+                    helperText={validationMsg}
+                    error={email !== "" && validity === "invalid"}
+                    affix={
+                        <Mail size={19} style={{ stroke: theme.palette.gray[200] as string }} />
+                    }
+                    affixPosition="end" />
 
-    setAuthLoading(false);
-  };
-
-  return (
-    <>
-      <Stack>
-        <Typography
-          component="h3"
-          variant="h5"
-          sx={{ textAlign: "center", ...style.headline }}>
-          Blobes Socials, A Place For Nigerians
-        </Typography>
-        <Typography
-          component="p"
-          variant="body2"
-          sx={{
-            color: theme.palette.gray[200],
-            paddingBottom: theme.boxSpacing(8),
-            textAlign: "center",
-            ...style.tagline,
-          }}>
-          Enter your email address to continue.
-        </Typography>
-      </Stack>
-
-      {inlineMsg && <InlineMsg msg={inlineMsg} type="ERROR" />}
-
-      <Stack
-        sx={{ gap: theme.gap(18) }}
-        component="form"
-        onSubmit={handleSubmit}>
-        <TextInput
-          defaultValue={existingEmail}
-          label="Email"
-          placeholder="Enter your email address"
-          onChange={handleChange}
-          helperText={msg}
-          error={email !== "" && validity === "invalid"}
-          affix={
-            <Mail
-              size={19}
-              style={{ stroke: theme.palette.gray[200] as string }}
-            />
-          }
-          affixPosition="end"
-        />
-        <AppButton
-          variant="contained"
-          submit
-          style={{
-            fontSize: "16px",
-            padding: theme.boxSpacing(5.5, 9),
-            width: "100%",
-          }}
-          options={{
-            disabled: validity === "invalid" || email === "" || isAuthLoading,
-          }}>
-          {isAuthLoading ? <ProgressIcon otherProps={{ size: 25 }} /> : "Continue"}
-        </AppButton>
-      </Stack>
-    </>
-  );
+                <AppButton
+                    variant="contained"
+                    submit
+                    style={{ fontSize: "16px", padding: theme.boxSpacing(5.5, 9), width: "100%" }}
+                    options={{ disabled: isSubmitDisabled }}>
+                    {isAuthLoading ? <ProgressIcon otherProps={{ size: 25 }} /> : "Continue"}
+                </AppButton>
+            </Stack>
+        </>
+    );
 };

@@ -24,18 +24,19 @@ export const NetworkGlitchUI = () => {
         (<Empty
           headline="Oops, something went wrong"
           tagline="Check your internet connection."
-          style={{
-            container: { padding: theme.boxSpacing(16), background: "none" },
-            icon: {
-              width: "60px",
-              height: "60px",
-            },
-          }}
           icon={<Unplug />}
           primaryCta={{
             label: "Refresh",
             variant: "outlined",
             action: () => window.location.reload(),
+          }}
+          style={{
+            container: { padding: theme.boxSpacing(16), background: "none" },
+            icon: {
+              width: "60px",
+              height: "60px",
+              marginBottom: theme.boxSpacing(10)
+            },
           }}
         />
         )}

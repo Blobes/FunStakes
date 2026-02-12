@@ -144,3 +144,10 @@ export const pulseAndRotate = keyframes`
   from { transform: scale(1) rotate(0deg); }
   to { transform: scale(1.1) rotate(360deg); }
 `;
+
+export const heartPop = keyframes`
+  0% { transform: translate(-50%, -50%) scale(0); opacity: 0; }
+  15% { transform: translate(-50%, -50%) scale(1.2); opacity: 1; }
+  80% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+  100% { transform: translate(-50%, -50%) scale(0); opacity: 0; }
+`;
