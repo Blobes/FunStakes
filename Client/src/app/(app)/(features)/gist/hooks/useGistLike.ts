@@ -80,7 +80,7 @@ export const useGistLike = (gist: IGist, context: any) => {
         clearPendingLike(_id);
       }
     } catch {
-      clearPendingLike(_id);
+      //  clearPendingLike(_id);
       // Optional: Rollback state on hard error
     } finally {
       setIsLiking(false);

@@ -144,6 +144,5 @@ export interface IMedia {
   src: string;
   title?: string;
   type?: "image" | "video";
-  onClick?: (id?: string) => void;
   usage?: "list" | "item";
 }

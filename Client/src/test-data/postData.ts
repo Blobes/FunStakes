@@ -30,7 +30,7 @@ export const stakeData: IStake[] = [
 
 export const singleMediaData: MediaProps[] = [
   { src: img.pic6 },
-  // { src: img.video, type: "video" },
+  { src: img.video, type: "video" },
 ];
 
 export const multiMediaData: MediaProps[] = [

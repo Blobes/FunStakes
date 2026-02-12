@@ -18,7 +18,7 @@ import { useGistAuthor } from "../hooks/useGistAuthor";
 import { useGistLike } from "../hooks/useGistLike";
 import { GistHeader } from "./GistHeader";
 import { GistEngagement } from "./GistEngagement";
-import { DoubleTapLike } from "@/components/DoubleTapLike";
+import { DoubleTap } from "@/components/DoubleTap";
 
 interface GistProps {
     gist: IGist;

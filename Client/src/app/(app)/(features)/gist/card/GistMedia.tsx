@@ -3,10 +3,9 @@
 import { useTheme } from "@mui/material/styles";
 import { Typography } from "@mui/material";
 import { useController } from "@/hooks/global";
-import { MediaStyle, SingleMedia, MediaProps } from "@/components/media/SingleMedia";
+import { SingleMedia } from "@/components/media/SingleMedia";
 import { GalleryProps, MediaGallery } from "@/components/media/MediaGallery";
 import { useCallback, useMemo } from "react";
-import { DoubleTapLike } from "@/components/DoubleTapLike";
 
 interface GistMediaProps extends GalleryProps {
     likedByMe: boolean;
@@ -29,7 +28,7 @@ export const GistMedia = ({ mediaList, style, likedByMe, handleLike }: GistMedia
             objectFit: 'cover',
             ...style?.content
         },
-    }), [theme.radius, style]);
+    }), [style]);
 
     const handleMedia = useCallback((id?: string) => {
         if (!id) return;
@@ -37,23 +36,20 @@ export const GistMedia = ({ mediaList, style, likedByMe, handleLike }: GistMedia
     }, [openModal]);
 
     const mappedList = useMemo(() => {
-        return mediaList.map((media, index) => (
-            {
+        return mediaList.map((media, index) => {
+            const mediaId = media.id || `${index}-${media.src}`;
+            return {
                 ...media,
-                id: media.id || `${index}-${media.src}`,
-                onClick: handleMedia
+                id: mediaId,
+                onSingleTap: () => handleMedia(mediaId),
+                ...(!likedByMe && { onDoubleTap: handleLike })
             }
-        ))
+        })
     }, [mediaList, handleMedia]);
 
     const singleMedia = mappedList[0];
 
-    return (
-        <DoubleTapLike isLiked={likedByMe} onSingleTap={handleMedia} onDoubleTap={handleLike}>
-            {mediaList.length < 2 ? <SingleMedia {...singleMedia}
-                style={{ container: mediaStyle.container }} /> : (
-                <MediaGallery mediaList={mappedList} style={{ ...mediaStyle }} />
-            )}
-        </DoubleTapLike>
-    )
+    return mediaList.length < 2 ? <SingleMedia {...singleMedia}
+        style={{ container: mediaStyle.container }} /> : (
+        <MediaGallery mediaList={mappedList} style={{ ...mediaStyle }} />)
 }

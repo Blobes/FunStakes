@@ -95,6 +95,7 @@ export const useStyles = () => {
       opacity: 0,
       zIndex: 2,
       transition: "opacity 0.4s ease",
+      pointerEvents: "none",
     },
     // Target the internal Box (Image/Video)
     "& .MuiBox-root": {

@@ -7,6 +7,7 @@ import { useStyles } from "@/hooks/style";
 import Image from "next/image";
 import { useController } from "@/hooks/global";
 import { IMedia } from "@/types";
+import { DoubleTap } from "../DoubleTap";
 
 
 export interface MediaStyle {
@@ -15,16 +16,19 @@ export interface MediaStyle {
 }
 export interface MediaProps extends IMedia {
     style?: MediaStyle;
+    onSingleTap?: (media?: IMedia) => void;
+    onDoubleTap?: (media?: IMedia) => void;
 }
 
+export const SingleMedia = ({ id, src, type, title, onSingleTap,
+    onDoubleTap, style, usage = "item" }: MediaProps) => {
 
-export const SingleMedia = ({ id, src, type, title, onClick, style, usage = "item" }: MediaProps) => {
     const theme = useTheme();
     const { applyBGEffect } = useStyles()
     const { isPortrait } = useImageColors(src);
-    const mediaId = id || (Math.random() * 100).toString();
     const mediaType = type ?? "image"
     const { isDesktop } = useController();
+
 
     const contentStyle = {
         height: isPortrait ? "80svh" : "auto",
@@ -33,8 +37,6 @@ export const SingleMedia = ({ id, src, type, title, onClick, style, usage = "ite
         maxWidth: "100%",
         objectFit: "contain",
         zIndex: 4,
-        //  boxShadow: "0 10px 80px rgba(0,0,0,0.2)",
-
         // Responsive Breakpoints
         ...(!isDesktop && {
             width: "100%",
@@ -45,50 +47,54 @@ export const SingleMedia = ({ id, src, type, title, onClick, style, usage = "ite
     }
 
     return (
-        <Box onClick={() => onClick && onClick(mediaId)}
-            sx={{
-                position: "relative",
-                overflow: "hidden",
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                // minHeight: "300px",
-                bgcolor: theme.palette.gray.trans[1],
-                cursor: "pointer",
-                // ...applyBGEffect(src),
-                ...style?.container?.base,
-                [theme.breakpoints.down("md")]: {
-                    ...style?.container?.smallScreen
-                },
-            }}>
-            {/* Blurred backround */}
-            <Image
-                src={src}
-                alt=""
-                fill
-                style={{
-                    objectFit: 'cover',
-                    filter: 'blur(8px)',
-                    opacity: 1
-                }}
-                priority={false}
-            />
-            {mediaType === "image" ? (
-                < Image
+        <DoubleTap
+            onSingleTap={() => onSingleTap && onSingleTap()}
+            onDoubleTap={() => onDoubleTap && onDoubleTap()}>
+            <Box
+                sx={{
+                    position: "relative",
+                    overflow: "hidden",
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    // minHeight: "300px",
+                    bgcolor: theme.palette.gray.trans[1],
+                    cursor: "pointer",
+                    // ...applyBGEffect(src),
+                    ...style?.container?.base,
+                    [theme.breakpoints.down("md")]: {
+                        ...style?.container?.smallScreen
+                    },
+                }}>
+                {/* Blurred backround */}
+                <Image
                     src={src}
-                    width={0}
-                    height={0}
-                    sizes="100vw"
-                    loading="lazy"
-                    alt={title || "Post image"}
-                    style={{ ...contentStyle }} />
-            ) : (
-                <Box
-                    component="video" src={src}
-                    autoPlay loop muted playsInline
-                    controls
-                    sx={{ ...contentStyle }} />
-            )}
-        </Box >
+                    alt=""
+                    fill
+                    style={{
+                        objectFit: 'cover',
+                        filter: 'blur(8px)',
+                        opacity: 1
+                    }}
+                    priority={false}
+                />
+                {mediaType === "image" ? (
+                    < Image
+                        src={src}
+                        width={0}
+                        height={0}
+                        sizes="100vw"
+                        loading="lazy"
+                        alt={title || "Post image"}
+                        style={{ ...contentStyle }} />
+                ) : (
+                    <Box
+                        component="video" src={src}
+                        autoPlay loop muted playsInline
+                        controls
+                        sx={{ ...contentStyle }} />
+                )}
+            </Box >
+        </DoubleTap >
     );
 };

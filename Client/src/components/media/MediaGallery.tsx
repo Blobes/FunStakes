@@ -3,6 +3,8 @@ import { Box, ImageList, ImageListItem, Typography } from '@mui/material';
 import { MediaStyle, MediaProps } from './SingleMedia';
 import { useTheme } from "@mui/material/styles";
 import { useStyles } from '@/hooks/style';
+import { DoubleTap } from '../DoubleTap';
+import Image from 'next/image';
 
 
 export interface GalleryProps {
@@ -12,7 +14,7 @@ export interface GalleryProps {
 
 export const MediaGallery = ({ mediaList, style }: GalleryProps) => {
     const theme = useTheme();
-    const { applyBGOverlay: applyOverlay } = useStyles();
+    const { applyBGOverlay } = useStyles();
 
     // 1. Define patterns to ensure the 4-column grid is always full
     const LAYOUT_PATTERNS: Record<number, { cols: number; rows: number }[]> = {
@@ -66,7 +68,7 @@ export const MediaGallery = ({ mediaList, style }: GalleryProps) => {
 
             {displayMedia.map((media, index) => {
                 const isLastItem = index === 5 && remainingCount > 0;
-                const { id, src, type, title, onClick, cols, rows } = media;
+                const { id, src, type, title, onSingleTap, onDoubleTap, cols, rows } = media;
                 const mediaType = type ?? "image";
 
                 return (
@@ -74,58 +76,64 @@ export const MediaGallery = ({ mediaList, style }: GalleryProps) => {
                         key={id}
                         cols={cols}
                         rows={rows}
-                        onClick={() => onClick && onClick(id)}
                         sx={{
                             position: 'relative',
                             overflow: 'hidden',
                             cursor: 'pointer',
-                            ...applyOverlay()
                         }} >
+                        <DoubleTap
+                            onSingleTap={() => onSingleTap && onSingleTap()}
+                            onDoubleTap={() => { onDoubleTap && onDoubleTap() }}
+                            style={{ ...applyBGOverlay() }}>
 
-                        {mediaType === "video" ? (
-                            <Box component="video"
-                                src={src}
-                                autoPlay loop muted playsInline
-                                sx={{
-                                    display: 'block',
-                                    ...style?.content,
-                                }}
-                            />
-                        ) : (
-                            <Box component="img"
-                                // Note: We use the pattern cols/rows for the URL optimization
-                                src={`${src}?w=${cols * 150}&h=${rows * 150}&fit=crop&auto=format`}
-                                alt={title}
-                                loading="lazy"
-                                sx={{
-                                    display: 'block',
-                                    ...style?.content,
-                                    objectFit: 'cover'
-                                }}
-                            />
-                        )}
-
-                        {isLastItem && (
-                            <Box
-                                sx={{
-                                    position: 'absolute',
-                                    top: 0,
-                                    left: 0,
-                                    width: '100%',
-                                    height: '100%',
-                                    backgroundColor: theme.palette.gray.trans.overlay(),
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    justifyContent: 'center',
-                                    flexDirection: "column",
-                                    zIndex: 2,
-                                    padding: theme.boxSpacing(4),
-                                }} >
-                                <Typography variant="h6" textAlign="center">
-                                    +{remainingCount}
-                                </Typography> Media
-                            </Box>
-                        )}
+                            {mediaType === "video" ? (
+                                <Box component="video"
+                                    src={src}
+                                    autoPlay loop muted playsInline
+                                    sx={{ ...style?.content }} />
+                            ) : (
+                                <Image
+                                    src={src}
+                                    width={0}
+                                    height={0}
+                                    sizes="100vw"
+                                    loading="lazy"
+                                    alt={title || "Post image"}
+                                    style={{ ...style?.content }} />
+                                // <Box component="img"
+                                //     // Note: We use the pattern cols/rows for the URL optimization
+                                //     src={`${src}?w=${cols * 150}&h=${rows * 150}&fit=crop&auto=format`}
+                                //     alt={title}
+                                //     loading="lazy"
+                                //     sx={{
+                                //         display: 'block',
+                                //         ...style?.content,
+                                //         objectFit: 'cover'
+                                //     }}
+                                // />
+                            )}
+                            {isLastItem && (
+                                <Box
+                                    sx={{
+                                        position: 'absolute',
+                                        top: 0,
+                                        left: 0,
+                                        width: '100%',
+                                        height: '100%',
+                                        backgroundColor: theme.palette.gray.trans.overlay(),
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        flexDirection: "column",
+                                        zIndex: 2,
+                                        padding: theme.boxSpacing(4),
+                                    }} >
+                                    <Typography variant="h6" textAlign="center">
+                                        +{remainingCount}
+                                    </Typography> Media
+                                </Box>
+                            )}
+                        </DoubleTap>
                     </ImageListItem>
                 );
             })}
