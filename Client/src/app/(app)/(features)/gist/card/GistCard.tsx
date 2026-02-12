@@ -67,9 +67,8 @@ export const GistCard = ({ gist, style = {}, mode = "online" }: GistProps) => {
             }}>{content}</Typography>
 
             {/* Gist media */}
-            <DoubleTapLike isLiked={gistData.likedByMe} handleLike={handleLike}>
-                {postMedia && <GistMedia mediaList={postMedia} />}
-            </DoubleTapLike>
+            {postMedia && <GistMedia mediaList={postMedia}
+                likedByMe={likedByMe} handleLike={handleLike} />}
 
             {/* Gist info strip */}
             <Strip

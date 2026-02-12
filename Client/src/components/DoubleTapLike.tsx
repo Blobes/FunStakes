@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useRef } from "react";
 import { Box } from "@mui/material";
 import { Heart } from "lucide-react";
 import { red } from "@mui/material/colors";
@@ -8,42 +8,60 @@ import { vibrate } from "@/helpers/global";
 interface DoubleTapProps {
     children: React.ReactNode;
     isLiked: boolean;
-    handleLike: () => void;
-    iconSize?: number;
+    onSingleTap: () => void;
+    onDoubleTap: () => void;
+    iconSize?: number
 }
 
-export const DoubleTapLike = ({
-    children,
-    isLiked,
-    handleLike,
-    iconSize = 80
-}: DoubleTapProps) => {
+export const DoubleTapLike = ({ children, isLiked, onDoubleTap,
+    onSingleTap, iconSize = 60 }: DoubleTapProps) => {
+
     const [showHeart, setShowHeart] = useState(false);
+    const lastTap = useRef<number>(0);
+    const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-    const handleDoubleClick = useCallback((e: React.MouseEvent) => {
-        // Prevent default browser zoom/behavior on some mobile browsers
-        e.preventDefault();
+    const handleTouch = useCallback((e: React.PointerEvent) => {
+        e.stopPropagation();
 
-        // 1. Show Animation (Always trigger for feedback)
-        setShowHeart(false);
-        setTimeout(() => setShowHeart(true), 10);
+        if (e.cancelable) e.preventDefault();
 
-        vibrate(); // Vibrate
+        const now = Date.now();
+        const DOUBLE_PRESS_DELAY = 300;
 
-        // 2. Logic: Only Like if currently Unliked
-        if (!isLiked) {
-            handleLike();
+        if (now - lastTap.current < DOUBLE_PRESS_DELAY) {
+            // --- DOUBLE TAP DETECTED ---
+            if (timer.current) {
+                clearTimeout(timer.current);
+                timer.current = null;
+            }
+            // Trigger Vibe and Animation
+            vibrate();
+            setShowHeart(false);
+            setTimeout(() => setShowHeart(true), 10);
+
+            if (!isLiked) onDoubleTap();
+
+            setTimeout(() => setShowHeart(false), 700);
+            lastTap.current = 0; // Reset
+        } else {
+            // --- POTENTIAL SINGLE TAP ---
+            lastTap.current = now;
+            if (timer.current) clearTimeout(timer.current);
+            timer.current = setTimeout(() => {
+                onSingleTap();
+                timer.current = null;
+            }, DOUBLE_PRESS_DELAY);
         }
-
-        // 3. Cleanup
-        setTimeout(() => setShowHeart(false), 700);
-    }, [isLiked, handleLike]);
+    }, [isLiked, onDoubleTap, onSingleTap]);
 
     return (
         <Box
-            onDoubleClick={handleDoubleClick}
-            sx={{ position: "relative", width: "100%" }}
-        >
+            onPointerDown={handleTouch}
+            onClick={(e) => {
+                e.stopPropagation();
+                e.preventDefault();
+            }}
+            sx={{ position: "relative", width: "100%" }}>
             {showHeart && (
                 <Box sx={{
                     position: "absolute",

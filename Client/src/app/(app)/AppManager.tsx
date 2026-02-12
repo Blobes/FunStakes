@@ -6,13 +6,14 @@ import { useGlobalContext } from "../GlobalContext";
 import { LeftNav } from "@/app/(app)/navbars/LeftNav";
 import { useTheme } from "@mui/material/styles";
 import { useStyles } from "@/hooks/style";
-import { AppHeader } from "@/app/(app)/navbars/Header";
+
 import { BottomNav } from "@/app/(app)/navbars/BottomNav";
 import { useRef } from "react";
 import { RootUIContainer } from "@/components/Containers";
 import { NetworkGlitchUI } from "@/components/NetworkGlitchUI";
 import { OfflinePromptUI } from "../offline/OfflinePromptUI";
-import { usePathname } from "next/navigation";
+import { AppHeader } from "./navbars/Header";
+
 
 export const AppManager = ({ children }: { children: React.ReactNode }) => {
   const { isDesktop, isUnstableNetwork, isOffline } = useController();

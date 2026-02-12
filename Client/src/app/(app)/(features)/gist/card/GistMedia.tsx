@@ -6,9 +6,14 @@ import { useController } from "@/hooks/global";
 import { MediaStyle, SingleMedia, MediaProps } from "@/components/media/SingleMedia";
 import { GalleryProps, MediaGallery } from "@/components/media/MediaGallery";
 import { useCallback, useMemo } from "react";
+import { DoubleTapLike } from "@/components/DoubleTapLike";
 
+interface GistMediaProps extends GalleryProps {
+    likedByMe: boolean;
+    handleLike: () => void;
+}
 
-export const GistMedia = ({ mediaList, style }: GalleryProps) => {
+export const GistMedia = ({ mediaList, style, likedByMe, handleLike }: GistMediaProps) => {
     const theme = useTheme();
     const { openModal } = useController()
 
@@ -43,8 +48,12 @@ export const GistMedia = ({ mediaList, style }: GalleryProps) => {
 
     const singleMedia = mappedList[0];
 
-    return mediaList.length < 2 ? <SingleMedia {...singleMedia}
-        style={{ container: mediaStyle.container }} /> : (
-        <MediaGallery mediaList={mappedList} style={{ ...mediaStyle }} />
+    return (
+        <DoubleTapLike isLiked={likedByMe} onSingleTap={handleMedia} onDoubleTap={handleLike}>
+            {mediaList.length < 2 ? <SingleMedia {...singleMedia}
+                style={{ container: mediaStyle.container }} /> : (
+                <MediaGallery mediaList={mappedList} style={{ ...mediaStyle }} />
+            )}
+        </DoubleTapLike>
     )
 }

@@ -4,7 +4,6 @@ import { AppBar, Stack } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import { useGlobalContext } from "@/app/GlobalContext";
 import { useController } from "@/hooks/global";
-import { SearchContainer } from "@/components/Search";
 import OfflineAvatar from "@/assets/svgs/offline-avatar.svg"
 import { AnchorLink, AppButton } from "@/components/Buttons";
 import { clientRoutes } from "@/helpers/routes";
@@ -23,7 +22,6 @@ export const Header: React.FC<AppHeaderProps> = ({ scrollRef }) => {
   const { navigateTo } = usePage();
   const { handlePageScroll } = usePageScroll();
   const theme = useTheme();
-  const isLoggedIn = authStatus === "AUTHENTICATED";
   const scrollDir = handlePageScroll(scrollRef);
 
   /* ---------------------------------- render ---------------------------------- */
@@ -48,7 +46,6 @@ export const Header: React.FC<AppHeaderProps> = ({ scrollRef }) => {
       }}>
 
       {/* Logo */}
-
       <AnchorLink
         url={clientRoutes.home.path}
         onClick={() => {
@@ -64,10 +61,6 @@ export const Header: React.FC<AppHeaderProps> = ({ scrollRef }) => {
             borderRadius: `${theme.radius.full}`,
           }}
         /></AnchorLink>
-
-
-      {/* Search */}
-      {/* {isDesktop && <SearchContainer />} */}
 
       {/* Right side elements */}
       <Stack direction="row" alignItems="center" spacing={theme.gap(8)}>
