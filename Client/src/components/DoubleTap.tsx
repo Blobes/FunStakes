@@ -18,11 +18,11 @@ export const DoubleTap = ({ children, onDoubleTap,
     const lastTap = useRef<number>(0);
     const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-    const handleTouch = useCallback((e: React.MouseEvent) => {
-        const now = Date.now();
-        const DOUBLE_TAP_DELAY = 40;
+    const handleTouch = useCallback((e: React.PointerEvent) => {
+        e.stopPropagation();
 
-        e.stopPropagation()
+        const now = Date.now();
+        const DOUBLE_TAP_DELAY = 250;
 
         if (now - lastTap.current < DOUBLE_TAP_DELAY) {
             // --- DOUBLE TAP DETECTED ---
@@ -51,11 +51,12 @@ export const DoubleTap = ({ children, onDoubleTap,
 
     return (
         <Box
-            onClick={handleTouch}
+            onPointerDown={handleTouch}
             sx={{
                 position: "relative",
                 width: "100%",
                 height: "100%",
+                touchAction: "manipulation",
                 ...style
             }}>
             {showHeart && (
