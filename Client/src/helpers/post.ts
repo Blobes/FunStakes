@@ -31,24 +31,40 @@ export const enqueueLike = (postId: string, finalState: boolean) => {
   localStorage.setItem(likeQueueKey, JSON.stringify(queue));
 };
 
-export const processQueue = async () => {
+let isSyncing = false;
+export const processQueue = async (authStatus: string) => {
+  //  If already syncing, don't start another loop
+  if (isSyncing || authStatus !== "AUTHENTICATED") return;
+
   const queue = JSON.parse(localStorage.getItem(likeQueueKey) || "{}");
   const postIds = Object.keys(queue);
 
   if (!postIds.length) return;
 
-  for (const postId of postIds) {
-    try {
-      await fetcher(serverApi.likePost(postId), { method: "PUT" });
-      // Remove from queue and pending only after success
-      const currentQueue = JSON.parse(
-        localStorage.getItem(likeQueueKey) || "{}",
-      );
-      delete currentQueue[postId];
-      localStorage.setItem(likeQueueKey, JSON.stringify(currentQueue));
-      clearPendingLike(postId);
-    } catch (err) {
-      console.error("Failed to sync offline like for:", postId);
+  isSyncing = true; // Lock the door
+
+  try {
+    for (const postId of postIds) {
+      try {
+        await fetcher(serverApi.likePost(postId), { method: "PUT" });
+
+        // Use a functional update style for the queue to prevent overwriting
+        const currentQueue = JSON.parse(
+          localStorage.getItem(likeQueueKey) || "{}",
+        );
+        delete currentQueue[postId];
+        localStorage.setItem(likeQueueKey, JSON.stringify(currentQueue));
+
+        clearPendingLike(postId);
+
+        // Optional: Add a tiny 50ms delay to let the DB "breathe" between updates
+        await new Promise((resolve) => setTimeout(resolve, 50));
+      } catch (err) {
+        console.error("Failed to sync offline like for:", postId, err);
+        // If it's a 401/Unauthorized, we should probably stop the whole loop
+      }
     }
+  } finally {
+    isSyncing = false; // Unlock the door when totally finished
   }
 };

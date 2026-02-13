@@ -11,6 +11,7 @@ import {
   processQueue,
 } from "@/helpers/post";
 import { serverApi } from "@/helpers/routes";
+import { useGlobalContext } from "@/app/GlobalContext";
 
 export const useGistService = () => {
   const getAllGist = useCallback(async (): Promise<{
@@ -66,11 +67,6 @@ export const useGistService = () => {
     },
     [],
   );
-  // Run sync like when online + app boot
-  if (typeof window !== "undefined") {
-    window.addEventListener("online", processQueue);
-    processQueue();
-  }
 
   return {
     handleGistLike,

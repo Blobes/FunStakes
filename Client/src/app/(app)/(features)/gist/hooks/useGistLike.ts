@@ -1,6 +1,7 @@
 import { useState, useCallback, useEffect } from "react";
 import { IGist } from "@/types";
 import { vibrate } from "@/helpers/global";
+import { processQueue } from "@/helpers/post";
 
 export const useGistLike = (gist: IGist, context: any) => {
   // 1. Destructure everything internally for clarity
@@ -80,7 +81,7 @@ export const useGistLike = (gist: IGist, context: any) => {
         clearPendingLike(_id);
       }
     } catch {
-      //  clearPendingLike(_id);
+      clearPendingLike(_id);
       // Optional: Rollback state on hard error
     } finally {
       setIsLiking(false);
@@ -98,6 +99,20 @@ export const useGistLike = (gist: IGist, context: any) => {
     setModalContent,
     LoginStepper,
   ]);
+
+  // Background syncing
+  useEffect(() => {
+    if (authStatus === "AUTHENTICATED") {
+      // Initial sync on login/boot
+      processQueue(authStatus);
+
+      // Sync when coming back online
+      const handleOnline = () => processQueue(authStatus);
+      window.addEventListener("online", handleOnline);
+
+      return () => window.removeEventListener("online", handleOnline);
+    }
+  }, [authStatus]);
 
   return { gistData, isLiking, handleLike };
 };

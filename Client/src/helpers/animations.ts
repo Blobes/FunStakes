@@ -148,6 +148,6 @@ export const pulseAndRotate = keyframes`
 export const heartPop = keyframes`
   0% { transform: translate(-50%, -50%) scale(0); opacity: 0; }
   15% { transform: translate(-50%, -50%) scale(1.2); opacity: 1; }
-  80% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
-  100% { transform: translate(-50%, -50%) scale(0); opacity: 0; }
+  80% { transform: translate(-50%, -50%) scale(1.3); opacity: 1; }
+  100% { transform: translate(-50%, -50%) scale(0.8); opacity: 0.5; }
 `;

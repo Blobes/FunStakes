@@ -100,17 +100,6 @@ export const MediaGallery = ({ mediaList, style }: GalleryProps) => {
                                     loading="lazy"
                                     alt={title || "Post image"}
                                     style={{ ...style?.content }} />
-                                // <Box component="img"
-                                //     // Note: We use the pattern cols/rows for the URL optimization
-                                //     src={`${src}?w=${cols * 150}&h=${rows * 150}&fit=crop&auto=format`}
-                                //     alt={title}
-                                //     loading="lazy"
-                                //     sx={{
-                                //         display: 'block',
-                                //         ...style?.content,
-                                //         objectFit: 'cover'
-                                //     }}
-                                // />
                             )}
                             {isLastItem && (
                                 <Box

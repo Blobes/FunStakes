@@ -37,7 +37,7 @@ export const DoubleTap = ({ children, onDoubleTap,
 
             onDoubleTap();
 
-            setTimeout(() => setShowHeart(false), 700);
+            setTimeout(() => setShowHeart(false), 1100);
             lastTap.current = 0; // Reset
         } else {
             // --- POTENTIAL SINGLE TAP ---
@@ -64,7 +64,7 @@ export const DoubleTap = ({ children, onDoubleTap,
                     top: "50%",
                     left: "50%",
                     pointerEvents: "none",
-                    animation: `${heartPop} 0.7s ease-out forwards`,
+                    animation: `${heartPop} 1.2s linear alternate`,
                     zIndex: 5,
                 }}>
                     <Heart
