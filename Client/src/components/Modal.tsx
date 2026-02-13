@@ -9,6 +9,7 @@ import { Direction, GenericObject } from "@/types";
 import { Transition, TransitionType } from "./Transition";
 import { zIndexes } from "@/helpers/global";
 import { useController } from "@/hooks/global";
+import { X } from "lucide-react";
 
 export interface ModalRef {
   openModal: () => void;
@@ -169,12 +170,7 @@ export const Modal = forwardRef<ModalRef, ModalProps>(
                           aria-haspopup="true"
                           ref={closeRef}
                           onClick={handleClose}>
-                          <Close
-                            sx={{
-                              width: "22px",
-                              height: "22px",
-                            }}
-                          />
+                          <X size={22} />
                         </IconButton>
                       )}
                     </Stack>

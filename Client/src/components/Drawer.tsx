@@ -8,7 +8,7 @@ import React, {
 } from "react";
 import { Box, IconButton, Stack } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
-import { Close } from "@mui/icons-material";
+import { X } from "lucide-react";
 import { useStyles } from "@/hooks/style";
 import { Direction, GenericObject } from "@/types";
 import { Transition } from "./Transition";
@@ -208,12 +208,7 @@ export const Drawer = forwardRef<DrawerRef, DrawerProps>(
                           aria-haspopup="true"
                           ref={closeRef}
                           onClick={handleClose}>
-                          <Close
-                            sx={{
-                              width: "22px",
-                              height: "22px",
-                            }}
-                          />
+                          <X size={22} />
                         </IconButton>
                       )}
                     </Stack>

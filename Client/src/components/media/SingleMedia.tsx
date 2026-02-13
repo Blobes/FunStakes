@@ -3,7 +3,6 @@
 import { useImageColors } from "@/hooks/color";
 import { useTheme } from "@mui/material/styles";
 import { Box } from "@mui/material";
-import { useStyles } from "@/hooks/style";
 import Image from "next/image";
 import { useController } from "@/hooks/global";
 import { IMedia } from "@/types";
@@ -21,10 +20,9 @@ export interface MediaProps extends IMedia {
 }
 
 export const SingleMedia = ({ id, src, type, title, onSingleTap,
-    onDoubleTap, style, usage = "item" }: MediaProps) => {
+    onDoubleTap, style, viewMode = "isolated" }: MediaProps) => {
 
     const theme = useTheme();
-    const { applyBGEffect } = useStyles()
     const { isPortrait } = useImageColors(src);
     const mediaType = type ?? "image"
     const { isDesktop } = useController();
@@ -57,10 +55,8 @@ export const SingleMedia = ({ id, src, type, title, onSingleTap,
                     display: "flex",
                     justifyContent: "center",
                     alignItems: "center",
-                    // minHeight: "300px",
                     bgcolor: theme.palette.gray.trans[1],
                     cursor: "pointer",
-                    // ...applyBGEffect(src),
                     ...style?.container?.base,
                     [theme.breakpoints.down("md")]: {
                         ...style?.container?.smallScreen

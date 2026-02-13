@@ -12,13 +12,12 @@ import { Empty } from "@/components/Empty";
 import { useSnackbar } from "@/hooks/snackbar";
 import { useController } from "@/hooks/global";
 import { Strip } from "@/components/StripBar";
-import { multiMediaData, singleMediaData } from "@/test-data/postData";
+import { mediaData } from "@/test-data/postData";
 import { GistMedia } from "./GistMedia";
 import { useGistAuthor } from "../hooks/useGistAuthor";
 import { useGistLike } from "../hooks/useGistLike";
 import { GistHeader } from "./GistHeader";
 import { GistEngagement } from "./GistEngagement";
-import { DoubleTap } from "@/components/DoubleTap";
 
 interface GistProps {
     gist: IGist;
@@ -42,7 +41,7 @@ export const GistCard = ({ gist, style = {}, mode = "online" }: GistProps) => {
         mode, LoginStepper: <LoginStepper />
     });
     const { likeCount, likedByMe, content } = gistData;
-    const postMedia = singleMediaData
+    const postMedia = mediaData
 
     if (!author) return <Empty tagline={error || "Loading author..."} />;
     if (gistData.status === "DELETED") return <Empty tagline="Deleted by author." />;

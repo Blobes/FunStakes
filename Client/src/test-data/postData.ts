@@ -28,17 +28,12 @@ export const stakeData: IStake[] = [
   },
 ];
 
-export const singleMediaData: MediaProps[] = [
-  { src: img.pic6 },
-  { src: img.video, type: "video" },
-];
-
-export const multiMediaData: MediaProps[] = [
+export const mediaData: MediaProps[] = [
   { src: img.pic1 },
   { src: img.pic2 },
-  { src: img.pic3 },
-  { src: img.pic4 },
-  { src: img.pic4 },
-  { src: img.pic3 },
   { src: img.video, type: "video" },
+  { src: img.pic3 },
+  { src: img.pic4 },
+  { src: img.pic5 },
+  { src: img.pic6 },
 ];

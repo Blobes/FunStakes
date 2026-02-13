@@ -31,8 +31,8 @@ const componentTheme = createTheme({
 
     MuiTypography: {
       styleOverrides: {
-        root: ({ theme }) => ({
-          color: theme.palette.gray?.[300],
+        root: () => ({
+          color: "inherit",
           margin: "0px",
           width: "inherit",
         }),

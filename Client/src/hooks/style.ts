@@ -85,33 +85,39 @@ export const useStyles = () => {
     },
   });
 
-  const applyBGOverlay = () => ({
+  const applyBGEffects = {
     // Fade in the overlay
-    "&::before": {
-      content: '""',
-      position: "absolute",
-      inset: 0,
-      bgcolor: theme.fixedColors.gray800,
-      opacity: 0,
-      zIndex: 2,
-      transition: "opacity 0.4s ease",
-      pointerEvents: "none",
+    overlay: {
+      "&::before": {
+        content: '""',
+        position: "absolute",
+        inset: 0,
+        bgcolor: theme.fixedColors.gray800,
+        opacity: 0,
+        zIndex: 2,
+        transition: "opacity 0.4s ease",
+        pointerEvents: "none",
+      },
+      "&:hover": {
+        "&::before": { opacity: 0.4 },
+      },
     },
-    // Target the internal Box (Image/Video)
-    "& .MuiBox-root": {
-      transition: "transform 0.6s ease",
-    },
-    "&:hover": {
-      "&::before": { opacity: 0.4 },
-      "& .MuiBox-root": { transform: "scale(1.05)" }, // Subtle zoom
-    },
-  });
+    // Apply zoom to the internal box
+    zoom: (element: string = ".MuiBox-root") => ({
+      [`${element}`]: {
+        transition: "transform 0.6s ease",
+      },
+      "&:hover": {
+        [`${element}`]: { transform: "scale(1.05)" },
+      },
+    }),
+  };
 
   return {
     scrollBarStyle,
     autoScroll,
     applyBGPattern,
     applyBGEffect,
-    applyBGOverlay,
+    applyBGEffects,
   };
 };

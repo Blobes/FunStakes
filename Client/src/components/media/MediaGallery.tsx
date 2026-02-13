@@ -5,6 +5,7 @@ import { useTheme } from "@mui/material/styles";
 import { useStyles } from '@/hooks/style';
 import { DoubleTap } from '../DoubleTap';
 import Image from 'next/image';
+import { MediaVideo } from './MediaVideo';
 
 
 export interface GalleryProps {
@@ -14,7 +15,7 @@ export interface GalleryProps {
 
 export const MediaGallery = ({ mediaList, style }: GalleryProps) => {
     const theme = useTheme();
-    const { applyBGOverlay } = useStyles();
+    const { applyBGEffects } = useStyles();
 
     // 1. Define patterns to ensure the 4-column grid is always full
     const LAYOUT_PATTERNS: Record<number, { cols: number; rows: number }[]> = {
@@ -33,7 +34,7 @@ export const MediaGallery = ({ mediaList, style }: GalleryProps) => {
         const mediaItems = [...mediaList].sort((a, b) =>
             (a.id || a.src).localeCompare(b.id || b.src)
         );
-        const count = Math.min(mediaItems.length, 6);
+        const count = Math.min(mediaItems.length, 5);
         const sliced = mediaItems.slice(0, count);
         const pattern = LAYOUT_PATTERNS[count];
 
@@ -46,7 +47,7 @@ export const MediaGallery = ({ mediaList, style }: GalleryProps) => {
         // Only re-run if the actual list of media changes (e.g., a new post)
     }, [mediaList]);
 
-    const remainingCount = mediaList.length - 6;
+    const remainingCount = mediaList.length - 5;
 
     return (
         <ImageList
@@ -67,7 +68,7 @@ export const MediaGallery = ({ mediaList, style }: GalleryProps) => {
             rowHeight={150}>
 
             {displayMedia.map((media, index) => {
-                const isLastItem = index === 5 && remainingCount > 0;
+                const isLastItem = index === 4 && remainingCount > 0;
                 const { id, src, type, title, onSingleTap, onDoubleTap, cols, rows } = media;
                 const mediaType = type ?? "image";
 
@@ -80,17 +81,15 @@ export const MediaGallery = ({ mediaList, style }: GalleryProps) => {
                             position: 'relative',
                             overflow: 'hidden',
                             cursor: 'pointer',
+                            ...applyBGEffects.zoom("& video, & img")
                         }} >
                         <DoubleTap
                             onSingleTap={() => onSingleTap && onSingleTap()}
-                            onDoubleTap={() => { onDoubleTap && onDoubleTap() }}
-                            style={{ ...applyBGOverlay() }}>
+                            onDoubleTap={() => onDoubleTap && onDoubleTap()}
+                            style={{ ...(!isLastItem && applyBGEffects.overlay) }}>
 
                             {mediaType === "video" ? (
-                                <Box component="video"
-                                    src={src}
-                                    autoPlay loop muted playsInline
-                                    sx={{ ...style?.content }} />
+                                <MediaVideo src={src} style={style?.content} />
                             ) : (
                                 <Image
                                     src={src}
@@ -109,17 +108,18 @@ export const MediaGallery = ({ mediaList, style }: GalleryProps) => {
                                         left: 0,
                                         width: '100%',
                                         height: '100%',
-                                        backgroundColor: theme.palette.gray.trans.overlay(),
+                                        backgroundColor: theme.palette.gray.trans.overlay(0.6),
                                         display: 'flex',
                                         alignItems: 'center',
                                         justifyContent: 'center',
                                         flexDirection: "column",
                                         zIndex: 2,
                                         padding: theme.boxSpacing(4),
+                                        color: theme.fixedColors.gray50
                                     }} >
                                     <Typography variant="h6" textAlign="center">
                                         +{remainingCount}
-                                    </Typography> Media
+                                    </Typography>
                                 </Box>
                             )}
                         </DoubleTap>

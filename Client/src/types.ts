@@ -144,5 +144,5 @@ export interface IMedia {
   src: string;
   title?: string;
   type?: "image" | "video";
-  usage?: "list" | "item";
+  viewMode?: "list" | "isolated";
 }
