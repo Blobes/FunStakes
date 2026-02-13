@@ -56,7 +56,7 @@ export const DoubleTap = ({ children, onDoubleTap,
                 position: "relative",
                 width: "100%",
                 height: "100%",
-                touchAction: "manipulation",
+                touchAction: "pan-y",
                 ...style
             }}>
             {showHeart && (
