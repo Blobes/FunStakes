@@ -14,15 +14,42 @@ interface DoubleTapProps {
 
 export const DoubleTap = ({ children, onDoubleTap,
     onSingleTap, iconSize = 70, style }: DoubleTapProps) => {
+
     const [showHeart, setShowHeart] = useState(false);
     const lastTap = useRef<number>(0);
     const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-    const handleTouch = useCallback((e: React.PointerEvent) => {
+    // Track movement to distinguish Tap vs. Scroll
+    const touchStartPos = useRef({ x: 0, y: 0 });
+    const isMovement = useRef(false);
+
+    const handlePointerDown = (e: React.PointerEvent) => {
+        touchStartPos.current = { x: e.clientX, y: e.clientY };
+        isMovement.current = false;
+    };
+
+    const handlePointerMove = (e: React.PointerEvent) => {
+        const dist = Math.hypot(
+            e.clientX - touchStartPos.current.x,
+            e.clientY - touchStartPos.current.y
+        );
+        // If moved more than 10px, consider it a scroll/drag
+        if (dist > 10) isMovement.current = true;
+    };
+
+    const handlePointerUp = useCallback((e: React.PointerEvent) => {
         e.stopPropagation();
+        // 1. If the finger moved, it's a scroll—ABORT
+        if (isMovement.current) {
+            if (timer.current) {
+                clearTimeout(timer.current);
+                timer.current = null;
+            }
+            return;
+        }
 
         const now = Date.now();
-        const DOUBLE_TAP_DELAY = 250;
+        const DOUBLE_TAP_DELAY = 250; // 300ms is standard social media timing
 
         if (now - lastTap.current < DOUBLE_TAP_DELAY) {
             // --- DOUBLE TAP DETECTED ---
@@ -30,28 +57,35 @@ export const DoubleTap = ({ children, onDoubleTap,
                 clearTimeout(timer.current);
                 timer.current = null;
             }
-            // Trigger Vibe and Animation
+
             vibrate();
             setShowHeart(false);
             setTimeout(() => setShowHeart(true), 10);
 
+            // Trigger like
             onDoubleTap();
 
             setTimeout(() => setShowHeart(false), 1100);
-            lastTap.current = 0; // Reset
+            lastTap.current = 0;
         } else {
             // --- POTENTIAL SINGLE TAP ---
             lastTap.current = now;
+
+            if (timer.current) clearTimeout(timer.current);
+
             timer.current = setTimeout(() => {
                 onSingleTap();
                 timer.current = null;
+                lastTap.current = 0; // Important: Clear lastTap if single tap confirms
             }, DOUBLE_TAP_DELAY);
         }
     }, [onDoubleTap, onSingleTap]);
 
     return (
         <Box
-            onPointerDown={handleTouch}
+            onPointerDown={handlePointerDown}
+            onPointerMove={handlePointerMove}
+            onPointerUp={handlePointerUp}
             sx={{
                 position: "relative",
                 width: "100%",
